@@ -13,15 +13,12 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · phase 2 (faction card) — built, waiting for the maintainer's check
-in Obsidian.** Everything is implemented and tested in Node and in a browser against a stub of the
-Obsidian API; it has not run inside Obsidian yet. The maintainer reloads the plugin in
-`examples/vault` and goes through `HANDOFF.md` → "Half-finished". Fix what that turns up; once the
-maintainer accepts phase 2 (planned for 2026-10-25, on the PC), get the review of the **phase 3 —
-world view** spec and plan, already written:
-[`docs/superpowers/specs/2026-10-24-world-view-design.md`](docs/superpowers/specs/2026-10-24-world-view-design.md),
-[`docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md`](docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md)
-(spec §7 lists the calls to check). Build phase 3 only after both.
+**dnd5e-byLokianer · Factions · phases 2 and 3 — built, waiting for the maintainer's check in
+Obsidian** (planned for 2026-10-25 on the PC). Phase 2 is the faction card, phase 3 the faction
+world (graph and matrix); both are tested in Node and rendered in a browser against a stub of the
+Obsidian API, neither has run inside Obsidian. The checklist is in `HANDOFF.md` → "Half-finished".
+Fix what it turns up; once both are accepted, spec and plan **phase 4 — faction view and tension
+panel** (design §5.2, §5.3).
 
 ---
 
@@ -60,9 +57,14 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
   - [x] Line editor `src/yaml/` (`2712fb1`), steps and targets (`fc3c807`), card model
         (`e3b446d`, `2263924`), card in Obsidian with Fix and settings (`61984a4`)
   - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 3 — World view** (spec and plan drafted 2026-10-24, awaiting review): own tab; graph
-      with bloc layout (d3-force, chosen by the maintainer) and matrix, switchable; step-name
-      settings; Public/True toggle (Public on open); warnings badge; clicks lead into the faction card
+- [ ] **Phase 3 — World view** ← _built 2026-10-24, awaiting acceptance in Obsidian_: own tab;
+      graph with bloc layout (d3-force, chosen by the maintainer) and matrix, switchable; step-name
+      settings; Public/True toggle (Public on open); warnings badge; clicks lead into the faction card.
+      Spec `docs/superpowers/specs/2026-10-24-world-view-design.md`, plan
+      `docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md`
+  - [x] Graph and matrix models (`9448cdb`), layout (`7fd45df`), step names (`60e6956`), the view
+        (`8b86a8f`)
+  - [ ] Maintainer's check in Obsidian
 - [ ] **Phase 4 — Faction view and tension panel**
 - [ ] **Phase 5 — In-view editing and history**: sliders in matrix, arrows and notes on the phase 2
       line editor; shared "tonight's session" package with the offer to create session N+1; history

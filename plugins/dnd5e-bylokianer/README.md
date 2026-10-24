@@ -5,7 +5,7 @@ factions are folders holding a `factions.md`, relations are frontmatter values f
 (sworn), and members inherit their faction's stance unless they state their own. Later modules: an
 NPC builder with 5e stat blocks, a battle tracker and dice.
 
-Status: phases 1 (data model) and 2 (faction card) of the factions module. See the repository's
+Status: phases 1 (data model), 2 (faction card) and 3 (world view) of the factions module. See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
 design in `docs/superpowers/specs/2026-10-24-faction-editor-design.md`.
 
@@ -24,13 +24,31 @@ and a notice says why — **Edit in source** jumps to the line. Lists such as `t
 edited in source.
 
 Settings: **Show Obsidian's properties on faction notes** brings the Properties block back beside
-the card.
+the card; **Step names** renames the eleven steps from −5 to +5 (empty keeps the default).
+
+## The faction world
+
+**Open faction world** (command or ribbon icon) opens a tab with all factions of the campaign:
+
+- **Graph** — factions as circles sized by power, sub-factions tied to their parent, the Party and
+  the unaffiliated characters as frames, unknown targets as dashed ghosts. Arrows are coloured from
+  red (−5) to green (+5); two arrows bow apart when both sides have a value. Friends cluster, enemies
+  drift apart. Drag a faction to pin it, drag the background to pan, scroll or pinch to zoom.
+- **Matrix** — who (rows) towards whom (columns), each cell with its number and step name; values a
+  sub-faction or member only inherits are dashed.
+- **Public / True** — Public every time the view opens; True adds the secret stances and marks
+  where they differ from the public face.
+
+Click an arrow or a cell to open the note that holds the value with the faction card on that entry;
+an empty cell offers to add the relation. Click a faction to highlight its relations, double-click
+(or Ctrl/Cmd-click) to open its note.
 
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
   that opens the note's card on the broken entry.
 - **Edit faction data** — focuses the card of the active note.
+- **Open faction world** — the graph and matrix of all factions.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

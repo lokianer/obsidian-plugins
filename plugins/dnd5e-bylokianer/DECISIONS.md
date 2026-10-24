@@ -116,3 +116,22 @@ those notes (a setting shows both) and is the only editor — no form modal. Its
   top of the view.
 
 Left out: a separate form modal (first draft), inherited values in the card.
+
+## 2026-10-24 · The faction world: its own tab, d3-force, edits through the card
+
+The maintainer chose a tab of its own and d3-force for the layout (ISC, no DOM, ~90 kB unpacked;
+only `src/factions/layout.ts` imports it; rendering is our own SVG). From
+`docs/superpowers/specs/2026-10-24-world-view-design.md` §7:
+
+- Arrows only for values a source's own note states; inherited ones appear in the matrix, dashed.
+- The Party and Unaffiliated are frames with a row per character, whose arrows leave from the row.
+  Characters without any faction relation get no matrix row.
+- Sub-factions are nodes beside their parent with a dashed tie, not drawn inside it.
+- The layout is computed once (fixed ticks, deterministic start) from the **public** graph, so the
+  True toggle never moves a node; positions are cached per campaign in plugin data; dragging pins.
+- A node click selects until the faction view exists (phase 4); double- or Ctrl-click opens the
+  note. Arrow and cell clicks open the note holding the value and focus the entry in the faction
+  card — no sliders of their own (phase 5). Click targets name note, field and target id.
+- Graph/Matrix is remembered, Public/True always starts at Public. Step names are global settings.
+
+Left out: faction-to-character arrows (faction view), image export, per-campaign step names.

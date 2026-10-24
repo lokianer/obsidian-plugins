@@ -1,6 +1,6 @@
 # Faction world view — design
 
-Date: 2026-10-24. Status: **draft for the maintainer's review**. Module: factions, **phase 3**.
+Date: 2026-10-24. Status: **approved and built** (2026-10-24; the maintainer let phase 3 go ahead before checking phase 2 in Obsidian). Module: factions, **phase 3**.
 Build only after phase 2 (faction card) is accepted in Obsidian and this spec and its plan are
 approved.
 
@@ -124,7 +124,8 @@ d3 package, no graph library.
 ### 4.3 Matrix
 
 - Rows and columns: the real factions, sub-factions indented under their parent, then a "Party" and
-  an "Unaffiliated" group of characters as rows only (their relations towards factions); ghosts as
+  an "Unaffiliated" group of characters as rows only (their relations towards factions; built:
+  only characters with at least one such relation get a row); ghosts as
   extra columns at the end.
 - A cell: background from the value, the signed number, the step name; empty when there is no
   relation (not 0). A value the row only **inherits** (stance with `inherited: true`) is shown with a

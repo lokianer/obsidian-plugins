@@ -2,8 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** draft — **build only after phase 2 is accepted in Obsidian and the maintainer has
-approved this plan.**
+**Status:** approved ("passt, weiter", 2026-10-24) and built; tasks 1–8 done, task 9 awaits the
+maintainer's check in Obsidian. Deviation: click targets name note, field and target id instead of a
+raw key (the card rows know their target id).
 
 **Goal:** A "Faction world" tab with a graph (bloc layout, d3-force) and a matrix of all factions,
 a Public/True toggle (Public on open), a warnings badge, clicks that lead into the faction card, and

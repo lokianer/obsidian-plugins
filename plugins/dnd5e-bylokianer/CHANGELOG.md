@@ -23,6 +23,10 @@ All notable changes to this plugin are documented here. The format follows
   relations as coloured rows with slider, step name and reason, secret relations, other fields —
   all editable in place as line edits that keep comments and formatting; refusals and concurrent
   edits end in a notice; Undo after removing a relation.
+- **Faction world** tab: a graph with a bloc layout (d3-force) and a matrix of all factions,
+  Public/True toggle (Public on opening), warnings badge; arrows and cells lead into the faction
+  card; nodes can be pinned by dragging, positions are kept per campaign.
+- **Step names** in the settings.
 - **Fix** buttons in the warnings modal and the command **Edit faction data**.
 - Plugin scaffold: manifest, build with esbuild, Vitest, eslint with Obsidian's rules, CI on Linux,
   macOS and Windows.
