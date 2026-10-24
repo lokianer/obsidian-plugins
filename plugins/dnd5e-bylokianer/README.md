@@ -49,7 +49,7 @@ whose own values differ from their faction's line have a yellow ring. Click a me
 stances, inherited ones dashed; click a sub-faction to go one level deeper; the breadcrumb leads
 back.
 
-**Tensions.** The lightning button (or **Show faction tensions**) opens a sidebar listing one-sided
+**Tensions.** The lightning button in the tab's header (or **Show faction tensions**) opens a sidebar listing one-sided
 pairs, members out of line, public faces hiding a different truth (True mode only) and allies split
 over a third faction. It follows the world's Public / True toggle; thresholds are in the settings.
 

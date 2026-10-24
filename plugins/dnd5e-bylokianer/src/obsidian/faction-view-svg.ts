@@ -167,7 +167,14 @@ export class FactionViewSvg {
       cls: 'dnd5e-fv-frame-title',
       attr: { x: -frame.w / 2 + 20, y: -frame.h / 2 + 34 },
     });
-    title.textContent = view.power === null ? view.name : `${view.name}  ${'●'.repeat(view.power)}`;
+    title.textContent = view.name;
+    if (view.power !== null) {
+      const power = frameGroup.createSvg('text', {
+        cls: 'dnd5e-fv-frame-power',
+        attr: { x: frame.w / 2 - 20, y: -frame.h / 2 + 34 },
+      });
+      power.textContent = `${this.t('card.power')} ${view.power}`;
+    }
 
     for (const member of view.members) {
       const r = places.get(member.id);

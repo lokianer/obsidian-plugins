@@ -328,7 +328,7 @@ export class CardRenderer extends Component {
   private renderValue(main: HTMLElement, el: HTMLElement, row: CardRow): void {
     const value = main.createDiv({ cls: 'dnd5e-card-value' });
     const slider = value.createEl('input', {
-      cls: 'dnd5e-card-slider',
+      cls: 'slider dnd5e-card-slider',
       attr: { type: 'range', min: '-5', max: '5', step: '1', 'data-focus': 'value' },
     });
     slider.value = String(row.value ?? 0);

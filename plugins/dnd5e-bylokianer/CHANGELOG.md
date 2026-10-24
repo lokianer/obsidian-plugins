@@ -37,6 +37,13 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Changed
 
+- A cleaner look closer to Obsidian across card, faction world, faction view, tension panel and
+  warnings modal: no nested boxes or coloured side bars, headings in normal case, values as a soft
+  tint of their colour behind normal text, icon buttons that appear on hover (always on phones),
+  Obsidian's own slider style, list values styled like the theme's tags, graph nodes without power
+  dots (power is their size), and the world view's re-layout and tension buttons in Obsidian's own
+  tab header.
+
 - An en dash (`–3`) reads as a minus; `0x3`, `1e0` and the like are no longer numbers; halves
   round away from zero on both sides.
 - `Factions.md` is recognised in any case; a `factions.md` with another `type` is not a faction.

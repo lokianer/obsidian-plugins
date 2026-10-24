@@ -154,3 +154,22 @@ back) and the tension panel in the right sidebar. From
 - The panel follows the world tab's mode through a shared store; Public without a world tab.
 
 Left out: thresholds per campaign, a tension panel inside the world tab.
+
+## 2026-10-24 · One quiet visual language, close to Obsidian
+
+The maintainer asked for every built view to look cleaner and more like Obsidian. Rules, in
+`styles.css` at the top:
+
+- Values are a soft tint of their colour (`color-mix` with transparency) behind normal text; full
+  colour only for arrows and small accents. The tint is derived on the element that sets the
+  colour, because a custom property resolves where it is declared.
+- No boxes inside boxes and no coloured side bars; sections are plain muted headings in normal case,
+  like Obsidian's "Properties"; rows get a hover background, and their icon buttons appear on hover
+  or focus (always on phones, via Obsidian's `is-mobile`).
+- Obsidian's own components where they exist: the `slider` class for the value slider, tag
+  variables for list values, `clickable-icon` buttons, the view header's actions (`addAction`) for
+  re-layout and tensions.
+- Graph nodes show power only as size (the tooltip says it); frames and ghosts are dashed.
+
+Left out: a custom slider track coloured by value (Obsidian's slider look wins; the value chip
+carries the colour).

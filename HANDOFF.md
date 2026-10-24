@@ -47,6 +47,9 @@ vault: never commit it as part of a task.
   selected; member arrows were first hidden behind the frame, fixed) and the panel in True mode.
 - Example vault: Ilex → The Archivists +2 and Elder Wren → The Drowned Choir −3 (with a reason), so
   the Party and Unaffiliated frames have arrows; `Home.md` rows for graph and matrix.
+- Design pass over every view at the maintainer's request (cleaner, closer to Obsidian): rules at
+  the top of `styles.css` and in DECISIONS.md; checked in the browser preview at desktop and phone
+  width (a mid-word break of long step names on phones fixed).
 - Rendered in Chromium against a stub of the Obsidian API with the example vault's data: graph in
   Public and True and the matrix, no runtime errors. Layout loosened after the first look (labels
   overlapped), frame arrows given a stub out of the frame.
@@ -95,11 +98,18 @@ The Gutter Court`; click The Bench chip → one level deeper, breadcrumb back wo
 15. **Rings and arrows**: Mira Voss and The Bench ringed, Sable not; click Mira → only her arrows,
     the inherited −4 towards the Order dashed; an arrow click opens the card on that entry (for the
     inherited one: The Gutter Court's note).
-16. **Tension panel**: the lightning button opens it in the right sidebar; Public lists Ondine,
+16. **Tension panel**: the lightning button in the world tab's own header opens it in the right
+    sidebar; Public lists Ondine,
     Mira, Aldric, Corvin out of line; toggling True in the world tab updates the panel (The Bench,
     Sable, public-vs-true lines); closing the world tab returns it to Public. Names open notes,
     values the card.
 17. **Thresholds** in the settings change the panel at once.
+
+**Design pass (all views)**
+
+18. The card looks native next to the note: Obsidian's slider style, icon buttons only on hover,
+    tags in the theme's tag style; check a light theme and one community theme too. The world tab's
+    re-layout button sits in Obsidian's tab header and is hidden outside the graph.
 
 ## Decisions taken this session
 

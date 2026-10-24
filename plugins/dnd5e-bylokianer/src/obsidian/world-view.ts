@@ -41,6 +41,7 @@ export class WorldView extends ItemView {
   private body!: HTMLElement;
   private graph: WorldGraphSvg | null = null;
   private factionView: FactionViewSvg | null = null;
+  private relayoutAction: HTMLElement | null = null;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -65,6 +66,14 @@ export class WorldView extends ItemView {
     this.setMode('public');
     this.contentEl.empty();
     this.contentEl.addClass('dnd5e-world');
+    const { t } = this.deps;
+    if (this.relayoutAction === null) {
+      this.addAction('zap', t('command.showTensions'), () => this.deps.showTensions());
+      this.relayoutAction = this.addAction('refresh-cw', t('world.relayout'), () => {
+        const world = this.deps.cache.current;
+        if (world !== null) this.graph?.relayout(world, this.mode);
+      });
+    }
     this.header = this.contentEl.createDiv({ cls: 'dnd5e-world-header' });
     this.body = this.contentEl.createDiv({ cls: 'dnd5e-world-body' });
     this.register(this.deps.cache.onChange(() => this.render()));
@@ -213,12 +222,11 @@ export class WorldView extends ItemView {
       setIcon(badge.createSpan({ cls: 'dnd5e-card-icon' }), 'alert-triangle');
       badge.addEventListener('click', () => this.deps.showWarnings(world));
     }
-    this.iconButton('zap', t('command.showTensions'), () => this.deps.showTensions());
-    if (view === null && settings.worldMode === 'graph' && world.campaign !== null) {
-      this.iconButton('refresh-cw', t('world.relayout'), () =>
-        this.graph?.relayout(world, this.mode),
-      );
-    }
+    // Re-layout lives in Obsidian's own view header; it only means something on the graph.
+    this.relayoutAction?.toggleClass(
+      'dnd5e-hidden',
+      view !== null || settings.worldMode !== 'graph' || world.campaign === null,
+    );
   }
 
   private renderBreadcrumb(view: FactionView): void {
@@ -239,15 +247,6 @@ export class WorldView extends ItemView {
       '@unaffiliated': t('pseudo.unaffiliated'),
     };
     crumbs.createSpan({ cls: 'dnd5e-world-crumb-current', text: pseudo[view.id] ?? view.name });
-  }
-
-  private iconButton(icon: string, label: string, onClick: () => void): void {
-    const button = this.header.createEl('button', {
-      cls: 'clickable-icon',
-      attr: { 'aria-label': label },
-    });
-    setIcon(button, icon);
-    button.addEventListener('click', onClick);
   }
 
   /** A row of buttons of which one is active. */

@@ -260,12 +260,10 @@ export class WorldGraphSvg {
       group.createSvg('circle', { cls: 'dnd5e-world-circle', attr: { r } });
       const label = group.createSvg('text', { cls: 'dnd5e-world-label', attr: { y: r + 20 } });
       label.textContent = node.name;
-      if (node.kind === 'faction') {
-        const power = group.createSvg('text', { cls: 'dnd5e-world-power', attr: { y: 6 } });
-        power.textContent = '●'.repeat(node.power);
-      }
     }
-    group.createSvg('title').textContent = node.name;
+    // Power shows as the node's size; the tooltip says it in words.
+    group.createSvg('title').textContent =
+      node.kind === 'faction' ? `${node.name} · ${this.t('card.power')} ${node.power}` : node.name;
     this.bindNode(group, node);
   }
 

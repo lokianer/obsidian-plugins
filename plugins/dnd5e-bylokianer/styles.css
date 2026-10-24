@@ -1,11 +1,468 @@
-/* dnd5e-byLokianer — styles. Only Obsidian CSS variables, so every theme works. */
+/* dnd5e-byLokianer — styles. Only Obsidian CSS variables, so every theme works.
+
+   One visual language for every view:
+   - values: a soft tint of the value's colour behind normal text (`--dnd5e-soft`); full colour only
+     for arrows and small accents;
+   - sections: plain muted headings in normal case, like Obsidian's own "Properties";
+   - rows: no boxes, a hover background, icon buttons that appear on hover (always on phones);
+   - text at least 16 px. */
+
+.dnd5e-card,
+.dnd5e-world,
+.dnd5e-tensions,
+.dnd5e-warnings {
+  font-size: 16px;
+}
+
+/* Elements that carry a value set --dnd5e-value-colour inline; the soft tint is derived on the same
+   element, since a custom property resolves where it is declared. */
+.dnd5e-card-row,
+.dnd5e-world-edge,
+.dnd5e-world-matrix td,
+.dnd5e-tensions-value {
+  --dnd5e-soft: color-mix(in srgb, var(--dnd5e-value-colour, var(--color-yellow)) 24%, transparent);
+}
+
+.dnd5e-hidden {
+  display: none !important;
+}
+
+.dnd5e-card-icon,
+.dnd5e-warnings-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.dnd5e-card-icon svg,
+.dnd5e-warnings-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* A plain heading for a group of things. */
+.dnd5e-card-section-title {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+/* A small neutral pill: "unknown", "secret", the mode in the tension panel. */
+.dnd5e-card-tag {
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  font-weight: var(--font-normal);
+  white-space: nowrap;
+}
+
+.dnd5e-card-tag.is-secret {
+  color: var(--text-accent);
+}
+
+/* A text button without chrome, like Obsidian's "Add property". */
+.dnd5e-card .dnd5e-card-add,
+.dnd5e-card .dnd5e-card-source,
+.dnd5e-card .dnd5e-card-write,
+.dnd5e-card .dnd5e-card-badge,
+.dnd5e-world-header .dnd5e-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  height: auto;
+  padding: var(--size-4-1) var(--size-4-2);
+  border: none;
+  border-radius: var(--radius-s);
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dnd5e-card .dnd5e-card-add:hover,
+.dnd5e-card .dnd5e-card-source:hover,
+.dnd5e-card .dnd5e-card-write:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.dnd5e-card .dnd5e-card-badge,
+.dnd5e-world-header .dnd5e-card-badge {
+  color: var(--text-warning);
+}
+
+/* Faction card ---------------------------------------------------------------------------------
+   Replaces Obsidian's Properties block on faction and character notes. */
+
+.dnd5e-entity-view:not(.dnd5e-show-properties) .markdown-preview-sizer .metadata-container,
+.dnd5e-entity-view:not(.dnd5e-show-properties) .cm-sizer > .metadata-container {
+  display: none;
+}
+
+.dnd5e-card {
+  margin: var(--size-4-2) 0 var(--size-4-8);
+  padding: var(--size-4-3) var(--size-4-3) var(--size-4-2);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+  color: var(--text-normal);
+  line-height: 1.5;
+}
+
+/* Head: kind and place, then the name with power on the right. */
+
+.dnd5e-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1) var(--size-4-2);
+  padding: 0 var(--size-4-1);
+  color: var(--text-muted);
+}
+
+.dnd5e-card-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+}
+
+.dnd5e-card-place::before {
+  content: '·';
+  margin-right: var(--size-4-2);
+  color: var(--text-faint);
+}
+
+.dnd5e-card-meta .dnd5e-card-badge {
+  margin-left: auto;
+}
+
+.dnd5e-card-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-4-2) var(--size-4-4);
+  padding: var(--size-4-1) var(--size-4-1) 0;
+}
+
+.dnd5e-card-name {
+  font-size: var(--h2-size, 1.5em);
+  font-weight: var(--h2-weight, var(--font-bold));
+  line-height: 1.25;
+}
+
+.dnd5e-card-name.is-editable,
+.dnd5e-card-field-value.is-editable {
+  margin-left: calc(-1 * var(--size-4-1));
+  padding: 0 var(--size-4-1);
+  border-radius: var(--radius-s);
+  cursor: text;
+}
+
+.dnd5e-card-name.is-editable:hover,
+.dnd5e-card-field-value.is-editable:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-card-power {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  color: var(--text-muted);
+}
+
+.dnd5e-card-pips {
+  display: flex;
+  gap: 3px;
+}
+
+.dnd5e-card .dnd5e-card-pip {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 1.5px solid var(--text-faint);
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.dnd5e-card .dnd5e-card-pip:hover {
+  border-color: var(--interactive-accent);
+}
+
+.dnd5e-card .dnd5e-card-pip.is-on {
+  border-color: var(--interactive-accent);
+  background: var(--interactive-accent);
+}
+
+.dnd5e-card-number {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sections: relations open, secret relations and other fields collapsible. */
+
+.dnd5e-card-section,
+.dnd5e-card-collapsible {
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-card-section > .dnd5e-card-section-title {
+  padding: 0 var(--size-4-1) var(--size-4-1);
+}
+
+.dnd5e-card .dnd5e-card-section-title.is-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  width: 100%;
+  height: auto;
+  padding: var(--size-4-1);
+  border: none;
+  border-radius: var(--radius-s);
+  background: transparent;
+  box-shadow: none;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dnd5e-card .dnd5e-card-section-title.is-toggle:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.dnd5e-card-section-detail {
+  overflow: hidden;
+  margin-left: var(--size-4-2);
+  color: var(--text-faint);
+  font-weight: var(--font-normal);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dnd5e-card-collapsible-body .dnd5e-card-section {
+  margin-top: 0;
+}
+
+.dnd5e-card-empty,
+.dnd5e-card-readonly {
+  padding: var(--size-4-1) var(--size-4-2);
+  color: var(--text-faint);
+}
+
+/* Relation rows. */
+
+.dnd5e-card-row {
+  padding: var(--size-4-1) var(--size-4-2);
+  border-radius: var(--radius-s);
+}
+
+.dnd5e-card-row:hover,
+.dnd5e-card-row:focus-within {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-card-row.is-highlighted {
+  box-shadow: inset 0 0 0 2px var(--interactive-accent);
+}
+
+.dnd5e-card-row-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1) var(--size-4-3);
+}
+
+.dnd5e-card-target {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  flex: 1 1 11em;
+  min-width: 0;
+}
+
+.dnd5e-card-target a.internal-link,
+.dnd5e-card-target-name {
+  min-width: 0;
+  font-weight: var(--font-medium, var(--font-semibold));
+  overflow-wrap: anywhere;
+}
+
+.dnd5e-card-value {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  flex: 2 1 15em;
+}
+
+.dnd5e-card-slider {
+  flex: 1;
+  min-width: 4em;
+}
+
+.dnd5e-card-row.is-unset .dnd5e-card-slider::-webkit-slider-thumb {
+  opacity: 0.25;
+}
+
+.dnd5e-card-row.is-unset .dnd5e-card-slider::-moz-range-thumb {
+  opacity: 0.25;
+}
+
+/* The value: a soft tint of its colour behind the signed number. */
+.dnd5e-card-chip {
+  min-width: 2.6em;
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--dnd5e-soft);
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-card-row.is-unset .dnd5e-card-chip {
+  background: transparent;
+  color: var(--text-faint);
+}
+
+.dnd5e-card-chip.is-invalid {
+  color: var(--text-warning);
+  text-decoration: line-through;
+}
+
+.dnd5e-card-step {
+  flex: none;
+  min-width: 5.5em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Icon buttons appear on hover or focus, always on phones. */
+.dnd5e-card-row .clickable-icon {
+  opacity: 0;
+}
+
+.dnd5e-card-row:hover .clickable-icon,
+.dnd5e-card-row:focus-within .clickable-icon,
+.is-mobile .dnd5e-card-row .clickable-icon {
+  opacity: 1;
+}
+
+.dnd5e-card-why {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  color: var(--text-muted);
+}
+
+.dnd5e-card-why.is-empty {
+  display: none;
+}
+
+.dnd5e-card-why-text p {
+  margin: 0;
+}
+
+.dnd5e-card-warning {
+  position: relative;
+  margin-top: 2px;
+  padding-left: 22px;
+  color: var(--text-warning);
+}
+
+/* The icon hangs in the margin, so a long message wraps under its own first line. */
+.dnd5e-card-warning > .dnd5e-card-icon {
+  position: absolute;
+  top: 0.25em;
+  left: 0;
+}
+
+.dnd5e-card .dnd5e-card-warning > .dnd5e-card-write {
+  margin-left: var(--size-4-1);
+  padding: 0 var(--size-4-1);
+  color: var(--text-accent);
+}
+
+.dnd5e-card-head > .dnd5e-card-warning,
+.dnd5e-card > .dnd5e-card-warning {
+  margin-left: var(--size-4-1);
+}
+
+.dnd5e-card-input {
+  flex: 1;
+  min-width: 10em;
+  font-size: 16px;
+}
+
+/* Other fields: key and value side by side, like Properties. */
+
+.dnd5e-card-fields {
+  display: grid;
+  grid-template-columns: minmax(7em, max-content) 1fr;
+  gap: 2px var(--size-4-4);
+  padding: var(--size-4-1) var(--size-4-2);
+}
+
+.dnd5e-card-field {
+  display: contents;
+}
+
+.dnd5e-card-field-key {
+  color: var(--text-muted);
+}
+
+.dnd5e-card-field-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1);
+}
+
+/* List values look like the theme's tags. */
+.dnd5e-card-field-value .dnd5e-card-tag {
+  background: var(--tag-background, var(--background-modifier-hover));
+  color: var(--tag-color, var(--text-accent));
+  border-radius: var(--tag-radius, 2em);
+}
+
+.dnd5e-card-fields .dnd5e-card-source {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.dnd5e-suggestion-detail {
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .dnd5e-card {
+    padding: var(--size-4-2);
+  }
+
+  /* Target and remove on one line, the slider on its own line below. */
+  .dnd5e-card-remove {
+    order: 1;
+  }
+
+  .dnd5e-card-value {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .dnd5e-card-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Warnings modal ------------------------------------------------------------------------------ */
 
 .dnd5e-warnings-modal {
   width: min(640px, 92vw);
 }
 
 .dnd5e-warnings {
-  font-size: 16px;
   color: var(--text-normal);
 }
 
@@ -18,23 +475,22 @@
 .dnd5e-warnings-stat {
   flex: 1;
   padding: var(--size-4-2) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
   border-radius: var(--radius-m);
-  background: var(--background-secondary);
 }
 
 .dnd5e-warnings-stat-value {
-  font-size: 24px;
+  font-size: 1.5em;
   font-weight: var(--font-bold);
   line-height: 1.2;
 }
 
 .dnd5e-warnings-stat.is-alert .dnd5e-warnings-stat-value {
-  color: var(--color-orange);
+  color: var(--text-warning);
 }
 
 .dnd5e-warnings-stat-label,
 .dnd5e-warnings-file,
-.dnd5e-warnings-group,
 .dnd5e-warnings-message,
 .dnd5e-warnings-empty {
   color: var(--text-muted);
@@ -42,8 +498,8 @@
 
 .dnd5e-warnings-note {
   margin-bottom: var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
   border-radius: var(--radius-m);
-  background: var(--background-secondary);
   overflow: hidden;
 }
 
@@ -52,29 +508,32 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--size-4-2) var(--size-4-3);
-  border-bottom: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
 }
 
 .dnd5e-warnings-link {
-  color: var(--text-accent);
+  color: var(--text-normal);
   font-weight: var(--font-semibold);
   text-decoration: none;
 }
 
 .dnd5e-warnings-link:hover {
-  text-decoration: underline;
+  color: var(--text-accent);
 }
 
 .dnd5e-warnings-badge {
+  min-width: 1.6em;
   padding: 0 var(--size-4-2);
   border-radius: 999px;
-  color: var(--color-orange);
-  background: rgba(var(--color-orange-rgb), 0.15);
+  background: color-mix(in srgb, var(--text-warning) 18%, transparent);
+  color: var(--text-warning);
   font-weight: var(--font-semibold);
+  text-align: center;
 }
 
 .dnd5e-warnings-group {
   padding: var(--size-4-2) var(--size-4-3) 0;
+  color: var(--text-muted);
   font-weight: var(--font-semibold);
 }
 
@@ -86,14 +545,7 @@
 }
 
 .dnd5e-warnings-icon {
-  display: inline-flex;
-  flex: none;
   padding-top: 3px;
-}
-
-.dnd5e-warnings-icon svg {
-  width: 18px;
-  height: 18px;
 }
 
 .dnd5e-warnings-row.is-skipped .dnd5e-warnings-icon {
@@ -114,6 +566,7 @@
 
 .dnd5e-warnings-body {
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
   gap: var(--size-4-1) var(--size-4-2);
   align-items: baseline;
@@ -127,400 +580,39 @@
 }
 
 .dnd5e-warnings-secret {
-  color: var(--color-purple);
+  color: var(--text-accent);
 }
 
 .dnd5e-warnings-change {
   font-weight: var(--font-semibold);
 }
 
+.dnd5e-warnings-fix {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--size-4-1);
+  margin-left: auto;
+  font-size: 16px;
+}
+
 .dnd5e-warnings-empty {
   display: flex;
   gap: var(--size-4-2);
   align-items: center;
+  padding: var(--size-4-4) 0;
 }
 
 .dnd5e-warnings-empty.is-clean .dnd5e-warnings-icon {
   color: var(--color-green);
 }
 
-/* Warnings modal: Fix button */
-
-.dnd5e-warnings-fix {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--size-4-1);
-  margin-left: auto;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-/* Faction card ---------------------------------------------------------------------------------
-   Replaces Obsidian's Properties block on faction and character notes. */
-
-.dnd5e-entity-view:not(.dnd5e-show-properties) .markdown-preview-sizer .metadata-container,
-.dnd5e-entity-view:not(.dnd5e-show-properties) .cm-sizer > .metadata-container {
-  display: none;
-}
-
-.dnd5e-card {
-  --dnd5e-value-colour: var(--color-yellow);
-  margin: var(--size-4-2) 0 var(--size-4-6);
-  padding: var(--size-4-3) var(--size-4-4);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
-  background: var(--background-secondary);
-  color: var(--text-normal);
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.dnd5e-card button {
-  font-size: 16px;
-}
-
-.dnd5e-card-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.dnd5e-card-icon svg {
-  width: 16px;
-  height: 16px;
-}
-
-.dnd5e-card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--size-4-2);
-  color: var(--text-muted);
-}
-
-.dnd5e-card-kind {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--size-4-1);
-  padding: 0 var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--background-modifier-hover);
-  color: var(--text-normal);
-  font-weight: var(--font-semibold);
-  letter-spacing: 0.02em;
-}
-
-.dnd5e-card-badge {
-  display: inline-flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  gap: var(--size-4-1);
-  margin-left: auto;
-  color: var(--text-warning);
-}
-
-.dnd5e-card-title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--size-4-2) var(--size-4-4);
-  margin-top: var(--size-4-1);
-}
-
-.dnd5e-card-name {
-  font-size: 1.4em;
-  font-weight: var(--font-bold);
-  line-height: 1.3;
-}
-
-.dnd5e-card-name.is-editable,
-.dnd5e-card-field-value.is-editable {
-  cursor: text;
-  border-radius: var(--radius-s);
-}
-
-.dnd5e-card-name.is-editable:hover,
-.dnd5e-card-field-value.is-editable:hover {
-  background: var(--background-modifier-hover);
-}
-
-.dnd5e-card-power {
-  display: flex;
-  align-items: center;
-  gap: var(--size-4-2);
-}
-
-.dnd5e-card-label {
-  color: var(--text-muted);
-}
-
-.dnd5e-card-pips {
-  display: flex;
-  gap: var(--size-4-1);
-}
-
-.dnd5e-card .dnd5e-card-pip {
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  border: 2px solid var(--text-muted);
-  border-radius: 50%;
-  background: transparent;
-  box-shadow: none;
-}
-
-.dnd5e-card .dnd5e-card-pip.is-on {
-  border-color: var(--interactive-accent);
-  background: var(--interactive-accent);
-}
-
-.dnd5e-card-section,
-.dnd5e-card-collapsible {
-  margin-top: var(--size-4-3);
-  padding-top: var(--size-4-2);
-  border-top: 1px solid var(--background-modifier-border);
-}
-
-.dnd5e-card-section-title {
-  color: var(--text-muted);
-  font-weight: var(--font-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.dnd5e-card .dnd5e-card-section-title.is-toggle {
-  display: flex;
-  align-items: center;
-  gap: var(--size-4-1);
-  width: 100%;
-  padding: 0;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  text-align: left;
-  cursor: pointer;
-}
-
-.dnd5e-card-section-detail {
-  overflow: hidden;
-  margin-left: var(--size-4-2);
-  color: var(--text-faint);
-  font-weight: var(--font-normal);
-  text-transform: none;
-  letter-spacing: normal;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dnd5e-card-collapsible-body .dnd5e-card-section {
-  margin-top: 0;
-  border-top: none;
-}
-
-.dnd5e-card-row {
-  margin-top: var(--size-4-2);
-  padding: var(--size-4-1) var(--size-4-2);
-  border-left: 3px solid var(--dnd5e-value-colour);
-  border-radius: var(--radius-s);
-}
-
-.dnd5e-card-row.is-unset {
-  border-left-color: var(--background-modifier-border);
-}
-
-.dnd5e-card-row.has-warning {
-  background: var(--background-modifier-hover);
-}
-
-.dnd5e-card-row.is-highlighted {
-  outline: 2px solid var(--interactive-accent);
-}
-
-.dnd5e-card-row-main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--size-4-2) var(--size-4-3);
-}
-
-.dnd5e-card-target {
-  display: flex;
-  align-items: center;
-  gap: var(--size-4-1);
-  flex: 1 1 12em;
-  min-width: 0;
-  font-weight: var(--font-semibold);
-}
-
-.dnd5e-card-tag {
-  padding: 0 var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--background-modifier-hover);
-  color: var(--text-muted);
-  font-weight: var(--font-normal);
-}
-
-.dnd5e-card-tag.is-secret {
-  color: var(--text-accent);
-}
-
-.dnd5e-card-value {
-  display: flex;
-  align-items: center;
-  gap: var(--size-4-2);
-  flex: 2 1 16em;
-}
-
-.dnd5e-card-slider {
-  flex: 1;
-  min-width: 6em;
-  accent-color: var(--dnd5e-value-colour);
-}
-
-.dnd5e-card-row.is-unset .dnd5e-card-slider::-webkit-slider-thumb {
-  opacity: 0;
-}
-
-.dnd5e-card-row.is-unset .dnd5e-card-slider::-moz-range-thumb {
-  opacity: 0;
-}
-
-.dnd5e-card-chip {
-  min-width: 2.5em;
-  padding: 0 var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--dnd5e-value-colour);
-  color: var(--background-primary);
-  font-weight: var(--font-bold);
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-
-.dnd5e-card-row.is-unset .dnd5e-card-chip {
-  background: var(--background-modifier-hover);
-  color: var(--text-muted);
-}
-
-.dnd5e-card-chip.is-invalid {
-  text-decoration: line-through;
-}
-
-.dnd5e-card-step {
-  min-width: 0;
-  flex: 0 1 7em;
-  overflow-wrap: anywhere;
-  color: var(--text-muted);
-}
-
-.dnd5e-card-why {
-  display: flex;
-  align-items: center;
-  gap: var(--size-4-1);
-  color: var(--text-muted);
-}
-
-.dnd5e-card-why.is-empty {
-  display: none;
-}
-
-.dnd5e-card-why-text p {
-  margin: 0;
-}
-
-.dnd5e-card-warning {
-  position: relative;
-  margin-top: var(--size-4-1);
-  padding-left: 24px;
-  color: var(--text-warning);
-}
-
-/* The icon hangs in the left margin, so a long message wraps under its own first line. */
-.dnd5e-card-warning > .dnd5e-card-icon {
-  position: absolute;
-  top: 0.2em;
-  left: 0;
-}
-
-.dnd5e-card-warning > .dnd5e-card-write {
-  margin-left: var(--size-4-2);
-}
-
-.dnd5e-card-add,
-.dnd5e-card-source {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--size-4-1);
-  margin-top: var(--size-4-2);
-}
-
-.dnd5e-card-input {
-  flex: 1;
-  min-width: 10em;
-  font-size: 16px;
-}
-
-.dnd5e-card-empty,
-.dnd5e-card-readonly {
-  margin-top: var(--size-4-1);
-  color: var(--text-muted);
-}
-
-.dnd5e-card-fields {
-  display: grid;
-  grid-template-columns: minmax(6em, max-content) 1fr;
-  gap: var(--size-4-1) var(--size-4-4);
-  margin-top: var(--size-4-2);
-}
-
-.dnd5e-card-field {
-  display: contents;
-}
-
-.dnd5e-card-field-key {
-  color: var(--text-muted);
-}
-
-.dnd5e-card-field-value {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--size-4-1);
-}
-
-.dnd5e-suggestion-detail {
-  color: var(--text-muted);
-}
-
-@media (max-width: 480px) {
-  .dnd5e-card {
-    padding: var(--size-4-2) var(--size-4-3);
-  }
-
-  /* Target and remove on one line, the slider on its own line below. */
-  .dnd5e-card-remove {
-    order: 1;
-  }
-
-  .dnd5e-card-value {
-    order: 2;
-    flex-basis: 100%;
-  }
-
-  .dnd5e-card-fields {
-    grid-template-columns: 1fr;
-  }
-}
-
-.dnd5e-card-section-title.is-toggle > span:nth-child(2) {
-  white-space: nowrap;
-}
-
-/* Faction world view ---------------------------------------------------------------------------- */
+/* Faction world ------------------------------------------------------------------------------- */
 
 .dnd5e-world {
   display: flex;
   flex-direction: column;
   padding: 0;
-  font-size: 16px;
 }
 
 .dnd5e-world-header {
@@ -528,7 +620,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--size-4-2) var(--size-4-3);
-  padding: var(--size-4-2) var(--size-4-3);
+  padding: var(--size-4-2) var(--size-4-4);
   border-bottom: 1px solid var(--background-modifier-border);
 }
 
@@ -536,247 +628,36 @@
   flex: 1;
 }
 
+/* Two or three options side by side, one active. */
 .dnd5e-world-segmented {
   display: inline-flex;
+  gap: 2px;
   padding: 2px;
   border-radius: var(--radius-m);
-  background: var(--background-secondary);
+  background: var(--background-modifier-hover);
 }
 
 .dnd5e-world-segmented button {
+  height: auto;
+  padding: var(--size-4-1) var(--size-4-3);
   border: none;
+  border-radius: var(--radius-s);
   background: transparent;
   box-shadow: none;
   color: var(--text-muted);
   font-size: 16px;
+  cursor: pointer;
+}
+
+.dnd5e-world-segmented button:hover {
+  color: var(--text-normal);
 }
 
 .dnd5e-world-segmented button.is-active {
   background: var(--background-primary);
+  box-shadow: var(--shadow-s);
   color: var(--text-normal);
-  font-weight: var(--font-semibold);
 }
-
-.dnd5e-world-body {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.dnd5e-world-empty {
-  padding: var(--size-4-6);
-  color: var(--text-muted);
-}
-
-/* Graph */
-
-.dnd5e-world-graph {
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-  cursor: grab;
-  user-select: none;
-}
-
-.dnd5e-world-tie {
-  stroke: var(--text-faint);
-  stroke-width: 2;
-  stroke-dasharray: 4 6;
-}
-
-.dnd5e-world-edge {
-  --dnd5e-value-colour: var(--color-yellow);
-  cursor: pointer;
-}
-
-.dnd5e-world-edge-line {
-  fill: none;
-  stroke: var(--dnd5e-value-colour);
-  stroke-width: 2;
-}
-
-.dnd5e-world-edge.is-differs .dnd5e-world-edge-line {
-  stroke-dasharray: 8 4;
-}
-
-.dnd5e-world-edge-head {
-  fill: var(--dnd5e-value-colour);
-}
-
-.dnd5e-world-edge-hit {
-  fill: none;
-  stroke: transparent;
-  stroke-width: 14;
-}
-
-.dnd5e-world-node {
-  cursor: pointer;
-}
-
-.dnd5e-world-circle {
-  fill: var(--background-secondary);
-  stroke: var(--text-muted);
-  stroke-width: 2;
-}
-
-.dnd5e-world-node.is-ghost .dnd5e-world-circle {
-  fill: transparent;
-  stroke-dasharray: 4 4;
-}
-
-.dnd5e-world-label,
-.dnd5e-world-frame-title,
-.dnd5e-world-frame-row {
-  fill: var(--text-normal);
-  font-size: 16px;
-  text-anchor: middle;
-}
-
-.dnd5e-world-label {
-  font-weight: var(--font-semibold);
-  paint-order: stroke;
-  stroke: var(--background-primary);
-  stroke-width: 4px;
-}
-
-.dnd5e-world-node.is-ghost .dnd5e-world-label {
-  fill: var(--text-muted);
-  font-weight: var(--font-normal);
-}
-
-.dnd5e-world-power {
-  fill: var(--interactive-accent);
-  font-size: 10px;
-  letter-spacing: 1px;
-  text-anchor: middle;
-}
-
-.dnd5e-world-frame {
-  fill: var(--background-secondary);
-  stroke: var(--text-muted);
-  stroke-width: 2;
-  stroke-dasharray: 6 4;
-}
-
-.dnd5e-world-frame-title {
-  fill: var(--text-muted);
-  font-weight: var(--font-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.dnd5e-world-frame-row:hover {
-  fill: var(--text-accent);
-}
-
-/* Matrix */
-
-.dnd5e-world-matrix {
-  height: 100%;
-  overflow: auto;
-}
-
-.dnd5e-world-matrix table {
-  border-collapse: separate;
-  border-spacing: 2px;
-  margin: var(--size-4-2);
-}
-
-.dnd5e-world-matrix th {
-  position: sticky;
-  z-index: 1;
-  background: var(--background-primary);
-  font-weight: var(--font-semibold);
-  text-align: left;
-}
-
-.dnd5e-world-matrix thead th {
-  top: 0;
-  z-index: 2;
-  max-width: 7em;
-  padding: var(--size-4-1) var(--size-4-2);
-  vertical-align: bottom;
-}
-
-.dnd5e-world-matrix thead th.is-ghost,
-.dnd5e-world-matrix thead th.is-sub {
-  color: var(--text-muted);
-}
-
-.dnd5e-world-matrix .dnd5e-world-corner {
-  left: 0;
-  z-index: 3;
-  color: var(--text-muted);
-  font-weight: var(--font-normal);
-}
-
-.dnd5e-world-row {
-  left: 0;
-  padding: var(--size-4-1) var(--size-4-3) var(--size-4-1)
-    calc(var(--size-4-2) + var(--dnd5e-depth, 0) * var(--size-4-4));
-  white-space: nowrap;
-}
-
-.dnd5e-world-row a {
-  color: var(--text-normal);
-  text-decoration: none;
-}
-
-.dnd5e-world-matrix tr.is-group th {
-  padding-top: var(--size-4-3);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.dnd5e-world-matrix td {
-  min-width: 5.5em;
-  height: 3.2em;
-  padding: var(--size-4-1);
-  border-radius: var(--radius-s);
-  text-align: center;
-  cursor: pointer;
-}
-
-.dnd5e-world-matrix td.is-none {
-  cursor: default;
-}
-
-.dnd5e-world-matrix td.is-empty {
-  border: 1px dashed transparent;
-}
-
-.dnd5e-world-matrix td.is-empty:hover {
-  border-color: var(--background-modifier-border);
-}
-
-.dnd5e-world-matrix td.has-value {
-  background: var(--dnd5e-value-colour);
-  color: var(--background-primary);
-}
-
-.dnd5e-world-matrix td.is-inherited {
-  border: 2px dashed var(--dnd5e-value-colour);
-  background: transparent;
-  color: var(--text-muted);
-}
-
-.dnd5e-world-matrix td.is-differs {
-  outline: 2px solid var(--text-accent);
-  outline-offset: 1px;
-}
-
-.dnd5e-world-number {
-  font-weight: var(--font-bold);
-  font-variant-numeric: tabular-nums;
-}
-
-.dnd5e-world-step {
-  font-size: 16px;
-}
-
-/* Faction view ------------------------------------------------------------------------------------ */
 
 .dnd5e-world-breadcrumb {
   display: flex;
@@ -802,38 +683,96 @@
   font-weight: var(--font-semibold);
 }
 
-.dnd5e-fv-frame rect {
-  fill: var(--background-secondary);
-  stroke: var(--interactive-accent);
-  stroke-width: 2;
+.dnd5e-world-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.dnd5e-fv-frame-title {
-  fill: var(--text-normal);
-  font-size: 18px;
-  font-weight: var(--font-bold);
+.dnd5e-world-empty {
+  padding: var(--size-4-8);
+  color: var(--text-muted);
+  text-align: center;
 }
 
-.dnd5e-fv-chip {
+/* Graph and faction view (SVG) */
+
+.dnd5e-world-graph {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.dnd5e-world-graph:active {
+  cursor: grabbing;
+}
+
+.dnd5e-world-tie {
+  stroke: var(--text-faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+}
+
+.dnd5e-world-edge {
   cursor: pointer;
 }
 
-.dnd5e-fv-chip rect {
-  fill: var(--background-primary);
-  stroke: var(--background-modifier-border);
+.dnd5e-world-edge-line {
+  fill: none;
+  stroke: var(--dnd5e-value-colour, var(--color-yellow));
   stroke-width: 2;
+  stroke-linecap: round;
 }
 
-.dnd5e-fv-chip.has-ring rect {
-  stroke: var(--text-warning);
+.dnd5e-world-edge:hover .dnd5e-world-edge-line {
   stroke-width: 3;
 }
 
-.dnd5e-fv-chip.is-selected rect {
+.dnd5e-world-edge.is-differs .dnd5e-world-edge-line {
+  stroke-dasharray: 8 4;
+}
+
+.dnd5e-world-edge.is-inherited .dnd5e-world-edge-line {
+  stroke-width: 1.5;
+  stroke-dasharray: 2 5;
+}
+
+.dnd5e-world-edge-head {
+  fill: var(--dnd5e-value-colour, var(--color-yellow));
+}
+
+.dnd5e-world-edge-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 14;
+}
+
+.dnd5e-world-node {
+  cursor: pointer;
+}
+
+.dnd5e-world-circle {
+  fill: var(--background-secondary);
+  stroke: var(--background-modifier-border-hover, var(--text-faint));
+  stroke-width: 1.5;
+}
+
+.dnd5e-world-node:hover .dnd5e-world-circle,
+.dnd5e-world-node:hover .dnd5e-world-frame {
   stroke: var(--interactive-accent);
-  stroke-width: 3;
 }
 
+.dnd5e-world-node.is-ghost .dnd5e-world-circle {
+  fill: transparent;
+  stroke-dasharray: 4 4;
+}
+
+.dnd5e-world-label,
+.dnd5e-world-frame-title,
+.dnd5e-world-frame-row,
 .dnd5e-fv-chip text,
 .dnd5e-fv-box-title,
 .dnd5e-fv-box-row {
@@ -842,66 +781,234 @@
   text-anchor: middle;
 }
 
-.dnd5e-fv-chip.is-faction text,
-.dnd5e-fv-box-title {
+/* A halo in the background colour keeps names readable over arrows. */
+.dnd5e-world-label {
   font-weight: var(--font-semibold);
+  paint-order: stroke;
+  stroke: var(--background-primary);
+  stroke-width: 4px;
+  stroke-linejoin: round;
 }
 
-.dnd5e-fv-chip.is-dim {
-  opacity: 0.35;
-}
-
-.dnd5e-fv-box rect {
-  fill: var(--background-secondary);
-  stroke: var(--text-muted);
-  stroke-width: 1.5;
-}
-
-.dnd5e-fv-box.is-group rect,
-.dnd5e-fv-box.is-ghost rect {
-  stroke-dasharray: 6 4;
-}
-
-.dnd5e-fv-box.is-ghost .dnd5e-fv-box-title {
+.dnd5e-world-node.is-ghost .dnd5e-world-label {
   fill: var(--text-muted);
   font-weight: var(--font-normal);
 }
 
+.dnd5e-world-frame,
+.dnd5e-fv-box rect {
+  fill: var(--background-secondary);
+  stroke: var(--background-modifier-border);
+  stroke-width: 1.5;
+}
+
+.dnd5e-world-frame,
+.dnd5e-fv-box.is-group rect,
+.dnd5e-fv-box.is-ghost rect {
+  stroke-dasharray: 5 4;
+}
+
+.dnd5e-world-frame-title,
+.dnd5e-fv-box.is-ghost .dnd5e-fv-box-title {
+  fill: var(--text-muted);
+}
+
+.dnd5e-world-frame-title,
+.dnd5e-fv-box-title,
+.dnd5e-fv-chip.is-faction text {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-world-frame-row,
 .dnd5e-fv-box-title,
 .dnd5e-fv-box-row {
   cursor: pointer;
 }
 
-.dnd5e-fv-box-row:hover,
-.dnd5e-fv-box-title:hover {
+.dnd5e-world-frame-row:hover,
+.dnd5e-fv-box-title:hover,
+.dnd5e-fv-box-row:hover {
   fill: var(--text-accent);
 }
 
-.dnd5e-world-edge.is-inherited .dnd5e-world-edge-line {
+.dnd5e-fv-frame rect {
+  fill: var(--background-primary-alt, var(--background-secondary));
+  stroke: var(--background-modifier-border-hover, var(--background-modifier-border));
   stroke-width: 1.5;
-  stroke-dasharray: 3 5;
 }
 
-/* Tension panel */
+.dnd5e-fv-frame-title {
+  fill: var(--text-normal);
+  font-size: 18px;
+  font-weight: var(--font-bold);
+}
 
-.dnd5e-tensions {
+.dnd5e-fv-frame-power {
+  fill: var(--text-muted);
   font-size: 16px;
+  text-anchor: end;
 }
+
+.dnd5e-fv-chip {
+  cursor: pointer;
+}
+
+.dnd5e-fv-chip rect {
+  fill: var(--background-secondary);
+  stroke: var(--background-modifier-border);
+  stroke-width: 1.5;
+}
+
+.dnd5e-fv-chip:hover rect {
+  stroke: var(--interactive-accent);
+}
+
+/* A member out of line with its faction. */
+.dnd5e-fv-chip.has-ring rect {
+  stroke: var(--text-warning);
+  stroke-width: 2.5;
+}
+
+.dnd5e-fv-chip.is-selected rect {
+  fill: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-secondary));
+  stroke: var(--interactive-accent);
+  stroke-width: 2.5;
+}
+
+.dnd5e-fv-chip.is-dim {
+  opacity: 0.4;
+}
+
+/* Matrix */
+
+.dnd5e-world-matrix {
+  height: 100%;
+  overflow: auto;
+}
+
+.dnd5e-world-matrix table {
+  margin: var(--size-4-3) var(--size-4-4);
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+
+.dnd5e-world-matrix th {
+  position: sticky;
+  z-index: 1;
+  background: var(--background-primary);
+  font-weight: var(--font-semibold);
+  text-align: left;
+}
+
+.dnd5e-world-matrix thead th {
+  top: 0;
+  z-index: 2;
+  max-width: 7.5em;
+  padding: var(--size-4-1) var(--size-4-2);
+  vertical-align: bottom;
+}
+
+.dnd5e-world-matrix thead th.is-ghost,
+.dnd5e-world-matrix thead th.is-sub {
+  color: var(--text-muted);
+  font-weight: var(--font-normal);
+}
+
+.dnd5e-world-matrix .dnd5e-world-corner {
+  left: 0;
+  z-index: 3;
+  color: var(--text-faint);
+  font-weight: var(--font-normal);
+}
+
+.dnd5e-world-row {
+  left: 0;
+  padding: var(--size-4-1) var(--size-4-3) var(--size-4-1)
+    calc(var(--size-4-2) + var(--dnd5e-depth, 0) * var(--size-4-4));
+  white-space: nowrap;
+}
+
+.dnd5e-world-row a {
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.dnd5e-world-row a:hover {
+  color: var(--text-accent);
+}
+
+.dnd5e-world-matrix tr.is-group th {
+  padding-top: var(--size-4-4);
+  color: var(--text-muted);
+}
+
+.dnd5e-world-matrix td {
+  min-width: 5.5em;
+  height: 3.2em;
+  padding: var(--size-4-1);
+  border-radius: var(--radius-s);
+  text-align: center;
+  cursor: pointer;
+}
+
+.dnd5e-world-matrix td.is-none {
+  cursor: default;
+}
+
+.dnd5e-world-matrix td.is-empty:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-world-matrix td.has-value {
+  background: var(--dnd5e-soft);
+}
+
+.dnd5e-world-matrix td.has-value:hover {
+  box-shadow: inset 0 0 0 1.5px var(--dnd5e-value-colour);
+}
+
+.dnd5e-world-matrix td.is-inherited {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--dnd5e-soft);
+  color: var(--text-muted);
+}
+
+.dnd5e-world-matrix td.is-differs {
+  outline: 2px dashed var(--text-accent);
+  outline-offset: -2px;
+}
+
+.dnd5e-world-number {
+  font-weight: var(--font-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-world-step {
+  color: var(--text-muted);
+}
+
+/* Tension panel ------------------------------------------------------------------------------- */
 
 .dnd5e-tensions-head {
   margin-bottom: var(--size-4-2);
 }
 
 .dnd5e-tensions-group {
-  margin-top: var(--size-4-3);
+  margin-top: var(--size-4-4);
+}
+
+.dnd5e-tensions-group > .dnd5e-card-section-title {
+  margin-bottom: var(--size-4-1);
 }
 
 .dnd5e-tensions-line {
-  margin-top: var(--size-4-2);
-  padding: var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--background-secondary);
+  padding: var(--size-4-2) 0;
+  border-bottom: 1px solid var(--background-modifier-border);
   line-height: 1.6;
+}
+
+.dnd5e-tensions-line:last-child {
+  border-bottom: none;
 }
 
 .dnd5e-tensions-name {
@@ -910,14 +1017,22 @@
   text-decoration: none;
 }
 
+a.dnd5e-tensions-name:hover {
+  color: var(--text-accent);
+}
+
 .dnd5e-tensions-value {
   padding: 0 var(--size-4-1);
   border-radius: var(--radius-s);
-  background: var(--dnd5e-value-colour, var(--background-modifier-hover));
-  color: var(--background-primary);
-  font-weight: var(--font-bold);
+  background: var(--dnd5e-soft);
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
   text-decoration: none;
   font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-tensions-value:hover {
+  box-shadow: inset 0 0 0 1.5px var(--dnd5e-value-colour, var(--color-yellow));
 }
 
 .dnd5e-tensions-empty,
