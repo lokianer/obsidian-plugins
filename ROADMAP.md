@@ -13,10 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · Phase 1: write the implementation plan, then build it.**
-The design is approved for phase 1 (2026-10-24). Plan goes to
-`docs/superpowers/plans/2026-10-24-factions-phase-1.md`; build only after the maintainer has seen the
-plan. Stop for review when phase 1 is done.
+**dnd5e-byLokianer · Factions · Phase 1: build it from the plan.**
+The design is approved for phase 1 (2026-10-24); the plan is
+[`docs/superpowers/plans/2026-10-24-factions-phase-1.md`](docs/superpowers/plans/2026-10-24-factions-phase-1.md)
+(7 tasks). Start with the first unticked task; build only once the maintainer has approved the plan.
+Stop for review when phase 1 is done.
 
 ---
 
