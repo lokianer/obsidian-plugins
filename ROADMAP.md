@@ -33,11 +33,11 @@ Statblocks. Test vault: `examples/vault/` (start at its `Home.md`).
 Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md)
 
 - [ ] **Phase 1 — Skeleton and data** ← *next*
-  - [ ] Plugin scaffold: official sample plugin, pnpm workspace, strict TypeScript, esbuild, Vitest,
+  - [x] Plugin scaffold: official sample plugin, pnpm workspace, strict TypeScript, esbuild, Vitest,
         eslint (+ `eslint-plugin-obsidianmd` if current), prettier, CI on Linux/macOS/Windows
-  - [ ] `commit-msg` hook rejecting attribution lines (see `CLAUDE.md`), next to the existing
+  - [x] `commit-msg` hook rejecting attribution lines (see `CLAUDE.md`), next to the existing
         `pre-push` hook in `.githooks/`
-  - [ ] Plugin docs: `README.md`, `DECISIONS.md` (carry over the decisions listed below),
+  - [x] Plugin docs: `README.md`, `DECISIONS.md` (carry over the decisions listed below),
         `CHANGELOG.md`, `HANDOFF.md`, `LICENSE` (MIT)
   - [ ] Campaign scope (`type: campaign`, its folder and below)
   - [ ] Faction discovery (`factions.md` or folder-named note, sub-factions, members, Party and
@@ -105,5 +105,5 @@ whole vault.
 
 - [x] Repository rules (`CLAUDE.md`), private vault git-ignored with a `pre-push` guard (2026-10-24)
 - [x] Example vault `examples/vault/` (2026-10-24)
-- [ ] pnpm workspace root (`package.json`, `pnpm-workspace.yaml`) — with phase 1
-- [ ] CI workflow — with phase 1
+- [x] pnpm workspace root (`package.json`, `pnpm-workspace.yaml`) — with phase 1
+- [x] CI workflow — with phase 1

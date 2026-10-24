@@ -77,8 +77,9 @@ so a published plugin gets a release mirror repository, pushed by CI from its su
 - **Phases.** Work in phases, each with a short spec, a plan and a review stop. Never pull a feature
   forward from a later phase.
 - **Dependencies.** Larger new dependencies only with a short justification first.
-- **Docs per plugin.** `README.md`, `ROADMAP.md`, `DECISIONS.md`, `CHANGELOG.md` (Keep a Changelog) and
-  a `HANDOFF.md` rewritten at the end of every session and committed with that session's work.
+- **Docs per plugin.** `README.md`, `DECISIONS.md`, `CHANGELOG.md` (Keep a Changelog) in the plugin's
+  folder. Roadmap and handoff are repository-wide: the root `ROADMAP.md` and `HANDOFF.md`, updated at
+  the end of every session and committed with that session's work.
 - **Agents.** Keep the fleet small.
 
 ## Principles for every plugin

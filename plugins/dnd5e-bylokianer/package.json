@@ -1,0 +1,32 @@
+{
+	"name": "dnd5e-bylokianer",
+	"version": "0.1.0",
+	"description": "Game-master tools for D&D 5e in Obsidian: factions and their relations.",
+	"private": true,
+	"main": "main.js",
+	"type": "module",
+	"license": "MIT",
+	"author": "Lokianer",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc --noEmit && node esbuild.config.mjs production",
+		"typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+		"lint": "eslint .",
+		"test": "vitest run",
+		"install-example": "node scripts/install-example.mjs"
+	},
+	"devDependencies": {
+		"@eslint/js": "9.39.5",
+		"@types/node": "24.19.2",
+		"esbuild": "0.28.2",
+		"eslint": "9.39.5",
+		"eslint-plugin-obsidianmd": "0.4.2",
+		"globals": "17.13.0",
+		"jiti": "2.7.0",
+		"obsidian": "1.14.4",
+		"typescript": "6.0.3",
+		"typescript-eslint": "8.72.0",
+		"vitest": "5.0.5",
+		"yaml": "2.9.1"
+	}
+}
