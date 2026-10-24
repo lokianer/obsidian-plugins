@@ -21,12 +21,16 @@ export type WarningCode =
 	| 'structured-without-value'
 	| 'relations-not-a-map'
 	| 'power-out-of-range'
+	| 'power-not-a-number'
+	| 'power-not-integer'
 	| 'unknown-target'
 	| 'self-relation'
 	| 'ambiguous-key'
 	| 'duplicate-name'
 	| 'missing-type'
-	| 'duplicate-faction-note';
+	| 'duplicate-faction-note'
+	| 'duplicate-key'
+	| 'campaign-ignored';
 
 /** A problem in the GM's data, reported once and never fatal. */
 export interface Warning {

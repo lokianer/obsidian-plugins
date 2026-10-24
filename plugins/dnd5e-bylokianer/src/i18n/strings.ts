@@ -15,6 +15,8 @@ export const en = {
 	'warning.structured-without-value': '“{key}”: the entry has no value and was skipped.',
 	'warning.relations-not-a-map': '{field} is not a list of names with values and was skipped.',
 	'warning.power-out-of-range': 'power is outside 1 … 5 and was clamped.',
+	'warning.power-not-a-number': 'power is not a number; read as 3.',
+	'warning.power-not-integer': 'power is not a whole number and was rounded.',
 	'warning.unknown-target': '“{key}”: no faction or character has this name.',
 	'warning.self-relation': '“{key}”: a relation to itself was skipped.',
 	'warning.ambiguous-key': '“{key}”: a faction and a character share this name; the faction is used.',
@@ -22,6 +24,8 @@ export const en = {
 	'warning.missing-type': 'factions.md has no “type: faction”; it is read as a faction anyway.',
 	'warning.duplicate-faction-note':
 		'The folder also has a factions.md; that one is used and this note is ignored.',
+	'warning.duplicate-key': '“{key}”: an earlier entry already names this target; this one was skipped.',
+	'warning.campaign-ignored': 'Another campaign note is in use; this one was passed over.',
 };
 
 export type StringKey = keyof typeof en;
@@ -38,6 +42,8 @@ export const de: Record<StringKey, string> = {
 	'warning.structured-without-value': '„{key}“: Der Eintrag hat keinen Wert und wurde übersprungen.',
 	'warning.relations-not-a-map': '{field} ist keine Liste aus Namen und Werten und wurde übersprungen.',
 	'warning.power-out-of-range': 'power liegt außerhalb von 1 … 5 und wurde begrenzt.',
+	'warning.power-not-a-number': 'power ist keine Zahl; gelesen als 3.',
+	'warning.power-not-integer': 'power ist keine ganze Zahl und wurde gerundet.',
 	'warning.unknown-target': '„{key}“: Keine Fraktion und kein Charakter heißt so.',
 	'warning.self-relation': '„{key}“: Eine Beziehung zu sich selbst wurde übersprungen.',
 	'warning.ambiguous-key':
@@ -48,6 +54,10 @@ export const de: Record<StringKey, string> = {
 		'factions.md hat kein „type: faction“; sie wird trotzdem als Fraktion gelesen.',
 	'warning.duplicate-faction-note':
 		'Der Ordner hat auch eine factions.md; die wird verwendet, diese Notiz nicht.',
+	'warning.duplicate-key':
+		'„{key}“: Ein früherer Eintrag nennt dieses Ziel schon; dieser wurde übersprungen.',
+	'warning.campaign-ignored':
+		'Eine andere Kampagnennotiz wird verwendet; diese wurde übergangen.',
 };
 
 export type T = (key: StringKey, vars?: Record<string, string | number>) => string;

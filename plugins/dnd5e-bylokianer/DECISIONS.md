@@ -54,3 +54,12 @@ typescript-eslint does. Because TypeScript 6 deprecates `moduleResolution: node`
 `getLanguage()` (for the interface language) exists since Obsidian 1.8.7, so that is the minimum
 app version. `eslint-plugin-obsidianmd` 0.4.2 declares a peer of exactly `obsidian@1.8.7`; we use
 the current typings 1.14.4, as the official sample plugin does, and accept pnpm's peer warning.
+
+## 2026-10-24 · The first written wins, and every passed-over note is named
+
+Two relation keys in one note can name the same target (`Watch` and `The City Watch`, or `Sable` and
+` Sable `). The first one written is used; each later one is skipped with `duplicate-key`. Of
+several campaign notes the smallest path still wins (one campaign per vault), and every other one
+gets `campaign-ignored`, so a template carrying `type: campaign` cannot hide the real campaign
+silently. A `power` that is not a number reads as 3 (`power-not-a-number`), a fractional one is
+rounded (`power-not-integer`), one outside 1–5 is clamped (`power-out-of-range`).

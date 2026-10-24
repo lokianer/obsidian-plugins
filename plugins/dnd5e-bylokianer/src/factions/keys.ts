@@ -1,6 +1,7 @@
 // Turning the names written as relation keys into entity ids. Order: exact faction name, exact
 // folder name, exact character name, then the same three ignoring case. A faction beats a
-// character of the same name; of two factions with one name the smaller id wins.
+// character of the same name; of two factions with one name the smaller id wins. Of two keys that
+// name the same target the first written wins.
 
 import type { Entity, Relation, RelationField, ResolvedEntity, Warn } from './model';
 
@@ -87,11 +88,19 @@ export function resolveKeys(
 			const found = lookup(key, indexes);
 			if (found === null) {
 				warn({ path, code: 'unknown-target', key, field });
+				if (result.has(`?${key}`)) {
+					warn({ path, code: 'duplicate-key', key, field });
+					continue;
+				}
 				result.set(`?${key}`, relation);
 				continue;
 			}
 			if (found.id === entity.id) {
 				warn({ path, code: 'self-relation', key, field });
+				continue;
+			}
+			if (result.has(found.id)) {
+				warn({ path, code: 'duplicate-key', key, field });
 				continue;
 			}
 			if (found.ambiguous) {

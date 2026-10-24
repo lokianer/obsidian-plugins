@@ -16,6 +16,10 @@ const CODES: WarningCode[] = [
 	'duplicate-name',
 	'missing-type',
 	'duplicate-faction-note',
+	'duplicate-key',
+	'campaign-ignored',
+	'power-not-a-number',
+	'power-not-integer',
 ];
 
 describe('strings', () => {

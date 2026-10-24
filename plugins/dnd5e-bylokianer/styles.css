@@ -23,7 +23,3 @@
 	padding: var(--size-4-2) 0;
 	border-bottom: 1px solid var(--background-modifier-border);
 }
-
-.dnd5e-warnings-path {
-	font-size: var(--font-ui-small);
-}

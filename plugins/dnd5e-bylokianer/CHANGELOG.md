@@ -11,5 +11,7 @@ All notable changes to this plugin are documented here. The format follows
 - Faction data model: campaign scope, factions and members, relation parsing with warnings,
   public and true stances with inheritance.
 - Command **Show faction warnings** (English and German).
+- Warnings for two keys naming one target (`duplicate-key`) and for passed-over campaign notes
+  (`campaign-ignored`); `power` warnings say whether the value was reset, rounded or clamped.
 - Plugin scaffold: manifest, build with esbuild, Vitest, eslint with Obsidian's rules, CI on Linux,
   macOS and Windows.

@@ -111,6 +111,20 @@ describe('resolveKeys', () => {
 		]);
 	});
 
+	it('keeps the first of two keys naming the same target, with a warning', () => {
+		const { entities, warnings } = resolve([
+			faction('F/Guild', 'Guild', { Watch: -4, 'The City Watch': 2 }),
+			faction('F/Watch', 'The City Watch'),
+		]);
+		expect([...(entities.get('F/Guild')?.relations ?? [])]).toContainEqual(['F/Watch', { value: -4 }]);
+		expect(warnings).toContainEqual({
+			path: 'F/Guild/factions.md',
+			code: 'duplicate-key',
+			key: 'The City Watch',
+			field: 'relations',
+		});
+	});
+
 	it('never targets a pseudo-faction', () => {
 		const party: Entity = { ...faction('@party', 'Party'), pseudo: true, notePath: null };
 		const { entities, warnings } = resolve([faction('F/Guild', 'Guild', { Party: 1 }), party]);
@@ -122,6 +136,15 @@ describe('resolveKeys', () => {
 describe('buildWorld', () => {
 	it('is empty without a campaign', () => {
 		expect(buildWorld([])).toEqual({ campaign: null, entities: new Map(), warnings: [] });
+	});
+
+	it('names every campaign note it passed over', () => {
+		const world = buildWorld([
+			{ path: 'Templates/Campaign.md', frontmatter: { type: 'campaign' } },
+			{ path: 'World/Campaign.md', frontmatter: { type: 'campaign' } },
+		]);
+		expect(world.campaign?.path).toBe('Templates/Campaign.md');
+		expect(world.warnings).toEqual([{ path: 'World/Campaign.md', code: 'campaign-ignored' }]);
 	});
 
 	it('reports a warning once even when the same problem is seen twice', () => {

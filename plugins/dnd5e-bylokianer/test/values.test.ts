@@ -66,6 +66,14 @@ describe('parseRelationMap', () => {
 		return { result, warnings };
 	}
 
+	it('keeps the first of two keys that are the same once trimmed, with a warning', () => {
+		const { result, warnings } = map({ Sable: 2, ' Sable ': -4 });
+		expect([...result]).toEqual([['Sable', { value: 2 }]]);
+		expect(warnings).toEqual([
+			{ path: 'F/factions.md', code: 'duplicate-key', key: 'Sable', field: 'secret_relations' },
+		]);
+	});
+
 	it('reads a map with trimmed keys and drops empty entries', () => {
 		const { result, warnings } = map({ ' The Archivists ': 1, Sable: null, Court: '-2' });
 		expect([...result]).toEqual([
@@ -104,6 +112,11 @@ describe('parsePower', () => {
 		expect(power(4)).toEqual({ result: 4, codes: [] });
 		expect(power(9)).toEqual({ result: 5, codes: ['power-out-of-range'] });
 		expect(power(0)).toEqual({ result: 1, codes: ['power-out-of-range'] });
-		expect(power('x')).toEqual({ result: 3, codes: ['power-out-of-range'] });
+	});
+
+	it('says what it did with a power it could not use as written', () => {
+		expect(power('x')).toEqual({ result: 3, codes: ['power-not-a-number'] });
+		expect(power(2.5)).toEqual({ result: 3, codes: ['power-not-integer'] });
+		expect(power(7.5)).toEqual({ result: 5, codes: ['power-out-of-range'] });
 	});
 });

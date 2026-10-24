@@ -11,7 +11,7 @@ function warningKey(w: Warning): string {
 }
 
 export function buildWorld(notes: readonly NoteInput[]): FactionWorld {
-	const { campaign } = findCampaign(notes);
+	const { campaign, ignored } = findCampaign(notes);
 	if (campaign === null) {
 		return { campaign: null, entities: new Map(), warnings: [] };
 	}
@@ -23,6 +23,9 @@ export function buildWorld(notes: readonly NoteInput[]): FactionWorld {
 			seen.set(key, w);
 		}
 	};
+	for (const path of ignored) {
+		warn({ path, code: 'campaign-ignored' });
+	}
 	const entities = resolveKeys(discoverEntities(notes, campaign, warn), warn);
 
 	// Stable sort: within one note and code, the order the problems were found in stays.

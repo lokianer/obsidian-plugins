@@ -93,6 +93,10 @@ export function parseRelationMap(
 	}
 	for (const [rawKey, rawValue] of Object.entries(raw)) {
 		const key = rawKey.trim();
+		if (result.has(key)) {
+			warn({ path, code: 'duplicate-key', key, field });
+			continue;
+		}
 		const relation = parseRelationValue(rawValue, { path, key, field }, warn);
 		if (relation !== null) {
 			result.set(key, relation);
@@ -108,12 +112,14 @@ export function parsePower(raw: unknown, path: string, warn: Warn): number {
 	}
 	const number = toNumber(raw);
 	if (number === null || number === 'empty') {
-		warn({ path, code: 'power-out-of-range' });
+		warn({ path, code: 'power-not-a-number' });
 		return POWER_DEFAULT;
 	}
 	const rounded = Math.round(number);
-	if (rounded !== number || rounded < POWER_MIN || rounded > POWER_MAX) {
+	if (rounded < POWER_MIN || rounded > POWER_MAX) {
 		warn({ path, code: 'power-out-of-range' });
+	} else if (rounded !== number) {
+		warn({ path, code: 'power-not-integer' });
 	}
 	return Math.min(POWER_MAX, Math.max(POWER_MIN, rounded));
 }
