@@ -1,173 +1,134 @@
-# Factions Phase 2 — Faction Editor — Implementation Plan
+# Factions Phase 2 — Faction Card — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** draft — **build only after the maintainer has approved this plan.**
+**Status:** approved by the maintainer ("mach weiter", 2026-10-24) with the revision to a card that
+replaces Properties and is the only editor.
 
-**Goal:** A command **Edit faction data** that opens a form on a faction or character note, edits
-`name`, `power`, `relations`, `secret_relations` and the other simple fields, and writes only the
-changed lines through `app.vault.process`; plus a **Fix** button on the warnings modal's rows.
+**Goal:** Faction and character notes show a faction card instead of Obsidian's Properties, in
+Reading view and Live Preview; every value in it is editable and written back as a line edit; the
+warnings modal gets Fix buttons that jump into the card.
 
 **Architecture:** A pure line editor in `src/yaml/` (locate, edit, quote — text in, text or refusal
-out), a pure form model in `src/factions/form.ts` (raw frontmatter → rows; edited rows → operations),
-pure step names and colours in `src/factions/steps.ts`, and thin Obsidian UI in `src/obsidian/`.
+out), a pure card model in `src/factions/card.ts`, pure step names, colours and target ranking, and
+the Obsidian side in `src/obsidian/` (world cache, mounting, rendering, suggest, settings, Fix).
 
-**Tech Stack:** unchanged from phase 1. No new dependency.
+**Tech Stack:** unchanged. No new runtime dependency.
 
 **Spec:** `docs/superpowers/specs/2026-10-24-faction-editor-design.md`, on top of
-`docs/superpowers/specs/2026-10-24-factions-design.md` §4, §5.4, §5.6. Read both first.
+`docs/superpowers/specs/2026-10-24-factions-design.md` §4, §5.4, §5.6.
 
 ## Global Constraints
 
-Everything under "Global Constraints" in `2026-10-24-factions-phase-1.md` still holds, plus:
+Everything in the phase 1 plan's "Global Constraints", plus:
 
 - `src/yaml/` imports neither `obsidian` nor `../factions`.
-- Every write goes through one `app.vault.process` call per save; no `processFrontMatter` (it
-  re-serialises and drops comments).
-- A line edit never touches a line outside the operation's target lines. Tests assert this by
-  diffing input and output line by line.
-- Refuse, never guess (spec §5.4); every refusal has a reason code and a translated message.
-- Commit per task only with `pnpm lint && pnpm typecheck && pnpm test && pnpm build` green, chained
-  with `&&`. No attribution lines (the `commit-msg` hook, now executable, rejects them).
+- Every write is one `app.vault.process` call per operation; no `processFrontMatter`.
+- A line edit touches only its target lines; tests diff input and output line by line.
+- Refuse, never guess (spec §5.2); each refusal has a code and a translated message.
+- Commit per task with `pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`
+  green. No attribution lines.
 
 ## Review Focus
 
-1. **Comments survive**: editing every relation of `The Drowned Choir/factions.md` keeps all its
-   `#` comment lines byte for byte — test in Task 2.
-2. **CRLF and BOM**: a CRLF note stays CRLF after an insert — test in Task 1/2.
-3. **Raw keys**: `Sable` and `" Sable "` in one map are edited and removed independently — Task 2.
-4. **All or nothing**: a save with one refused operation leaves the text unchanged — Task 4.
-5. **Changed underneath**: the note edited while the form was open → nothing written — Task 6.
-6. **Secrets hidden**: the secret section is closed on open unless Fix points into it — Task 6.
-
----
-
-## File structure
-
-```
-src/yaml/lines.ts               frontmatterRange, topLevelKeys, fieldBlock, entries (locate only)
-src/yaml/scalar.ts              isPlainSafe, quoteKey, quoteString, formatNumber
-src/yaml/edit.ts                setEntryValue, setEntryWhy, addEntry, removeEntry, renameEntry,
-                                setScalar, removeScalar, ensureFrontmatter; Refusal type
-src/factions/steps.ts           stepName(value, t), stepColour(value) → CSS color-mix string
-src/factions/form.ts            FormState, loadForm(note, world), diffForm(a, b) → EditOp[],
-                                applyOps(text, ops) → { text } | { refusal, op }
-src/obsidian/editor-modal.ts    EditorModal
-src/obsidian/target-suggest.ts  TargetSuggest (AbstractInputSuggest)
-src/obsidian/warnings-modal.ts  + Fix buttons
-src/main.ts                     + command edit-faction-data
-src/i18n/strings.ts             + editor strings, step names, refusal messages (en, de)
-test/yaml-lines.test.ts, test/yaml-edit.test.ts, test/yaml-scalar.test.ts,
-test/steps.test.ts, test/form.test.ts, test/edit.example.test.ts
-```
+1. **Comments survive**: editing every relation of `The Drowned Choir/factions.md` keeps all `#`
+   comment lines byte for byte — Task 2.
+2. **CRLF and BOM** kept on insert — Tasks 1, 2.
+3. **Raw keys**: `Sable` and `" Sable "` edited and removed independently — Task 2.
+4. **Changed underneath**: an op whose `expect` no longer matches leaves the text unchanged — Task 2.
+5. **Secrets hidden**: the secret section is closed on every build unless Fix points into it — Task 4.
+6. **Not a faction note → untouched view**: no class, no card — Task 6.
 
 ---
 
 ### Task 1: Locating lines in the frontmatter
 
-**Files:** create `src/yaml/lines.ts`, `test/yaml-lines.test.ts`.
+`src/yaml/lines.ts`, `test/yaml-lines.test.ts`.
 
-- [ ] Tests first: `frontmatterRange(text)` → `{ start, end, eol, bom }` (line indices of the two
-      `---` lines) or null; CRLF detected; BOM kept out of line 0.
-- [ ] `topLevelKeys(lines, range)` → `{ key, line, valueText, comment }[]`, key unquoted
-      (`"A: b"` and `'A'` forms), `valueText` without a trailing ` # comment`.
-- [ ] `fieldBlock(lines, range, field)` → header, kind (block, empty flow, none, unsupported),
-      indent and entries; `unsupported` carries a reason (flow map, tabs, mixed
-      indent, anchor, tag, block scalar).
-- [ ] `entries`: `{ rawKey, line, lastLine, form: 'plain' | 'structured', valueLine?, whyLine? }`;
-      a structured entry with keys other than `value`/`why`, or a multi-line string, is
-      `unsupported` with a reason.
-- [ ] Run against every note of `examples/vault/` (via `test/fixture.ts`): every faction and
-      character note locates without `unsupported`, and the entries' raw keys equal
-      `Object.keys(frontmatter.relations)`.
+- [ ] `splitLines(text)` → lines, eol (`\n` or `\r\n`), bom; `joinLines` the inverse.
+- [ ] `frontmatterRange(lines)` → indices of the two `---` lines, or null.
+- [ ] `topLevelKeys(lines, range)` → key (unquoted), line, last line (deeper lines included), value
+      text, comment.
+- [ ] `fieldBlock(lines, range, field)` → none / empty flow / block with indent and entries /
+      unsupported with a reason.
+- [ ] Entries: raw key, line, last line, plain or structured with `value` and `why` lines;
+      unsupported with a reason for anything else.
+- [ ] Against every note of `examples/vault/`: each faction and character note's relation blocks
+      locate, and their raw keys equal `Object.keys()` of the parsed field.
 
 ### Task 2: Line edits
 
-**Files:** create `src/yaml/scalar.ts`, `src/yaml/edit.ts`, `test/yaml-scalar.test.ts`,
-`test/yaml-edit.test.ts`.
+`src/yaml/scalar.ts`, `src/yaml/edit.ts`, tests.
 
-- [ ] `scalar.ts` tests first: plain-safe rule of spec §5.3; quoting with JSON-style escapes, which
-      YAML double-quoted strings accept; `formatNumber(-3)` → `-3`.
-- [ ] Each operation of spec §5.3 with tests for: plain and structured entries, quoted value kept
-      quoted, trailing comment kept, entry indent 2 and 4, header insert before `tags:` and at the
-      end, `relations: {}` replaced, CRLF kept, new frontmatter block.
-- [ ] Each refusal of spec §5.4 has a test that also asserts the text is returned unchanged.
-- [ ] Property-style check: for every relation entry in `The Drowned Choir/factions.md`, set it to
-      `0`, then parse the result with `yaml`: that entry reads 0, every other key reads as before,
-      and every line outside the entry's lines is identical (comments included).
+- [ ] Plain-safe test and quoting (spec §5.1); number formatting.
+- [ ] Every operation of spec §5.1, each with `expect` (the value the card showed; `undefined` for
+      "absent"), returning `{ text }` or `{ refusal }`.
+- [ ] Refusal codes: `not-found`, `changed`, `unsupported` (with the reason from Task 1), `exists`
+      (add or rename onto an existing key).
+- [ ] The Drowned Choir check: set each entry to 0 → re-parse with `yaml`: that entry reads 0,
+      every other value as before, every line outside the entry identical.
 
-### Task 3: Step names and colours
+### Task 3: Steps, colours, targets
 
-**Files:** create `src/factions/steps.ts`, `test/steps.test.ts`; modify `src/i18n/strings.ts`.
+`src/factions/steps.ts`, `src/factions/targets.ts`, `src/i18n/strings.ts`, tests.
 
-- [ ] Step names −5 … +5 in en and de as in design §4.4 (`step.-5` … `step.5`).
-- [ ] `stepColour(v)`: −5 → pure `--color-red`, 0 → `--color-yellow`, +5 → `--color-green`, in
-      between `color-mix(in srgb, var(--color-red) 60%, var(--color-yellow))` and so on; tests on
-      the strings.
+- [ ] Step names −5 … +5 in en and de (design §4.4); `stepColour(v)` as `color-mix()` strings.
+- [ ] `targetsFor(world, entityId)`: factions (name; folder name when different), characters, each
+      with kind and folder; own entity and pseudo-factions left out. `rankTargets(list, query)`:
+      exact, prefix, word prefix, substring; case-insensitive.
 
-### Task 4: Form model
+### Task 4: Card model
 
-**Files:** create `src/factions/form.ts`, `test/form.test.ts`.
+`src/factions/card.ts`, `test/card.test.ts`.
 
-- [ ] `loadForm(note, text, world)` → `FormState`: kind, place (parent chain names), name, power,
-      relation rows and secret rows from the **raw** entries (spec §4.1) each with its warnings from
-      `world.warnings` (matched by path, field and trimmed key), other fields (spec §4.2) marked
-      editable or read-only.
-- [ ] `diffForm(loaded, edited)` → `EditOp[]` in a fixed order (removes, then changes, then adds), so
-      line positions of later operations are found afresh in the edited text; no op for an unchanged
-      or reset value; an empty new row yields nothing.
-- [ ] `applyOps(text, ops)`: applies in order, each op re-locating its line; on the first refusal
-      returns the refusal and the op, never a partial text.
-- [ ] Tests on the example vault: Fix-style edits on The Drowned Choir (clamp `7` to `5`, pick a
-      value for `hates`, remove the self-relation, add a value for Elder Wren) give a note that
-      `buildWorld` reads with **no** relation warnings left for it; the `power: 9` line → `5`.
+- [ ] `buildCard(path, frontmatter, world)` → `CardModel | null` (null when the note is not an
+      entity of the world): kind, place, name (+ editable), power, relation and secret rows from the
+      raw entries with their warnings, other fields (editable or read-only + summary), warning count.
+- [ ] Each row carries what an op needs: field, raw key, `expect` value.
+- [ ] Example vault: The Drowned Choir's card has 8 relation rows, warnings on 5 of them; Sable's
+      card has secret rows; Isolde Ferrant's card has no rows of its own.
+- [ ] Ops for Fix-style edits on The Drowned Choir leave `buildWorld` with no relation warnings for
+      it except the legal dangling target.
 
-### Task 5: Target suggestions
+### Task 5: World cache and settings
 
-**Files:** create `src/obsidian/target-suggest.ts`.
+`src/obsidian/world-cache.ts`, `src/obsidian/settings.ts`, `src/main.ts`.
 
-- [ ] `AbstractInputSuggest<Target>` over the world's factions (name, then folder name when it
-      differs) and characters, each rendered with its kind and folder; pseudo-factions left out;
-      the note's own entity left out.
-- [ ] The pure part — building and ranking the target list for a query (prefix before substring,
-      case-insensitive) — lives in `src/factions/targets.ts` with tests.
+- [ ] One world per plugin, built on demand, invalidated on `metadataCache` `changed` / `deleted` and
+      vault `rename`, rebuilt debounced (250 ms); subscribers notified.
+- [ ] Settings tab with one toggle: show Obsidian's properties on faction notes (off).
 
-### Task 6: The form
+### Task 6: Mounting the card
 
-**Files:** create `src/obsidian/editor-modal.ts`; modify `src/main.ts`, `styles.css`,
-`src/i18n/strings.ts`.
+`src/obsidian/card-view.ts`, `styles.css`.
 
-- [ ] Command `edit-faction-data` ("Edit faction data" / "Fraktionsdaten bearbeiten") with
-      `checkCallback`: available only when the active file is a faction or character note of the
-      campaign; otherwise the notices of spec §5.1.
-- [ ] Sections and rows of spec §4 built with `createEl`/`createDiv`; slider `input[type=range]`
-      with step name and number; secret section closed by default.
-- [ ] Save per spec §5.2: read the text at open (`vault.cachedRead`), on save `vault.process` with
-      the unchanged check and `applyOps`; notices; discard prompt on close with changes.
-- [ ] Mobile: rows wrap below 480 px (CSS only); check in Obsidian's mobile emulation
-      (`app.emulateMobile(true)` in the developer console).
-- [ ] Manual check in `examples/vault`: edit Isolde Ferrant, The Bench, The Drowned Choir; confirm
-      with `git diff examples/vault` that only the intended lines changed; then `git checkout` them.
+- [ ] Idempotent `mount(view)` for Reading view and Live Preview per spec §6, with the fallback; the
+      view's class hides Properties; unmount when the note stops being an entity or the mode is
+      Source.
+- [ ] Re-run on `file-open`, `layout-change`, `active-leaf-change`, world changes; no rebuild while a
+      card field has focus; rebuild only when the card model changed.
 
-### Task 7: Fix from the warnings modal
+### Task 7: Rendering and editing
 
-**Files:** modify `src/obsidian/warnings-modal.ts`, `src/obsidian/editor-modal.ts`, `styles.css`.
+`src/obsidian/card-render.ts`, `src/obsidian/target-suggest.ts`, `styles.css`, strings.
 
-- [ ] A Fix button per row for the codes in spec §5.6; opens the form with a `focus` target
-      (field + raw key, or `power`, or `type`).
-- [ ] After a save from Fix: wait for `metadataCache.on('changed')` for that file (registered and
-      removed again; fallback 1 s), rebuild the world, reopen the warnings modal.
-- [ ] Manual check: from a fresh `examples/vault`, fix every Drowned Choir warning through the
-      buttons; only `unknown-target` for The Salt Kings may stay (it is a legal dangling target).
-      Revert the vault afterwards.
+- [ ] Header, sections, rows, controls of spec §4.2–§4.3, all with `createEl`; `why` through
+      `MarkdownRenderer.render` with a component owned by the card.
+- [ ] Each control produces one op; the write goes through `vault.process` + `applyOp`; notices for
+      refusals; optimistic update; Undo for remove.
+- [ ] Command `edit-faction-data`.
 
-### Task 8: Docs and example vault
+### Task 8: Fix from the warnings modal
 
-**Files:** modify `plugins/dnd5e-bylokianer/README.md`, `CHANGELOG.md`, `DECISIONS.md`,
-`examples/vault/Home.md`, root `ROADMAP.md`, `HANDOFF.md`.
+`src/obsidian/warnings-modal.ts`, `card-view.ts`.
 
-- [ ] README: the command, the suggested hotkey (none set), what the form never touches.
-- [ ] DECISIONS: the calls of spec §7 the maintainer confirmed.
-- [ ] `Home.md`: row "Faction editor" — which notes to try (Choir for Fix, Corvin Marsh for a
-      structured `why`, a note with CRLF if the vault has one, else add one).
-- [ ] ROADMAP: tick phase 2, move "Next step" to the world view.
+- [ ] Fix buttons for the codes of spec §4.5; open the note, switch Source to Live Preview, focus the
+      target in the card (open the section first).
+
+### Task 9: Docs, example vault, manual check
+
+- [ ] README (the card, the setting, what it never touches), CHANGELOG, DECISIONS (spec §7 calls).
+- [ ] `examples/vault/Home.md`: row "Faction card" — which notes to try.
+- [ ] Manual check in Obsidian (maintainer, local): every Drowned Choir warning fixed through the
+      buttons; `git diff examples/vault` shows only the intended lines; revert afterwards.
+- [ ] ROADMAP, HANDOFF.
