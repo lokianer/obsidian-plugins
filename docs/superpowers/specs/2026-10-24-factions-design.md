@@ -249,14 +249,21 @@ The fuller "time machine" (replay the graph at session N) is a later idea, not i
 
 ## 6. Phasing (each phase ends with the maintainer's review)
 
+Renumbered 2026-10-24: the maintainer put a faction editor first after phase 1
+([`2026-10-24-faction-editor-design.md`](2026-10-24-faction-editor-design.md)). It brings the line
+editor of 5.6 forward; the in-view sliders and history stay last and reuse it.
+
 1. **Skeleton and data** — plugin scaffold (sample plugin, pnpm, strict TS, esbuild, Vitest, eslint,
    CI, commit-msg hook), campaign scope, faction/member discovery, relation parsing with inheritance
    and all warnings, as pure functions with tests against the example vault's cases.
-2. **World view** — graph with blocs layout and matrix, toggle, click behaviour, colours, step names,
-   warnings badge, Public/True toggle.
-3. **Faction view and tension panel.**
-4. **Editing and history** — sliders and the line editor, the shared "tonight's session" package with
-   the offer to create session N+1, logging, history in tooltips.
+2. **Faction editor** — a form for all frontmatter incl. relations, Fix from the warnings modal, the
+   line editor of 5.6.
+3. **World view** — graph with blocs layout and matrix, toggle, click behaviour, colours, step names
+   (and their settings), warnings badge, Public/True toggle.
+4. **Faction view and tension panel.**
+5. **In-view editing and history** — sliders in the matrix, on arrows and in notes (on the phase 2
+   line editor), the shared "tonight's session" package with the offer to create session N+1,
+   logging, history in tooltips.
 
 ## 7. Left to the builder
 

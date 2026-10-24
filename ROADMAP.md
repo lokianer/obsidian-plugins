@@ -13,11 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · next phase — ask first.** Phase 1 is accepted (2026-10-24). The
-maintainer also wants a **faction editor** (all frontmatter incl. relations, see `HANDOFF.md`);
-ask whether it comes before the world view. Then write the next phase's spec and plan from the design
-([`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md))
-with superpowers:writing-plans; build only once the maintainer has approved that plan.
+**dnd5e-byLokianer · Factions · phase 2 (faction editor) — waiting for plan approval.** The
+maintainer chose the editor before the world view (2026-10-24). Spec:
+[`docs/superpowers/specs/2026-10-24-faction-editor-design.md`](docs/superpowers/specs/2026-10-24-faction-editor-design.md),
+plan: [`docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`](docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md).
+Get the maintainer's review of both (spec §7 lists the calls to check), then build task by task.
 
 ---
 
@@ -45,13 +45,19 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
   - [x] Relation parsing: plain and `{ value, why }` forms, all warnings, clamping
   - [x] Resolution: public and true stance with inheritance, as one pure function taking the mode
   - [x] Tests against every case in `examples/vault/` (The Drowned Choir holds the broken ones)
-- [ ] **Faction editor** (wish 2026-10-24, placement open): form for all frontmatter incl.
-      relations, Fix button from the warnings modal; line edits as in spec §5.6
-- [ ] **Phase 2 — World view** ← *next, unless the editor goes first*: graph with bloc layout and matrix, switchable; colours and step names;
-      Public/True toggle (Public by default); warnings badge; click behaviour
-- [ ] **Phase 3 — Faction view and tension panel**
-- [ ] **Phase 4 — Editing and history**: sliders writing line edits; shared "tonight's session"
-      package with the offer to create session N+1; history log lines and tooltips
+- [x] **Minor review findings of phase 1** (2026-10-24, `4f55b5d`): strict decimal numbers, en dash
+      as minus, symmetric rounding, `broken-frontmatter`, `Factions.md` in any case, other-typed
+      `factions.md` not a faction, case-only and folder-name clashes, singular counts
+- [ ] **Phase 2 — Faction editor** ← *next, plan awaiting approval*: form for all frontmatter incl.
+      relations, Fix button from the warnings modal, the line editor of design §5.6.
+      Spec `docs/superpowers/specs/2026-10-24-faction-editor-design.md`, plan
+      `docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`
+- [ ] **Phase 3 — World view**: graph with bloc layout and matrix, switchable; colours, step names
+      and their settings; Public/True toggle (Public by default); warnings badge; click behaviour
+- [ ] **Phase 4 — Faction view and tension panel**
+- [ ] **Phase 5 — In-view editing and history**: sliders in matrix, arrows and notes on the phase 2
+      line editor; shared "tonight's session" package with the offer to create session N+1; history
+      log lines and tooltips
 
 Later ideas for factions, not designed yet: time machine (replay the graph per session), domino
 preview of knock-on changes, faction turn between sessions, the party as a node, what the players
@@ -109,3 +115,4 @@ whole vault.
 - [x] Example vault `examples/vault/` (2026-10-24)
 - [x] pnpm workspace root (`package.json`, `pnpm-workspace.yaml`) — with phase 1
 - [x] CI workflow — with phase 1
+- [x] Git hooks stored executable, so they run on Linux and macOS too (2026-10-24, `7866980`)
