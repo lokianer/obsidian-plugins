@@ -17,8 +17,10 @@ plugin's `DECISIONS.md` once it exists.
 Obsidian** (planned for 2026-10-25 on the PC). Phase 2 is the faction card, phase 3 the faction
 world (graph and matrix); both are tested in Node and rendered in a browser against a stub of the
 Obsidian API, neither has run inside Obsidian. The checklist is in `HANDOFF.md` → "Half-finished".
-Fix what it turns up; once both are accepted, spec and plan **phase 4 — faction view and tension
-panel** (design §5.2, §5.3).
+Fix what it turns up. **Phase 4 — faction view and tension panel** is specified and planned
+([`docs/superpowers/specs/2026-10-24-faction-view-design.md`](docs/superpowers/specs/2026-10-24-faction-view-design.md),
+[`docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md`](docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md));
+build it once the maintainer approves the plan (spec §7 lists the calls to check).
 
 ---
 
@@ -65,7 +67,9 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
   - [x] Graph and matrix models (`9448cdb`), layout (`7fd45df`), step names (`60e6956`), the view
         (`8b86a8f`)
   - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 4 — Faction view and tension panel**
+- [ ] **Phase 4 — Faction view and tension panel** (spec and plan drafted 2026-10-24, awaiting
+      approval): drill-down inside the faction world tab with breadcrumb, own vs inherited arrows,
+      rings on deviating members; tension panel in the right sidebar following the Public/True toggle
 - [ ] **Phase 5 — In-view editing and history**: sliders in matrix, arrows and notes on the phase 2
       line editor; shared "tonight's session" package with the offer to create session N+1; history
       log lines and tooltips

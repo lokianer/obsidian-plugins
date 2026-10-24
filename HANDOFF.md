@@ -23,13 +23,15 @@ maintainer tests both on 2026-10-25 on the PC.
 1. The maintainer's check in Obsidian, both lists under "Half-finished". Fix what turns up — the
    likeliest places: the card mounting (`src/obsidian/card-view.ts`) and pointer handling in the
    graph (`src/obsidian/world-graph-svg.ts`).
-2. Once phases 2 and 3 are accepted: spec and plan **phase 4 — faction view and tension panel**
-   (design §5.2, §5.3), review stop, build.
+2. **Phase 4** is specified and planned (`docs/superpowers/specs/2026-10-24-faction-view-design.md`,
+   `docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md`): the maintainer chose the
+   faction view inside the world tab and the tension panel in the right sidebar. Build after the
+   plan is approved.
 
 ## State of the working tree
 
-Branch `claude/roadmap-and-handoff-nb9sav`, pushed, not merged into `main` (the maintainer decides:
-merge or pull request). `examples/vault/.obsidian/graph.json` may show as modified after opening the
+Branch `claude/roadmap-and-handoff-nb9sav`, pushed; `main` fast-forwarded to it at the maintainer's
+request (2026-10-24), so `git pull` on `main` brings everything. `examples/vault/.obsidian/graph.json` may show as modified after opening the
 vault: never commit it as part of a task.
 
 ## Done this session
@@ -91,7 +93,8 @@ target id (not a raw key); characters without any faction relation get no matrix
 ## Open questions for the maintainer
 
 - Spec §7 of phase 2 (card) and phase 3 (world view) — confirm or correct after trying them.
-- Merge the branch into `main`, or a pull request?
+- Phase 4 spec §7: node click opens the faction view (no more selection); inherited arrows only for
+  the selected member; tension rules' details.
 
 ## Watch out
 
