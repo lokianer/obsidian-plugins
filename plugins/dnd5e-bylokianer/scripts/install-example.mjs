@@ -5,7 +5,16 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const pluginDir = join(dirname(fileURLToPath(import.meta.url)), '..');
-const target = join(pluginDir, '..', '..', 'examples', 'vault', '.obsidian', 'plugins', 'dnd5e-bylokianer');
+const target = join(
+	pluginDir,
+	'..',
+	'..',
+	'examples',
+	'vault',
+	'.obsidian',
+	'plugins',
+	'dnd5e-bylokianer',
+);
 const files = ['main.js', 'manifest.json', 'styles.css'];
 
 if (!existsSync(join(pluginDir, 'main.js'))) {

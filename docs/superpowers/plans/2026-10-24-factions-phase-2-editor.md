@@ -71,8 +71,8 @@ test/steps.test.ts, test/form.test.ts, test/edit.example.test.ts
       `---` lines) or null; CRLF detected; BOM kept out of line 0.
 - [ ] `topLevelKeys(lines, range)` → `{ key, line, valueText, comment }[]`, key unquoted
       (`"A: b"` and `'A'` forms), `valueText` without a trailing ` # comment`.
-- [ ] `fieldBlock(lines, range, field)` → `{ header, kind: 'block' | 'empty-flow' | 'none' |
-      'unsupported', indent, entries }`; `unsupported` carries a reason (flow map, tabs, mixed
+- [ ] `fieldBlock(lines, range, field)` → header, kind (block, empty flow, none, unsupported),
+      indent and entries; `unsupported` carries a reason (flow map, tabs, mixed
       indent, anchor, tag, block scalar).
 - [ ] `entries`: `{ rawKey, line, lastLine, form: 'plain' | 'structured', valueLine?, whyLine? }`;
       a structured entry with keys other than `value`/`why`, or a multi-line string, is

@@ -76,10 +76,12 @@ plugins/dnd5e-bylokianer/
 ### Task 1: Workspace, plugin scaffold, docs and CI
 
 **Files:**
+
 - Create: everything under "File structure" except `src/campaign`, `src/factions`, `src/i18n`, `src/obsidian`, `test/fixture.ts`
 - Modify: `CLAUDE.md` ("Docs per plugin": the handoff is the root `HANDOFF.md`, not one per plugin), `.gitignore` (add `plugins/*/main.js`), `ROADMAP.md` (tick the scaffold items)
 
 **Interfaces:**
+
 - Produces: `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build` at the root and in the plugin; `pnpm install-example` in the plugin.
 
 - [ ] **Step 1: Root workspace.** `package.json` (`"private": true`, `"packageManager": "pnpm@12.15.0"`, scripts `lint`/`typecheck`/`test`/`build` = `pnpm -r <script>`), `pnpm-workspace.yaml` (`packages: ['plugins/*']`), `.prettierrc.json` (`singleQuote`, `printWidth: 100`), `.editorconfig` (tabs in JSON config files like the sample plugin; 2 spaces in TS).
@@ -94,20 +96,33 @@ plugins/dnd5e-bylokianer/
 ### Task 2: Test fixture and campaign scope
 
 **Files:**
+
 - Create: `src/types.ts`, `src/campaign/scope.ts`, `test/fixture.ts`, `test/scope.test.ts`
 
 **Interfaces:**
+
 - Produces:
+
   ```ts
   // src/types.ts
-  export interface NoteInput { path: string; frontmatter: Record<string, unknown> | undefined }
+  export interface NoteInput {
+    path: string;
+    frontmatter: Record<string, unknown> | undefined;
+  }
   // src/campaign/scope.ts
-  export interface CampaignScope { path: string; folder: string; system: string | null }
-  export function findCampaign(notes: readonly NoteInput[]): { campaign: CampaignScope | null; ignored: string[] }
-  export function inCampaign(campaign: CampaignScope | null, path: string): boolean
-  export function typeOf(frontmatter: Record<string, unknown> | undefined): string | undefined // trimmed, lower-case
+  export interface CampaignScope {
+    path: string;
+    folder: string;
+    system: string | null;
+  }
+  export function findCampaign(notes: readonly NoteInput[]): {
+    campaign: CampaignScope | null;
+    ignored: string[];
+  };
+  export function inCampaign(campaign: CampaignScope | null, path: string): boolean;
+  export function typeOf(frontmatter: Record<string, unknown> | undefined): string | undefined; // trimmed, lower-case
   // test/fixture.ts
-  export function loadExampleVault(): NoteInput[] // every .md under examples/vault except .obsidian, vault-relative POSIX paths
+  export function loadExampleVault(): NoteInput[]; // every .md under examples/vault except .obsidian, vault-relative POSIX paths
   ```
 
 - [ ] **Step 1: Port the tests** from `../rhizom/packages/core/src/vault/campaign.test.ts` (`findCampaign` and "the campaign scope" blocks; drop `campaignTypeOf`), adapted to `NoteInput` (frontmatter may be `undefined` → not a campaign). Add: `findCampaign(loadExampleVault()).campaign` equals `{ path: 'Silverstadt/Campaign.md', folder: 'Silverstadt', system: 'D&D 5e (2014 rules)' }`.
@@ -119,25 +134,54 @@ plugins/dnd5e-bylokianer/
 ### Task 3: Relation values
 
 **Files:**
+
 - Create: `src/factions/model.ts`, `src/factions/values.ts`, `test/values.test.ts`
 
 **Interfaces:**
+
 - Produces (`model.ts`):
   ```ts
   export type Mode = 'public' | 'true';
   export type RelationField = 'relations' | 'secret_relations';
-  export interface Relation { value: number; why?: string }
+  export interface Relation {
+    value: number;
+    why?: string;
+  }
   export type WarningCode =
-    | 'value-out-of-range' | 'value-not-a-number' | 'value-not-integer' | 'structured-without-value'
-    | 'relations-not-a-map' | 'power-out-of-range' | 'unknown-target' | 'self-relation'
-    | 'ambiguous-key' | 'duplicate-name' | 'missing-type' | 'duplicate-faction-note';
-  export interface Warning { path: string; code: WarningCode; key?: string; field?: RelationField }
+    | 'value-out-of-range'
+    | 'value-not-a-number'
+    | 'value-not-integer'
+    | 'structured-without-value'
+    | 'relations-not-a-map'
+    | 'power-out-of-range'
+    | 'unknown-target'
+    | 'self-relation'
+    | 'ambiguous-key'
+    | 'duplicate-name'
+    | 'missing-type'
+    | 'duplicate-faction-note';
+  export interface Warning {
+    path: string;
+    code: WarningCode;
+    key?: string;
+    field?: RelationField;
+  }
   ```
 - Produces (`values.ts`):
+
   ```ts
-  export function parseRelationValue(raw: unknown, ctx: { path: string; key: string; field: RelationField }, warn: (w: Warning) => void): Relation | null
-  export function parseRelationMap(raw: unknown, path: string, field: RelationField, warn: (w: Warning) => void): Map<string, Relation> // keys trimmed, raw (unresolved) names
-  export function parsePower(raw: unknown, path: string, warn: (w: Warning) => void): number // default 3
+  export function parseRelationValue(
+    raw: unknown,
+    ctx: { path: string; key: string; field: RelationField },
+    warn: (w: Warning) => void,
+  ): Relation | null;
+  export function parseRelationMap(
+    raw: unknown,
+    path: string,
+    field: RelationField,
+    warn: (w: Warning) => void,
+  ): Map<string, Relation>; // keys trimmed, raw (unresolved) names
+  export function parsePower(raw: unknown, path: string, warn: (w: Warning) => void): number; // default 3
   ```
 
 - [ ] **Step 1: Write failing tests** (`test/values.test.ts`), each asserting value and the warnings collected:
@@ -154,27 +198,34 @@ plugins/dnd5e-bylokianer/
 ### Task 4: Discovering factions and members
 
 **Files:**
+
 - Modify: `src/factions/model.ts` (add `Entity`)
 - Create: `src/factions/discover.ts`, `test/discover.test.ts`
 
 **Interfaces:**
+
 - Consumes: `NoteInput`, `CampaignScope`, `inCampaign`, `typeOf` (Task 2); `parseRelationMap`, `parsePower` (Task 3).
 - Produces:
   ```ts
-  export const PARTY = '@party'; export const UNAFFILIATED = '@unaffiliated';
+  export const PARTY = '@party';
+  export const UNAFFILIATED = '@unaffiliated';
   export interface Entity {
-    id: string            // faction: its folder path; character: its note path; pseudo: PARTY | UNAFFILIATED
+    id: string; // faction: its folder path; character: its note path; pseudo: PARTY | UNAFFILIATED
     kind: 'faction' | 'character';
     pseudo: boolean;
-    name: string          // faction: frontmatter `name` or folder name; character: note base name
-    folderName?: string   // factions only: the folder's own name, for key matching
-    notePath: string | null // the note holding its frontmatter; null for pseudo-factions
-    parent: string | null // id of the enclosing faction (characters, sub-factions); null for top-level and pseudo
-    power: number
-    relations: Map<string, Relation>        // keys still raw names
-    secretRelations: Map<string, Relation>
+    name: string; // faction: frontmatter `name` or folder name; character: note base name
+    folderName?: string; // factions only: the folder's own name, for key matching
+    notePath: string | null; // the note holding its frontmatter; null for pseudo-factions
+    parent: string | null; // id of the enclosing faction (characters, sub-factions); null for top-level and pseudo
+    power: number;
+    relations: Map<string, Relation>; // keys still raw names
+    secretRelations: Map<string, Relation>;
   }
-  export function discoverEntities(notes: readonly NoteInput[], campaign: CampaignScope, warn: (w: Warning) => void): Map<string, Entity>
+  export function discoverEntities(
+    notes: readonly NoteInput[],
+    campaign: CampaignScope,
+    warn: (w: Warning) => void,
+  ): Map<string, Entity>;
   ```
 
 Rules (spec 4.2): only notes inside the campaign scope count. A folder is a faction when it holds
@@ -200,20 +251,29 @@ exist only when they have a member. A faction's parent is the nearest faction fo
 ### Task 5: Resolving relation keys
 
 **Files:**
+
 - Modify: `src/factions/model.ts` (add `ResolvedEntity`, `FactionWorld`)
 - Create: `src/factions/keys.ts`, `src/factions/world.ts`, `test/keys.test.ts`
 
 **Interfaces:**
+
 - Consumes: `Entity`, `discoverEntities` (Task 4).
 - Produces:
   ```ts
   export interface ResolvedEntity extends Omit<Entity, 'relations' | 'secretRelations'> {
-    relations: Map<string, Relation>        // keys are target ids; unknown targets as '?' + name
-    secretRelations: Map<string, Relation>
+    relations: Map<string, Relation>; // keys are target ids; unknown targets as '?' + name
+    secretRelations: Map<string, Relation>;
   }
-  export interface FactionWorld { campaign: CampaignScope | null; entities: Map<string, ResolvedEntity>; warnings: Warning[] }
-  export function resolveKeys(entities: Map<string, Entity>, warn: (w: Warning) => void): Map<string, ResolvedEntity>
-  export function buildWorld(notes: readonly NoteInput[]): FactionWorld // findCampaign → discover → resolveKeys; deduplicated warnings, sorted by path then code
+  export interface FactionWorld {
+    campaign: CampaignScope | null;
+    entities: Map<string, ResolvedEntity>;
+    warnings: Warning[];
+  }
+  export function resolveKeys(
+    entities: Map<string, Entity>,
+    warn: (w: Warning) => void,
+  ): Map<string, ResolvedEntity>;
+  export function buildWorld(notes: readonly NoteInput[]): FactionWorld; // findCampaign → discover → resolveKeys; deduplicated warnings, sorted by path then code
   ```
 
 Matching order for a key: exact faction `name` → exact faction `folderName` → exact character name →
@@ -232,21 +292,24 @@ reported once.
 ### Task 6: Public and true stance
 
 **Files:**
+
 - Modify: `src/factions/model.ts` (add `Stance`)
 - Create: `src/factions/stance.ts`, `test/stance.test.ts`, `test/world.example.test.ts`
 
 **Interfaces:**
+
 - Consumes: `FactionWorld`, `ResolvedEntity` (Task 5).
 - Produces:
   ```ts
   export interface Stance {
-    value: number; why?: string;
-    source: string        // id of the entity whose note holds the value
-    field: RelationField  // where it was found
-    inherited: boolean    // source !== from
+    value: number;
+    why?: string;
+    source: string; // id of the entity whose note holds the value
+    field: RelationField; // where it was found
+    inherited: boolean; // source !== from
   }
-  export function stance(world: FactionWorld, from: string, to: string, mode: Mode): Stance | null
-  export function allStances(world: FactionWorld, from: string, mode: Mode): Map<string, Stance> // every target reachable along the chain, minus `from` itself
+  export function stance(world: FactionWorld, from: string, to: string, mode: Mode): Stance | null;
+  export function allStances(world: FactionWorld, from: string, mode: Mode): Map<string, Stance>; // every target reachable along the chain, minus `from` itself
   ```
 
 Algorithm (spec 4.3): walk `from`, then each `parent` up to the top. Public: the first level with
@@ -271,23 +334,28 @@ the first hit wins. Nothing found → `null`. Pseudo-factions have no relations 
 ### Task 7: Wiring into Obsidian — warnings command
 
 **Files:**
+
 - Create: `src/i18n/strings.ts`, `src/obsidian/notes.ts`, `src/obsidian/warnings-modal.ts`, `test/i18n.test.ts`
 - Modify: `src/main.ts`, `README.md`, `CHANGELOG.md`, `ROADMAP.md`, `HANDOFF.md`
 
 **Interfaces:**
+
 - Consumes: `buildWorld`, `FactionWorld`, `Warning` (Task 5).
 - Produces:
+
   ```ts
   // src/i18n/strings.ts
   export type Lang = 'en' | 'de';
-  export type StringKey = keyof typeof en;   // `en` is the English table, the source of all keys
+  export type StringKey = keyof typeof en; // `en` is the English table, the source of all keys
   export type T = (key: StringKey, vars?: Record<string, string | number>) => string;
-  export function createT(lang: string): T   // unknown lang → en; `de` table typed Record<StringKey, string>
+  export function createT(lang: string): T; // unknown lang → en; `de` table typed Record<StringKey, string>
   // summary in the modal: "5 factions, 14 characters, 6 warnings" for the example vault (pseudo-factions not counted)
   // src/obsidian/notes.ts
-  export function collectNotes(app: App): NoteInput[] // getMarkdownFiles + metadataCache.getFileCache(f)?.frontmatter
+  export function collectNotes(app: App): NoteInput[]; // getMarkdownFiles + metadataCache.getFileCache(f)?.frontmatter
   // src/obsidian/warnings-modal.ts
-  export class WarningsModal extends Modal { constructor(app: App, world: FactionWorld, t: T) }
+  export class WarningsModal extends Modal {
+    constructor(app: App, world: FactionWorld, t: T);
+  }
   ```
 
 - [ ] **Step 1: Failing i18n test:** every `StringKey` has a non-empty string in both tables; `createT('fr')` falls back to English; `{n}` placeholders are filled.

@@ -10,86 +10,86 @@ export type RelationField = 'relations' | 'secret_relations';
 
 /** One relation value, −5 … +5, with the optional reason written next to it. */
 export interface Relation {
-	value: number;
-	why?: string;
+  value: number;
+  why?: string;
 }
 
 export type WarningCode =
-	| 'value-out-of-range'
-	| 'value-not-a-number'
-	| 'value-not-integer'
-	| 'structured-without-value'
-	| 'relations-not-a-map'
-	| 'power-out-of-range'
-	| 'power-not-a-number'
-	| 'power-not-integer'
-	| 'unknown-target'
-	| 'self-relation'
-	| 'ambiguous-key'
-	| 'duplicate-name'
-	| 'missing-type'
-	| 'duplicate-faction-note'
-	| 'duplicate-key'
-	| 'campaign-ignored'
-	| 'broken-frontmatter';
+  | 'value-out-of-range'
+  | 'value-not-a-number'
+  | 'value-not-integer'
+  | 'structured-without-value'
+  | 'relations-not-a-map'
+  | 'power-out-of-range'
+  | 'power-not-a-number'
+  | 'power-not-integer'
+  | 'unknown-target'
+  | 'self-relation'
+  | 'ambiguous-key'
+  | 'duplicate-name'
+  | 'missing-type'
+  | 'duplicate-faction-note'
+  | 'duplicate-key'
+  | 'campaign-ignored'
+  | 'broken-frontmatter';
 
 /** A problem in the GM's data, reported once and never fatal. */
 export interface Warning {
-	/** The note the problem sits in. */
-	path: string;
-	code: WarningCode;
-	/** The relation key concerned (or `power`, or the clashing name), if any. */
-	key?: string;
-	field?: RelationField;
-	/** The value as the note writes it, when the warning is about a value. */
-	written?: string;
-	/** What the plugin reads it as instead, when it still uses the value. */
-	read?: number;
+  /** The note the problem sits in. */
+  path: string;
+  code: WarningCode;
+  /** The relation key concerned (or `power`, or the clashing name), if any. */
+  key?: string;
+  field?: RelationField;
+  /** The value as the note writes it, when the warning is about a value. */
+  written?: string;
+  /** What the plugin reads it as instead, when it still uses the value. */
+  read?: number;
 }
 
 export type Warn = (warning: Warning) => void;
 
 /** A faction (real or pseudo) or a character, as discovered from the notes. */
 export interface Entity {
-	/** Faction: its folder path. Character: its note path. Pseudo-faction: PARTY or UNAFFILIATED. */
-	id: string;
-	kind: 'faction' | 'character';
-	/** True for the Party and Unaffiliated groups, which have no note. */
-	pseudo: boolean;
-	/** Faction: frontmatter `name`, else the folder name. Character: the note's base name. */
-	name: string;
-	/** Factions only: the folder's own name, also accepted as a relation key. */
-	folderName?: string;
-	/** The note holding the frontmatter; null for pseudo-factions. */
-	notePath: string | null;
-	/** Id of the enclosing faction; null for top-level factions and pseudo-factions. */
-	parent: string | null;
-	/** 1–5; only drawn for factions. */
-	power: number;
-	/** Keys as written in the note, not yet resolved. */
-	relations: Map<string, Relation>;
-	secretRelations: Map<string, Relation>;
+  /** Faction: its folder path. Character: its note path. Pseudo-faction: PARTY or UNAFFILIATED. */
+  id: string;
+  kind: 'faction' | 'character';
+  /** True for the Party and Unaffiliated groups, which have no note. */
+  pseudo: boolean;
+  /** Faction: frontmatter `name`, else the folder name. Character: the note's base name. */
+  name: string;
+  /** Factions only: the folder's own name, also accepted as a relation key. */
+  folderName?: string;
+  /** The note holding the frontmatter; null for pseudo-factions. */
+  notePath: string | null;
+  /** Id of the enclosing faction; null for top-level factions and pseudo-factions. */
+  parent: string | null;
+  /** 1–5; only drawn for factions. */
+  power: number;
+  /** Keys as written in the note, not yet resolved. */
+  relations: Map<string, Relation>;
+  secretRelations: Map<string, Relation>;
 }
 
 /** An entity whose relation keys are target ids; an unknown target is kept as `?` + its name. */
 export interface ResolvedEntity extends Omit<Entity, 'relations' | 'secretRelations'> {
-	relations: Map<string, Relation>;
-	secretRelations: Map<string, Relation>;
+  relations: Map<string, Relation>;
+  secretRelations: Map<string, Relation>;
 }
 
 /** Everything the views need: the campaign, its factions and characters, and the problems found. */
 export interface FactionWorld {
-	campaign: CampaignScope | null;
-	entities: Map<string, ResolvedEntity>;
-	warnings: Warning[];
+  campaign: CampaignScope | null;
+  entities: Map<string, ResolvedEntity>;
+  warnings: Warning[];
 }
 
 /** How one entity stands towards another, and where in its faction chain that was written. */
 export interface Stance {
-	value: number;
-	why?: string;
-	/** The entity whose note holds the value: the entity itself or one of its factions. */
-	source: string;
-	field: RelationField;
-	inherited: boolean;
+  value: number;
+  why?: string;
+  /** The entity whose note holds the value: the entity itself or one of its factions. */
+  source: string;
+  field: RelationField;
+  inherited: boolean;
 }

@@ -28,7 +28,7 @@ Keep the vault current while working:
   `[[YYYY-MM-DD]]`. A second session on the same day extends that day's note under its own heading.
 - `Changelog.md` — **only the essence** per day (added / changed / known limitations / open), each day
   linking its daily report. Details belong in the daily report, not here.
-- `Decisions.md` — numbered `D<n>`, status *made* / *proposed* / *open*, with the reason and what was
+- `Decisions.md` — numbered `D<n>`, status _made_ / _proposed_ / _open_, with the reason and what was
   left out.
 - `Design Ideas.md` — **everything about design**: UI, look and feel, interaction, architecture ideas
   that are not decided yet. A design idea that gets decided moves into `Decisions.md`.
@@ -103,6 +103,10 @@ so a published plugin gets a release mirror repository, pushed by CI from its su
 - **Tests.** Vitest for pure modules; the Obsidian API sits behind thin adapters. Lint (eslint, plus
   `eslint-plugin-obsidianmd` if current), strict typecheck, tests and build in CI on Linux, macOS and
   Windows.
+- **Formatting.** Prettier is enforced (`.prettierrc.json`, `.editorconfig`, `.prettierignore`):
+  `pnpm format` before committing; the `pre-commit` hook and CI (`pnpm format:check`) refuse
+  unformatted files. The example vault and the private vault are excluded — their exact text is the
+  contract.
 
 ## Environment traps
 
@@ -112,6 +116,6 @@ so a published plugin gets a release mirror repository, pushed by CI from its su
 
 ## Plugins
 
-| Plugin  | Folder | Status                                                                                       |
-| ------- | ------ | -------------------------------------------------------------------------------------------- |
+| Plugin                                | Folder                      | Status                                                                                                                                                                                                                                                                |
+| ------------------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | dnd5e-byLokianer (`dnd5e-bylokianer`) | `plugins/dnd5e-bylokianer/` | Factions phase 1 (data model, warnings command) accepted; phase 2 faction editor specified, plan awaiting approval. Design: `docs/superpowers/specs/2026-10-24-factions-design.md`, editor: `docs/superpowers/specs/2026-10-24-faction-editor-design.md`. Licence MIT |

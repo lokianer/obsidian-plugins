@@ -58,21 +58,21 @@ dev dependency for tests).
 ## 4. What the form edits
 
 Opened on a note, the form shows its kind (Faction / Character) and its place (`The Gutter Court ›
-The Bench`, or *Party* / *Unaffiliated*), then these sections:
+The Bench`, or _Party_ / _Unaffiliated_), then these sections:
 
-| Section | Faction note | Character note | Written as |
-| --- | --- | --- | --- |
-| Name | `name` — text, placeholder the folder name; empty removes the line | not shown (a character's name is its file name) | top-level scalar |
-| Power | `power` — 1 … 5 slider, step shown; untouched default 3 adds no line | not shown | top-level scalar |
-| Relations | rows (§4.1) | rows | entries under `relations:` |
-| Secret relations | rows, **collapsed** each time the form opens | same | entries under `secret_relations:` |
-| Other fields | every other top-level key (§4.2) | same | top-level scalars |
+| Section          | Faction note                                                         | Character note                                  | Written as                        |
+| ---------------- | -------------------------------------------------------------------- | ----------------------------------------------- | --------------------------------- |
+| Name             | `name` — text, placeholder the folder name; empty removes the line   | not shown (a character's name is its file name) | top-level scalar                  |
+| Power            | `power` — 1 … 5 slider, step shown; untouched default 3 adds no line | not shown                                       | top-level scalar                  |
+| Relations        | rows (§4.1)                                                          | rows                                            | entries under `relations:`        |
+| Secret relations | rows, **collapsed** each time the form opens                         | same                                            | entries under `secret_relations:` |
+| Other fields     | every other top-level key (§4.2)                                     | same                                            | top-level scalars                 |
 
 ### 4.1 Relation rows
 
 Each entry as the note writes it is one row, **including the broken ones** — the form reads the raw
 frontmatter entries, not the parsed relation map, so a `hates`, a `+7`, a `{ why }` without value and
-a second ` Sable ` all appear and can be repaired.
+a second `Sable` all appear and can be repaired.
 
 - **Target**: text with suggestions (faction names, folder names, character names; each suggestion
   shows its kind and folder so two "Watch" factions are told apart). A name no faction or character
@@ -135,16 +135,16 @@ Nothing is written when nothing changed. A value the GM sets back to what it was
 Pure functions over the note's text (`string → string | refusal`), each with its own tests. They work
 on the frontmatter block only and keep the line ending style (LF or CRLF) and a BOM.
 
-| Operation | What changes |
-| --- | --- |
-| set relation value | plain entry: the number token on its line (`The Archivists: 7` → `5`), keeping quotes and a trailing comment; structured entry: the number on its `value:` line, or a new `value:` line under the key when it had none |
-| set / clear why | structured entry: its `why:` line replaced, inserted or deleted; plain entry with a new why: its one line becomes `Key:` + `value:` + `why:` lines |
-| add relation | one `Key: n` line after the block's last entry (indent taken from the block); missing block: a `relations:` / `secret_relations:` header plus the line, inserted before `tags:` or at the end of the frontmatter; `relations: {}` is replaced by a block |
-| remove relation | the entry's line, or its line and its deeper-indented lines |
-| change target | the key text of the entry's line, nothing else |
-| set scalar (`name`, `power`, other) | the value after `key:`, keeping a trailing comment; missing key: one line inserted before `tags:` or at the end |
-| remove scalar | the key's line |
-| note without frontmatter | a new block at the top (only reachable through Fix on a `factions.md` without frontmatter) |
+| Operation                           | What changes                                                                                                                                                                                                                                             |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| set relation value                  | plain entry: the number token on its line (`The Archivists: 7` → `5`), keeping quotes and a trailing comment; structured entry: the number on its `value:` line, or a new `value:` line under the key when it had none                                   |
+| set / clear why                     | structured entry: its `why:` line replaced, inserted or deleted; plain entry with a new why: its one line becomes `Key:` + `value:` + `why:` lines                                                                                                       |
+| add relation                        | one `Key: n` line after the block's last entry (indent taken from the block); missing block: a `relations:` / `secret_relations:` header plus the line, inserted before `tags:` or at the end of the frontmatter; `relations: {}` is replaced by a block |
+| remove relation                     | the entry's line, or its line and its deeper-indented lines                                                                                                                                                                                              |
+| change target                       | the key text of the entry's line, nothing else                                                                                                                                                                                                           |
+| set scalar (`name`, `power`, other) | the value after `key:`, keeping a trailing comment; missing key: one line inserted before `tags:` or at the end                                                                                                                                          |
+| remove scalar                       | the key's line                                                                                                                                                                                                                                           |
+| note without frontmatter            | a new block at the top (only reachable through Fix on a `factions.md` without frontmatter)                                                                                                                                                               |
 
 Numbers are written with an ASCII minus (`-3`); a value that was quoted stays quoted. Keys and
 strings are written plain when they are plain-safe (letters, digits, spaces, `.`, `'`, `-`, `_`, not
@@ -180,17 +180,17 @@ field's block, at the block's indent.
 Each warnings row whose code an edit can repair gets a **Fix** button (wrench icon). It closes the
 warnings modal and opens the form on that note, focused on:
 
-| Warning | Fix opens on |
-| --- | --- |
-| `value-out-of-range`, `value-not-integer` | the row; the slider shows the value read (5, 3) and saving writes it |
-| `value-not-a-number`, `structured-without-value` | the row; no value until the GM picks one, or Remove |
-| `unknown-target` | the row's target field, suggestions open |
-| `self-relation`, `duplicate-key` | the row, Remove highlighted |
-| `ambiguous-key` | the row's target field; the hint says the faction is used and that a key cannot name the character while both share a name — renaming one of the two is the way |
-| `power-out-of-range`, `power-not-a-number`, `power-not-integer` | the power slider |
-| `missing-type` | the `type` field, prefilled `faction` |
-| `relations-not-a-map` | the field's section, read-only, with **Edit in note** |
-| `duplicate-name`, `duplicate-faction-note`, `campaign-ignored`, `broken-frontmatter` | no Fix: the row's note link is the way |
+| Warning                                                                              | Fix opens on                                                                                                                                                    |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `value-out-of-range`, `value-not-integer`                                            | the row; the slider shows the value read (5, 3) and saving writes it                                                                                            |
+| `value-not-a-number`, `structured-without-value`                                     | the row; no value until the GM picks one, or Remove                                                                                                             |
+| `unknown-target`                                                                     | the row's target field, suggestions open                                                                                                                        |
+| `self-relation`, `duplicate-key`                                                     | the row, Remove highlighted                                                                                                                                     |
+| `ambiguous-key`                                                                      | the row's target field; the hint says the faction is used and that a key cannot name the character while both share a name — renaming one of the two is the way |
+| `power-out-of-range`, `power-not-a-number`, `power-not-integer`                      | the power slider                                                                                                                                                |
+| `missing-type`                                                                       | the `type` field, prefilled `faction`                                                                                                                           |
+| `relations-not-a-map`                                                                | the field's section, read-only, with **Edit in note**                                                                                                           |
+| `duplicate-name`, `duplicate-faction-note`, `campaign-ignored`, `broken-frontmatter` | no Fix: the row's note link is the way                                                                                                                          |
 
 After a save that came from **Fix**, the warnings modal reopens, rebuilt once the metadata cache has
 re-read the note (on its `changed` event for that file, with a short timeout as fallback).

@@ -11,50 +11,50 @@ import type { NoteInput } from '../src/types';
 const vaultRoot = fileURLToPath(new URL('../../../examples/vault', import.meta.url));
 
 function markdownFiles(dir: string): string[] {
-	return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-		if (entry.name === '.obsidian' || entry.name === '.trash') {
-			return [];
-		}
-		const full = join(dir, entry.name);
-		if (entry.isDirectory()) {
-			return markdownFiles(full);
-		}
-		return entry.name.endsWith('.md') ? [full] : [];
-	});
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    if (entry.name === '.obsidian' || entry.name === '.trash') {
+      return [];
+    }
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      return markdownFiles(full);
+    }
+    return entry.name.endsWith('.md') ? [full] : [];
+  });
 }
 
 /** The frontmatter between the first two `---` lines, parsed; undefined when absent or broken. */
 export function frontmatterOf(text: string): Record<string, unknown> | undefined {
-	const body = frontmatterBody(text);
-	if (body === null) {
-		return undefined;
-	}
-	try {
-		const data: unknown = parse(body);
-		return data !== null && typeof data === 'object' && !Array.isArray(data)
-			? (data as Record<string, unknown>)
-			: undefined;
-	} catch {
-		return undefined;
-	}
+  const body = frontmatterBody(text);
+  if (body === null) {
+    return undefined;
+  }
+  try {
+    const data: unknown = parse(body);
+    return data !== null && typeof data === 'object' && !Array.isArray(data)
+      ? (data as Record<string, unknown>)
+      : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 /** A note as the adapter hands it over: broken only when its block holds YAML that fails. */
 export function noteFromText(path: string, text: string): NoteInput {
-	const frontmatter = frontmatterOf(text);
-	return frontmatter === undefined && hasFrontmatterContent(text)
-		? { path, frontmatter, frontmatterBroken: true }
-		: { path, frontmatter };
+  const frontmatter = frontmatterOf(text);
+  return frontmatter === undefined && hasFrontmatterContent(text)
+    ? { path, frontmatter, frontmatterBroken: true }
+    : { path, frontmatter };
 }
 
 let cache: NoteInput[] | undefined;
 
 /** Every note of the example vault, with vault-relative POSIX paths. */
 export function loadExampleVault(): NoteInput[] {
-	cache ??= markdownFiles(vaultRoot)
-		.map((file) =>
-			noteFromText(relative(vaultRoot, file).split(sep).join('/'), readFileSync(file, 'utf8')),
-		)
-		.sort((a, b) => (a.path < b.path ? -1 : 1));
-	return cache;
+  cache ??= markdownFiles(vaultRoot)
+    .map((file) =>
+      noteFromText(relative(vaultRoot, file).split(sep).join('/'), readFileSync(file, 'utf8')),
+    )
+    .sort((a, b) => (a.path < b.path ? -1 : 1));
+  return cache;
 }

@@ -6,168 +6,168 @@ import { parsePower, parseRelationMap, parseRelationValue } from '../src/faction
 const ctx = { path: 'F/factions.md', key: 'K', field: 'relations' as const };
 
 function value(raw: unknown): { result: Relation | null; warnings: Warning[] } {
-	const warnings: Warning[] = [];
-	const result = parseRelationValue(raw, ctx, (w) => warnings.push(w));
-	return { result, warnings };
+  const warnings: Warning[] = [];
+  const result = parseRelationValue(raw, ctx, (w) => warnings.push(w));
+  return { result, warnings };
 }
 
 const codes = (warnings: Warning[]) => warnings.map((w) => w.code);
 
 describe('parseRelationValue', () => {
-	it('reads plain numbers, numeric strings and the typographic minus', () => {
-		expect(value(3)).toEqual({ result: { value: 3 }, warnings: [] });
-		expect(value('-1')).toEqual({ result: { value: -1 }, warnings: [] });
-		expect(value('−3')).toEqual({ result: { value: -3 }, warnings: [] });
-		expect(value(' 2 ')).toEqual({ result: { value: 2 }, warnings: [] });
-	});
+  it('reads plain numbers, numeric strings and the typographic minus', () => {
+    expect(value(3)).toEqual({ result: { value: 3 }, warnings: [] });
+    expect(value('-1')).toEqual({ result: { value: -1 }, warnings: [] });
+    expect(value('−3')).toEqual({ result: { value: -3 }, warnings: [] });
+    expect(value(' 2 ')).toEqual({ result: { value: 2 }, warnings: [] });
+  });
 
-	it('reads an en dash as a minus, as editors type it', () => {
-		expect(value('–3')).toEqual({ result: { value: -3 }, warnings: [] });
-		expect(value('+2')).toEqual({ result: { value: 2 }, warnings: [] });
-	});
+  it('reads an en dash as a minus, as editors type it', () => {
+    expect(value('–3')).toEqual({ result: { value: -3 }, warnings: [] });
+    expect(value('+2')).toEqual({ result: { value: 2 }, warnings: [] });
+  });
 
-	it('accepts plain decimal notation only', () => {
-		for (const raw of ['0x3', '1e0', 'Infinity', '3-', '--3', '0b1']) {
-			expect(codes(value(raw).warnings)).toEqual(['value-not-a-number']);
-		}
-		expect(value('.5').result).toEqual({ value: 1 });
-	});
+  it('accepts plain decimal notation only', () => {
+    for (const raw of ['0x3', '1e0', 'Infinity', '3-', '--3', '0b1']) {
+      expect(codes(value(raw).warnings)).toEqual(['value-not-a-number']);
+    }
+    expect(value('.5').result).toEqual({ value: 1 });
+  });
 
-	it('rounds halves away from zero, the same on both sides', () => {
-		expect(value(2.5).result).toEqual({ value: 3 });
-		expect(value(-2.5).result).toEqual({ value: -3 });
-		expect(value('−0.4').result).toEqual({ value: 0 });
-		expect(Object.is(value(-0.4).result?.value, 0)).toBe(true);
-	});
+  it('rounds halves away from zero, the same on both sides', () => {
+    expect(value(2.5).result).toEqual({ value: 3 });
+    expect(value(-2.5).result).toEqual({ value: -3 });
+    expect(value('−0.4').result).toEqual({ value: 0 });
+    expect(Object.is(value(-0.4).result?.value, 0)).toBe(true);
+  });
 
-	it('reads the structured form and keeps only a string why', () => {
-		expect(value({ value: -3, why: '[[X]]' })).toEqual({
-			result: { value: -3, why: '[[X]]' },
-			warnings: [],
-		});
-		expect(value({ value: 2, why: 7 })).toEqual({ result: { value: 2 }, warnings: [] });
-		expect(value({ value: '−2' }).result).toEqual({ value: -2 });
-	});
+  it('reads the structured form and keeps only a string why', () => {
+    expect(value({ value: -3, why: '[[X]]' })).toEqual({
+      result: { value: -3, why: '[[X]]' },
+      warnings: [],
+    });
+    expect(value({ value: 2, why: 7 })).toEqual({ result: { value: 2 }, warnings: [] });
+    expect(value({ value: '−2' }).result).toEqual({ value: -2 });
+  });
 
-	it('clamps out-of-range values and rounds fractions, with a warning each', () => {
-		expect(value(7).result).toEqual({ value: 5 });
-		expect(codes(value(7).warnings)).toEqual(['value-out-of-range']);
-		expect(value(-9).result).toEqual({ value: -5 });
-		expect(codes(value(-9).warnings)).toEqual(['value-out-of-range']);
-		expect(value(2.6).result).toEqual({ value: 3 });
-		expect(codes(value(2.6).warnings)).toEqual(['value-not-integer']);
-	});
+  it('clamps out-of-range values and rounds fractions, with a warning each', () => {
+    expect(value(7).result).toEqual({ value: 5 });
+    expect(codes(value(7).warnings)).toEqual(['value-out-of-range']);
+    expect(value(-9).result).toEqual({ value: -5 });
+    expect(codes(value(-9).warnings)).toEqual(['value-out-of-range']);
+    expect(value(2.6).result).toEqual({ value: 3 });
+    expect(codes(value(2.6).warnings)).toEqual(['value-not-integer']);
+  });
 
-	it('says what was written and what it was read as', () => {
-		expect(value(7).warnings[0]).toMatchObject({ written: '7', read: 5 });
-		expect(value('−9').warnings[0]).toMatchObject({ written: '−9', read: -5 });
-		expect(value(2.6).warnings[0]).toMatchObject({ written: '2.6', read: 3 });
-	});
+  it('says what was written and what it was read as', () => {
+    expect(value(7).warnings[0]).toMatchObject({ written: '7', read: 5 });
+    expect(value('−9').warnings[0]).toMatchObject({ written: '−9', read: -5 });
+    expect(value(2.6).warnings[0]).toMatchObject({ written: '2.6', read: 3 });
+  });
 
-	it('rejects what is not a number and says why', () => {
-		expect(value('hates')).toEqual({
-			result: null,
-			warnings: [
-				{
-					path: 'F/factions.md',
-					code: 'value-not-a-number',
-					key: 'K',
-					field: 'relations',
-					written: 'hates',
-				},
-			],
-		});
-		expect(value(true).result).toBeNull();
-		expect(codes(value({ why: '[[Elder Wren]]' }).warnings)).toEqual(['structured-without-value']);
-		expect(value({ why: '[[Elder Wren]]' }).result).toBeNull();
-	});
+  it('rejects what is not a number and says why', () => {
+    expect(value('hates')).toEqual({
+      result: null,
+      warnings: [
+        {
+          path: 'F/factions.md',
+          code: 'value-not-a-number',
+          key: 'K',
+          field: 'relations',
+          written: 'hates',
+        },
+      ],
+    });
+    expect(value(true).result).toBeNull();
+    expect(codes(value({ why: '[[Elder Wren]]' }).warnings)).toEqual(['structured-without-value']);
+    expect(value({ why: '[[Elder Wren]]' }).result).toBeNull();
+  });
 
-	it('treats an empty value as no relation, silently', () => {
-		expect(value(null)).toEqual({ result: null, warnings: [] });
-		expect(value(undefined)).toEqual({ result: null, warnings: [] });
-		expect(value('')).toEqual({ result: null, warnings: [] });
-		expect(value('  ')).toEqual({ result: null, warnings: [] });
-	});
+  it('treats an empty value as no relation, silently', () => {
+    expect(value(null)).toEqual({ result: null, warnings: [] });
+    expect(value(undefined)).toEqual({ result: null, warnings: [] });
+    expect(value('')).toEqual({ result: null, warnings: [] });
+    expect(value('  ')).toEqual({ result: null, warnings: [] });
+  });
 });
 
 describe('parseRelationMap', () => {
-	function map(raw: unknown) {
-		const warnings: Warning[] = [];
-		const result = parseRelationMap(raw, 'F/factions.md', 'secret_relations', (w) =>
-			warnings.push(w),
-		);
-		return { result, warnings };
-	}
+  function map(raw: unknown) {
+    const warnings: Warning[] = [];
+    const result = parseRelationMap(raw, 'F/factions.md', 'secret_relations', (w) =>
+      warnings.push(w),
+    );
+    return { result, warnings };
+  }
 
-	it('keeps the first of two keys that are the same once trimmed, with a warning', () => {
-		const { result, warnings } = map({ Sable: 2, ' Sable ': -4 });
-		expect([...result]).toEqual([['Sable', { value: 2 }]]);
-		expect(warnings).toEqual([
-			{ path: 'F/factions.md', code: 'duplicate-key', key: 'Sable', field: 'secret_relations' },
-		]);
-	});
+  it('keeps the first of two keys that are the same once trimmed, with a warning', () => {
+    const { result, warnings } = map({ Sable: 2, ' Sable ': -4 });
+    expect([...result]).toEqual([['Sable', { value: 2 }]]);
+    expect(warnings).toEqual([
+      { path: 'F/factions.md', code: 'duplicate-key', key: 'Sable', field: 'secret_relations' },
+    ]);
+  });
 
-	it('reads a map with trimmed keys and drops empty entries', () => {
-		const { result, warnings } = map({ ' The Archivists ': 1, Sable: null, Court: '-2' });
-		expect([...result]).toEqual([
-			['The Archivists', { value: 1 }],
-			['Court', { value: -2 }],
-		]);
-		expect(warnings).toEqual([]);
-	});
+  it('reads a map with trimmed keys and drops empty entries', () => {
+    const { result, warnings } = map({ ' The Archivists ': 1, Sable: null, Court: '-2' });
+    expect([...result]).toEqual([
+      ['The Archivists', { value: 1 }],
+      ['Court', { value: -2 }],
+    ]);
+    expect(warnings).toEqual([]);
+  });
 
-	it('passes the field and key on to the warnings', () => {
-		expect(map({ Order: 'hates' }).warnings).toEqual([
-			{
-				path: 'F/factions.md',
-				code: 'value-not-a-number',
-				key: 'Order',
-				field: 'secret_relations',
-				written: 'hates',
-			},
-		]);
-	});
+  it('passes the field and key on to the warnings', () => {
+    expect(map({ Order: 'hates' }).warnings).toEqual([
+      {
+        path: 'F/factions.md',
+        code: 'value-not-a-number',
+        key: 'Order',
+        field: 'secret_relations',
+        written: 'hates',
+      },
+    ]);
+  });
 
-	it('rejects what is not a map', () => {
-		expect(map('x')).toEqual({
-			result: new Map(),
-			warnings: [{ path: 'F/factions.md', code: 'relations-not-a-map', field: 'secret_relations' }],
-		});
-		expect(codes(map([1]).warnings)).toEqual(['relations-not-a-map']);
-		expect(map(undefined)).toEqual({ result: new Map(), warnings: [] });
-		expect(map(null)).toEqual({ result: new Map(), warnings: [] });
-	});
+  it('rejects what is not a map', () => {
+    expect(map('x')).toEqual({
+      result: new Map(),
+      warnings: [{ path: 'F/factions.md', code: 'relations-not-a-map', field: 'secret_relations' }],
+    });
+    expect(codes(map([1]).warnings)).toEqual(['relations-not-a-map']);
+    expect(map(undefined)).toEqual({ result: new Map(), warnings: [] });
+    expect(map(null)).toEqual({ result: new Map(), warnings: [] });
+  });
 });
 
 describe('parsePower', () => {
-	function power(raw: unknown) {
-		const warnings: Warning[] = [];
-		const result = parsePower(raw, 'F/factions.md', (w) => warnings.push(w));
-		return { result, codes: codes(warnings) };
-	}
+  function power(raw: unknown) {
+    const warnings: Warning[] = [];
+    const result = parsePower(raw, 'F/factions.md', (w) => warnings.push(w));
+    return { result, codes: codes(warnings) };
+  }
 
-	it('defaults to 3 and clamps to 1–5', () => {
-		expect(power(undefined)).toEqual({ result: 3, codes: [] });
-		expect(power(4)).toEqual({ result: 4, codes: [] });
-		expect(power(9)).toEqual({ result: 5, codes: ['power-out-of-range'] });
-		expect(power(0)).toEqual({ result: 1, codes: ['power-out-of-range'] });
-	});
+  it('defaults to 3 and clamps to 1–5', () => {
+    expect(power(undefined)).toEqual({ result: 3, codes: [] });
+    expect(power(4)).toEqual({ result: 4, codes: [] });
+    expect(power(9)).toEqual({ result: 5, codes: ['power-out-of-range'] });
+    expect(power(0)).toEqual({ result: 1, codes: ['power-out-of-range'] });
+  });
 
-	it('says what power was written and what it was read as', () => {
-		const warnings: Warning[] = [];
-		parsePower(9, 'F/factions.md', (w) => warnings.push(w));
-		parsePower('high', 'F/factions.md', (w) => warnings.push(w));
-		expect(warnings).toEqual([
-			{ path: 'F/factions.md', code: 'power-out-of-range', key: 'power', written: '9', read: 5 },
-			{ path: 'F/factions.md', code: 'power-not-a-number', key: 'power', written: 'high', read: 3 },
-		]);
-	});
+  it('says what power was written and what it was read as', () => {
+    const warnings: Warning[] = [];
+    parsePower(9, 'F/factions.md', (w) => warnings.push(w));
+    parsePower('high', 'F/factions.md', (w) => warnings.push(w));
+    expect(warnings).toEqual([
+      { path: 'F/factions.md', code: 'power-out-of-range', key: 'power', written: '9', read: 5 },
+      { path: 'F/factions.md', code: 'power-not-a-number', key: 'power', written: 'high', read: 3 },
+    ]);
+  });
 
-	it('says what it did with a power it could not use as written', () => {
-		expect(power('x')).toEqual({ result: 3, codes: ['power-not-a-number'] });
-		expect(power(2.5)).toEqual({ result: 3, codes: ['power-not-integer'] });
-		expect(power(7.5)).toEqual({ result: 5, codes: ['power-out-of-range'] });
-		expect(power('0x3')).toEqual({ result: 3, codes: ['power-not-a-number'] });
-		expect(power(3.5)).toEqual({ result: 4, codes: ['power-not-integer'] });
-	});
+  it('says what it did with a power it could not use as written', () => {
+    expect(power('x')).toEqual({ result: 3, codes: ['power-not-a-number'] });
+    expect(power(2.5)).toEqual({ result: 3, codes: ['power-not-integer'] });
+    expect(power(7.5)).toEqual({ result: 5, codes: ['power-out-of-range'] });
+    expect(power('0x3')).toEqual({ result: 3, codes: ['power-not-a-number'] });
+    expect(power(3.5)).toEqual({ result: 4, codes: ['power-not-integer'] });
+  });
 });

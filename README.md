@@ -25,8 +25,8 @@ This repository collects the Obsidian plugins I build. Every plugin follows the 
 
 ## 🧩 Plugins
 
-| Plugin | Id | Status | Description |
-| --- | --- | --- | --- |
+| Plugin                                            | Id                 | Status                                 | Description                                                                               |
+| ------------------------------------------------- | ------------------ | -------------------------------------- | ----------------------------------------------------------------------------------------- |
 | [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, later NPCs, battles and dice. |
 
 More plugins will follow.
@@ -36,12 +36,12 @@ More plugins will follow.
 A game master's thinking tool for D&D 5e campaigns kept in Obsidian. It is not a rules engine: the
 plugin shows and suggests, the GM decides. It is built in four modules, one after another:
 
-| Module | Status |
-| --- | --- |
+| Module                                                          | Status                        |
+| --------------------------------------------------------------- | ----------------------------- |
 | ⚔️ **Factions:** factions and how they stand towards each other | 🚧 In progress (phase 1 of 4) |
-| 📜 **NPC builder:** stat blocks in 5e style | 🗓️ Planned |
-| 🛡️ **Battle tracker** | 🗓️ Planned |
-| 🎲 **Dice** | 🗓️ Planned |
+| 📜 **NPC builder:** stat blocks in 5e style                     | 🗓️ Planned                    |
+| 🛡️ **Battle tracker**                                           | 🗓️ Planned                    |
+| 🎲 **Dice**                                                     | 🗓️ Planned                    |
 
 ### ⚔️ Factions
 
@@ -56,13 +56,13 @@ player characters) and **Unaffiliated** (`@unaffiliated`), so they still have a 
 ```yaml
 # Factions/The Gutter Court/factions.md
 type: faction
-power: 3            # 1–5, node size
-relations:          # the public face
+power: 3 # 1–5, node size
+relations: # the public face
   Order of the Lantern: -4
   The Archivists:
     value: 1
-    why: "[[Mira Voss]]"
-secret_relations:   # the true stance, GM only
+    why: '[[Mira Voss]]'
+secret_relations: # the true stance, GM only
   The Archivists: -2
 ```
 
@@ -87,13 +87,13 @@ To find the **true** stance, the plugin walks the same chain but checks `secret_
 
 #### What exists now vs. what is planned
 
-| | Feature |
-| --- | --- |
+|                      | Feature                                                                                                                                                                 |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ✅ **Now (phase 1)** | Data model: campaign scope (`type: campaign`), faction discovery with sub-factions and members, relation parsing with warnings, public and true stance with inheritance |
-| ✅ **Now (phase 1)** | Command **Show faction warnings**: lists every data problem in the campaign |
-| 🗓️ Phase 2 | World view: graph with blocs and a matrix, switchable; Public / True toggle; colour scale 🟢 peaceful · 🟡 tense · 🔴 hostile, taken from the theme |
-| 🗓️ Phase 3 | Faction view with inherited vs. own values, and a tension panel |
-| 🗓️ Phase 4 | Editing with sliders (line edits, never re-serialised YAML) and relation history in session notes |
+| ✅ **Now (phase 1)** | Command **Show faction warnings**: lists every data problem in the campaign                                                                                             |
+| 🗓️ Phase 2           | World view: graph with blocs and a matrix, switchable; Public / True toggle; colour scale 🟢 peaceful · 🟡 tense · 🔴 hostile, taken from the theme                     |
+| 🗓️ Phase 3           | Faction view with inherited vs. own values, and a tension panel                                                                                                         |
+| 🗓️ Phase 4           | Editing with sliders (line edits, never re-serialised YAML) and relation history in session notes                                                                       |
 
 The full design is in
 [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md).
@@ -103,7 +103,7 @@ The full design is in
 [`examples/vault/`](examples/vault/) is the shared test vault for every plugin here. It holds
 **Silverstadt**, a campaign city of tides, bells and records, with four factions and a sub-faction,
 characters who disagree with their faction, secret stances, 5e stat blocks, an encounter, rollable
-tables and a deck. One faction, *The Drowned Choir*, holds every broken value on purpose.
+tables and a deck. One faction, _The Drowned Choir_, holds every broken value on purpose.
 [`Home.md`](examples/vault/Home.md) maps each feature to the notes that test it.
 
 To try it:

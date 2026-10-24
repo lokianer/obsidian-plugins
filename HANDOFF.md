@@ -1,8 +1,8 @@
 # Handoff
 
 The note one session leaves for the next — local or in the cloud. **Rewrite it at the end of every
-session** (not append) and commit it with that session's work. `ROADMAP.md` says *what* is done and
-next; this file says *how it was left*: state of the working tree, what is half-finished, what to
+session** (not append) and commit it with that session's work. `ROADMAP.md` says _what_ is done and
+next; this file says _how it was left_: state of the working tree, what is half-finished, what to
 watch out for. A cloud session cannot see the maintainer's private vault, so nothing here may depend
 on it.
 
@@ -56,7 +56,7 @@ Nothing in code. Not yet seen in Obsidian:
 - the `broken-frontmatter` detection in the adapter (`src/obsidian/notes.ts`) relies on Obsidian's
   cache showing a block (`frontmatterPosition`, or a leading `yaml` section) while `frontmatter` is
   undefined. Verify: reload the plugin in `examples/vault`, run "Show faction warnings", expect
-  Brother Silt and The Missing Bellringer under *Notes*. If they are missing, the hint is wrong and
+  Brother Silt and The Missing Bellringer under _Notes_. If they are missing, the hint is wrong and
   the adapter has to read every note without cached frontmatter instead;
 - the singular counts and the reworded duplicate-name rows.
 

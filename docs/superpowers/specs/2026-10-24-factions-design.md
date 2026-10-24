@@ -16,7 +16,7 @@ every convention below.
 The maintainer runs a D&D 5e campaign in Obsidian and wants more than organised notes: the **factions
 of the world and how they stand towards each other**, visible at a glance as colour — green peaceful,
 yellow tense, red hostile — and changeable by editing a value in a note. The point is the
-*interplay*: one-sided grudges, members who do not share their faction's line, secret stances behind a
+_interplay_: one-sided grudges, members who do not share their faction's line, secret stances behind a
 public face, and how it all shifts over the campaign. It is a GM's thinking tool for preparing and
 improvising, not a rules engine.
 
@@ -76,19 +76,19 @@ for now; key all caches by campaign root so several can come later.
   where it states none of its own, exactly like a member does.
 - `power: 1–5` (optional, default 3) sets the node size.
 - Links to a faction note made with `factions.md` need a path (`[[The Gutter Court/factions|The Gutter
-  Court]]`); folder-named faction notes link normally. Documented, not solved by the plugin.
+Court]]`); folder-named faction notes link normally. Documented, not solved by the plugin.
 
 ### 4.3 Relations
 
 In the frontmatter of a faction note or a character note:
 
 ```yaml
-relations:            # the public face
+relations: # the public face
   The Archivists: 1
   The Gutter Court:
     value: -3
-    why: "[[Session 11 – Under the Lantern Bridge]]"
-secret_relations:     # the true stance, GM only
+    why: '[[Session 11 – Under the Lantern Bridge]]'
+secret_relations: # the true stance, GM only
   The Archivists: -2
 ```
 
@@ -100,28 +100,28 @@ secret_relations:     # the true stance, GM only
 - **Inheritance**: a member's effective relation to X is its own value if it has one, else its
   sub-faction's, else its faction's, up the chain. This holds for every target X, faction or
   character: if the Gutter Court hates Sable, its members do too unless they say otherwise. What is
-  never passed on is a *member's* relation: a character's values apply to that character only.
+  never passed on is a _member's_ relation: a character's values apply to that character only.
 - **Resolving the two stances** (one function, used by every view):
-  - *public(A, X)*: walk the chain A → sub-faction → faction → …; the first level that has
+  - _public(A, X)_: walk the chain A → sub-faction → faction → …; the first level that has
     `relations.X` wins.
-  - *true(A, X)*: walk the same chain; at each level look at `secret_relations.X` first, then
+  - _true(A, X)_: walk the same chain; at each level look at `secret_relations.X` first, then
     `relations.X`; the first hit wins. So the most specific note always speaks for itself.
     Example from the vault: Corvin Marsh has his own public `Order of the Lantern: -3` and no secret
     value; his faction has a secret −2. His true stance is **−3**, because his own note is the more
     specific level and nothing in it says otherwise.
   - Where nothing is found, there is no relation (no arrow, empty cell) — not 0.
 - **Robustness** (each case produces one warning in a warnings list, and the entry is otherwise
-  ignored): value out of range (clamped to ±5 *and* warned), not a number, unknown key (dangling —
+  ignored): value out of range (clamped to ±5 _and_ warned), not a number, unknown key (dangling —
   drawn as a ghost node), relation to itself, empty value (= no relation, no warning), structured
   form without `value`, `power` out of range (clamped). `examples/vault/Silverstadt/Factions/The
-  Drowned Choir/factions.md` holds every case.
+Drowned Choir/factions.md` holds every case.
 
 ### 4.4 Named steps
 
 Each integer has a name, editable in the settings, shown in tooltips, the matrix and the slider:
 
-| −5 | −4 | −3 | −2 | −1 | 0 | +1 | +2 | +3 | +4 | +5 |
-|---|---|---|---|---|---|---|---|---|---|---|
+| −5  | −4   | −3      | −2       | −1   | 0       | +1      | +2       | +3     | +4    | +5    |
+| --- | ---- | ------- | -------- | ---- | ------- | ------- | -------- | ------ | ----- | ----- |
 | war | feud | hostile | distrust | wary | neutral | cordial | friendly | allied | close | sworn |
 
 German defaults: Krieg, Fehde, feindlich, Misstrauen, argwöhnisch, neutral, höflich, freundlich,
@@ -149,7 +149,7 @@ session N+1 from the session template, dated today, in the folder of the last se
 GM answers, writes go to the newest note, and every write names its target ("→ Session 14"). This
 "tonight's session" logic is **shared** — it goes into a `packages/` module, because the dice module,
 the battle tracker and the capture bar will write to the same note. Values edited by hand in the YAML
-are not logged; the plugin does not watch keystrokes. History is *read* from these lines across all
+are not logged; the plugin does not watch keystrokes. History is _read_ from these lines across all
 session notes, in session order; the line format is the contract (accept both `-` and `−`). A secret
 value's change is logged inside a `> [!gm]` callout so it never becomes public.
 

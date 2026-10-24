@@ -48,7 +48,7 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
 - [x] **Minor review findings of phase 1** (2026-10-24, `4f55b5d`): strict decimal numbers, en dash
       as minus, symmetric rounding, `broken-frontmatter`, `Factions.md` in any case, other-typed
       `factions.md` not a faction, case-only and folder-name clashes, singular counts
-- [ ] **Phase 2 — Faction editor** ← *next, plan awaiting approval*: form for all frontmatter incl.
+- [ ] **Phase 2 — Faction editor** ← _next, plan awaiting approval_: form for all frontmatter incl.
       relations, Fix button from the warnings modal, the line editor of design §5.6.
       Spec `docs/superpowers/specs/2026-10-24-faction-editor-design.md`, plan
       `docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`

@@ -1,0 +1,11 @@
+# Notes are test fixtures and private writing: their exact text is the contract.
+examples/vault/
+Obsidian Plugins Vault/
+.superpowers/
+
+# Generated
+pnpm-lock.yaml
+node_modules/
+dist/
+coverage/
+main.js

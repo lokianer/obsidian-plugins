@@ -14,13 +14,13 @@ warnings** lists every note the plugin could not read cleanly. See the repositor
 ```yaml
 # Factions/The Gutter Court/factions.md
 type: faction
-power: 3            # 1–5, node size
-relations:          # the public face
+power: 3 # 1–5, node size
+relations: # the public face
   Order of the Lantern: -4
   The Archivists:
     value: 1
-    why: "[[Mira Voss]]"
-secret_relations:   # the true stance, GM only
+    why: '[[Mira Voss]]'
+secret_relations: # the true stance, GM only
   The Archivists: -2
 ```
 

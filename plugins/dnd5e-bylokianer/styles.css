@@ -1,35 +1,35 @@
 /* dnd5e-byLokianer — styles. Only Obsidian CSS variables, so every theme works. */
 
 .dnd5e-warnings-modal {
-	width: min(640px, 92vw);
+  width: min(640px, 92vw);
 }
 
 .dnd5e-warnings {
-	font-size: 16px;
-	color: var(--text-normal);
+  font-size: 16px;
+  color: var(--text-normal);
 }
 
 .dnd5e-warnings-stats {
-	display: flex;
-	gap: var(--size-4-2);
-	margin-bottom: var(--size-4-4);
+  display: flex;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-4);
 }
 
 .dnd5e-warnings-stat {
-	flex: 1;
-	padding: var(--size-4-2) var(--size-4-3);
-	border-radius: var(--radius-m);
-	background: var(--background-secondary);
+  flex: 1;
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
 }
 
 .dnd5e-warnings-stat-value {
-	font-size: 24px;
-	font-weight: var(--font-bold);
-	line-height: 1.2;
+  font-size: 24px;
+  font-weight: var(--font-bold);
+  line-height: 1.2;
 }
 
 .dnd5e-warnings-stat.is-alert .dnd5e-warnings-stat-value {
-	color: var(--color-orange);
+  color: var(--color-orange);
 }
 
 .dnd5e-warnings-stat-label,
@@ -37,109 +37,109 @@
 .dnd5e-warnings-group,
 .dnd5e-warnings-message,
 .dnd5e-warnings-empty {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .dnd5e-warnings-note {
-	margin-bottom: var(--size-4-3);
-	border-radius: var(--radius-m);
-	background: var(--background-secondary);
-	overflow: hidden;
+  margin-bottom: var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  overflow: hidden;
 }
 
 .dnd5e-warnings-note-head {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: var(--size-4-2) var(--size-4-3);
-	border-bottom: 1px solid var(--background-modifier-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--size-4-2) var(--size-4-3);
+  border-bottom: 1px solid var(--background-modifier-border);
 }
 
 .dnd5e-warnings-link {
-	color: var(--text-accent);
-	font-weight: var(--font-semibold);
-	text-decoration: none;
+  color: var(--text-accent);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
 }
 
 .dnd5e-warnings-link:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 .dnd5e-warnings-badge {
-	padding: 0 var(--size-4-2);
-	border-radius: 999px;
-	color: var(--color-orange);
-	background: rgba(var(--color-orange-rgb), 0.15);
-	font-weight: var(--font-semibold);
+  padding: 0 var(--size-4-2);
+  border-radius: 999px;
+  color: var(--color-orange);
+  background: rgba(var(--color-orange-rgb), 0.15);
+  font-weight: var(--font-semibold);
 }
 
 .dnd5e-warnings-group {
-	padding: var(--size-4-2) var(--size-4-3) 0;
-	font-weight: var(--font-semibold);
+  padding: var(--size-4-2) var(--size-4-3) 0;
+  font-weight: var(--font-semibold);
 }
 
 .dnd5e-warnings-row {
-	display: flex;
-	gap: var(--size-4-2);
-	align-items: flex-start;
-	padding: var(--size-4-1) var(--size-4-3) var(--size-4-2);
+  display: flex;
+  gap: var(--size-4-2);
+  align-items: flex-start;
+  padding: var(--size-4-1) var(--size-4-3) var(--size-4-2);
 }
 
 .dnd5e-warnings-icon {
-	display: inline-flex;
-	flex: none;
-	padding-top: 3px;
+  display: inline-flex;
+  flex: none;
+  padding-top: 3px;
 }
 
 .dnd5e-warnings-icon svg {
-	width: 18px;
-	height: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .dnd5e-warnings-row.is-skipped .dnd5e-warnings-icon {
-	color: var(--color-red);
+  color: var(--color-red);
 }
 
 .dnd5e-warnings-row.is-adjusted .dnd5e-warnings-icon {
-	color: var(--color-yellow);
+  color: var(--color-yellow);
 }
 
 .dnd5e-warnings-row.is-names .dnd5e-warnings-icon {
-	color: var(--color-cyan);
+  color: var(--color-cyan);
 }
 
 .dnd5e-warnings-row.is-notes .dnd5e-warnings-icon {
-	color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .dnd5e-warnings-body {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--size-4-1) var(--size-4-2);
-	align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-1) var(--size-4-2);
+  align-items: baseline;
 }
 
 .dnd5e-warnings-chip {
-	padding: 0 var(--size-4-1);
-	border-radius: var(--radius-s);
-	background: var(--background-modifier-hover);
-	font-family: var(--font-monospace);
+  padding: 0 var(--size-4-1);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  font-family: var(--font-monospace);
 }
 
 .dnd5e-warnings-secret {
-	color: var(--color-purple);
+  color: var(--color-purple);
 }
 
 .dnd5e-warnings-change {
-	font-weight: var(--font-semibold);
+  font-weight: var(--font-semibold);
 }
 
 .dnd5e-warnings-empty {
-	display: flex;
-	gap: var(--size-4-2);
-	align-items: center;
+  display: flex;
+  gap: var(--size-4-2);
+  align-items: center;
 }
 
 .dnd5e-warnings-empty.is-clean .dnd5e-warnings-icon {
-	color: var(--color-green);
+  color: var(--color-green);
 }
