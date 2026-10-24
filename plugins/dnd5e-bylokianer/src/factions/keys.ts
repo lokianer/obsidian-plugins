@@ -92,6 +92,12 @@ function lookup(key: string, ix: Indexes): { id: string; ambiguous: boolean } | 
   return character !== undefined ? { id: character, ambiguous: false } : null;
 }
 
+/** Resolves single keys the way relations are resolved: the target id, or null when unknown. */
+export function keyLookup(entities: Map<string, Entity>): (key: string) => string | null {
+  const indexes = buildIndexes(entities, () => undefined);
+  return (key) => lookup(key.trim(), indexes)?.id ?? null;
+}
+
 export function resolveKeys(
   entities: Map<string, Entity>,
   warn: Warn,

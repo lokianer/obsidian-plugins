@@ -36,7 +36,7 @@ function round(value: number): number {
 }
 
 /** A value as the note writes it, for the warning that quotes it. */
-function asWritten(raw: unknown): string {
+export function asWritten(raw: unknown): string {
   if (typeof raw === 'string') {
     return raw.trim();
   }
