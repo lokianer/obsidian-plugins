@@ -51,12 +51,14 @@ describe('buildCard', () => {
 
   it('places a sub-faction and a member, and keeps characters to their own fields', () => {
     const bench = card(`${F}/The Gutter Court/The Bench/factions.md`);
-    expect(bench?.place).toEqual(['The Gutter Court']);
+    expect(bench?.place.map((p) => p.name)).toEqual(['The Gutter Court']);
     const vermillion = card(`${F}/The Gutter Court/The Bench/Lady Vermillion.md`);
-    expect(vermillion?.place).toEqual(['The Gutter Court', 'The Bench']);
+    expect(vermillion?.place.map((p) => p.name)).toEqual(['The Gutter Court', 'The Bench']);
     expect(vermillion?.nameField).toBeNull();
     expect(vermillion?.power).toBeNull();
-    expect(card('Silverstadt/Party/Orrin Quill.md')?.place).toEqual(['Party']);
+    expect(card('Silverstadt/Party/Orrin Quill.md')?.place).toEqual([
+      { id: '@party', name: 'Party' },
+    ]);
   });
 
   it('separates the secret section', () => {

@@ -50,7 +50,7 @@ export interface CardModel {
   entityId: string;
   kind: 'faction' | 'character';
   /** Names of the enclosing factions, outermost first; Party or Unaffiliated for loose characters. */
-  place: string[];
+  place: { id: string; name: string }[];
   name: string;
   /** Factions: the `name:` as written (null when absent) and the folder name as placeholder. */
   nameField: { value: string | null; expect: Expect; placeholder: string } | null;
@@ -74,13 +74,13 @@ function asExpect(raw: unknown): Expect {
   return isScalar(raw) || raw === undefined ? raw : undefined;
 }
 
-function placeOf(world: FactionWorld, entity: ResolvedEntity): string[] {
-  const names: string[] = [];
+function placeOf(world: FactionWorld, entity: ResolvedEntity): { id: string; name: string }[] {
+  const names: { id: string; name: string }[] = [];
   const seen = new Set<string>();
   let parent = entity.parent === null ? undefined : world.entities.get(entity.parent);
   while (parent !== undefined && !seen.has(parent.id)) {
     seen.add(parent.id);
-    names.unshift(parent.name);
+    names.unshift({ id: parent.id, name: parent.name });
     parent = parent.parent === null ? undefined : world.entities.get(parent.parent);
   }
   return names;

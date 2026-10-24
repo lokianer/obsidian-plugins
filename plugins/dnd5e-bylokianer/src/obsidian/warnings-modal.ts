@@ -4,7 +4,12 @@
 import { type App, Keymap, Modal, setIcon } from 'obsidian';
 
 import type { FactionWorld, Warning } from '../factions/model';
-import { groupWarnings, type NoteWarnings, type WarningGroup } from '../factions/warning-groups';
+import {
+  groupWarnings,
+  isFixable,
+  type NoteWarnings,
+  type WarningGroup,
+} from '../factions/warning-groups';
 import type { T } from '../i18n/strings';
 
 const FACTION_NOTE = 'factions.md';
@@ -31,6 +36,8 @@ export class WarningsModal extends Modal {
     app: App,
     private readonly world: FactionWorld,
     private readonly t: T,
+    /** Opens the faction card on the entry a warning is about. */
+    private readonly onFix?: (warning: Warning, newLeaf: boolean) => void,
   ) {
     super(app);
   }
@@ -126,6 +133,16 @@ export class WarningsModal extends Modal {
       cls: 'dnd5e-warnings-message',
       text: t(`warning.${warning.code}`, { written: warning.written ?? '' }),
     });
+    const { onFix } = this;
+    if (onFix !== undefined && isFixable(warning.code)) {
+      const fix = row.createEl('button', { cls: 'dnd5e-warnings-fix' });
+      setIcon(fix.createSpan({ cls: 'dnd5e-warnings-icon' }), 'wrench');
+      fix.createSpan({ text: t('fix.button') });
+      fix.addEventListener('click', (event) => {
+        this.close();
+        onFix(warning, Keymap.isModEvent(event) !== false);
+      });
+    }
   }
 
   private openNote(path: string, event: MouseEvent): void {

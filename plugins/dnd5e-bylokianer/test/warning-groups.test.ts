@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Warning } from '../src/factions/model';
-import { groupWarnings, warningGroup } from '../src/factions/warning-groups';
+import { groupWarnings, isFixable, warningGroup } from '../src/factions/warning-groups';
 
 describe('warningGroup', () => {
   it('sorts every code into what happened to the data', () => {
@@ -33,5 +33,14 @@ describe('groupWarnings', () => {
       ['skipped', ['Q', 'R']],
       ['adjusted', ['P']],
     ]);
+  });
+});
+
+describe('isFixable', () => {
+  it('leaves renames, moves and broken YAML to the GM', () => {
+    expect(isFixable('value-out-of-range')).toBe(true);
+    expect(isFixable('missing-type')).toBe(true);
+    expect(isFixable('duplicate-name')).toBe(false);
+    expect(isFixable('broken-frontmatter')).toBe(false);
   });
 });

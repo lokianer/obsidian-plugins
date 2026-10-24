@@ -27,6 +27,18 @@ const GROUPS: Record<WarningCode, WarningGroup> = {
   'broken-frontmatter': 'notes',
 };
 
+/** Codes the faction card can repair: everything but renames, moves and broken YAML. */
+const NOT_FIXABLE = new Set<WarningCode>([
+  'duplicate-name',
+  'duplicate-faction-note',
+  'campaign-ignored',
+  'broken-frontmatter',
+]);
+
+export function isFixable(code: WarningCode): boolean {
+  return !NOT_FIXABLE.has(code);
+}
+
 export function warningGroup(code: WarningCode): WarningGroup {
   return GROUPS[code];
 }
