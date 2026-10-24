@@ -37,6 +37,17 @@ export const en = {
   'warning.duplicate-key': 'an earlier entry already names this target — this one is skipped',
   'warning.campaign-ignored': 'another campaign note is in use — this one is passed over',
   'warning.broken-frontmatter': 'the frontmatter is not valid YAML — none of its values are read',
+  'step.-5': 'war',
+  'step.-4': 'feud',
+  'step.-3': 'hostile',
+  'step.-2': 'distrust',
+  'step.-1': 'wary',
+  'step.0': 'neutral',
+  'step.1': 'cordial',
+  'step.2': 'friendly',
+  'step.3': 'allied',
+  'step.4': 'close',
+  'step.5': 'sworn',
 };
 
 export type StringKey = keyof typeof en;
@@ -80,6 +91,17 @@ export const de: Record<StringKey, string> = {
   'warning.campaign-ignored': 'eine andere Kampagnennotiz wird verwendet — diese wird übergangen',
   'warning.broken-frontmatter':
     'das Frontmatter ist kein gültiges YAML — keiner seiner Werte wird gelesen',
+  'step.-5': 'Krieg',
+  'step.-4': 'Fehde',
+  'step.-3': 'feindlich',
+  'step.-2': 'Misstrauen',
+  'step.-1': 'argwöhnisch',
+  'step.0': 'neutral',
+  'step.1': 'höflich',
+  'step.2': 'freundlich',
+  'step.3': 'verbündet',
+  'step.4': 'eng',
+  'step.5': 'eingeschworen',
 };
 
 export type T = (key: StringKey, vars?: Record<string, string | number>) => string;
