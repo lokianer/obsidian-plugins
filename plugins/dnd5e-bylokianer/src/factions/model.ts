@@ -1,5 +1,7 @@
 // The faction module's data types. Pure: no Obsidian import.
 
+import type { CampaignScope } from '../campaign/scope';
+
 /** Which side of a relation a view shows: the public face, or the GM's true stance. */
 export type Mode = 'public' | 'true';
 
@@ -58,4 +60,17 @@ export interface Entity {
 	/** Keys as written in the note, not yet resolved. */
 	relations: Map<string, Relation>;
 	secretRelations: Map<string, Relation>;
+}
+
+/** An entity whose relation keys are target ids; an unknown target is kept as `?` + its name. */
+export interface ResolvedEntity extends Omit<Entity, 'relations' | 'secretRelations'> {
+	relations: Map<string, Relation>;
+	secretRelations: Map<string, Relation>;
+}
+
+/** Everything the views need: the campaign, its factions and characters, and the problems found. */
+export interface FactionWorld {
+	campaign: CampaignScope | null;
+	entities: Map<string, ResolvedEntity>;
+	warnings: Warning[];
 }
