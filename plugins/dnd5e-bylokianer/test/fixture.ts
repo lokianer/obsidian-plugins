@@ -58,3 +58,8 @@ export function loadExampleVault(): NoteInput[] {
     .sort((a, b) => (a.path < b.path ? -1 : 1));
   return cache;
 }
+
+/** The text of one note of the example vault, by its vault path. */
+export function readExampleNote(path: string): string {
+  return readFileSync(join(vaultRoot, ...path.split('/')), 'utf8');
+}
