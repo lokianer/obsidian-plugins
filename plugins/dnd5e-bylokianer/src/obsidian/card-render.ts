@@ -42,8 +42,15 @@ interface CardContext {
   refresh: () => void;
 }
 
-/** Where Fix points: a warning of this note, or the first field. */
-export type FocusTarget = { warning: Warning } | { first: true };
+/**
+ * Where to focus: a warning of this note (Fix), an entry by field and target (a click in the world
+ * view), a new entry for a target (an empty matrix cell), or the first field.
+ */
+export type FocusTarget =
+  | { warning: Warning }
+  | { entry: { field: RelationField; target: string } }
+  | { add: { field: RelationField; key: string } }
+  | { first: true };
 
 const SLIDER_DELAY = 400;
 
@@ -631,6 +638,31 @@ export class CardRenderer extends Component {
 
   // ── focus ──────────────────────────────────────────────────────────────────────────────────
 
+  private openSection(field: RelationField): void {
+    if (field === 'secret_relations' && !this.ctx.ui.secretOpen) {
+      this.ctx.ui.secretOpen = true;
+      this.render();
+    }
+  }
+
+  /** Highlights the first row of a field that matches and focuses one of its controls. */
+  private focusRow(
+    field: RelationField,
+    match: (row: CardRow) => boolean,
+    part: 'value' | 'target' | 'remove',
+  ): HTMLElement | null {
+    const rows = [
+      ...this.el.querySelectorAll<HTMLElement>(`.dnd5e-card-row[data-field="${field}"]`),
+    ];
+    const index = this.ctx.card.sections[field].rows.findIndex(match);
+    const row = index === -1 ? undefined : rows[index];
+    row?.addClass('is-highlighted');
+    const el = row?.querySelector<HTMLElement>(`[data-focus="${part}"]`) ?? row ?? null;
+    el?.scrollIntoView({ block: 'center' });
+    el?.focus();
+    return el;
+  }
+
   /** Opens the section a warning points into and focuses the control that repairs it. */
   focus(target: FocusTarget): void {
     if ('first' in target) {
@@ -638,11 +670,31 @@ export class CardRenderer extends Component {
       this.el.scrollIntoView({ block: 'start' });
       return;
     }
-    const { warning } = target;
-    if (warning.field === 'secret_relations' && !this.ctx.ui.secretOpen) {
-      this.ctx.ui.secretOpen = true;
-      this.render();
+    if ('entry' in target || 'add' in target) {
+      const field = 'entry' in target ? target.entry.field : target.add.field;
+      this.openSection(field);
+      if ('entry' in target) {
+        const { target: id } = target.entry;
+        // The entry that is used: the first row naming the target (later ones are duplicates).
+        this.focusRow(field, (r) => (r.targetId ?? `?${r.key}`) === id, 'value');
+      } else {
+        const add = this.el.querySelector<HTMLElement>(
+          `.dnd5e-card-section[data-field="${field}"] .dnd5e-card-add`,
+        );
+        add?.click();
+        const input = this.el.querySelector<HTMLInputElement>(
+          `.dnd5e-card-section[data-field="${field}"] .dnd5e-card-row.is-new input`,
+        );
+        if (input !== null) {
+          input.value = target.add.key;
+          input.scrollIntoView({ block: 'center' });
+          input.focus();
+        }
+      }
+      return;
     }
+    const { warning } = target;
+    if (warning.field !== undefined) this.openSection(warning.field);
     if (warning.code === 'missing-type' && !this.ctx.ui.fieldsOpen) {
       this.ctx.ui.fieldsOpen = true;
       this.render();
@@ -653,24 +705,19 @@ export class CardRenderer extends Component {
         : warning.code === 'self-relation' || warning.code === 'duplicate-key'
           ? 'remove'
           : 'value';
-    let el: HTMLElement | null = null;
-    if (warning.key === 'power') {
-      el = this.el.querySelector('[data-focus="power"] button');
-    } else if (warning.field !== undefined) {
-      const rows = [
-        ...this.el.querySelectorAll<HTMLElement>(`.dnd5e-card-row[data-field="${warning.field}"]`),
-      ];
-      const index = this.ctx.card.sections[warning.field].rows.findIndex((r) =>
-        r.warnings.some((w) => warningMatches(w, warning)),
+    if (warning.field !== undefined) {
+      const el = this.focusRow(
+        warning.field,
+        (r) => r.warnings.some((w) => warningMatches(w, warning)),
+        part,
       );
-      const row = index === -1 ? undefined : rows[index];
-      el = row?.querySelector<HTMLElement>(`[data-focus="${part}"]`) ?? row ?? null;
-      row?.addClass('is-highlighted');
-    } else {
-      el = this.el.querySelector('.dnd5e-card-warning button');
+      if (part === 'target' && el?.hasClass('dnd5e-card-rename')) el.click();
+      return;
     }
+    const el = this.el.querySelector<HTMLElement>(
+      warning.key === 'power' ? '[data-focus="power"] button' : '.dnd5e-card-warning button',
+    );
     el?.scrollIntoView({ block: 'center' });
     el?.focus();
-    if (part === 'target' && el?.hasClass('dnd5e-card-rename')) el.click();
   }
 }

@@ -9,6 +9,11 @@ tags:
   - npc/neutral
 aliases:
   - Wren
+relations:
+  # the reed beds are where the Choir sings to the river at low tide; she wants them gone
+  The Drowned Choir:
+    value: -3
+    why: "the Choir sings in her reed beds"
 ---
 
 # Elder Wren

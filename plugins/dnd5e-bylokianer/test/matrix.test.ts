@@ -25,7 +25,10 @@ describe('buildMatrix', () => {
     expect(names.indexOf('The Bench')).toBe(names.indexOf('The Gutter Court') + 1);
     expect(matrix.rows.find((r) => r.id === BENCH)).toMatchObject({ depth: 1 });
     expect(names).toContain('[Party]');
-    expect(names.indexOf('Orrin Quill')).toBeGreaterThan(names.indexOf('[Party]'));
+    expect(names.indexOf('Ilex')).toBe(names.indexOf('[Party]') + 1);
+    // A character without a stance towards any faction would only be an empty row.
+    expect(names).not.toContain('Orrin Quill');
+    expect(names.slice(-2)).toEqual(['[Unaffiliated]', 'Elder Wren']);
     expect(matrix.columns[matrix.columns.length - 1]).toMatchObject({
       name: 'The Salt Kings',
       ghost: true,

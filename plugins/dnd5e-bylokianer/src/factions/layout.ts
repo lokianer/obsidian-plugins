@@ -26,6 +26,8 @@ export interface CachedPoint extends Point {
 }
 
 const TICKS = 300;
+/** Space around a node for its name below it. */
+const LABEL_ROOM = 40;
 const FRAME_WIDTH = 200;
 const FRAME_ROW = 28;
 
@@ -85,26 +87,26 @@ export function layout(
     pair.sum += edge.value;
     sums.set(key, pair);
   }
+  const radius = new Map(nodes.map((n) => [n.id, n.radius]));
+  // Distances run between the nodes' edges, not their centres, so big nodes do not overlap.
   const links: SimLink[] = [...sums.values()].map(({ a, b, sum }) => ({
     source: a,
     target: b,
-    distance: pairDistance(sum),
+    distance: pairDistance(sum) + (radius.get(a) ?? 0) + (radius.get(b) ?? 0),
     strength: 0.25,
   }));
   for (const { child, parent } of graph.ties) {
     if (!known.has(child) || !known.has(parent)) continue;
-    const r = nodes
-      .filter((n) => n.id === child || n.id === parent)
-      .reduce((s, n) => s + n.radius, 0);
-    links.push({ source: child, target: parent, distance: r + 30, strength: 1 });
+    const r = (radius.get(child) ?? 0) + (radius.get(parent) ?? 0);
+    links.push({ source: child, target: parent, distance: r + 50, strength: 1 });
   }
 
   const simulation = forceSimulation(nodes)
     .stop()
-    .force('charge', forceManyBody<SimNode>().strength(-500))
+    .force('charge', forceManyBody<SimNode>().strength(-900))
     .force(
       'collide',
-      forceCollide<SimNode>((n) => n.radius + 16),
+      forceCollide<SimNode>((n) => n.radius + LABEL_ROOM),
     )
     .force(
       'link',
@@ -115,6 +117,9 @@ export function layout(
     )
     .force('x', forceX<SimNode>(0).strength(0.04))
     .force('y', forceY<SimNode>(0).strength(0.04));
+  // From cached positions, only settle what changed: little energy when every node has a place.
+  const placed = sorted.filter((n) => cached[n.id] !== undefined).length;
+  simulation.alpha(placed === 0 ? 1 : placed === nodes.length ? 0.1 : 0.4);
   simulation.tick(TICKS);
 
   return new Map(nodes.map((n) => [n.id, { x: n.x ?? 0, y: n.y ?? 0 }]));

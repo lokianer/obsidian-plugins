@@ -2,7 +2,7 @@
 // Obsidian's Properties block sits. This is the one module that knows Obsidian's view DOM; every
 // selector it relies on is here, with a fallback that keeps the card visible if one is missing.
 
-import { MarkdownView, type PaneType, type Plugin, type TFile } from 'obsidian';
+import { MarkdownView, type PaneType, type Plugin, type TFile, type WorkspaceLeaf } from 'obsidian';
 
 import { buildCard, type CardModel } from '../factions/card';
 import type { FactionWorld } from '../factions/model';
@@ -199,12 +199,24 @@ export class CardManager {
     for (const view of this.views()) this.unmount(view);
   }
 
+  /**
+   * The leaf a note opens in. From a note, as Obsidian does; from another view (the world view) the
+   * most recent note tab, so that view is not replaced, or a new tab.
+   */
+  leafFor(newLeaf: PaneType | boolean): WorkspaceLeaf {
+    const { workspace } = this.plugin.app;
+    if (newLeaf !== false || workspace.getActiveViewOfType(MarkdownView) !== null) {
+      return workspace.getLeaf(newLeaf);
+    }
+    return workspace.getLeavesOfType('markdown')[0] ?? workspace.getLeaf('tab');
+  }
+
   /** Opens a note, makes sure its card shows, and focuses what `target` points at. */
   async open(path: string, target: FocusTarget, newLeaf: PaneType | boolean): Promise<void> {
     const { app } = this.plugin;
     const file = app.vault.getFileByPath(path);
     if (file === null) return;
-    const leaf = app.workspace.getLeaf(newLeaf);
+    const leaf = this.leafFor(newLeaf);
     await leaf.openFile(file);
     const view = leaf.view;
     if (!(view instanceof MarkdownView)) return;

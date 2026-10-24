@@ -12,6 +12,8 @@ initiative: 5
 passive_perception: 17
 relations:
   Sable: 1
+  # the archivists pay for the party's ledger of favours: shown in the world view's Party frame
+  The Archivists: 2
 tags:
   - pc
 ---

@@ -53,7 +53,14 @@ describe('buildGraph', () => {
 
   it('draws a character in a frame from its frame, towards factions only', () => {
     const fromParty = graph.edges.filter((e) => e.sourceNode === PARTY);
-    expect(fromParty.every((e) => world.entities.get(e.target)?.kind === 'faction')).toBe(true);
+    expect(fromParty.map((e) => [e.source, e.target, e.value])).toEqual([
+      ['Silverstadt/Party/Ilex.md', `${F}/The Archivists`, 2],
+    ]);
+    expect(graph.edges.find((e) => e.sourceNode === UNAFFILIATED)).toMatchObject({
+      target: `${F}/The Drowned Choir`,
+      value: -3,
+      why: 'the Choir sings in her reed beds',
+    });
   });
 
   it('shows nothing secret in Public mode', () => {

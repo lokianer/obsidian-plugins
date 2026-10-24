@@ -65,10 +65,14 @@ export function buildMatrix(world: FactionWorld, mode: Mode): WorldMatrix {
     depth,
     notePath: entity.notePath,
   }));
+  const factionIds = new Set(tree.map(({ entity }) => entity.id));
+  // Characters only with a stance towards some faction or ghost; the rest would be empty rows.
+  const relatesToFactions = (id: string) =>
+    [...allStances(world, id, mode).keys()].some((k) => factionIds.has(k) || k.startsWith('?'));
   for (const groupId of [PARTY, UNAFFILIATED]) {
     const group = world.entities.get(groupId);
     const members = [...world.entities.values()]
-      .filter((e) => e.kind === 'character' && e.parent === groupId)
+      .filter((e) => e.kind === 'character' && e.parent === groupId && relatesToFactions(e.id))
       .sort(byName);
     if (group === undefined || members.length === 0) continue;
     rows.push({ kind: 'group', id: groupId, name: group.name });
