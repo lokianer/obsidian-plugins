@@ -82,10 +82,7 @@ class NextSessionModal extends Modal {
 export class SessionLog {
   /** One open notice per relation, so fiddling with a slider offers one line, not many. */
   private readonly pending = new Map<string, { notice: Notice; change: ValueChange }>();
-  private readonly parsed = new Map<
-    string,
-    { session: number; entries: ReturnType<typeof parseLog> }
-  >();
+  private readonly parsed = new Map<string, { session: number; entries: LogEntry[] }>();
   private history: HistoryEntry[] = [];
   private loaded = false;
   private readonly listeners = new Set<() => void>();

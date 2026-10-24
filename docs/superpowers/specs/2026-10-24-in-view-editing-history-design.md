@@ -1,6 +1,6 @@
 # In-view editing and history — design
 
-Date: 2026-10-24. Status: **draft for the maintainer's review**. Module: factions, **phase 5**.
+Date: 2026-10-24. Status: **approved ("passt") and built** the same day. Module: factions, **phase 5**.
 
 Builds on [`2026-10-24-factions-design.md`](2026-10-24-factions-design.md) §4.6 (history), §5.6
 (editing in place) and §5.7 (history in the views), and on phases 2–4 (card, world, faction view).

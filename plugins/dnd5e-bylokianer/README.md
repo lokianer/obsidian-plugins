@@ -5,7 +5,7 @@ factions are folders holding a `factions.md`, relations are frontmatter values f
 (sworn), and members inherit their faction's stance unless they state their own. Later modules: an
 NPC builder with 5e stat blocks, a battle tracker and dice.
 
-Status: phases 1 (data model), 2 (faction card), 3 (world view) and 4 (faction view, tensions) of the factions module. See the repository's
+Status: the factions module is built (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
 design in `docs/superpowers/specs/2026-10-24-faction-editor-design.md`.
 
@@ -25,7 +25,8 @@ edited in source.
 
 Settings: **Show Obsidian's properties on faction notes** brings the Properties block back beside
 the card; **Step names** renames the eleven steps from −5 to +5 (empty keeps the default);
-**Tension thresholds** set when the tension panel reports something.
+**Tension thresholds** set when the tension panel reports something; **Session template** is the
+note a new session note is made from.
 
 ## The faction world
 
@@ -40,8 +41,17 @@ the card; **Step names** renames the eleven steps from −5 to +5 (empty keeps t
 - **Public / True** — Public every time the view opens; True adds the secret stances and marks
   where they differ from the public face.
 
-Click an arrow or a cell to open the note that holds the value with the faction card on that entry;
-an empty cell offers to add the relation. Ctrl/Cmd-click a faction to open its note.
+Click an arrow or a cell to change that value in a small popover: the slider, the reason, where an
+inherited value comes from, **Reset to inherited** and **Open card**. It always writes the subject's
+own note — moving an inherited value gives the subject its own. Ctrl/Cmd-click a faction to open its
+note.
+
+**History.** After every change of a relation value (popover or card) a notice offers **Log →
+Session 14**; a click adds a line such as `- 20:31 Order of the Lantern → The Gutter Court: −2 → −3`
+under `## Log` of tonight's session note (the one with the highest `session:` number; secret changes
+go into a `[!gm]` callout). If that note is from an earlier day, the plugin asks once a day whether to
+start the next session from your session template. The views' tooltips show each relation's last
+changes, read back from those lines.
 
 **Faction view.** Click a faction (or the Party / Unaffiliated frame) to open it: the faction as a
 frame with its members, the factions it relates to around it, own values as solid arrows. Members

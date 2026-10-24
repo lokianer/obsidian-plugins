@@ -48,7 +48,7 @@ an edge case, add a note for it there and a row to that table. Only `.obsidian/w
 - Downloads, extracted archives, research output: put them in the scratchpad, and check `git status`
   after research runs.
 
-## Layout (proposed, D19)
+## Layout (D19; `packages/session` is the first shared package)
 
 ```
 plugins/<plugin-id>/     one Obsidian plugin each (manifest.json, src/, tests, its own docs)
@@ -120,6 +120,6 @@ so a published plugin gets a release mirror repository, pushed by CI from its su
 
 ## Plugins
 
-| Plugin                                | Folder                      | Status                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| dnd5e-byLokianer (`dnd5e-bylokianer`) | `plugins/dnd5e-bylokianer/` | Factions phase 1 (data model, warnings command) accepted; phase 2 (faction card replacing Properties, editable in place) phase 3 (faction world: graph and matrix) and phase 4 (faction view, tension panel) built, awaiting the maintainer's check in Obsidian. Design: `docs/superpowers/specs/2026-10-24-factions-design.md`, editor: `docs/superpowers/specs/2026-10-24-faction-editor-design.md`. Licence MIT |
+| Plugin                                | Folder                      | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| dnd5e-byLokianer (`dnd5e-bylokianer`) | `plugins/dnd5e-bylokianer/` | Factions phase 1 (data model, warnings command) accepted; phase 2 (faction card replacing Properties, editable in place) phase 3 (faction world: graph and matrix), phase 4 (faction view, tension panel) and phase 5 (popover editing, session history; shared `packages/session`) built, awaiting the maintainer's check in Obsidian. Design: `docs/superpowers/specs/2026-10-24-factions-design.md`, editor: `docs/superpowers/specs/2026-10-24-faction-editor-design.md`. Licence MIT |

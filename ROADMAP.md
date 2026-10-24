@@ -13,15 +13,12 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · phases 2, 3 and 4 — built, waiting for the maintainer's check in
-Obsidian** (planned for 2026-10-25 on the PC). Phase 2 is the faction card, phase 3 the faction world
-(graph and matrix), phase 4 the faction view and the tension panel. All are tested in Node and
-rendered in a browser against a stub of the Obsidian API; none has run inside Obsidian. The
-checklist is in `HANDOFF.md` → "Half-finished". Fix what it turns up. **Phase 5 — in-view editing and
-history** is specified and planned
-([`docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md`](docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md),
-[`docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md`](docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md));
-build it once the maintainer approves the plan.
+**dnd5e-byLokianer · Factions · phases 2 to 5 — built, waiting for the maintainer's check in
+Obsidian.** The factions module is complete as designed: card (2), faction world (3), faction view
+and tensions (4), popover editing and session history (5). All is tested in Node and rendered in a
+browser against a stub of the Obsidian API; none has run inside Obsidian. The checklist is in
+`HANDOFF.md` → "Half-finished". Fix what it turns up. After that, the next module: **Module 2 — NPC
+builder** needs a brainstorm with the maintainer (see below), or one of the factions "later ideas".
 
 ---
 
@@ -75,10 +72,13 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
       `docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md`
   - [x] Tension rules and faction view model (`846ec98`), drawing, drill-down and panel (`1ff2dfd`)
   - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 5 — In-view editing and history** (spec and plan drafted 2026-10-24, awaiting
-      approval): value popover on matrix cells and arrows writing the subject's own note; a "Log"
-      notice after each change, writing to tonight's session note (with the once-a-day offer to
-      create session N+1); history in tooltips; shared package `packages/session/`
+- [ ] **Phase 5 — In-view editing and history** ← _built 2026-10-24, awaiting acceptance in
+      Obsidian_: value popover on cells and arrows writing the subject's own note; "Log" notice and
+      session log with the once-a-day N+1 offer; history in tooltips; shared `packages/session/`.
+      Spec `docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md`, plan
+      `docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md`
+  - [x] Package and history resolution (`86331b8`), popover, logging and tooltips (`951a54a`)
+  - [ ] Maintainer's check in Obsidian
 
 Later ideas for factions, not designed yet: time machine (replay the graph per session), domino
 preview of knock-on changes, faction turn between sessions, the party as a node, what the players

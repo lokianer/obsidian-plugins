@@ -13,21 +13,19 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-24, cloud (third session of the day, continued). Phase 3 (faction world) and phase 4
-(faction view, tension panel) specified, approved by the maintainer and built in full; `main`
-fast-forwarded to the branch at the maintainer's request. **Phases 2, 3 and 4 have not run inside
-Obsidian yet**; the maintainer tests them on 2026-10-25 on the PC.
+2026-10-24, cloud (third session of the day, continued). Phases 3, 4 and 5 specified, approved and
+built; a design pass over every view; `main` kept in step with the branch. **The whole factions
+module (phases 2–5) has not run inside Obsidian yet**; the maintainer tests it on 2026-10-25 on the
+PC.
 
 ## Where to continue
 
 1. The maintainer's check in Obsidian, the lists under "Half-finished". Fix what turns up — the
-   likeliest places: the card mounting (`src/obsidian/card-view.ts`), pointer handling in the
-   drawings (`pan-zoom.ts`, `world-graph-svg.ts`, `faction-view-svg.ts`), and the sidebar view.
-2. **Phase 5** is specified and planned
-   (`docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md`,
-   `docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md`): the maintainer chose a
-   "Log" notice, a popover on cells and arrows, and the once-a-day offer of session N+1. Build after
-   the plan is approved.
+   likeliest places: card mounting (`src/obsidian/card-view.ts`), pointer handling in the drawings
+   (`pan-zoom.ts`, `world-graph-svg.ts`, `faction-view-svg.ts`), the popover (`popover.ts`) and the
+   session log (`session-log.ts`).
+2. Then the next module: brainstorm **Module 2 — NPC builder** with the maintainer (ROADMAP), or one
+   of the factions' "later ideas" if they prefer.
 
 ## State of the working tree
 
@@ -48,6 +46,11 @@ vault: never commit it as part of a task.
   model; `1ff2dfd` drawing, drill-down with breadcrumb, tension sidebar, thresholds, shared pan/zoom
   and mode store. Seen in the browser preview: The Gutter Court's view (with and without Mira Voss
   selected; member arrows were first hidden behind the frame, fixed) and the panel in True mode.
+- Phase 5: the maintainer chose a "Log" notice, a popover on cells and arrows and the once-a-day
+  N+1 offer, then "passt". `2831489` spec and plan; `86331b8` `packages/session` (tonight's session,
+  log lines, parsing) and history resolution; `951a54a` popover, logging, session N+1, tooltips (the
+  graph, matrix and faction view models lost their unused edit targets). Seen in the browser
+  preview: popover for The Bench (True), Isolde Ferrant (inherited), docked at phone width.
 - Example vault: Ilex → The Archivists +2 and Elder Wren → The Drowned Choir −3 (with a reason), so
   the Party and Unaffiliated frames have arrows; `Home.md` rows for graph and matrix.
 - Design pass over every view at the maintainer's request (cleaner, closer to Obsidian): rules at
@@ -108,9 +111,24 @@ The Gutter Court`; click The Bench chip → one level deeper, breadcrumb back wo
     values the card.
 17. **Thresholds** in the settings change the panel at once.
 
+**Phase 5 — popover and history**
+
+19. **Popover**: Matrix → The Bench × Order of the Lantern: Public shows −4 "inherited from The Gutter
+    Court"; moving the slider writes a new `Order of the Lantern:` line into The Bench's own note
+    (check with `git diff`), never the Court's. True: its own secret +4 with "Reset to inherited"
+    (Undo works). Arrows in graph and faction view open it too; Esc, ✕ and a click outside close it.
+20. **Log**: after a change a notice "Log → Session 14 – Bell Square"; dragging back and forth
+    gives one notice. Click → the first time today a dialog offers Session 15: Create makes
+    `Silverstadt/Sessions/Session 15.md` from `Templates/Session.md` (date today, session 15) and
+    logs there; Keep logs into Session 14 after `- 21:40 …`, before `## Loot`. A True-mode change
+    lands in a `> [!gm]` callout. Revert the vault afterwards.
+21. **History**: the tooltip of Order → Court (arrow and matrix cell) shows `−2 → −3 in S14`; a
+    secret logged change appears only in True mode.
+22. **Card** changes offer the Log notice too.
+
 **Design pass (all views)**
 
-18. The card looks native next to the note: Obsidian's slider style, icon buttons only on hover,
+23. The card looks native next to the note: Obsidian's slider style, icon buttons only on hover,
     tags in the theme's tag style; check a light theme and one community theme too. The world tab's
     re-layout button sits in Obsidian's tab header and is hidden outside the graph.
 
@@ -122,7 +140,7 @@ target id (not a raw key); characters without any faction relation get no matrix
 
 ## Open questions for the maintainer
 
-- Spec §7 of phases 2, 3 and 4 — confirm or correct after trying them.
+- The "calls I made" sections of the phase 2–5 specs — confirm or correct after trying them.
 
 ## Watch out
 
@@ -145,4 +163,4 @@ target id (not a raw key); characters without any faction relation get no matrix
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 151 tests pass (64 at the start of the day).
+`pnpm check` at the root: exit 0; 155 plugin tests and 9 package tests pass (64 at the start of the day).

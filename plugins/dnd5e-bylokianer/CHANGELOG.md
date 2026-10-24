@@ -30,6 +30,11 @@ All notable changes to this plugin are documented here. The format follows
   arrows, breadcrumb.
 - **Tension panel** in the right sidebar with four rules and thresholds in the settings, following
   the Public/True toggle.
+- **Value popover** on matrix cells and arrows: slider, reason, Reset to inherited, Open card;
+  writes the subject's own note.
+- **Session log**: after a relation change, a notice offers to log it under `## Log` of tonight's
+  session note (secret changes in `[!gm]`), with a once-a-day offer to start session N+1 from the
+  template; relation history in the views' tooltips. Shared package `packages/session`.
 - **Step names** in the settings.
 - **Fix** buttons in the warnings modal and the command **Edit faction data**.
 - Plugin scaffold: manifest, build with esbuild, Vitest, eslint with Obsidian's rules, CI on Linux,

@@ -22,13 +22,14 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Tension panel | Faction world → lightning button | Public: Ondine Vale, Mira Voss, Aldric Thane, Corvin Marsh out of line; True adds The Bench and Sable, and public vs. true for The Bench, Mira, Sable and the Order |
 | Faction card | [[The Drowned Choir/factions\|The Drowned Choir]], [[Corvin Marsh]], [[Sable]], [[The Bench/factions\|The Bench]] | Choir: every Fix button; Corvin: a reason rendered as a link; Sable: secret relations closed until opened; Bench: place shown as The Gutter Court |
 | Broken frontmatter | [[Brother Silt]], [[The Missing Bellringer]] | YAML that does not parse (an unclosed list, an unclosed quote): the note is named in the warnings, never dropped silently |
-| Relation history | [[Session 14 – Bell Square]] | A log line `Order of the Lantern → The Gutter Court: −2 → −3` |
+| Relation history | [[Session 14 – Bell Square]] | A log line `Order of the Lantern → The Gutter Court: −2 → −3`; it shows in the tooltip of that arrow and matrix cell as `−2 → −3 in S14` |
+| Value popover | Faction world → Matrix → The Bench × Order of the Lantern | Public: inherited −4 from the Court (moving it gives The Bench its own value); True: its own secret +4 with Reset to inherited |
 | NPC builder / stat blocks | [[Isolde Ferrant]], [[Ondine Vale]], [[Aldric Thane]], [[Mira Voss]] | Full 5e stat blocks; [[Sergeant Pell]] has none yet |
 | Battle tracker | [[Ambush under the second arch]] | Party, a named NPC, groups with `count`; provisional format |
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |
 | Decks | [[Omens of the River]] | Two of eight cards already drawn |
 | GM gate | Almost every note | `[!gm]` callouts with and without `revealed:`, `%%comments%%`, a link hidden in a comment |
-| Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → offer Session 15 |
+| Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md` |
 
 ## Conventions used here (provisional)
 

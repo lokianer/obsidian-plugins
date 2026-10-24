@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** draft — **build only after the maintainer has approved this plan.**
+**Status:** approved ("passt", 2026-10-24) and built; tasks 1–7 done, task 8 awaits the maintainer's check in Obsidian.
 
 **Goal:** A value popover on matrix cells and arrows, an opt-in log line in tonight's session note
 after every relation change (with the once-a-day offer to create session N+1), and history in the

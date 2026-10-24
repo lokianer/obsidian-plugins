@@ -173,3 +173,22 @@ The maintainer asked for every built view to look cleaner and more like Obsidian
 
 Left out: a custom slider track coloured by value (Obsidian's slider look wins; the value chip
 carries the colour).
+
+## 2026-10-24 · Editing in the views, and a history the GM opts into
+
+The maintainer chose a popover on cells and arrows (instead of leading into the card), a "Log"
+notice after each change (nothing is logged without that click), and a once-a-day offer to start
+session N+1. From `docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md` §8:
+
+- Only relation values are logged; the notice stays six seconds; repeated changes of one relation
+  merge into one offer (so dragging a slider back and forth logs one line, or none).
+- The day's N+1 answer is kept in plugin data; the new note is `Session N.md` beside the last one,
+  from the template setting (default `Templates/Session.md`), or a minimal note without one.
+- A removed own value logs `x → —`. Secret changes go into a `[!gm]` callout under `## Log`.
+- Tooltips show the three newest changes per relation; secret ones only in True mode.
+- Tonight's session, log lines and their parsing live in `packages/session` (pure, shared), because
+  dice and the battle tracker will log to the same note.
+- The graph, matrix and faction view models no longer carry edit targets; the popover works out the
+  write from the subject's own card rows.
+
+Left out: logging reasons, names and power; a full history view (the "time machine" idea).
