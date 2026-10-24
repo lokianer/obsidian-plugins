@@ -4,7 +4,7 @@
 
 import type { Expect } from '../yaml/edit';
 import { keyLookup } from './keys';
-import type { Entity, FactionWorld, RelationField, ResolvedEntity, Warning } from './model';
+import type { FactionWorld, RelationField, ResolvedEntity, Warning } from './model';
 import { asWritten, parseRelationValue } from './values';
 
 export const RELATION_FIELDS: readonly RelationField[] = ['relations', 'secret_relations'];
@@ -108,7 +108,10 @@ function sectionOf(
     const structured = isMap(rawValue);
     const valuePart = structured ? rawValue.value : rawValue;
     const relation = parseRelationValue(valuePart, { path, key, field }, () => undefined);
-    const empty = valuePart === null || valuePart === undefined || String(valuePart).trim() === '';
+    const empty =
+      valuePart === null ||
+      valuePart === undefined ||
+      (typeof valuePart === 'string' && valuePart.trim() === '');
     const targetId = resolve(key);
     const target = targetId ?? `?${key}`;
     const repeated = seenTargets.has(target);
@@ -145,7 +148,7 @@ export function buildCard(
   }
   const fm = frontmatter ?? {};
   const noteWarnings = world.warnings.filter((w) => w.path === path);
-  const resolve = keyLookup(world.entities as Map<string, Entity>);
+  const resolve = keyLookup(world.entities);
   const sections = {
     relations: sectionOf('relations', fm.relations, path, noteWarnings, resolve),
     secret_relations: sectionOf(
