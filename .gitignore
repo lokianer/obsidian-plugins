@@ -1,0 +1,22 @@
+# Private working vault — never committed, never pushed (see CLAUDE.md)
+/Obsidian Plugins Vault/
+
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+main.js
+*.log
+
+# Local secrets and tool state
+.env
+.env.*
+.claude/settings.local.json
+
+# Brainstorming mockups (visual companion)
+.superpowers/
+
+# Example vault: personal Obsidian state and built plugins stay local
+examples/vault/.obsidian/workspace*.json
+examples/vault/.obsidian/plugins/
+examples/vault/.trash/
