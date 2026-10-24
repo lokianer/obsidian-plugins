@@ -25,6 +25,14 @@ function toNumber(raw: unknown): number | null | 'empty' {
 	return null;
 }
 
+/** A value as the note writes it, for the warning that quotes it. */
+function asWritten(raw: unknown): string {
+	if (typeof raw === 'string') {
+		return raw.trim();
+	}
+	return typeof raw === 'number' || typeof raw === 'boolean' ? String(raw) : JSON.stringify(raw);
+}
+
 function isMap(raw: unknown): raw is Record<string, unknown> {
 	return raw !== null && typeof raw === 'object' && !Array.isArray(raw);
 }
@@ -38,8 +46,8 @@ export function parseRelationValue(
 	ctx: { path: string; key: string; field: RelationField },
 	warn: Warn,
 ): Relation | null {
-	const report = (code: Parameters<Warn>[0]['code']) =>
-		warn({ path: ctx.path, code, key: ctx.key, field: ctx.field });
+	const report = (code: Parameters<Warn>[0]['code'], extra: { written?: string; read?: number } = {}) =>
+		warn({ path: ctx.path, code, key: ctx.key, field: ctx.field, ...extra });
 
 	let why: string | undefined;
 	let rawValue = raw;
@@ -60,18 +68,18 @@ export function parseRelationValue(
 		return null;
 	}
 	if (number === null) {
-		report('value-not-a-number');
+		report('value-not-a-number', { written: asWritten(rawValue) });
 		return null;
 	}
 
 	let value = number;
 	if (!Number.isInteger(value)) {
-		report('value-not-integer');
 		value = Math.round(value);
+		report('value-not-integer', { written: asWritten(rawValue), read: value });
 	}
 	if (value < MIN || value > MAX) {
-		report('value-out-of-range');
 		value = Math.min(MAX, Math.max(MIN, value));
+		report('value-out-of-range', { written: asWritten(rawValue), read: value });
 	}
 	return why === undefined ? { value } : { value, why };
 }
@@ -110,16 +118,18 @@ export function parsePower(raw: unknown, path: string, warn: Warn): number {
 	if (raw === null || raw === undefined) {
 		return POWER_DEFAULT;
 	}
+	const power = { path, key: 'power', written: asWritten(raw) };
 	const number = toNumber(raw);
 	if (number === null || number === 'empty') {
-		warn({ path, code: 'power-not-a-number' });
+		warn({ ...power, code: 'power-not-a-number', read: POWER_DEFAULT });
 		return POWER_DEFAULT;
 	}
 	const rounded = Math.round(number);
-	if (rounded < POWER_MIN || rounded > POWER_MAX) {
-		warn({ path, code: 'power-out-of-range' });
+	const result = Math.min(POWER_MAX, Math.max(POWER_MIN, rounded));
+	if (rounded !== result) {
+		warn({ ...power, code: 'power-out-of-range', read: result });
 	} else if (rounded !== number) {
-		warn({ path, code: 'power-not-integer' });
+		warn({ ...power, code: 'power-not-integer', read: result });
 	}
-	return Math.min(POWER_MAX, Math.max(POWER_MIN, rounded));
+	return result;
 }

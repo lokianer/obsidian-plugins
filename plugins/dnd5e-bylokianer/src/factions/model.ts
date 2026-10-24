@@ -37,9 +37,13 @@ export interface Warning {
 	/** The note the problem sits in. */
 	path: string;
 	code: WarningCode;
-	/** The relation key concerned, if any. */
+	/** The relation key concerned (or `power`), if any. */
 	key?: string;
 	field?: RelationField;
+	/** The value as the note writes it, when the warning is about a value. */
+	written?: string;
+	/** What the plugin reads it as instead, when it still uses the value. */
+	read?: number;
 }
 
 export type Warn = (warning: Warning) => void;

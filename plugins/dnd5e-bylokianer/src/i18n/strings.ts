@@ -4,60 +4,73 @@
 export type Lang = 'en' | 'de';
 
 export const en = {
-	'command.showWarnings': 'Show faction warnings',
-	'modal.title': 'Faction warnings',
-	'modal.noCampaign': 'No campaign note found',
-	'modal.noWarnings': 'No warnings — every note reads cleanly.',
-	summary: '{factions} factions, {characters} characters, {warnings} warnings',
-	'warning.value-out-of-range': '“{key}”: the value is outside −5 … +5 and was clamped.',
-	'warning.value-not-a-number': '“{key}”: the value is not a number and was skipped.',
-	'warning.value-not-integer': '“{key}”: the value is not a whole number and was rounded.',
-	'warning.structured-without-value': '“{key}”: the entry has no value and was skipped.',
-	'warning.relations-not-a-map': '{field} is not a list of names with values and was skipped.',
-	'warning.power-out-of-range': 'power is outside 1 … 5 and was clamped.',
-	'warning.power-not-a-number': 'power is not a number; read as 3.',
-	'warning.power-not-integer': 'power is not a whole number and was rounded.',
-	'warning.unknown-target': '“{key}”: no faction or character has this name.',
-	'warning.self-relation': '“{key}”: a relation to itself was skipped.',
-	'warning.ambiguous-key': '“{key}”: a faction and a character share this name; the faction is used.',
-	'warning.duplicate-name': 'Another faction or character already has this name; that one is used.',
-	'warning.missing-type': 'factions.md has no “type: faction”; it is read as a faction anyway.',
-	'warning.duplicate-faction-note':
-		'The folder also has a factions.md; that one is used and this note is ignored.',
-	'warning.duplicate-key': '“{key}”: an earlier entry already names this target; this one was skipped.',
-	'warning.campaign-ignored': 'Another campaign note is in use; this one was passed over.',
+  'command.showWarnings': 'Show faction warnings',
+  'modal.title': 'Faction warnings',
+  'modal.noCampaign': 'No campaign note found',
+  'modal.noWarnings': 'Every note reads cleanly',
+  'stat.factions': 'factions',
+  'stat.characters': 'characters',
+  'stat.warnings': 'warnings',
+  'group.skipped': 'Skipped',
+  'group.adjusted': 'Adjusted',
+  'group.names': 'Names',
+  'group.notes': 'Notes',
+  'field.secret': 'secret',
+  'warning.value-out-of-range': 'outside −5 … +5',
+  'warning.value-not-a-number': '“{written}” is not a number',
+  'warning.value-not-integer': 'not a whole number',
+  'warning.structured-without-value': 'has a reason but no value',
+  'warning.relations-not-a-map': 'is not a list of names with values',
+  'warning.power-out-of-range': 'outside 1 … 5',
+  'warning.power-not-a-number': '“{written}” is not a number',
+  'warning.power-not-integer': 'not a whole number',
+  'warning.unknown-target': 'no faction or character has this name — kept as a dangling target',
+  'warning.self-relation': 'a relation to itself',
+  'warning.ambiguous-key': 'a faction and a character share this name — the faction is used',
+  'warning.duplicate-name': 'another faction or character already has this name — that one is used',
+  'warning.missing-type': 'factions.md has no “type: faction” — read as a faction anyway',
+  'warning.duplicate-faction-note':
+    'the folder also has a factions.md — that one is used, this note is ignored',
+  'warning.duplicate-key': 'an earlier entry already names this target — this one is skipped',
+  'warning.campaign-ignored': 'another campaign note is in use — this one is passed over',
 };
 
 export type StringKey = keyof typeof en;
 
 export const de: Record<StringKey, string> = {
-	'command.showWarnings': 'Fraktions-Warnungen anzeigen',
-	'modal.title': 'Fraktions-Warnungen',
-	'modal.noCampaign': 'Keine Kampagnennotiz gefunden',
-	'modal.noWarnings': 'Keine Warnungen — alle Notizen sind lesbar.',
-	summary: '{factions} Fraktionen, {characters} Charaktere, {warnings} Warnungen',
-	'warning.value-out-of-range': '„{key}“: Der Wert liegt außerhalb von −5 … +5 und wurde begrenzt.',
-	'warning.value-not-a-number': '„{key}“: Der Wert ist keine Zahl und wurde übersprungen.',
-	'warning.value-not-integer': '„{key}“: Der Wert ist keine ganze Zahl und wurde gerundet.',
-	'warning.structured-without-value': '„{key}“: Der Eintrag hat keinen Wert und wurde übersprungen.',
-	'warning.relations-not-a-map': '{field} ist keine Liste aus Namen und Werten und wurde übersprungen.',
-	'warning.power-out-of-range': 'power liegt außerhalb von 1 … 5 und wurde begrenzt.',
-	'warning.power-not-a-number': 'power ist keine Zahl; gelesen als 3.',
-	'warning.power-not-integer': 'power ist keine ganze Zahl und wurde gerundet.',
-	'warning.unknown-target': '„{key}“: Keine Fraktion und kein Charakter heißt so.',
-	'warning.self-relation': '„{key}“: Eine Beziehung zu sich selbst wurde übersprungen.',
-	'warning.ambiguous-key':
-		'„{key}“: Eine Fraktion und ein Charakter heißen gleich; die Fraktion wird verwendet.',
-	'warning.duplicate-name':
-		'Eine andere Fraktion oder ein anderer Charakter heißt schon so; diese wird verwendet.',
-	'warning.missing-type':
-		'factions.md hat kein „type: faction“; sie wird trotzdem als Fraktion gelesen.',
-	'warning.duplicate-faction-note':
-		'Der Ordner hat auch eine factions.md; die wird verwendet, diese Notiz nicht.',
-	'warning.duplicate-key':
-		'„{key}“: Ein früherer Eintrag nennt dieses Ziel schon; dieser wurde übersprungen.',
-	'warning.campaign-ignored':
-		'Eine andere Kampagnennotiz wird verwendet; diese wurde übergangen.',
+  'command.showWarnings': 'Fraktions-Warnungen anzeigen',
+  'modal.title': 'Fraktions-Warnungen',
+  'modal.noCampaign': 'Keine Kampagnennotiz gefunden',
+  'modal.noWarnings': 'Alle Notizen sind sauber lesbar',
+  'stat.factions': 'Fraktionen',
+  'stat.characters': 'Charaktere',
+  'stat.warnings': 'Warnungen',
+  'group.skipped': 'Übersprungen',
+  'group.adjusted': 'Angepasst',
+  'group.names': 'Namen',
+  'group.notes': 'Notizen',
+  'field.secret': 'geheim',
+  'warning.value-out-of-range': 'außerhalb von −5 … +5',
+  'warning.value-not-a-number': '„{written}“ ist keine Zahl',
+  'warning.value-not-integer': 'keine ganze Zahl',
+  'warning.structured-without-value': 'hat eine Begründung, aber keinen Wert',
+  'warning.relations-not-a-map': 'ist keine Liste aus Namen und Werten',
+  'warning.power-out-of-range': 'außerhalb von 1 … 5',
+  'warning.power-not-a-number': '„{written}“ ist keine Zahl',
+  'warning.power-not-integer': 'keine ganze Zahl',
+  'warning.unknown-target': 'keine Fraktion und kein Charakter heißt so — bleibt als offenes Ziel',
+  'warning.self-relation': 'eine Beziehung zu sich selbst',
+  'warning.ambiguous-key':
+    'eine Fraktion und ein Charakter heißen gleich — die Fraktion wird verwendet',
+  'warning.duplicate-name':
+    'eine andere Fraktion oder ein anderer Charakter heißt schon so — diese wird verwendet',
+  'warning.missing-type':
+    'factions.md hat kein „type: faction“ — wird trotzdem als Fraktion gelesen',
+  'warning.duplicate-faction-note':
+    'der Ordner hat auch eine factions.md — die wird verwendet, diese Notiz nicht',
+  'warning.duplicate-key':
+    'ein früherer Eintrag nennt dieses Ziel schon — dieser wird übersprungen',
+  'warning.campaign-ignored': 'eine andere Kampagnennotiz wird verwendet — diese wird übergangen',
 };
 
 export type T = (key: StringKey, vars?: Record<string, string | number>) => string;
@@ -65,9 +78,9 @@ export type T = (key: StringKey, vars?: Record<string, string | number>) => stri
 const tables: Record<Lang, Record<StringKey, string>> = { en, de };
 
 export function createT(lang: string): T {
-	const table = lang === 'de' ? tables.de : tables.en;
-	return (key, vars = {}) =>
-		table[key].replace(/\{(\w+)\}/g, (match, name: string) =>
-			name in vars ? String(vars[name]) : match,
-		);
+  const table = lang === 'de' ? tables.de : tables.en;
+  return (key, vars = {}) =>
+    table[key].replace(/\{(\w+)\}/g, (match, name: string) =>
+      name in vars ? String(vars[name]) : match,
+    );
 }

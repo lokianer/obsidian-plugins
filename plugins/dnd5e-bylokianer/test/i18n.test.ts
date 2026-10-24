@@ -43,8 +43,8 @@ describe('strings', () => {
 	});
 
 	it('fills placeholders', () => {
-		expect(createT('en')('summary', { factions: 5, characters: 14, warnings: 6 })).toBe(
-			'5 factions, 14 characters, 6 warnings',
+		expect(createT('en')('warning.value-not-a-number', { written: 'hates' })).toBe(
+			'“hates” is not a number',
 		);
 	});
 });

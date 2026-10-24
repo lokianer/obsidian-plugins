@@ -39,10 +39,24 @@ describe('parseRelationValue', () => {
 		expect(codes(value(2.6).warnings)).toEqual(['value-not-integer']);
 	});
 
+	it('says what was written and what it was read as', () => {
+		expect(value(7).warnings[0]).toMatchObject({ written: '7', read: 5 });
+		expect(value('−9').warnings[0]).toMatchObject({ written: '−9', read: -5 });
+		expect(value(2.6).warnings[0]).toMatchObject({ written: '2.6', read: 3 });
+	});
+
 	it('rejects what is not a number and says why', () => {
 		expect(value('hates')).toEqual({
 			result: null,
-			warnings: [{ path: 'F/factions.md', code: 'value-not-a-number', key: 'K', field: 'relations' }],
+			warnings: [
+				{
+					path: 'F/factions.md',
+					code: 'value-not-a-number',
+					key: 'K',
+					field: 'relations',
+					written: 'hates',
+				},
+			],
 		});
 		expect(value(true).result).toBeNull();
 		expect(codes(value({ why: '[[Elder Wren]]' }).warnings)).toEqual(['structured-without-value']);
@@ -85,7 +99,13 @@ describe('parseRelationMap', () => {
 
 	it('passes the field and key on to the warnings', () => {
 		expect(map({ Order: 'hates' }).warnings).toEqual([
-			{ path: 'F/factions.md', code: 'value-not-a-number', key: 'Order', field: 'secret_relations' },
+			{
+				path: 'F/factions.md',
+				code: 'value-not-a-number',
+				key: 'Order',
+				field: 'secret_relations',
+				written: 'hates',
+			},
 		]);
 	});
 
@@ -112,6 +132,16 @@ describe('parsePower', () => {
 		expect(power(4)).toEqual({ result: 4, codes: [] });
 		expect(power(9)).toEqual({ result: 5, codes: ['power-out-of-range'] });
 		expect(power(0)).toEqual({ result: 1, codes: ['power-out-of-range'] });
+	});
+
+	it('says what power was written and what it was read as', () => {
+		const warnings: Warning[] = [];
+		parsePower(9, 'F/factions.md', (w) => warnings.push(w));
+		parsePower('high', 'F/factions.md', (w) => warnings.push(w));
+		expect(warnings).toEqual([
+			{ path: 'F/factions.md', code: 'power-out-of-range', key: 'power', written: '9', read: 5 },
+			{ path: 'F/factions.md', code: 'power-not-a-number', key: 'power', written: 'high', read: 3 },
+		]);
 	});
 
 	it('says what it did with a power it could not use as written', () => {
