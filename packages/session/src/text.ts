@@ -1,6 +1,6 @@
 // Splitting a note into lines and back, keeping its line endings and a BOM.
 
-const BOM = '﻿';
+const BOM = '\uFEFF';
 
 export interface NoteLines {
   lines: string[];
