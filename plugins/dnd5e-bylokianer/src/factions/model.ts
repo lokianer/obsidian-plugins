@@ -30,14 +30,15 @@ export type WarningCode =
 	| 'missing-type'
 	| 'duplicate-faction-note'
 	| 'duplicate-key'
-	| 'campaign-ignored';
+	| 'campaign-ignored'
+	| 'broken-frontmatter';
 
 /** A problem in the GM's data, reported once and never fatal. */
 export interface Warning {
 	/** The note the problem sits in. */
 	path: string;
 	code: WarningCode;
-	/** The relation key concerned (or `power`), if any. */
+	/** The relation key concerned (or `power`, or the clashing name), if any. */
 	key?: string;
 	field?: RelationField;
 	/** The value as the note writes it, when the warning is about a value. */

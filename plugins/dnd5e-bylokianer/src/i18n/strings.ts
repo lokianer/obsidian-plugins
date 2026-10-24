@@ -8,8 +8,11 @@ export const en = {
   'modal.title': 'Faction warnings',
   'modal.noCampaign': 'No campaign note found',
   'modal.noWarnings': 'Every note reads cleanly',
+  'stat.faction': 'faction',
   'stat.factions': 'factions',
+  'stat.character': 'character',
   'stat.characters': 'characters',
+  'stat.warning': 'warning',
   'stat.warnings': 'warnings',
   'group.skipped': 'Skipped',
   'group.adjusted': 'Adjusted',
@@ -33,6 +36,7 @@ export const en = {
     'the folder also has a factions.md — that one is used, this note is ignored',
   'warning.duplicate-key': 'an earlier entry already names this target — this one is skipped',
   'warning.campaign-ignored': 'another campaign note is in use — this one is passed over',
+  'warning.broken-frontmatter': 'the frontmatter is not valid YAML — none of its values are read',
 };
 
 export type StringKey = keyof typeof en;
@@ -42,8 +46,11 @@ export const de: Record<StringKey, string> = {
   'modal.title': 'Fraktions-Warnungen',
   'modal.noCampaign': 'Keine Kampagnennotiz gefunden',
   'modal.noWarnings': 'Alle Notizen sind sauber lesbar',
+  'stat.faction': 'Fraktion',
   'stat.factions': 'Fraktionen',
+  'stat.character': 'Charakter',
   'stat.characters': 'Charaktere',
+  'stat.warning': 'Warnung',
   'stat.warnings': 'Warnungen',
   'group.skipped': 'Übersprungen',
   'group.adjusted': 'Angepasst',
@@ -71,6 +78,8 @@ export const de: Record<StringKey, string> = {
   'warning.duplicate-key':
     'ein früherer Eintrag nennt dieses Ziel schon — dieser wird übersprungen',
   'warning.campaign-ignored': 'eine andere Kampagnennotiz wird verwendet — diese wird übergangen',
+  'warning.broken-frontmatter':
+    'das Frontmatter ist kein gültiges YAML — keiner seiner Werte wird gelesen',
 };
 
 export type T = (key: StringKey, vars?: Record<string, string | number>) => string;

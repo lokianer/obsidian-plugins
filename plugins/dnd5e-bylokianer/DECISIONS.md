@@ -63,3 +63,30 @@ several campaign notes the smallest path still wins (one campaign per vault), an
 gets `campaign-ignored`, so a template carrying `type: campaign` cannot hide the real campaign
 silently. A `power` that is not a number reads as 3 (`power-not-a-number`), a fractional one is
 rounded (`power-not-integer`), one outside 1–5 is clamped (`power-out-of-range`).
+
+## 2026-10-24 · How relation keys find their target
+
+A key is trimmed and then looked up in this order: a faction's exact name (`name:`, else the folder
+name), a faction's exact folder name, the same two ignoring case; only then a character's exact
+note name, then ignoring case. So a faction beats a character of the same name (`ambiguous-key`).
+Two factions — or two characters — sharing a name, also only in case, are a clash: whoever holds
+the name ignoring case keeps it (a faction's name before another's folder name, then the smaller
+id) and every other one is named with `duplicate-name` and the clashing name. A faction whose folder differs
+from its name only in case is no clash.
+
+## 2026-10-24 · Reading numbers and notes leniently, but never silently
+
+- Numbers are plain decimal notation (`3`, `-1`, `+2`, `2.5`); `0x3`, `1e0` or `Infinity` are not a
+  number. A leading `−` (U+2212) or `–` (en dash, which editors put in for a typed hyphen) is a
+  minus. Fractions round half away from zero, so −2.5 reads as −3 like 2.5 reads as 3.
+- `factions.md` is recognised in any case (`Factions.md`), as Windows and macOS treat file names; of
+  two spellings in one folder the exact one wins and the other is named (`duplicate-faction-note`).
+- A `factions.md` with an explicit other `type` (an overview note in a container folder) is not a
+  faction note, and gets no warning: the type says what it is. Without any type it still counts,
+  with `missing-type`.
+- A note whose frontmatter holds YAML that does not parse is named with `broken-frontmatter`
+  instead of vanishing; nothing is read from it (a broken `factions.md` still makes its folder a
+  faction, with the folder name). An empty block is fine. Obsidian's cache cannot tell the two
+  apart, so the adapter reads the text of just those notes whose cache shows a block but no values.
+
+Left out: a decimal comma (`2,5`) — it reads as not a number and is warned about.

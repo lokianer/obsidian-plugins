@@ -11,8 +11,8 @@ export default class Dnd5ePlugin extends Plugin {
 		this.addCommand({
 			id: 'show-faction-warnings',
 			name: t('command.showWarnings'),
-			callback: () => {
-				new WarningsModal(this.app, buildWorld(collectNotes(this.app)), t).open();
+			callback: async () => {
+				new WarningsModal(this.app, buildWorld(await collectNotes(this.app)), t).open();
 			},
 		});
 	}

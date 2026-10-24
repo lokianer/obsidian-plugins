@@ -4,4 +4,6 @@ export interface NoteInput {
 	path: string;
 	/** Parsed frontmatter, or undefined when the note has none or it does not parse. */
 	frontmatter: Record<string, unknown> | undefined;
+	/** True when the note opens with a frontmatter block that holds YAML but does not parse. */
+	frontmatterBroken?: boolean;
 }

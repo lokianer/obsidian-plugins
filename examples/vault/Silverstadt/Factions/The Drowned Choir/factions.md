@@ -27,7 +27,7 @@ tags:
 
 A cult that sings to the river at low tide, and the **test faction** of this vault: every value in its frontmatter is broken in a different way, with a comment saying what the plugin should do. Nothing here may crash a view; each problem should show up once in a list of warnings.
 
-The Choir has no members yet, so opening it one level deeper should show an empty faction, not an error.
+The Choir has no members yet — [[Brother Silt]]'s frontmatter is broken, so he is not read as one — and opening it one level deeper should show an empty faction, not an error.
 
 > [!gm]
 > They are right about the thing under the river. That is the worst part.

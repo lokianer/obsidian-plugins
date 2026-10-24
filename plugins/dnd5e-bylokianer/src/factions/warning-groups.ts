@@ -24,6 +24,7 @@ const GROUPS: Record<WarningCode, WarningGroup> = {
   'missing-type': 'notes',
   'duplicate-faction-note': 'notes',
   'campaign-ignored': 'notes',
+  'broken-frontmatter': 'notes',
 };
 
 export function warningGroup(code: WarningCode): WarningGroup {

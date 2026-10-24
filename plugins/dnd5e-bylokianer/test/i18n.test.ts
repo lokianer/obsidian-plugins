@@ -20,6 +20,7 @@ const CODES: WarningCode[] = [
 	'campaign-ignored',
 	'power-not-a-number',
 	'power-not-integer',
+	'broken-frontmatter',
 ];
 
 describe('strings', () => {

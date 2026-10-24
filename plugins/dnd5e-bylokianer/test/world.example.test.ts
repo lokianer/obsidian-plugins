@@ -104,15 +104,19 @@ describe('the example vault — entities and warnings', () => {
 		expect(all.filter((e) => e.kind === 'character')).toHaveLength(14);
 	});
 
-	it('warns only about the Drowned Choir, once per problem', () => {
-		expect(world.warnings.map((w) => w.path)).toEqual(Array(6).fill(`${CHOIR}/factions.md`));
-		expect(world.warnings.map((w) => w.code).sort()).toEqual([
+	it('warns only about the Drowned Choir and the two broken notes, once per problem', () => {
+		const choir = world.warnings.filter((w) => w.path === `${CHOIR}/factions.md`);
+		expect(choir.map((w) => w.code).sort()).toEqual([
 			'power-out-of-range',
 			'self-relation',
 			'structured-without-value',
 			'unknown-target',
 			'value-not-a-number',
 			'value-out-of-range',
+		]);
+		expect(world.warnings.filter((w) => w.path !== `${CHOIR}/factions.md`)).toEqual([
+			{ path: `${CHOIR}/Brother Silt.md`, code: 'broken-frontmatter' },
+			{ path: 'Silverstadt/Quests/The Missing Bellringer.md', code: 'broken-frontmatter' },
 		]);
 	});
 });

@@ -95,7 +95,39 @@ describe('resolveKeys', () => {
 			faction('F/A/Watch', 'Watch'),
 		]);
 		expect(targets(entities.get('F/Guild'))).toEqual(['F/A/Watch']);
-		expect(warnings).toEqual([{ path: 'F/B/Watch/factions.md', code: 'duplicate-name' }]);
+		expect(warnings).toEqual([
+			{ path: 'F/B/Watch/factions.md', code: 'duplicate-name', key: 'Watch' },
+		]);
+	});
+
+	it('names a clash that differs only in case', () => {
+		const { warnings } = resolve([
+			faction('F/A', 'The Watch'),
+			faction('F/B', 'the watch'),
+			character('N/Sable.md'),
+			character('P/sable.md'),
+		]);
+		expect(warnings).toEqual([
+			{ path: 'F/B/factions.md', code: 'duplicate-name', key: 'the watch' },
+			{ path: 'P/sable.md', code: 'duplicate-name', key: 'sable' },
+		]);
+	});
+
+	it('names a faction whose folder name another faction has as its name', () => {
+		const { entities, warnings } = resolve([
+			faction('F/A/Watch', 'The City Watch'),
+			faction('F/B/Guild', 'Watch'),
+			faction('F/C/Court', 'Court', { Watch: -2 }),
+		]);
+		expect(targets(entities.get('F/C/Court'))).toEqual(['F/B/Guild']);
+		expect(warnings).toEqual([
+			{ path: 'F/A/Watch/factions.md', code: 'duplicate-name', key: 'Watch' },
+		]);
+	});
+
+	it('takes no offence at a folder named like its own faction in another case', () => {
+		const { warnings } = resolve([faction('F/watch', 'Watch'), character('N/Watch.md')]);
+		expect(warnings).toEqual([]);
 	});
 
 	it('keeps unknown targets as ghosts and drops relations to oneself', () => {
@@ -172,6 +204,8 @@ describe('buildWorld', () => {
 			{ path: 'C/G/Guild/factions.md', frontmatter: { type: 'faction', relations: { Watch: 1 } } },
 			{ path: 'C/G/Guild/Ilka.md', frontmatter: { type: 'npc', relations: { Watch: 2 } } },
 		]);
-		expect(twice.warnings).toEqual([{ path: 'C/B/Watch/factions.md', code: 'duplicate-name' }]);
+		expect(twice.warnings).toEqual([
+			{ path: 'C/B/Watch/factions.md', code: 'duplicate-name', key: 'Watch' },
+		]);
 	});
 });

@@ -59,6 +59,43 @@ describe('discoverEntities — factions', () => {
 		expect(warnings).toEqual([{ path: 'C/F/Guild/factions.md', code: 'missing-type' }]);
 	});
 
+	it('recognises factions.md in any case, the exact spelling first', () => {
+		const { entities, warnings } = discover([
+			note('C/F/Guild/Factions.md', { type: 'faction' }),
+			note('C/F/Watch/FACTIONS.md', { type: 'faction' }),
+			note('C/F/Watch/factions.md', { type: 'faction' }),
+		]);
+		expect(entities.get('C/F/Guild')?.notePath).toBe('C/F/Guild/Factions.md');
+		expect(entities.get('C/F/Watch')?.notePath).toBe('C/F/Watch/factions.md');
+		expect(warnings).toEqual([
+			{ path: 'C/F/Watch/FACTIONS.md', code: 'duplicate-faction-note' },
+		]);
+	});
+
+	it('does not read a factions.md with another type as a faction', () => {
+		const { entities, warnings } = discover([
+			note('C/Factions/factions.md', { type: 'overview' }),
+			note('C/Factions/Guild/factions.md', { type: 'faction' }),
+		]);
+		expect([...entities.keys()]).toEqual(['C/Factions/Guild']);
+		expect(entities.get('C/Factions/Guild')?.parent).toBeNull();
+		expect(warnings).toEqual([]);
+	});
+
+	it('names a note whose frontmatter does not parse, and no more than that', () => {
+		const { entities, warnings } = discover([
+			{ path: 'C/F/Guild/factions.md', frontmatter: undefined, frontmatterBroken: true },
+			{ path: 'C/F/Guild/Ilka.md', frontmatter: undefined, frontmatterBroken: true },
+			{ path: 'Templates/NPC.md', frontmatter: undefined, frontmatterBroken: true },
+		]);
+		expect(entities.get('C/F/Guild')?.name).toBe('Guild');
+		expect(entities.has('C/F/Guild/Ilka.md')).toBe(false);
+		expect(warnings).toEqual([
+			{ path: 'C/F/Guild/Ilka.md', code: 'broken-frontmatter' },
+			{ path: 'C/F/Guild/factions.md', code: 'broken-frontmatter' },
+		]);
+	});
+
 	it('nests a sub-faction under the nearest faction above it', () => {
 		const { entities } = discover([
 			note('C/F/Court/factions.md', { type: 'faction' }),

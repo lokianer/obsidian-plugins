@@ -20,7 +20,7 @@ const ICONS: Record<WarningGroup, string> = {
 function noteName(path: string): { name: string; file: string | null } {
   const parts = path.split('/');
   const file = parts[parts.length - 1] ?? path;
-  if (file === FACTION_NOTE && parts.length > 1) {
+  if (file.toLowerCase() === FACTION_NOTE && parts.length > 1) {
     return { name: parts[parts.length - 2] ?? path, file };
   }
   return { name: file.replace(/\.md$/, ''), file: null };
@@ -48,17 +48,13 @@ export class WarningsModal extends Modal {
 
     const entities = [...world.entities.values()];
     const stats = contentEl.createDiv({ cls: 'dnd5e-warnings-stats' });
-    this.renderStat(
-      stats,
-      entities.filter((e) => e.kind === 'faction' && !e.pseudo).length,
-      t('stat.factions'),
-    );
-    this.renderStat(
-      stats,
-      entities.filter((e) => e.kind === 'character').length,
-      t('stat.characters'),
-    );
-    this.renderStat(stats, world.warnings.length, t('stat.warnings'), world.warnings.length > 0);
+    const factions = entities.filter((e) => e.kind === 'faction' && !e.pseudo).length;
+    const characters = entities.filter((e) => e.kind === 'character').length;
+    const warnings = world.warnings.length;
+    this.renderStat(stats, factions, t(factions === 1 ? 'stat.faction' : 'stat.factions'));
+    this.renderStat(stats, characters, t(characters === 1 ? 'stat.character' : 'stat.characters'));
+    const warningsLabel = t(warnings === 1 ? 'stat.warning' : 'stat.warnings');
+    this.renderStat(stats, warnings, warningsLabel, warnings > 0);
 
     if (world.warnings.length === 0) {
       const empty = contentEl.createDiv({ cls: 'dnd5e-warnings-empty is-clean' });

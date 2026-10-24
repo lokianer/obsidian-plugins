@@ -9,20 +9,30 @@ const POWER_MIN = 1;
 const POWER_MAX = 5;
 const POWER_DEFAULT = 3;
 
-/** A number from a YAML number or a numeric string; `−` (U+2212) counts as a minus. */
+/** Plain decimal notation only: no hex, no exponent, no `Infinity`. */
+const DECIMAL = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/;
+
+/**
+ * A number from a YAML number or a numeric string. A leading `−` (U+2212) or `–` (en dash,
+ * which editors put in for a typed hyphen) counts as a minus.
+ */
 function toNumber(raw: unknown): number | null | 'empty' {
 	if (typeof raw === 'number') {
 		return Number.isFinite(raw) ? raw : null;
 	}
 	if (typeof raw === 'string') {
-		const text = raw.trim().replace(/−/g, '-');
+		const text = raw.trim().replace(/^[−–]/, '-');
 		if (text === '') {
 			return 'empty';
 		}
-		const number = Number(text);
-		return Number.isFinite(number) ? number : null;
+		return DECIMAL.test(text) ? Number(text) : null;
 	}
 	return null;
+}
+
+/** Rounds half away from zero, so −2.5 and 2.5 move the same distance; never yields −0. */
+function round(value: number): number {
+	return Math.sign(value) * Math.round(Math.abs(value)) || 0;
 }
 
 /** A value as the note writes it, for the warning that quotes it. */
@@ -74,7 +84,7 @@ export function parseRelationValue(
 
 	let value = number;
 	if (!Number.isInteger(value)) {
-		value = Math.round(value);
+		value = round(value);
 		report('value-not-integer', { written: asWritten(rawValue), read: value });
 	}
 	if (value < MIN || value > MAX) {
@@ -124,7 +134,7 @@ export function parsePower(raw: unknown, path: string, warn: Warn): number {
 		warn({ ...power, code: 'power-not-a-number', read: POWER_DEFAULT });
 		return POWER_DEFAULT;
 	}
-	const rounded = Math.round(number);
+	const rounded = round(number);
 	const result = Math.min(POWER_MAX, Math.max(POWER_MIN, rounded));
 	if (rounded !== result) {
 		warn({ ...power, code: 'power-out-of-range', read: result });

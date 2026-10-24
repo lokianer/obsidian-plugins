@@ -21,6 +21,25 @@ describe('parseRelationValue', () => {
 		expect(value(' 2 ')).toEqual({ result: { value: 2 }, warnings: [] });
 	});
 
+	it('reads an en dash as a minus, as editors type it', () => {
+		expect(value('–3')).toEqual({ result: { value: -3 }, warnings: [] });
+		expect(value('+2')).toEqual({ result: { value: 2 }, warnings: [] });
+	});
+
+	it('accepts plain decimal notation only', () => {
+		for (const raw of ['0x3', '1e0', 'Infinity', '3-', '--3', '0b1']) {
+			expect(codes(value(raw).warnings)).toEqual(['value-not-a-number']);
+		}
+		expect(value('.5').result).toEqual({ value: 1 });
+	});
+
+	it('rounds halves away from zero, the same on both sides', () => {
+		expect(value(2.5).result).toEqual({ value: 3 });
+		expect(value(-2.5).result).toEqual({ value: -3 });
+		expect(value('−0.4').result).toEqual({ value: 0 });
+		expect(Object.is(value(-0.4).result?.value, 0)).toBe(true);
+	});
+
 	it('reads the structured form and keeps only a string why', () => {
 		expect(value({ value: -3, why: '[[X]]' })).toEqual({
 			result: { value: -3, why: '[[X]]' },
@@ -148,5 +167,7 @@ describe('parsePower', () => {
 		expect(power('x')).toEqual({ result: 3, codes: ['power-not-a-number'] });
 		expect(power(2.5)).toEqual({ result: 3, codes: ['power-not-integer'] });
 		expect(power(7.5)).toEqual({ result: 5, codes: ['power-out-of-range'] });
+		expect(power('0x3')).toEqual({ result: 3, codes: ['power-not-a-number'] });
+		expect(power(3.5)).toEqual({ result: 4, codes: ['power-not-integer'] });
 	});
 });

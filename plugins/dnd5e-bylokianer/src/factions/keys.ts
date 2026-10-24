@@ -1,19 +1,17 @@
-// Turning the names written as relation keys into entity ids. Order: exact faction name, exact
-// folder name, exact character name, then the same three ignoring case. A faction beats a
-// character of the same name; of two factions with one name the smaller id wins. Of two keys that
-// name the same target the first written wins.
+// Turning the names written as relation keys into entity ids. Factions: exact name, exact folder
+// name, then the same two ignoring case; characters: exact name, then ignoring case. A faction
+// beats a character of the same name; of two factions (or characters) with one name the smaller id
+// wins. Of two keys that name the same target the first written wins.
 
 import type { Entity, Relation, RelationField, ResolvedEntity, Warn } from './model';
 
 type Index = Map<string, string>;
 
-/** Adds name → id unless the name is taken; returns the id that already held it, if any. */
-function claim(index: Index, name: string, id: string): string | undefined {
-	const held = index.get(name);
-	if (held === undefined) {
+/** Adds name → id unless the name is taken. */
+function claim(index: Index, name: string, id: string): void {
+	if (!index.has(name)) {
 		index.set(name, id);
 	}
-	return held;
 }
 
 interface Indexes {
@@ -23,6 +21,14 @@ interface Indexes {
 	factionNameCi: Index;
 	folderNameCi: Index;
 	characterNameCi: Index;
+}
+
+/** The names a key can reach an entity by: a faction's name and folder, a character's name. */
+function namesOf(entity: Entity): string[] {
+	const folder = entity.folderName;
+	return folder === undefined || folder.toLowerCase() === entity.name.toLowerCase()
+		? [entity.name]
+		: [entity.name, folder];
 }
 
 function buildIndexes(entities: Map<string, Entity>, warn: Warn): Indexes {
@@ -39,19 +45,34 @@ function buildIndexes(entities: Map<string, Entity>, warn: Warn): Indexes {
 		.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 	for (const entity of sorted) {
 		if (entity.kind === 'faction') {
-			if (claim(indexes.factionName, entity.name, entity.id) !== undefined && entity.notePath) {
-				warn({ path: entity.notePath, code: 'duplicate-name' });
-			}
+			claim(indexes.factionName, entity.name, entity.id);
 			claim(indexes.factionNameCi, entity.name.toLowerCase(), entity.id);
 			if (entity.folderName !== undefined) {
 				claim(indexes.folderName, entity.folderName, entity.id);
 				claim(indexes.folderNameCi, entity.folderName.toLowerCase(), entity.id);
 			}
 		} else {
-			if (claim(indexes.characterName, entity.name, entity.id) !== undefined && entity.notePath) {
-				warn({ path: entity.notePath, code: 'duplicate-name' });
-			}
+			claim(indexes.characterName, entity.name, entity.id);
 			claim(indexes.characterNameCi, entity.name.toLowerCase(), entity.id);
+		}
+	}
+	// Two entities of one kind sharing a name, also only in case: the holder of the name ignoring
+	// case keeps it (a faction's name before a folder name, then the smaller id), every other one
+	// is named. A faction and a character sharing a name are no clash here; the key that hits both
+	// says so (`ambiguous-key`).
+	for (const entity of sorted) {
+		if (entity.notePath === null) {
+			continue;
+		}
+		for (const name of namesOf(entity)) {
+			const lower = name.toLowerCase();
+			const holder =
+				entity.kind === 'faction'
+					? (indexes.factionNameCi.get(lower) ?? indexes.folderNameCi.get(lower))
+					: indexes.characterNameCi.get(lower);
+			if (holder !== entity.id) {
+				warn({ path: entity.notePath, code: 'duplicate-name', key: name });
+			}
 		}
 	}
 	return indexes;

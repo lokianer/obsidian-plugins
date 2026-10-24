@@ -5,6 +5,7 @@ import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
+import { frontmatterBody, hasFrontmatterContent } from '../src/frontmatter';
 import type { NoteInput } from '../src/types';
 
 const vaultRoot = fileURLToPath(new URL('../../../examples/vault', import.meta.url));
@@ -24,12 +25,12 @@ function markdownFiles(dir: string): string[] {
 
 /** The frontmatter between the first two `---` lines, parsed; undefined when absent or broken. */
 export function frontmatterOf(text: string): Record<string, unknown> | undefined {
-	const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(text);
-	if (match === null) {
+	const body = frontmatterBody(text);
+	if (body === null) {
 		return undefined;
 	}
 	try {
-		const data: unknown = parse(match[1] ?? '');
+		const data: unknown = parse(body);
 		return data !== null && typeof data === 'object' && !Array.isArray(data)
 			? (data as Record<string, unknown>)
 			: undefined;
@@ -38,15 +39,22 @@ export function frontmatterOf(text: string): Record<string, unknown> | undefined
 	}
 }
 
+/** A note as the adapter hands it over: broken only when its block holds YAML that fails. */
+export function noteFromText(path: string, text: string): NoteInput {
+	const frontmatter = frontmatterOf(text);
+	return frontmatter === undefined && hasFrontmatterContent(text)
+		? { path, frontmatter, frontmatterBroken: true }
+		: { path, frontmatter };
+}
+
 let cache: NoteInput[] | undefined;
 
 /** Every note of the example vault, with vault-relative POSIX paths. */
 export function loadExampleVault(): NoteInput[] {
 	cache ??= markdownFiles(vaultRoot)
-		.map((file) => ({
-			path: relative(vaultRoot, file).split(sep).join('/'),
-			frontmatter: frontmatterOf(readFileSync(file, 'utf8')),
-		}))
+		.map((file) =>
+			noteFromText(relative(vaultRoot, file).split(sep).join('/'), readFileSync(file, 'utf8')),
+		)
 		.sort((a, b) => (a.path < b.path ? -1 : 1));
 	return cache;
 }

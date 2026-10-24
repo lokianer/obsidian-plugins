@@ -67,7 +67,14 @@ export function discoverEntities(
 		.filter((note) => inCampaign(campaign, note.path))
 		.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
 
-	// Pick one faction note per folder.
+	for (const note of scoped) {
+		if (note.frontmatterBroken === true) {
+			warn({ path: note.path, code: 'broken-frontmatter' });
+		}
+	}
+
+	// Pick one faction note per folder. `factions.md` is matched in any case, as Windows and macOS
+	// do; one with an explicit other type (an overview note, say) is not a faction note.
 	const primary = new Map<string, NoteInput>();
 	const folderNamed = new Map<string, NoteInput>();
 	for (const note of scoped) {
@@ -75,9 +82,20 @@ export function discoverEntities(
 		if (folder === '') {
 			continue;
 		}
-		if (baseName(note.path) === FACTION_NOTE) {
-			primary.set(folder, note);
-		} else if (stem(note.path) === baseName(folder) && typeOf(note.frontmatter) === 'faction') {
+		const type = typeOf(note.frontmatter);
+		if (baseName(note.path).toLowerCase() === FACTION_NOTE) {
+			if (type !== undefined && type !== 'faction') {
+				continue;
+			}
+			const held = primary.get(folder);
+			// Two spellings in one folder (only possible on Linux): the exact one wins.
+			const exact = held === undefined || baseName(note.path) === FACTION_NOTE;
+			const [kept, passed] = exact ? [note, held] : [held, note];
+			if (passed !== undefined) {
+				warn({ path: passed.path, code: 'duplicate-faction-note' });
+			}
+			primary.set(folder, kept);
+		} else if (stem(note.path) === baseName(folder) && type === 'faction') {
 			folderNamed.set(folder, note);
 		}
 	}
@@ -87,7 +105,7 @@ export function discoverEntities(
 		if (other !== undefined) {
 			warn({ path: other.path, code: 'duplicate-faction-note' });
 		}
-		if (typeOf(note.frontmatter) !== 'faction') {
+		if (typeOf(note.frontmatter) !== 'faction' && note.frontmatterBroken !== true) {
 			warn({ path: note.path, code: 'missing-type' });
 		}
 		factionNotes.set(folder, note);
