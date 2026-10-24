@@ -3,8 +3,9 @@
 Collection repository for the Obsidian plugins the maintainer builds with Claude. This file applies to the
 whole repository; a plugin may add its own `CLAUDE.md` in its folder for plugin-specific rules.
 
-**Start every session with `ROADMAP.md`**: it says what is done and where to continue. Update it at the
-end of every session. A cloud session has no access to the private vault below, so anything a later
+**Start every session with `ROADMAP.md`, then `HANDOFF.md`**: the roadmap says what is done and where
+to continue, the handoff how the last session left things. At the end of every session update the
+roadmap and rewrite the handoff, following its structure. A cloud session has no access to the private vault below, so anything a later
 session needs must be in the repository (roadmap, specs, plans, `DECISIONS.md`).
 
 ## The vault is never pushed
