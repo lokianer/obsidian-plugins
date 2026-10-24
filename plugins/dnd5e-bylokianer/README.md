@@ -5,7 +5,8 @@ factions are folders holding a `factions.md`, relations are frontmatter values f
 (sworn), and members inherit their faction's stance unless they state their own. Later modules: an
 NPC builder with 5e stat blocks, a battle tracker and dice.
 
-Status: phase 1 of the factions module (data model) is in progress. See the repository's
+Status: phase 1 of the factions module (data model) is done; the command **Show faction
+warnings** lists every note the plugin could not read cleanly. See the repository's
 `ROADMAP.md` and the design in `docs/superpowers/specs/2026-10-24-factions-design.md`.
 
 ## Conventions

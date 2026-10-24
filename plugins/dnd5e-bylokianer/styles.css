@@ -1,1 +1,29 @@
 /* dnd5e-byLokianer — styles. Only Obsidian CSS variables, so every theme works. */
+
+.dnd5e-warnings {
+	font-size: 16px;
+	color: var(--text-normal);
+}
+
+.dnd5e-warnings-summary {
+	font-weight: var(--font-semibold);
+}
+
+.dnd5e-warnings-empty,
+.dnd5e-warnings-path {
+	color: var(--text-muted);
+}
+
+.dnd5e-warnings-list {
+	padding-left: 0;
+	list-style: none;
+}
+
+.dnd5e-warnings-row {
+	padding: var(--size-4-2) 0;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.dnd5e-warnings-path {
+	font-size: var(--font-ui-small);
+}

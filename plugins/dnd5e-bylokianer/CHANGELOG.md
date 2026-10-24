@@ -8,5 +8,8 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- Faction data model: campaign scope, factions and members, relation parsing with warnings,
+  public and true stances with inheritance.
+- Command **Show faction warnings** (English and German).
 - Plugin scaffold: manifest, build with esbuild, Vitest, eslint with Obsidian's rules, CI on Linux,
   macOS and Windows.

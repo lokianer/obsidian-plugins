@@ -13,11 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · Phase 1: build it from the plan.**
-The design is approved for phase 1 (2026-10-24); the plan is
-[`docs/superpowers/plans/2026-10-24-factions-phase-1.md`](docs/superpowers/plans/2026-10-24-factions-phase-1.md)
-(7 tasks). Start with the first unticked task; build only once the maintainer has approved the plan.
-Stop for review when phase 1 is done.
+**dnd5e-byLokianer · Factions · Phase 2: world view.** Phase 1 is built (2026-10-24) and waits for
+the maintainer's review. Once approved, write the phase 2 plan from the design
+([`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md))
+with superpowers:writing-plans; build only once the maintainer has approved that plan.
 
 ---
 
@@ -32,20 +31,20 @@ Statblocks. Test vault: `examples/vault/` (start at its `Home.md`).
 
 Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md)
 
-- [ ] **Phase 1 — Skeleton and data** ← *next*
+- [x] **Phase 1 — Skeleton and data** (built 2026-10-24, awaiting review)
   - [x] Plugin scaffold: official sample plugin, pnpm workspace, strict TypeScript, esbuild, Vitest,
         eslint (+ `eslint-plugin-obsidianmd` if current), prettier, CI on Linux/macOS/Windows
   - [x] `commit-msg` hook rejecting attribution lines (see `CLAUDE.md`), next to the existing
         `pre-push` hook in `.githooks/`
   - [x] Plugin docs: `README.md`, `DECISIONS.md` (carry over the decisions listed below),
         `CHANGELOG.md`, `HANDOFF.md`, `LICENSE` (MIT)
-  - [ ] Campaign scope (`type: campaign`, its folder and below)
-  - [ ] Faction discovery (`factions.md` or folder-named note, sub-factions, members, Party and
+  - [x] Campaign scope (`type: campaign`, its folder and below)
+  - [x] Faction discovery (`factions.md` or folder-named note, sub-factions, members, Party and
         Unaffiliated pseudo-factions)
-  - [ ] Relation parsing: plain and `{ value, why }` forms, all warnings, clamping
-  - [ ] Resolution: public and true stance with inheritance, as one pure function taking the mode
-  - [ ] Tests against every case in `examples/vault/` (The Drowned Choir holds the broken ones)
-- [ ] **Phase 2 — World view**: graph with bloc layout and matrix, switchable; colours and step names;
+  - [x] Relation parsing: plain and `{ value, why }` forms, all warnings, clamping
+  - [x] Resolution: public and true stance with inheritance, as one pure function taking the mode
+  - [x] Tests against every case in `examples/vault/` (The Drowned Choir holds the broken ones)
+- [ ] **Phase 2 — World view** ← *next*: graph with bloc layout and matrix, switchable; colours and step names;
       Public/True toggle (Public by default); warnings badge; click behaviour
 - [ ] **Phase 3 — Faction view and tension panel**
 - [ ] **Phase 4 — Editing and history**: sliders writing line edits; shared "tonight's session"

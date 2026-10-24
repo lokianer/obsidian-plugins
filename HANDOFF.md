@@ -13,37 +13,49 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-<!-- Date, local or cloud, and the one-line goal of the session. -->
+2026-10-24, local. Goal: build phase 1 of the factions module (data model + warnings command).
 
 ## Where to continue
 
-<!-- The exact next action: task and step in the plan, with the file paths. One or two lines. -->
+Phase 1 waits for the maintainer's review. After approval: write the phase 2 plan (world view) from
+`docs/superpowers/specs/2026-10-24-factions-design.md` with superpowers:writing-plans.
 
 ## State of the working tree
 
-<!-- Branch, last commit, anything uncommitted or unpushed and why. "Clean" if clean. -->
+`main`, everything pushed. `examples/vault/.obsidian/graph.json` may show as modified: Obsidian
+rewrites it when the vault is opened; it is not part of any task.
 
 ## Done this session
 
-<!-- Short list; each item names the commit or file. Details belong in commits and CHANGELOG.md. -->
+- Phase 1, tasks 1–7 of `docs/superpowers/plans/2026-10-24-factions-phase-1.md`: scaffold, campaign
+  scope, relation values, discovery, key resolution, stances, command "Show faction warnings".
+- Root `README.md` and `LICENSE` (MIT).
 
 ## Half-finished
 
-<!-- What was started and not completed, how far it got, and what the next step on it is. -->
+Nothing in code. The manual check in Obsidian (plan task 7 step 7) is for the maintainer: open
+`examples/vault`, run `pnpm --filter dnd5e-bylokianer install-example`, enable the plugin, run
+"Show faction warnings". Expected: "5 factions, 14 characters, 6 warnings", all six in
+`The Drowned Choir/factions.md`, each path opening its note.
 
 ## Decisions taken this session
 
-<!-- Only those not yet in a DECISIONS.md; move them there before ending if possible. -->
+All in `plugins/dnd5e-bylokianer/DECISIONS.md` and the spec. Interface strings live in
+`src/i18n/strings.ts`; English is the source of the keys, German must match key for key (a test
+enforces it).
 
 ## Open questions for the maintainer
 
-<!-- Questions only the maintainer can answer, most important first. -->
+- Review phase 1, including the manual check above.
 
 ## Watch out
 
-<!-- Traps found this session: failing tests, flaky tools, environment quirks, things that look
-     wrong but are intentional. -->
+- TypeScript stays at 6.0.3 until typescript-eslint supports a newer version (TS 7 has no classic JS
+  API).
+- Chain verification and commit with `&&`, never `;` — a lint failure once slipped into a commit.
+- `test/world.example.test.ts` treats the example vault as the contract: when it fails because a
+  note is wrong, fix the note and `Home.md`, not the expectation.
 
 ## Verification
 
-<!-- The commands run at the end and their results (lint, typecheck, tests, build). -->
+`pnpm lint && pnpm typecheck && pnpm test && pnpm build` at the root: all exit 0, 56 tests pass.
