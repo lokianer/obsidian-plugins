@@ -19,7 +19,7 @@ function faction(
 		notePath: `${id}/factions.md`,
 		parent: null,
 		power: 3,
-		relations: new Map(Object.entries(relations).map(([k, v]) => [k, { value: v } as Relation])),
+		relations: new Map(Object.entries(relations).map(([k, v]) => [k, { value: v }])),
 		secretRelations: new Map(),
 	};
 }
@@ -33,7 +33,7 @@ function character(id: string, relations: Record<string, number> = {}): Entity {
 		notePath: id,
 		parent: null,
 		power: 3,
-		relations: new Map(Object.entries(relations).map(([k, v]) => [k, { value: v } as Relation])),
+		relations: new Map(Object.entries(relations).map(([k, v]) => [k, { value: v }])),
 		secretRelations: new Map(),
 	};
 }
