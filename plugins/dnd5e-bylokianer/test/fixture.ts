@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
 import { frontmatterBody, hasFrontmatterContent } from '../src/frontmatter';
+import type { FactionWorld } from '../src/factions/model';
 import type { NoteInput } from '../src/types';
 
 const vaultRoot = fileURLToPath(new URL('../../../examples/vault', import.meta.url));
@@ -62,4 +63,14 @@ export function loadExampleVault(): NoteInput[] {
 /** The text of one note of the example vault, by its vault path. */
 export function readExampleNote(path: string): string {
   return readFileSync(join(vaultRoot, ...path.split('/')), 'utf8');
+}
+
+/** The same world with every secret relation gone: Public views must not tell them apart. */
+export function withoutSecrets(world: FactionWorld): FactionWorld {
+  return {
+    ...world,
+    entities: new Map(
+      [...world.entities].map(([id, e]) => [id, { ...e, secretRelations: new Map() }]),
+    ),
+  };
 }
