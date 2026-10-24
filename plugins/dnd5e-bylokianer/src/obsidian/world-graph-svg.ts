@@ -12,6 +12,7 @@ import {
   type GraphNode,
 } from '../factions/world-graph';
 import type { T } from '../i18n/strings';
+import { PanZoom } from './pan-zoom';
 
 const FRAME_WIDTH = 200;
 const FRAME_HEAD = 40;
@@ -20,22 +21,16 @@ const BOW = 22;
 /** How far an arrow from a frame runs straight out before it bends. */
 const STUB = 24;
 const ARROW = 10;
-const MIN_ZOOM = 0.3;
-const MAX_ZOOM = 3;
 
 export interface GraphActions {
   /** Open a note; `newLeaf` for Ctrl/Cmd. */
   openNote: (path: string, newLeaf: boolean) => void;
   /** Open the note holding a value and focus its entry in the faction card. */
   editValue: (edit: EditTarget, newLeaf: boolean) => void;
+  /** Open the faction view of a faction or frame. */
+  openFaction: (id: string) => void;
   /** Persist positions (after a layout or a drag). */
   savePositions: (positions: Record<string, CachedPoint>) => void;
-}
-
-interface Viewport {
-  x: number;
-  y: number;
-  k: number;
 }
 
 function frameHeight(rows: number): number {
@@ -51,11 +46,10 @@ function layoutKey(nodes: readonly GraphNode[], edges: readonly GraphEdge[]): st
 export class WorldGraphSvg {
   private readonly svg: SVGSVGElement;
   private readonly stage: SVGGElement;
+  private readonly panZoom: PanZoom;
   private positions = new Map<string, Point>();
   private pinned = new Set<string>();
   private key = '';
-  private view: Viewport = { x: 0, y: 0, k: 1 };
-  private selected: string | null = null;
   private fitted = false;
   /** Set by the view: draw again with the current world and mode. */
   redraw: (() => void) | null = null;
@@ -68,7 +62,7 @@ export class WorldGraphSvg {
   ) {
     this.svg = parent.createSvg('svg', { cls: 'dnd5e-world-graph' });
     this.stage = this.svg.createSvg('g');
-    this.bindPanZoom();
+    this.panZoom = new PanZoom(this.svg, this.stage);
   }
 
   /** Redraws for a world and mode; lays out again only when nodes or related pairs changed. */
@@ -118,17 +112,6 @@ export class WorldGraphSvg {
 
   private draw(graph: ReturnType<typeof buildGraph>): void {
     this.stage.empty();
-    const related = new Set<string>();
-    if (this.selected !== null) {
-      related.add(this.selected);
-      for (const e of graph.edges) {
-        if (e.sourceNode === this.selected || e.target === this.selected) {
-          related.add(e.sourceNode);
-          related.add(e.target);
-        }
-      }
-    }
-    const dim = (id: string) => this.selected !== null && !related.has(id);
 
     const ties = this.stage.createSvg('g', { cls: 'dnd5e-world-ties' });
     for (const { child, parent } of graph.ties) {
@@ -136,7 +119,7 @@ export class WorldGraphSvg {
       const b = this.positions.get(parent);
       if (a === undefined || b === undefined) continue;
       ties.createSvg('line', {
-        cls: dim(child) ? 'dnd5e-world-tie is-dim' : 'dnd5e-world-tie',
+        cls: 'dnd5e-world-tie',
         attr: { x1: a.x, y1: a.y, x2: b.x, y2: b.y },
       });
     }
@@ -145,17 +128,12 @@ export class WorldGraphSvg {
     const edgeLayer = this.stage.createSvg('g', { cls: 'dnd5e-world-edges' });
     const nodeById = new Map(graph.nodes.map((n) => [n.id, n]));
     for (const edge of graph.edges) {
-      const bowed = pairs.has(`${edge.target}→${edge.sourceNode}`);
-      const faded =
-        this.selected !== null &&
-        edge.sourceNode !== this.selected &&
-        edge.target !== this.selected;
-      this.drawEdge(edgeLayer, edge, nodeById, bowed, faded);
+      this.drawEdge(edgeLayer, edge, nodeById, pairs.has(`${edge.target}→${edge.sourceNode}`));
     }
 
     const nodeLayer = this.stage.createSvg('g', { cls: 'dnd5e-world-nodes' });
     for (const node of graph.nodes) {
-      this.drawNode(nodeLayer, node, dim(node.id));
+      this.drawNode(nodeLayer, node);
     }
   }
 
@@ -187,7 +165,6 @@ export class WorldGraphSvg {
     edge: GraphEdge,
     nodes: Map<string, GraphNode>,
     bowed: boolean,
-    faded: boolean,
   ): void {
     const end = this.positions.get(edge.target);
     const targetNode = nodes.get(edge.target);
@@ -215,8 +192,6 @@ export class WorldGraphSvg {
 
     const cls = ['dnd5e-world-edge'];
     if (edge.differs) cls.push('is-differs');
-    if (faded) cls.push('is-dim');
-    if (this.selected !== null && !faded) cls.push('is-selected');
     const group = layer.createSvg('g', { cls });
     group.setCssProps({ '--dnd5e-value-colour': stepColour(edge.value) });
     group.createSvg('path', {
@@ -249,12 +224,10 @@ export class WorldGraphSvg {
     });
   }
 
-  private drawNode(layer: SVGGElement, node: GraphNode, dim: boolean): void {
+  private drawNode(layer: SVGGElement, node: GraphNode): void {
     const p = this.positions.get(node.id);
     if (p === undefined) return;
     const cls = [`dnd5e-world-node is-${node.kind}`];
-    if (dim) cls.push('is-dim');
-    if (node.id === this.selected) cls.push('is-selected');
     const group = layer.createSvg('g', { cls, attr: { transform: `translate(${p.x} ${p.y})` } });
 
     if (node.kind === 'frame') {
@@ -309,8 +282,8 @@ export class WorldGraphSvg {
       if (origin === undefined) return;
       group.setPointerCapture(event.pointerId);
       const move = (e: PointerEvent) => {
-        const dx = (e.clientX - start.x) / this.view.k;
-        const dy = (e.clientY - start.y) / this.view.k;
+        const dx = (e.clientX - start.x) / this.panZoom.scale;
+        const dy = (e.clientY - start.y) / this.panZoom.scale;
         if (!dragged && Math.hypot(dx, dy) < 4) return;
         dragged = true;
         this.positions.set(node.id, { x: origin.x + dx, y: origin.y + dy });
@@ -334,111 +307,14 @@ export class WorldGraphSvg {
       const path = node.kind === 'faction' ? node.notePath : null;
       if ((event.ctrlKey || event.metaKey) && path !== null) {
         this.actions.openNote(path, true);
-        return;
+      } else if (node.kind !== 'ghost') {
+        this.actions.openFaction(node.id);
       }
-      this.selected = this.selected === node.id ? null : node.id;
-      this.redraw?.();
     });
-    group.addEventListener('dblclick', (event) => {
-      event.stopPropagation();
-      if (node.kind === 'faction' && node.notePath !== null)
-        this.actions.openNote(node.notePath, false);
-    });
-  }
-
-  private apply(): void {
-    this.stage.setAttribute(
-      'transform',
-      `translate(${this.view.x} ${this.view.y}) scale(${this.view.k})`,
-    );
   }
 
   /** Zooms and pans so every node is in view. */
   fit(): void {
-    const box = this.svg.getBoundingClientRect();
-    if (box.width === 0 || this.positions.size === 0) return;
-    const xs = [...this.positions.values()].map((p) => p.x);
-    const ys = [...this.positions.values()].map((p) => p.y);
-    const pad = 120;
-    const [minX, maxX] = [Math.min(...xs) - pad, Math.max(...xs) + pad];
-    const [minY, maxY] = [Math.min(...ys) - pad, Math.max(...ys) + pad];
-    const k = Math.min(
-      MAX_ZOOM,
-      Math.max(MIN_ZOOM, Math.min(box.width / (maxX - minX), box.height / (maxY - minY))),
-    );
-    this.view = {
-      k,
-      x: box.width / 2 - ((minX + maxX) / 2) * k,
-      y: box.height / 2 - ((minY + maxY) / 2) * k,
-    };
-    this.fitted = true;
-    this.apply();
-  }
-
-  private zoomAt(factor: number, cx: number, cy: number): void {
-    const k = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, this.view.k * factor));
-    const f = k / this.view.k;
-    this.view = { k, x: cx - (cx - this.view.x) * f, y: cy - (cy - this.view.y) * f };
-    this.apply();
-  }
-
-  private bindPanZoom(): void {
-    const pointers = new Map<number, { x: number; y: number }>();
-    let pinch = 0;
-    this.svg.addEventListener('pointerdown', (event) => {
-      // No pointer capture here: it would turn a click on an arrow into a click on the canvas.
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      if (pointers.size === 2) {
-        const [a, b] = [...pointers.values()];
-        pinch = a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0;
-      }
-    });
-    this.svg.addEventListener('pointermove', (event) => {
-      const last = pointers.get(event.pointerId);
-      if (last === undefined) return;
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-      if (pointers.size === 1) {
-        this.view = {
-          ...this.view,
-          x: this.view.x + event.clientX - last.x,
-          y: this.view.y + event.clientY - last.y,
-        };
-        this.apply();
-      } else if (pointers.size === 2) {
-        const [a, b] = [...pointers.values()];
-        if (a === undefined || b === undefined) return;
-        const distance = Math.hypot(a.x - b.x, a.y - b.y);
-        const box = this.svg.getBoundingClientRect();
-        if (pinch > 0)
-          this.zoomAt(distance / pinch, (a.x + b.x) / 2 - box.left, (a.y + b.y) / 2 - box.top);
-        pinch = distance;
-      }
-    });
-    const end = (event: PointerEvent) => {
-      pointers.delete(event.pointerId);
-      if (pointers.size < 2) pinch = 0;
-    };
-    this.svg.addEventListener('pointerup', end);
-    this.svg.addEventListener('pointercancel', end);
-    this.svg.addEventListener('pointerleave', end);
-    this.svg.addEventListener(
-      'wheel',
-      (event) => {
-        event.preventDefault();
-        const box = this.svg.getBoundingClientRect();
-        this.zoomAt(
-          Math.exp(-event.deltaY * 0.0015),
-          event.clientX - box.left,
-          event.clientY - box.top,
-        );
-      },
-      { passive: false },
-    );
-    this.svg.addEventListener('click', () => {
-      if (this.selected !== null) {
-        this.selected = null;
-        this.redraw?.();
-      }
-    });
+    if (this.panZoom.fit([...this.positions.values()])) this.fitted = true;
   }
 }

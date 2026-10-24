@@ -1,11 +1,14 @@
 import { getLanguage, MarkdownView, Notice, Plugin } from 'obsidian';
 
 import type { FactionWorld } from './factions/model';
+import type { EditTarget } from './factions/world-graph';
 
 import { createT } from './i18n/strings';
 import { CardManager } from './obsidian/card-view';
 import { DEFAULT_SETTINGS, type Settings, SettingsTab } from './obsidian/settings';
 import { WarningsModal } from './obsidian/warnings-modal';
+import { ModeStore } from './obsidian/mode-store';
+import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
 import { WorldCache } from './obsidian/world-cache';
 import { WORLD_VIEW, WorldView } from './obsidian/world-view';
 
@@ -22,10 +25,14 @@ export default class Dnd5ePlugin extends Plugin {
     const cards = new CardManager(this, cache, t, () => this.options);
     cards.start();
 
+    const modes = new ModeStore();
     const save = async (settings: Settings) => {
       this.options = settings;
       await this.saveData(settings);
       cards.refreshAll();
+      for (const leaf of this.app.workspace.getLeavesOfType(TENSION_VIEW)) {
+        if (leaf.view instanceof TensionView) leaf.view.refresh();
+      }
     };
     this.addSettingTab(new SettingsTab(this.app, this, t, () => this.options, save));
 
@@ -40,27 +47,52 @@ export default class Dnd5ePlugin extends Plugin {
       callback: async () => showWarnings(await cache.rebuild()),
     });
 
+    const openNote = (path: string, newLeaf: boolean) => {
+      const file = this.app.vault.getFileByPath(path);
+      if (file !== null) void cards.leafFor(newLeaf).openFile(file);
+    };
+    const editValue = (edit: EditTarget, newLeaf: boolean) =>
+      void cards.open(edit.path, { entry: { field: edit.field, target: edit.target } }, newLeaf);
+    const showTensions = async () => {
+      const { workspace } = this.app;
+      const leaf = workspace.getLeavesOfType(TENSION_VIEW)[0] ?? workspace.getRightLeaf(false);
+      if (leaf === null) return;
+      await leaf.setViewState({ type: TENSION_VIEW, active: true });
+      await workspace.revealLeaf(leaf);
+    };
+    this.registerView(
+      TENSION_VIEW,
+      (leaf) =>
+        new TensionView(leaf, {
+          cache,
+          modes,
+          t,
+          thresholds: () => this.options.thresholds,
+          openNote,
+          editValue,
+        }),
+    );
+    this.addCommand({
+      id: 'show-faction-tensions',
+      name: t('command.showTensions'),
+      callback: showTensions,
+    });
+
     this.registerView(
       WORLD_VIEW,
       (leaf) =>
         new WorldView(leaf, {
           cache,
+          modes,
           t,
           settings: () => this.options,
           save,
-          openNote: (path, newLeaf) => {
-            const file = this.app.vault.getFileByPath(path);
-            if (file !== null) void cards.leafFor(newLeaf).openFile(file);
-          },
-          editValue: (edit, newLeaf) =>
-            void cards.open(
-              edit.path,
-              { entry: { field: edit.field, target: edit.target } },
-              newLeaf,
-            ),
+          openNote,
+          editValue,
           addValue: (add, newLeaf) =>
             void cards.open(add.path, { add: { field: add.field, key: add.key } }, newLeaf),
           showWarnings,
+          showTensions: () => void showTensions(),
         }),
     );
     const openWorld = async () => {

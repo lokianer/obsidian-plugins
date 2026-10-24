@@ -791,3 +791,153 @@
 .dnd5e-world-step {
   font-size: 16px;
 }
+
+/* Faction view ------------------------------------------------------------------------------------ */
+
+.dnd5e-world-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1) var(--size-4-2);
+}
+
+.dnd5e-world-breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.dnd5e-world-breadcrumb a:hover {
+  color: var(--text-normal);
+}
+
+.dnd5e-world-crumb-sep {
+  color: var(--text-faint);
+}
+
+.dnd5e-world-crumb-current {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-fv-frame rect {
+  fill: var(--background-secondary);
+  stroke: var(--interactive-accent);
+  stroke-width: 2;
+}
+
+.dnd5e-fv-frame-title {
+  fill: var(--text-normal);
+  font-size: 18px;
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-fv-chip {
+  cursor: pointer;
+}
+
+.dnd5e-fv-chip rect {
+  fill: var(--background-primary);
+  stroke: var(--background-modifier-border);
+  stroke-width: 2;
+}
+
+.dnd5e-fv-chip.has-ring rect {
+  stroke: var(--text-warning);
+  stroke-width: 3;
+}
+
+.dnd5e-fv-chip.is-selected rect {
+  stroke: var(--interactive-accent);
+  stroke-width: 3;
+}
+
+.dnd5e-fv-chip text,
+.dnd5e-fv-box-title,
+.dnd5e-fv-box-row {
+  fill: var(--text-normal);
+  font-size: 16px;
+  text-anchor: middle;
+}
+
+.dnd5e-fv-chip.is-faction text,
+.dnd5e-fv-box-title {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-fv-chip.is-dim {
+  opacity: 0.35;
+}
+
+.dnd5e-fv-box rect {
+  fill: var(--background-secondary);
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+
+.dnd5e-fv-box.is-group rect,
+.dnd5e-fv-box.is-ghost rect {
+  stroke-dasharray: 6 4;
+}
+
+.dnd5e-fv-box.is-ghost .dnd5e-fv-box-title {
+  fill: var(--text-muted);
+  font-weight: var(--font-normal);
+}
+
+.dnd5e-fv-box-title,
+.dnd5e-fv-box-row {
+  cursor: pointer;
+}
+
+.dnd5e-fv-box-row:hover,
+.dnd5e-fv-box-title:hover {
+  fill: var(--text-accent);
+}
+
+.dnd5e-world-edge.is-inherited .dnd5e-world-edge-line {
+  stroke-width: 1.5;
+  stroke-dasharray: 3 5;
+}
+
+/* Tension panel */
+
+.dnd5e-tensions {
+  font-size: 16px;
+}
+
+.dnd5e-tensions-head {
+  margin-bottom: var(--size-4-2);
+}
+
+.dnd5e-tensions-group {
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-tensions-line {
+  margin-top: var(--size-4-2);
+  padding: var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+  line-height: 1.6;
+}
+
+.dnd5e-tensions-name {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
+}
+
+.dnd5e-tensions-value {
+  padding: 0 var(--size-4-1);
+  border-radius: var(--radius-s);
+  background: var(--dnd5e-value-colour, var(--background-modifier-hover));
+  color: var(--background-primary);
+  font-weight: var(--font-bold);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-tensions-empty,
+.dnd5e-tensions-note {
+  margin-top: var(--size-4-3);
+  color: var(--text-muted);
+}

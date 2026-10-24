@@ -1,23 +1,28 @@
-// The "Faction world" tab: a header with Graph/Matrix and Public/True switches, a warnings badge
-// and re-layout, and below it the graph or the matrix. Public on every opening; redrawn whenever
-// the world cache rebuilds.
+// The "Faction world" tab: a header with Graph/Matrix and Public/True switches, a warnings badge,
+// re-layout and the tension panel; below it the graph, the matrix, or — after a click on a faction —
+// that faction's view with a breadcrumb back. Public on every opening; redrawn whenever the world
+// cache rebuilds.
 
 import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
 
+import { buildFactionView, type FactionView } from '../factions/faction-view';
+import type { CachedPoint } from '../factions/layout';
 import { buildMatrix } from '../factions/matrix';
 import type { FactionWorld, Mode, RelationField } from '../factions/model';
 import type { EditTarget } from '../factions/world-graph';
 import type { T } from '../i18n/strings';
-import type { CachedPoint } from '../factions/layout';
-import { WorldGraphSvg } from './world-graph-svg';
-import { renderMatrix } from './world-matrix';
+import { FactionViewSvg } from './faction-view-svg';
+import type { ModeStore } from './mode-store';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
+import { WorldGraphSvg } from './world-graph-svg';
+import { renderMatrix } from './world-matrix';
 
 export const WORLD_VIEW = 'dnd5e-faction-world';
 
 export interface WorldViewDeps {
   cache: WorldCache;
+  modes: ModeStore;
   t: T;
   settings: () => Settings;
   save: (settings: Settings) => Promise<void>;
@@ -25,13 +30,17 @@ export interface WorldViewDeps {
   editValue: (edit: EditTarget, newLeaf: boolean) => void;
   addValue: (add: { path: string; field: RelationField; key: string }, newLeaf: boolean) => void;
   showWarnings: (world: FactionWorld) => void;
+  showTensions: () => void;
 }
 
 export class WorldView extends ItemView {
   private mode: Mode = 'public';
+  /** The faction whose view is open, or null for the world. */
+  private focus: string | null = null;
   private header!: HTMLElement;
   private body!: HTMLElement;
   private graph: WorldGraphSvg | null = null;
+  private factionView: FactionViewSvg | null = null;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -53,7 +62,7 @@ export class WorldView extends ItemView {
   }
 
   async onOpen(): Promise<void> {
-    this.mode = 'public';
+    this.setMode('public');
     this.contentEl.empty();
     this.contentEl.addClass('dnd5e-world');
     this.header = this.contentEl.createDiv({ cls: 'dnd5e-world-header' });
@@ -64,39 +73,69 @@ export class WorldView extends ItemView {
   }
 
   async onClose(): Promise<void> {
+    this.deps.modes.set('public');
     this.graph = null;
+    this.factionView = null;
     this.contentEl.empty();
+  }
+
+  private setMode(mode: Mode): void {
+    this.mode = mode;
+    this.deps.modes.set(mode);
+  }
+
+  private openFaction(id: string | null): void {
+    this.focus = id;
+    this.render();
+  }
+
+  /** Shows one body element at a time, dropping the drawings that are not shown. */
+  private show(kind: 'graph' | 'faction' | 'other'): void {
+    const keep =
+      (kind === 'graph' && this.graph !== null) ||
+      (kind === 'faction' && this.factionView !== null);
+    if (kind !== 'graph') this.graph = null;
+    if (kind !== 'faction') this.factionView = null;
+    if (!keep) this.body.empty();
   }
 
   private render(): void {
     const world = this.deps.cache.current;
     if (world === null) return;
-    this.renderHeader(world);
+    const view = this.focus === null ? null : buildFactionView(world, this.focus, this.mode);
+    if (view === null) this.focus = null;
+    this.renderHeader(world, view);
+    const { t } = this.deps;
+
     if (world.campaign === null) {
-      this.graph = null;
-      this.body.empty();
+      this.show('other');
       const empty = this.body.createDiv({ cls: 'dnd5e-world-empty' });
-      empty.createDiv({ text: this.deps.t('modal.noCampaign') });
-      empty.createDiv({ text: this.deps.t('world.noCampaignHint') });
+      empty.createDiv({ text: t('modal.noCampaign') });
+      empty.createDiv({ text: t('world.noCampaignHint') });
+      return;
+    }
+    const stepNames = () => this.deps.settings().stepNames;
+    if (view !== null) {
+      this.show('faction');
+      this.factionView ??= new FactionViewSvg(this.body, t, stepNames, {
+        openNote: this.deps.openNote,
+        openFaction: (id) => this.openFaction(id),
+        editValue: this.deps.editValue,
+      });
+      this.factionView.update(view, this.angles(world, view.id));
       return;
     }
     if (this.deps.settings().worldMode === 'matrix') {
-      this.graph = null;
-      this.body.empty();
-      renderMatrix(
-        this.body,
-        buildMatrix(world, this.mode),
-        this.deps.t,
-        this.deps.settings().stepNames,
-        this.deps,
-      );
+      this.show('other');
+      renderMatrix(this.body, buildMatrix(world, this.mode), t, stepNames(), this.deps);
       return;
     }
+    this.show('graph');
     if (this.graph === null) {
-      this.body.empty();
-      this.graph = new WorldGraphSvg(this.body, this.deps.t, () => this.deps.settings().stepNames, {
+      this.graph = new WorldGraphSvg(this.body, t, stepNames, {
         openNote: this.deps.openNote,
         editValue: this.deps.editValue,
+        openFaction: (id) => this.openFaction(id),
         savePositions: (positions) =>
           void this.savePositions(world.campaign?.path ?? '', positions),
       });
@@ -107,6 +146,18 @@ export class WorldView extends ItemView {
 
   private cachedPositions(world: FactionWorld): Record<string, CachedPoint> {
     return this.deps.settings().positions[world.campaign?.path ?? ''] ?? {};
+  }
+
+  /** Each node's direction from `id` in the world graph, from the cached layout. */
+  private angles(world: FactionWorld, id: string): Map<string, number> {
+    const positions = this.cachedPositions(world);
+    const centre = positions[id];
+    const angles = new Map<string, number>();
+    if (centre === undefined) return angles;
+    for (const [other, p] of Object.entries(positions)) {
+      if (other !== id) angles.set(other, Math.atan2(p.y - centre.y, p.x - centre.x));
+    }
+    return angles;
   }
 
   private async savePositions(
@@ -120,21 +171,25 @@ export class WorldView extends ItemView {
     });
   }
 
-  private renderHeader(world: FactionWorld): void {
+  private renderHeader(world: FactionWorld, view: FactionView | null): void {
     const { t } = this.deps;
     this.header.empty();
     const settings = this.deps.settings();
-    this.segmented(
-      [
-        ['graph', t('world.graph')],
-        ['matrix', t('world.matrix')],
-      ],
-      settings.worldMode,
-      (value) =>
-        void this.deps
-          .save({ ...this.deps.settings(), worldMode: value })
-          .then(() => this.render()),
-    );
+    if (view !== null) {
+      this.renderBreadcrumb(view);
+    } else {
+      this.segmented(
+        [
+          ['graph', t('world.graph')],
+          ['matrix', t('world.matrix')],
+        ],
+        settings.worldMode,
+        (value) =>
+          void this.deps
+            .save({ ...this.deps.settings(), worldMode: value })
+            .then(() => this.render()),
+      );
+    }
     this.segmented(
       [
         ['public', t('world.public')],
@@ -142,7 +197,7 @@ export class WorldView extends ItemView {
       ],
       this.mode,
       (value) => {
-        this.mode = value;
+        this.setMode(value);
         this.render();
       },
     );
@@ -158,14 +213,41 @@ export class WorldView extends ItemView {
       setIcon(badge.createSpan({ cls: 'dnd5e-card-icon' }), 'alert-triangle');
       badge.addEventListener('click', () => this.deps.showWarnings(world));
     }
-    if (settings.worldMode === 'graph' && world.campaign !== null) {
-      const relayout = this.header.createEl('button', {
-        cls: 'clickable-icon',
-        attr: { 'aria-label': t('world.relayout') },
-      });
-      setIcon(relayout, 'refresh-cw');
-      relayout.addEventListener('click', () => this.graph?.relayout(world, this.mode));
+    this.iconButton('zap', t('command.showTensions'), () => this.deps.showTensions());
+    if (view === null && settings.worldMode === 'graph' && world.campaign !== null) {
+      this.iconButton('refresh-cw', t('world.relayout'), () =>
+        this.graph?.relayout(world, this.mode),
+      );
     }
+  }
+
+  private renderBreadcrumb(view: FactionView): void {
+    const { t } = this.deps;
+    const crumbs = this.header.createDiv({ cls: 'dnd5e-world-breadcrumb' });
+    const link = (label: string, target: string | null) => {
+      const a = crumbs.createEl('a', { text: label, href: '#' });
+      a.addEventListener('click', (event) => {
+        event.preventDefault();
+        this.openFaction(target);
+      });
+      crumbs.createSpan({ cls: 'dnd5e-world-crumb-sep', text: '›' });
+    };
+    link(t('world.title'), null);
+    for (const parent of view.parents) link(parent.name, parent.id);
+    const pseudo: Record<string, string> = {
+      '@party': t('pseudo.party'),
+      '@unaffiliated': t('pseudo.unaffiliated'),
+    };
+    crumbs.createSpan({ cls: 'dnd5e-world-crumb-current', text: pseudo[view.id] ?? view.name });
+  }
+
+  private iconButton(icon: string, label: string, onClick: () => void): void {
+    const button = this.header.createEl('button', {
+      cls: 'clickable-icon',
+      attr: { 'aria-label': label },
+    });
+    setIcon(button, icon);
+    button.addEventListener('click', onClick);
   }
 
   /** A row of buttons of which one is active. */
