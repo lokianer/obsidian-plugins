@@ -17,8 +17,11 @@ plugin's `DECISIONS.md` once it exists.
 Obsidian** (planned for 2026-10-25 on the PC). Phase 2 is the faction card, phase 3 the faction world
 (graph and matrix), phase 4 the faction view and the tension panel. All are tested in Node and
 rendered in a browser against a stub of the Obsidian API; none has run inside Obsidian. The
-checklist is in `HANDOFF.md` → "Half-finished". Fix what it turns up; then **phase 5 — in-view
-editing and history** (design §4.6, §5.6, §5.7) gets its spec and plan.
+checklist is in `HANDOFF.md` → "Half-finished". Fix what it turns up. **Phase 5 — in-view editing and
+history** is specified and planned
+([`docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md`](docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md),
+[`docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md`](docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md));
+build it once the maintainer approves the plan.
 
 ---
 
@@ -72,9 +75,10 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
       `docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md`
   - [x] Tension rules and faction view model (`846ec98`), drawing, drill-down and panel (`1ff2dfd`)
   - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 5 — In-view editing and history**: sliders in matrix, arrows and notes on the phase 2
-      line editor; shared "tonight's session" package with the offer to create session N+1; history
-      log lines and tooltips
+- [ ] **Phase 5 — In-view editing and history** (spec and plan drafted 2026-10-24, awaiting
+      approval): value popover on matrix cells and arrows writing the subject's own note; a "Log"
+      notice after each change, writing to tonight's session note (with the once-a-day offer to
+      create session N+1); history in tooltips; shared package `packages/session/`
 
 Later ideas for factions, not designed yet: time machine (replay the graph per session), domino
 preview of knock-on changes, faction turn between sessions, the party as a node, what the players

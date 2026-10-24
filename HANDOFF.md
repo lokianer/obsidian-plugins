@@ -23,8 +23,11 @@ Obsidian yet**; the maintainer tests them on 2026-10-25 on the PC.
 1. The maintainer's check in Obsidian, the lists under "Half-finished". Fix what turns up — the
    likeliest places: the card mounting (`src/obsidian/card-view.ts`), pointer handling in the
    drawings (`pan-zoom.ts`, `world-graph-svg.ts`, `faction-view-svg.ts`), and the sidebar view.
-2. Then **phase 5 — in-view editing and history** (design §4.6, §5.6, §5.7): spec, plan, review
-   stop, build.
+2. **Phase 5** is specified and planned
+   (`docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md`,
+   `docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md`): the maintainer chose a
+   "Log" notice, a popover on cells and arrows, and the once-a-day offer of session N+1. Build after
+   the plan is approved.
 
 ## State of the working tree
 
