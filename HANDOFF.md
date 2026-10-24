@@ -30,6 +30,8 @@ rewrites it when the vault is opened; it is not part of any task.
 - Phase 1, tasks 1–7 of `docs/superpowers/plans/2026-10-24-factions-phase-1.md`: scaffold, campaign
   scope, relation values, discovery, key resolution, stances, command "Show faction warnings".
 - Root `README.md` and `LICENSE` (MIT).
+- Final whole-branch review by a fresh reviewer: no critical findings; three important ones fixed
+  test-first (`e71718e`): duplicate keys, passed-over campaign notes, power messages, 16 px text.
 
 ## Half-finished
 
@@ -47,6 +49,18 @@ enforces it).
 ## Open questions for the maintainer
 
 - Review phase 1, including the manual check above.
+- Minor review findings, deferred for your call (none fixed):
+  - an en dash `–3` is not read as a minus (only U+2212 is);
+  - `Number()` accepts `"0x3"` and `"1e0"`;
+  - a character note with broken YAML vanishes without a warning;
+  - `missing-type` is the message when `factions.md` has broken YAML;
+  - `Factions.md` (capital F) is not recognised, silently;
+  - an overview note `Factions/factions.md` would turn the container folder into a faction;
+  - some name collisions (case-only; a `name:` equal to another folder name) get no `duplicate-name`;
+  - `Math.round` rounds −2.5 to −2 but 2.5 to 3;
+  - the key-matching order is documented only in `keys.ts`, not in `DECISIONS.md`;
+  - the modal ignores Ctrl/Cmd-click (new tab);
+  - the summary is always plural ("1 factions").
 
 ## Watch out
 
@@ -58,4 +72,4 @@ enforces it).
 
 ## Verification
 
-`pnpm lint && pnpm typecheck && pnpm test && pnpm build` at the root: all exit 0, 56 tests pass.
+`pnpm lint && pnpm typecheck && pnpm test && pnpm build` at the root: all exit 0, 60 tests pass.
