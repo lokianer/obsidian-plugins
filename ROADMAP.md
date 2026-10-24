@@ -13,11 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · phase 2 (faction editor) — waiting for plan approval.** The
-maintainer chose the editor before the world view (2026-10-24). Spec:
-[`docs/superpowers/specs/2026-10-24-faction-editor-design.md`](docs/superpowers/specs/2026-10-24-faction-editor-design.md),
-plan: [`docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`](docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md).
-Get the maintainer's review of both (spec §7 lists the calls to check), then build task by task.
+**dnd5e-byLokianer · Factions · phase 2 (faction card) — built, waiting for the maintainer's check
+in Obsidian.** Everything is implemented and tested in Node and in a browser against a stub of the
+Obsidian API; it has not run inside Obsidian yet. The maintainer reloads the plugin in
+`examples/vault` and goes through `HANDOFF.md` → "Half-finished". Fix what that turns up; once the
+maintainer accepts phase 2, brainstorm and plan **phase 3 — world view** from design §5.1.
 
 ---
 
@@ -48,10 +48,14 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
 - [x] **Minor review findings of phase 1** (2026-10-24, `4f55b5d`): strict decimal numbers, en dash
       as minus, symmetric rounding, `broken-frontmatter`, `Factions.md` in any case, other-typed
       `factions.md` not a faction, case-only and folder-name clashes, singular counts
-- [ ] **Phase 2 — Faction editor** ← _next, plan awaiting approval_: form for all frontmatter incl.
-      relations, Fix button from the warnings modal, the line editor of design §5.6.
+- [ ] **Phase 2 — Faction card** ← _built 2026-10-24, awaiting acceptance in Obsidian_: a card
+      replacing Properties on faction and character notes, everything editable in place as line
+      edits (design §5.6), Fix buttons in the warnings modal, command Edit faction data.
       Spec `docs/superpowers/specs/2026-10-24-faction-editor-design.md`, plan
       `docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`
+  - [x] Line editor `src/yaml/` (`2712fb1`), steps and targets (`fc3c807`), card model
+        (`e3b446d`, `2263924`), card in Obsidian with Fix and settings (`61984a4`)
+  - [ ] Maintainer's check in Obsidian
 - [ ] **Phase 3 — World view**: graph with bloc layout and matrix, switchable; colours, step names
       and their settings; Public/True toggle (Public by default); warnings badge; click behaviour
 - [ ] **Phase 4 — Faction view and tension panel**
@@ -116,3 +120,5 @@ whole vault.
 - [x] pnpm workspace root (`package.json`, `pnpm-workspace.yaml`) — with phase 1
 - [x] CI workflow — with phase 1
 - [x] Git hooks stored executable, so they run on Linux and macOS too (2026-10-24, `7866980`)
+- [x] Prettier enforced: `pnpm format`, `format:check` in CI, `pre-commit` hook; `pnpm check` runs
+      everything (2026-10-24, `ff4807a`, `2263924`)

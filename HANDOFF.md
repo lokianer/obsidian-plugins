@@ -13,84 +13,92 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-24, cloud (second session of the day). The open question was answered, the deferred minor
-review findings of phase 1 were fixed, and phase 2 (faction editor) was specified and planned.
-**Nothing of the editor is built yet.**
+2026-10-24, cloud (second session of the day, continued). Minor findings fixed, Prettier enforced,
+the editor redesigned as a **faction card that replaces Properties**, and phase 2 built in full.
+**Not yet run inside Obsidian.**
 
 ## Where to continue
 
-1. Ask the maintainer to review the editor spec
-   (`docs/superpowers/specs/2026-10-24-faction-editor-design.md`, §7 lists the calls I made) and the
-   plan (`docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`).
-2. Once approved, build the plan task by task (superpowers:subagent-driven-development or
-   executing-plans), one commit per task.
+1. The maintainer checks phase 2 in Obsidian (list under "Half-finished"). Fix what turns up — the
+   likeliest place is the mounting in `src/obsidian/card-view.ts`.
+2. Once phase 2 is accepted: phase 3, world view (design §5.1) — spec, plan, review stop, build.
 
 ## State of the working tree
 
-Branch `claude/roadmap-and-handoff-nb9sav`, pushed; not merged into `main` yet — the maintainer
-decides whether to merge or open a pull request. `examples/vault/.obsidian/graph.json` may show as
-modified after opening the vault in Obsidian: never commit it as part of a task.
+Branch `claude/roadmap-and-handoff-nb9sav`, pushed, not merged into `main` (the maintainer decides:
+merge or pull request). `examples/vault/.obsidian/graph.json` may show as modified after opening the
+vault: never commit it as part of a task.
 
 ## Done this session
 
-- Maintainer's answers: **editor first** (new phase 2; world view → 3, faction view and tension → 4,
-  in-view sliders and history → 5); the editor proposal of the last handoff **accepted as is**; all
-  three groups of minor findings to be fixed first.
-- Minor findings fixed (`4f55b5d`): plain decimal numbers only (`0x3`, `1e0` rejected), en dash as
-  minus, halves round away from zero; new warning `broken-frontmatter` (a broken `factions.md` no
-  longer says `missing-type`); `Factions.md` in any case; a `factions.md` with another `type` is
-  not a faction; case-only clashes and a `name:` equal to another faction's folder now get
-  `duplicate-name`, which carries the clashing name; singular counts in the modal; key matching
-  order in `DECISIONS.md`. Example vault: new `The Drowned Choir/Brother Silt.md` (broken YAML on
-  purpose); `Quests/The Missing Bellringer.md` was already broken (unclosed quote) and is now mapped
-  in `Home.md` too.
-- The Ctrl/Cmd-click finding was already fixed in `544759b`; nothing changed there.
-- Git hooks were stored `100644`, so Git on Linux/macOS skipped them silently; now executable
-  (`7866980`).
-- Spec and plan for phase 2; factions design §6 renumbered; ROADMAP and `CLAUDE.md` status updated.
+- Maintainer's answers: editor first; then, revising it: "the frontmatter must be specially editable
+  and rendered better than in ordinary notes" → a card replacing Properties (setting shows both), and
+  the card is the only editor. "Enforce Prettier." "Carry on" = plan approved.
+- `4f55b5d` minor findings of phase 1; `7866980` hooks executable; `ff4807a` Prettier enforced
+  (whole repo reformatted, `.ts` from tabs to the spaces `.editorconfig` asks for, `pre-commit` hook,
+  CI step); `977f27f` spec and plan revised to the card.
+- `2712fb1` line editor `src/yaml/` (locate, edit with `expect` checks, refusals); `fc3c807` step
+  names, colours, target suggestions; `e3b446d` + `2263924` card model (the first went in with two
+  lint errors because I chained with `;` — fixed in the second, plus `pnpm check`); `61984a4` the card
+  in Obsidian: world cache, mounting, renderer, target suggest, settings, Fix buttons, command.
+- Card rendered in Chromium against a stub of the Obsidian API with the example vault's data, at
+  800 px and 400 px, English and German: no runtime errors; layout fixed for phones.
 
-## Half-finished
+## Half-finished — check in Obsidian
 
-Nothing in code. Not yet seen in Obsidian:
+Reload the plugin in `examples/vault` (`pnpm build && pnpm install-example` in the plugin folder),
+then:
 
-- the `broken-frontmatter` detection in the adapter (`src/obsidian/notes.ts`) relies on Obsidian's
-  cache showing a block (`frontmatterPosition`, or a leading `yaml` section) while `frontmatter` is
-  undefined. Verify: reload the plugin in `examples/vault`, run "Show faction warnings", expect
-  Brother Silt and The Missing Bellringer under _Notes_. If they are missing, the hint is wrong and
-  the adapter has to read every note without cached frontmatter instead;
-- the singular counts and the reworded duplicate-name rows.
+1. **Card placement**: open The Drowned Choir, Sable, Corvin Marsh in Reading view and in Live
+   Preview. The card should sit below the inline title where Properties were, scroll with the note,
+   and Properties should be gone. Source mode: raw YAML, no card. If the card lands at the very top
+   of the view instead, the selectors in `card-view.ts` (`.markdown-preview-sizer`, `.cm-sizer`,
+   `.metadata-container`, `.inline-title`) do not match this Obsidian version.
+2. **Live Preview interaction**: clicking a slider, a name or a reason must not move the editor's
+   cursor or scroll the note (the card stops `mousedown` from reaching CodeMirror).
+3. **Edits**: drag a slider, add a reason, rename a target with suggestions, add and remove a
+   relation (Undo), click a power pip, edit `name`. After each: `git diff examples/vault` shows only
+   the intended characters. Revert the vault afterwards (`git checkout examples/vault`).
+4. **Fix**: "Show faction warnings" → Fix on each Drowned Choir row; only The Salt Kings
+   (`unknown-target`) may remain, or be fixed by renaming. Brother Silt and The Missing Bellringer
+   should be listed under Notes (`broken-frontmatter`), without Fix.
+5. **Secrets**: Sable's secret section closed when the note opens; open it, switch notes and back:
+   closed again.
+6. **Setting** "Show Obsidian's properties on faction notes" shows both; in Obsidian 1.13+ it is
+   found by the settings search (declarative API), in older versions the tab still shows it.
+7. **Mobile**: `app.emulateMobile(true)` in the developer console: rows wrap, × stays on the
+   target's line.
 
 ## Decisions taken this session
 
-- Editor before the world view; proposal accepted (see the spec).
-- Recorded in `plugins/dnd5e-bylokianer/DECISIONS.md`: key matching order and name clashes; strict
-  numbers and rounding; `factions.md` in any case and with other types; `broken-frontmatter`. Left
-  out: a decimal comma (`2,5`) stays "not a number".
+All in `plugins/dnd5e-bylokianer/DECISIONS.md` (strict numbers etc.; the faction card and its calls)
+and in the revised spec §7: writes at once, refused when changed underneath; entries shown as
+written; new relation starts at 0; Undo for remove; secrets closed per build; lists, maps and
+booleans edited in source; ASCII minus; no "Reset to inherited".
 
 ## Open questions for the maintainer
 
-- Review of the editor spec §7: Modal rather than side panel; raw entries shown incl. broken ones;
-  secrets collapsed on every opening; save all-or-nothing and refused when the note changed
-  underneath; lists and maps (tags too) read-only; step-name settings deferred to the world view;
-  ASCII minus on write; no "Reset to inherited" (Remove is that).
-- Merge `claude/roadmap-and-handoff-nb9sav` into `main`, or a pull request?
+- The spec §7 calls above — confirm or correct after trying the card.
+- Merge the branch into `main`, or a pull request?
 
 ## Watch out
 
-- TypeScript stays at 6.0.3 until typescript-eslint supports a newer version (TS 7 has no classic JS
-  API).
-- Chain verification and commit with `&&`, never `;`.
-- `test/world.example.test.ts` treats the example vault as the contract: when it fails because a
-  note is wrong, fix the note and `Home.md`, not the expectation.
-- In a fresh clone run `git config core.hooksPath .githooks`; the cloud checkout did not have it set.
-- The repository is not prettier-clean (tabs in `.ts` files against `.editorconfig`'s spaces) and CI
-  does not check formatting; keep to each file's existing style and 100 columns.
-- Shell heredocs mangle escapes like `﻿` (they arrive as the literal character, which eslint
-  rejects); write such text with Write/Edit.
-- The private vault is not available in the cloud; this session's daily report and changelog entry
-  for it still have to be written there by a local session (goals, the fix slice, the spec).
+- Verify with `pnpm check` (chains format check, lint, typecheck, tests, build with `&&`); never chain
+  verification and commit with `;`.
+- Prettier is enforced: run `pnpm format` before committing; the `pre-commit` hook refuses otherwise.
+  Prettier is not idempotent on inline code spanning two lines in Markdown — keep such spans on one
+  line.
+- In a fresh clone run `git config core.hooksPath .githooks` (the cloud checkout did not have it).
+- TypeScript stays at 6.0.3 until typescript-eslint supports a newer version.
+- `test/world.example.test.ts` treats the example vault as the contract.
+- `eslint-plugin-obsidianmd` forbids disabling its rules; the settings tab implements both
+  `display()` (before 1.13) and `getSettingDefinitions()` (1.13+).
+- Shell heredocs turn escapes like `﻿` into literal characters; write such text with Write/Edit.
+- The browser preview harness (stub of the Obsidian API + DOM helpers) lived in the session's
+  scratchpad and is gone; rebuilding it takes ~15 minutes if a later cloud session needs it.
+- The private vault's daily report and changelog for this session still need writing by a local
+  session.
 
 ## Verification
 
-`pnpm lint && pnpm typecheck && pnpm test && pnpm build` at the root: all exit 0, 77 tests pass
-(was 64).
+`pnpm check` at the root: exit 0; 124 tests pass (was 64 at the start of the day).

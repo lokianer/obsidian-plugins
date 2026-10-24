@@ -16,6 +16,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Tension panel | [[Ondine Vale]] (−5 against a Court her faction likes), Bench vs Court | Strong deviations and secret contradictions |
 | Character → character | Aldric → Mira, Sable → Mira, Orrin → Mira | Relations between people, not factions |
 | Broken values | [[The Drowned Choir/factions\|The Drowned Choir]] | Out of range, not a number, dangling, self, empty — each must warn, none may crash |
+| Faction card | [[The Drowned Choir/factions\|The Drowned Choir]], [[Corvin Marsh]], [[Sable]], [[The Bench/factions\|The Bench]] | Choir: every Fix button; Corvin: a reason rendered as a link; Sable: secret relations closed until opened; Bench: place shown as The Gutter Court |
 | Broken frontmatter | [[Brother Silt]], [[The Missing Bellringer]] | YAML that does not parse (an unclosed list, an unclosed quote): the note is named in the warnings, never dropped silently |
 | Relation history | [[Session 14 – Bell Square]] | A log line `Order of the Lantern → The Gutter Court: −2 → −3` |
 | NPC builder / stat blocks | [[Isolde Ferrant]], [[Ondine Vale]], [[Aldric Thane]], [[Mira Voss]] | Full 5e stat blocks; [[Sergeant Pell]] has none yet |

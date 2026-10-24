@@ -18,6 +18,12 @@ All notable changes to this plugin are documented here. The format follows
   (`campaign-ignored`); `power` warnings say whether the value was reset, rounded or clamped.
 - Warning for a note whose frontmatter does not parse (`broken-frontmatter`), instead of dropping
   it silently.
+- **Faction card** on faction and character notes, in Reading view and Live Preview, replacing
+  Obsidian's Properties block there (a setting shows both): kind, place, name, power pips,
+  relations as coloured rows with slider, step name and reason, secret relations, other fields —
+  all editable in place as line edits that keep comments and formatting; refusals and concurrent
+  edits end in a notice; Undo after removing a relation.
+- **Fix** buttons in the warnings modal and the command **Edit faction data**.
 - Plugin scaffold: manifest, build with esbuild, Vitest, eslint with Obsidian's rules, CI on Linux,
   macOS and Windows.
 

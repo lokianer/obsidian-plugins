@@ -90,3 +90,29 @@ from its name only in case is no clash.
   apart, so the adapter reads the text of just those notes whose cache shows a block but no values.
 
 Left out: a decimal comma (`2,5`) — it reads as not a number and is warned about.
+
+## 2026-10-24 · The faction card is the editor, and it replaces Properties
+
+The maintainer wants the frontmatter of faction and character notes rendered better than in
+ordinary notes and editable in place, and chose a card that replaces Obsidian's Properties block on
+those notes (a setting shows both) and is the only editor — no form modal. Its calls, from
+`docs/superpowers/specs/2026-10-24-faction-editor-design.md` §7:
+
+- Each change writes at once (slider on release, text on Enter or blur), like Properties; no Save
+  button. An edit carries the value shown and is refused when the note says something else now,
+  instead of merging.
+- Writes are line edits through `vault.process`, never `processFrontMatter`, so YAML comments
+  survive; what cannot be placed with certainty is refused with a reason.
+- The card shows the entries as written, broken ones included, so Fix reaches every relation
+  warning. A new relation starts at 0 once its target is picked. Remove offers Undo for 5 s, which
+  puts the exact previous text back.
+- Secret relations are closed every time the card is built; Other fields are closed by default.
+  Lists and maps (tags too) and booleans are shown, edited in source.
+- Card in Reading view and Live Preview; Source mode stays raw YAML. Numbers are written with an
+  ASCII minus. No "Reset to inherited": the card shows only the note's own values, so Remove is
+  that reset. Step-name settings come with the world view.
+- Mounting relies on Obsidian's view DOM (`.markdown-preview-sizer`, `.cm-sizer`,
+  `.metadata-container`); all selectors live in `src/obsidian/card-view.ts`, with a fallback to the
+  top of the view.
+
+Left out: a separate form modal (first draft), inherited values in the card.
