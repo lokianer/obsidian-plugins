@@ -5,7 +5,7 @@ factions are folders holding a `factions.md`, relations are frontmatter values f
 (sworn), and members inherit their faction's stance unless they state their own. Later modules: an
 NPC builder with 5e stat blocks, a battle tracker and dice.
 
-Status: phases 1 (data model), 2 (faction card) and 3 (world view) of the factions module. See the repository's
+Status: phases 1 (data model), 2 (faction card), 3 (world view) and 4 (faction view, tensions) of the factions module. See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
 design in `docs/superpowers/specs/2026-10-24-faction-editor-design.md`.
 
@@ -24,7 +24,8 @@ and a notice says why — **Edit in source** jumps to the line. Lists such as `t
 edited in source.
 
 Settings: **Show Obsidian's properties on faction notes** brings the Properties block back beside
-the card; **Step names** renames the eleven steps from −5 to +5 (empty keeps the default).
+the card; **Step names** renames the eleven steps from −5 to +5 (empty keeps the default);
+**Tension thresholds** set when the tension panel reports something.
 
 ## The faction world
 
@@ -40,8 +41,17 @@ the card; **Step names** renames the eleven steps from −5 to +5 (empty keeps t
   where they differ from the public face.
 
 Click an arrow or a cell to open the note that holds the value with the faction card on that entry;
-an empty cell offers to add the relation. Click a faction to highlight its relations, double-click
-(or Ctrl/Cmd-click) to open its note.
+an empty cell offers to add the relation. Ctrl/Cmd-click a faction to open its note.
+
+**Faction view.** Click a faction (or the Party / Unaffiliated frame) to open it: the faction as a
+frame with its members, the factions it relates to around it, own values as solid arrows. Members
+whose own values differ from their faction's line have a yellow ring. Click a member to see all its
+stances, inherited ones dashed; click a sub-faction to go one level deeper; the breadcrumb leads
+back.
+
+**Tensions.** The lightning button (or **Show faction tensions**) opens a sidebar listing one-sided
+pairs, members out of line, public faces hiding a different truth (True mode only) and allies split
+over a third faction. It follows the world's Public / True toggle; thresholds are in the settings.
 
 ## Commands
 
@@ -49,6 +59,7 @@ an empty cell offers to add the relation. Click a faction to highlight its relat
   that opens the note's card on the broken entry.
 - **Edit faction data** — focuses the card of the active note.
 - **Open faction world** — the graph and matrix of all factions.
+- **Show faction tensions** — the tension panel in the right sidebar.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

@@ -596,10 +596,6 @@
   stroke-width: 2;
 }
 
-.dnd5e-world-edge.is-selected .dnd5e-world-edge-line {
-  stroke-width: 3;
-}
-
 .dnd5e-world-edge.is-differs .dnd5e-world-edge-line {
   stroke-dasharray: 8 4;
 }
@@ -622,12 +618,6 @@
   fill: var(--background-secondary);
   stroke: var(--text-muted);
   stroke-width: 2;
-}
-
-.dnd5e-world-node.is-selected .dnd5e-world-circle,
-.dnd5e-world-node.is-selected .dnd5e-world-frame {
-  stroke: var(--interactive-accent);
-  stroke-width: 3;
 }
 
 .dnd5e-world-node.is-ghost .dnd5e-world-circle {
@@ -678,12 +668,6 @@
 
 .dnd5e-world-frame-row:hover {
   fill: var(--text-accent);
-}
-
-.dnd5e-world-node.is-dim,
-.dnd5e-world-edge.is-dim,
-.dnd5e-world-tie.is-dim {
-  opacity: 0.2;
 }
 
 /* Matrix */

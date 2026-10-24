@@ -13,25 +13,23 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-24, cloud (third session of the day). Phase 3 (faction world: graph and matrix) specified,
-approved by the maintainer ("passt, weiter") and built in full — before phase 2 was checked in
-Obsidian, at the maintainer's word. **Neither phase 2 nor phase 3 has run inside Obsidian yet**; the
-maintainer tests both on 2026-10-25 on the PC.
+2026-10-24, cloud (third session of the day, continued). Phase 3 (faction world) and phase 4
+(faction view, tension panel) specified, approved by the maintainer and built in full; `main`
+fast-forwarded to the branch at the maintainer's request. **Phases 2, 3 and 4 have not run inside
+Obsidian yet**; the maintainer tests them on 2026-10-25 on the PC.
 
 ## Where to continue
 
-1. The maintainer's check in Obsidian, both lists under "Half-finished". Fix what turns up — the
-   likeliest places: the card mounting (`src/obsidian/card-view.ts`) and pointer handling in the
-   graph (`src/obsidian/world-graph-svg.ts`).
-2. **Phase 4** is specified and planned (`docs/superpowers/specs/2026-10-24-faction-view-design.md`,
-   `docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md`): the maintainer chose the
-   faction view inside the world tab and the tension panel in the right sidebar. Build after the
-   plan is approved.
+1. The maintainer's check in Obsidian, the lists under "Half-finished". Fix what turns up — the
+   likeliest places: the card mounting (`src/obsidian/card-view.ts`), pointer handling in the
+   drawings (`pan-zoom.ts`, `world-graph-svg.ts`, `faction-view-svg.ts`), and the sidebar view.
+2. Then **phase 5 — in-view editing and history** (design §4.6, §5.6, §5.7): spec, plan, review
+   stop, build.
 
 ## State of the working tree
 
 Branch `claude/roadmap-and-handoff-nb9sav`, pushed; `main` fast-forwarded to it at the maintainer's
-request (2026-10-24), so `git pull` on `main` brings everything. `examples/vault/.obsidian/graph.json` may show as modified after opening the
+request (2026-10-24) and kept in step since, so `git pull` on `main` brings everything. `examples/vault/.obsidian/graph.json` may show as modified after opening the
 vault: never commit it as part of a task.
 
 ## Done this session
@@ -42,6 +40,11 @@ vault: never commit it as part of a task.
   secret-free world); `7fd45df` d3-force layout (deterministic, cached start, pins, blocs test);
   `60e6956` step-name settings; `8b86a8f` the view: tab, header switches, SVG graph with pan/zoom,
   selection, pinning, matrix, clicks into the card, card focus by entry and "add relation for X".
+- Phase 4: the maintainer chose the faction view inside the world tab and the tension panel in the
+  right sidebar, then "passt". `7c586e8` spec and plan; `846ec98` tension rules and faction view
+  model; `1ff2dfd` drawing, drill-down with breadcrumb, tension sidebar, thresholds, shared pan/zoom
+  and mode store. Seen in the browser preview: The Gutter Court's view (with and without Mira Voss
+  selected; member arrows were first hidden behind the frame, fixed) and the panel in True mode.
 - Example vault: Ilex → The Archivists +2 and Elder Wren → The Drowned Choir −3 (with a reason), so
   the Party and Unaffiliated frames have arrows; `Home.md` rows for graph and matrix.
 - Rendered in Chromium against a stub of the Obsidian API with the example vault's data: graph in
@@ -84,17 +87,29 @@ Reload the plugin in `examples/vault` (`pnpm build && pnpm install-example` in t
 12. **Live update**: change a value in the card → graph and matrix recolour without re-laying out.
 13. **Mobile**: header wraps, matrix scrolls both ways, touch pan and pinch zoom.
 
+**Phase 4 — faction view and tensions**
+
+14. **Drill-down**: click The Gutter Court in the graph → its view; breadcrumb `Faction world ›
+The Gutter Court`; click The Bench chip → one level deeper, breadcrumb back works; Ctrl/Cmd-click
+    on a graph node opens its note instead.
+15. **Rings and arrows**: Mira Voss and The Bench ringed, Sable not; click Mira → only her arrows,
+    the inherited −4 towards the Order dashed; an arrow click opens the card on that entry (for the
+    inherited one: The Gutter Court's note).
+16. **Tension panel**: the lightning button opens it in the right sidebar; Public lists Ondine,
+    Mira, Aldric, Corvin out of line; toggling True in the world tab updates the panel (The Bench,
+    Sable, public-vs-true lines); closing the world tab returns it to Public. Names open notes,
+    values the card.
+17. **Thresholds** in the settings change the panel at once.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md` ("The faction world: its own tab, d3-force, edits
-through the card") and the phase 3 spec §7. Built deviations: click targets name note, field and
+through the card"; "Faction view inside the world tab, tensions in the sidebar") and the specs' §7. Built deviations: click targets name note, field and
 target id (not a raw key); characters without any faction relation get no matrix row.
 
 ## Open questions for the maintainer
 
-- Spec §7 of phase 2 (card) and phase 3 (world view) — confirm or correct after trying them.
-- Phase 4 spec §7: node click opens the faction view (no more selection); inherited arrows only for
-  the selected member; tension rules' details.
+- Spec §7 of phases 2, 3 and 4 — confirm or correct after trying them.
 
 ## Watch out
 
@@ -117,4 +132,4 @@ target id (not a raw key); characters without any faction relation get no matrix
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 140 tests pass (64 at the start of the day).
+`pnpm check` at the root: exit 0; 151 tests pass (64 at the start of the day).

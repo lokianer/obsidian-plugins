@@ -135,3 +135,22 @@ only `src/factions/layout.ts` imports it; rendering is our own SVG). From
 - Graph/Matrix is remembered, Public/True always starts at Public. Step names are global settings.
 
 Left out: faction-to-character arrows (faction view), image export, per-campaign step names.
+
+## 2026-10-24 · Faction view inside the world tab, tensions in the sidebar
+
+The maintainer chose the faction view inside the faction world tab (click a faction, breadcrumb
+back) and the tension panel in the right sidebar. From
+`docs/superpowers/specs/2026-10-24-faction-view-design.md` §7, as built:
+
+- A click on a graph node opens its faction view; Ctrl/Cmd-click opens the note (the phase 3
+  selection and double-click are gone — a click navigates before a double-click could land).
+- Inherited arrows only for the selected member; arrows between a faction and its own members are
+  not drawn (no room inside the frame).
+- Surrounding boxes only for what arrows reach, placed in the world graph's angle order; targeted
+  characters are listed inside their faction's box.
+- Rules: one-sided needs both directions; out of line compares an own value with the faction
+  above, either sign; public vs true is reported once at the level holding the secret, True mode
+  only; split allies need alliance both ways. Default thresholds 4 / 3 / 3 / 3, global settings.
+- The panel follows the world tab's mode through a shared store; Public without a world tab.
+
+Left out: thresholds per campaign, a tension panel inside the world tab.

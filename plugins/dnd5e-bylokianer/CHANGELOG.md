@@ -26,6 +26,10 @@ All notable changes to this plugin are documented here. The format follows
 - **Faction world** tab: a graph with a bloc layout (d3-force) and a matrix of all factions,
   Public/True toggle (Public on opening), warnings badge; arrows and cells lead into the faction
   card; nodes can be pinned by dragging, positions are kept per campaign.
+- **Faction view** inside the faction world: members, rings on those out of line, own and inherited
+  arrows, breadcrumb.
+- **Tension panel** in the right sidebar with four rules and thresholds in the settings, following
+  the Public/True toggle.
 - **Step names** in the settings.
 - **Fix** buttons in the warnings modal and the command **Edit faction data**.
 - Plugin scaffold: manifest, build with esbuild, Vitest, eslint with Obsidian's rules, CI on Linux,

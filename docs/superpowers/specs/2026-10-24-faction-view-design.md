@@ -1,6 +1,6 @@
 # Faction view and tension panel — design
 
-Date: 2026-10-24. Status: **draft for the maintainer's review**. Module: factions, **phase 4**.
+Date: 2026-10-24. Status: **approved ("passt") and built** the same day; deviations in `DECISIONS.md` (no double-click on graph nodes, characters listed inside their box, no arrows between a faction and its own members). Module: factions, **phase 4**.
 
 Builds on [`2026-10-24-factions-design.md`](2026-10-24-factions-design.md) §5.2 (faction view) and
 §5.3 (tension panel), on phase 3's faction world
