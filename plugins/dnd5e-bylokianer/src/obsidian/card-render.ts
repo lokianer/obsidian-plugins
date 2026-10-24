@@ -20,6 +20,7 @@ import { targetsFor } from '../factions/targets';
 import type { T } from '../i18n/strings';
 import type { EditOp } from '../yaml/edit';
 import { TargetSuggest } from './target-suggest';
+import type { ValueChange } from './session-log';
 import { editInSource, undoableWrite, writeOp } from './write';
 
 /** What survives a rebuild of the same card: which sections are open. */
@@ -38,19 +39,18 @@ interface CardContext {
   ui: CardUiState;
   /** The GM's step names from the settings (−5 … +5). */
   stepNames: readonly string[];
+  /** Offer to log a change of a relation value. */
+  offerLog: (change: ValueChange) => void;
   /** Asks for a rebuild from fresh data (after a refused edit). */
   refresh: () => void;
 }
 
 /**
- * Where to focus: a warning of this note (Fix), an entry by field and target (a click in the world
- * view), a new entry for a target (an empty matrix cell), or the first field.
+ * Where to focus: a warning of this note (Fix), an entry by field and target (the world view's
+ * "Open card"), or the first field.
  */
 export type FocusTarget =
-  | { warning: Warning }
-  | { entry: { field: RelationField; target: string } }
-  | { add: { field: RelationField; key: string } }
-  | { first: true };
+  { warning: Warning } | { entry: { field: RelationField; target: string } } | { first: true };
 
 const SLIDER_DELAY = 400;
 
@@ -268,7 +268,7 @@ export class CardRenderer extends Component {
         field: row.field,
         key: row.rawKey,
         expect: row.expect,
-      }).then((ok) => !ok && this.ctx.refresh());
+      }).then((ok) => (ok ? this.offerLog(row, row.value, null) : this.ctx.refresh()));
     });
 
     this.renderWhy(el, target, row);
@@ -349,6 +349,7 @@ export class CardRenderer extends Component {
     show(row.value);
     if (row.invalid !== null) chip.addClass('is-invalid');
     let expect = row.expect;
+    let before = row.value;
     const commit = debounce(
       () => {
         const next = Number(slider.value);
@@ -359,7 +360,10 @@ export class CardRenderer extends Component {
           expect,
           value: next,
         }).then((ok) => {
-          if (ok) expect = next;
+          if (!ok) return;
+          this.offerLog(row, before, next);
+          expect = next;
+          before = next;
         });
       },
       SLIDER_DELAY,
@@ -633,7 +637,28 @@ export class CardRenderer extends Component {
   private async write(op: EditOp): Promise<boolean> {
     const ok = await writeOp(this.ctx.app, this.ctx.file, op, this.t);
     if (!ok) this.ctx.refresh();
+    if (ok && op.op === 'add-entry') {
+      this.ctx.offerLog({
+        from: this.ctx.card.name,
+        to: op.key,
+        before: null,
+        after: op.value,
+        secret: op.field === 'secret_relations',
+      });
+    }
     return ok;
+  }
+
+  /** Offers to log a row's value change, naming the target as the world knows it. */
+  private offerLog(row: CardRow, before: number | null, after: number | null): void {
+    const target = row.targetId === null ? undefined : this.ctx.world.entities.get(row.targetId);
+    this.ctx.offerLog({
+      from: this.ctx.card.name,
+      to: target?.name ?? row.key,
+      before,
+      after,
+      secret: row.field === 'secret_relations',
+    });
   }
 
   // ── focus ──────────────────────────────────────────────────────────────────────────────────
@@ -670,27 +695,11 @@ export class CardRenderer extends Component {
       this.el.scrollIntoView({ block: 'start' });
       return;
     }
-    if ('entry' in target || 'add' in target) {
-      const field = 'entry' in target ? target.entry.field : target.add.field;
+    if ('entry' in target) {
+      const { field, target: id } = target.entry;
       this.openSection(field);
-      if ('entry' in target) {
-        const { target: id } = target.entry;
-        // The entry that is used: the first row naming the target (later ones are duplicates).
-        this.focusRow(field, (r) => (r.targetId ?? `?${r.key}`) === id, 'value');
-      } else {
-        const add = this.el.querySelector<HTMLElement>(
-          `.dnd5e-card-section[data-field="${field}"] .dnd5e-card-add`,
-        );
-        add?.click();
-        const input = this.el.querySelector<HTMLInputElement>(
-          `.dnd5e-card-section[data-field="${field}"] .dnd5e-card-row.is-new input`,
-        );
-        if (input !== null) {
-          input.value = target.add.key;
-          input.scrollIntoView({ block: 'center' });
-          input.focus();
-        }
-      }
+      // The entry that is used: the first row naming the target (later ones are duplicates).
+      this.focusRow(field, (r) => (r.targetId ?? `?${r.key}`) === id, 'value');
       return;
     }
     const { warning } = target;

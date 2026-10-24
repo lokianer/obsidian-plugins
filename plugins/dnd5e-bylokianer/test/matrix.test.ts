@@ -40,20 +40,18 @@ describe('buildMatrix', () => {
       kind: 'value',
       value: -4,
       inheritedFrom: 'The Gutter Court',
-      edit: { path: `${COURT}/factions.md`, field: 'relations', target: ORDER },
     });
     expect(cell('true', BENCH, ORDER)).toMatchObject({
       value: 4,
       inheritedFrom: null,
       differs: true,
-      edit: { path: `${BENCH}/factions.md`, field: 'secret_relations' },
     });
   });
 
   it('leaves the diagonal blank and offers to add where there is no relation', () => {
     expect(cell('public', ORDER, ORDER)).toEqual({ kind: 'none' });
     const empty = matrix.cells.flat().find((c) => c.kind === 'empty');
-    expect(empty).toMatchObject({ kind: 'empty', add: { field: 'relations' } });
+    expect(empty).toEqual({ kind: 'empty' });
   });
 
   it('shows nothing secret in Public mode', () => {

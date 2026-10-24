@@ -610,6 +610,7 @@
 /* Faction world ------------------------------------------------------------------------------- */
 
 .dnd5e-world {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -985,6 +986,73 @@
 
 .dnd5e-world-step {
   color: var(--text-muted);
+}
+
+/* Value popover */
+
+.dnd5e-popover {
+  position: absolute;
+  z-index: var(--layer-popover, 30);
+  width: min(380px, calc(100% - 16px));
+  padding: var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+  background: var(--background-primary);
+  box-shadow: var(--shadow-l);
+  font-size: 16px;
+}
+
+/* On narrow views the popover docks at the bottom, full width. */
+.dnd5e-popover.is-docked {
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  width: auto;
+}
+
+.dnd5e-popover-head {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-2);
+}
+
+.dnd5e-popover-title {
+  flex: 1;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-popover-value {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) 0;
+}
+
+.dnd5e-popover-value:hover {
+  background: transparent;
+}
+
+.dnd5e-popover-why {
+  width: 100%;
+  margin-top: var(--size-4-2);
+}
+
+.dnd5e-popover-fallback {
+  margin-top: var(--size-4-2);
+  color: var(--text-muted);
+}
+
+.dnd5e-popover-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-popover-buttons button {
+  font-size: 16px;
 }
 
 /* Tension panel ------------------------------------------------------------------------------- */

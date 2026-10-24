@@ -5,14 +5,10 @@
 import type { FactionWorld, Mode } from '../factions/model';
 import { type CachedPoint, layout, nodeRadius, type Point } from '../factions/layout';
 import { signed, stepColour, stepName } from '../factions/steps';
-import {
-  buildGraph,
-  type EditTarget,
-  type GraphEdge,
-  type GraphNode,
-} from '../factions/world-graph';
+import { buildGraph, type GraphEdge, type GraphNode } from '../factions/world-graph';
 import type { T } from '../i18n/strings';
 import { PanZoom } from './pan-zoom';
+import type { PopoverTarget } from './popover';
 
 const FRAME_WIDTH = 200;
 const FRAME_HEAD = 40;
@@ -25,8 +21,10 @@ const ARROW = 10;
 export interface GraphActions {
   /** Open a note; `newLeaf` for Ctrl/Cmd. */
   openNote: (path: string, newLeaf: boolean) => void;
-  /** Open the note holding a value and focus its entry in the faction card. */
-  editValue: (edit: EditTarget, newLeaf: boolean) => void;
+  /** Open the value popover for a relation at a screen point. */
+  openValue: (target: PopoverTarget) => void;
+  /** A relation's newest changes, for its tooltip. */
+  history: (from: string, to: string) => string[];
   /** Open the faction view of a faction or frame. */
   openFaction: (id: string) => void;
   /** Persist positions (after a layout or a drag). */
@@ -216,11 +214,20 @@ export class WorldGraphSvg {
       source?.kind === 'frame'
         ? (source.rows.find((row) => row.id === edge.source)?.name ?? source.name)
         : (source?.name ?? '');
-    const title = `${sourceName} → ${targetNode.name}: ${signed(edge.value)} ${stepName(edge.value, this.t, this.stepNames())}${edge.differs ? ` · ${this.t('world.trueTag')}` : ''}${edge.why !== undefined ? `\n${edge.why}` : ''}`;
-    group.createSvg('title').textContent = title;
+    const lines = [
+      `${sourceName} → ${targetNode.name}: ${signed(edge.value)} ${stepName(edge.value, this.t, this.stepNames())}`,
+      ...(edge.differs ? [this.t('world.trueTag')] : []),
+      ...(edge.why !== undefined ? [edge.why] : []),
+      ...this.actions.history(edge.source, edge.target),
+    ];
+    group.createSvg('title').textContent = lines.join('\n');
     hit.addEventListener('click', (event) => {
       event.stopPropagation();
-      this.actions.editValue(edge.edit, event.ctrlKey || event.metaKey);
+      this.actions.openValue({
+        subject: edge.source,
+        target: edge.target,
+        at: { x: event.clientX, y: event.clientY },
+      });
     });
   }
 

@@ -21,6 +21,10 @@ export interface Settings {
   worldMode: 'graph' | 'matrix';
   /** The tension panel's thresholds. */
   thresholds: Thresholds;
+  /** The note new session notes are made from. */
+  sessionTemplate: string;
+  /** Today's answer to "start session N+1?", so it is asked once a day. */
+  sessionAnswer: { date: string; choice: 'next' | 'keep' } | null;
   /** Graph positions per campaign note path, by node id. */
   positions: Record<string, Record<string, { x: number; y: number; pinned?: boolean }>>;
 }
@@ -30,6 +34,8 @@ export const DEFAULT_SETTINGS: Settings = {
   stepNames: [],
   worldMode: 'graph',
   thresholds: DEFAULT_THRESHOLDS,
+  sessionTemplate: 'Templates/Session.md',
+  sessionAnswer: null,
   positions: {},
 };
 
@@ -68,6 +74,15 @@ export class SettingsTab extends PluginSettingTab {
         control: { type: 'toggle', key: 'showProperties', defaultValue: false },
       },
       {
+        name: this.t('settings.template'),
+        desc: this.t('settings.template.desc'),
+        control: {
+          type: 'text',
+          key: 'sessionTemplate',
+          placeholder: DEFAULT_SETTINGS.sessionTemplate,
+        },
+      },
+      {
         type: 'group',
         heading: this.t('settings.stepNames'),
         items: STEPS.map((step) => ({
@@ -99,12 +114,19 @@ export class SettingsTab extends PluginSettingTab {
     if (key.startsWith(THRESHOLD_KEY)) {
       return this.settings().thresholds[key.slice(THRESHOLD_KEY.length) as keyof Thresholds];
     }
+    if (key === 'sessionTemplate') return this.settings().sessionTemplate;
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
 
   async setControlValue(key: string, value: unknown): Promise<void> {
     if (key === 'showProperties' && typeof value === 'boolean') {
       await this.save({ ...this.settings(), showProperties: value });
+    }
+    if (key === 'sessionTemplate' && typeof value === 'string') {
+      await this.save({
+        ...this.settings(),
+        sessionTemplate: value.trim() || DEFAULT_SETTINGS.sessionTemplate,
+      });
     }
     if (key.startsWith(STEP_KEY) && typeof value === 'string') {
       await this.setStepName(Number(key.slice(STEP_KEY.length)), value);
@@ -138,6 +160,20 @@ export class SettingsTab extends PluginSettingTab {
         toggle
           .setValue(this.settings().showProperties)
           .onChange((value) => this.save({ ...this.settings(), showProperties: value })),
+      );
+    new Setting(containerEl)
+      .setName(t('settings.template'))
+      .setDesc(t('settings.template.desc'))
+      .addText((text) =>
+        text
+          .setPlaceholder(DEFAULT_SETTINGS.sessionTemplate)
+          .setValue(this.settings().sessionTemplate)
+          .onChange((value) =>
+            this.save({
+              ...this.settings(),
+              sessionTemplate: value.trim() || DEFAULT_SETTINGS.sessionTemplate,
+            }),
+          ),
       );
     new Setting(containerEl).setName(t('settings.stepNames')).setHeading();
     for (const step of STEPS) {

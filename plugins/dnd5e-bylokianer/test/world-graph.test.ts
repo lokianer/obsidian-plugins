@@ -29,13 +29,12 @@ describe('buildGraph', () => {
     expect(graph.ties).toEqual([{ child: BENCH, parent: COURT }]);
   });
 
-  it('keeps relations one-directional, each with where to edit it', () => {
+  it('keeps relations one-directional, with reasons', () => {
     const edge = (from: string, to: string) => graph.edges.find((e) => e.id === `${from}→${to}`);
     expect(edge(ORDER, COURT)).toMatchObject({
       value: -3,
       why: '[[Session 11 – Under the Lantern Bridge]]',
       differs: false,
-      edit: { path: `${ORDER}/factions.md`, field: 'relations', target: COURT },
     });
     expect(edge(COURT, ORDER)?.value).toBe(-4);
   });
@@ -46,7 +45,6 @@ describe('buildGraph', () => {
       {
         value: 4,
         differs: true,
-        edit: { field: 'secret_relations' },
       },
     );
   });
@@ -65,6 +63,6 @@ describe('buildGraph', () => {
 
   it('shows nothing secret in Public mode', () => {
     expect(buildGraph(withoutSecrets(world), 'public')).toEqual(graph);
-    expect(graph.edges.every((e) => !e.differs && e.edit.field === 'relations')).toBe(true);
+    expect(graph.edges.every((e) => !e.differs)).toBe(true);
   });
 });

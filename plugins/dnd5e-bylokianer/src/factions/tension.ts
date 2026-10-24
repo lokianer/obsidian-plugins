@@ -2,9 +2,8 @@
 // hiding another truth, and allies split over a third. Stances with inheritance in the given mode;
 // the public-vs-true rule runs in True mode only. Pure.
 
-import type { FactionWorld, Mode, ResolvedEntity, Stance } from './model';
+import type { EditTarget, FactionWorld, Mode, ResolvedEntity, Stance } from './model';
 import { stance } from './stance';
-import type { EditTarget } from './world-graph';
 
 export interface Thresholds {
   oneSided: number;

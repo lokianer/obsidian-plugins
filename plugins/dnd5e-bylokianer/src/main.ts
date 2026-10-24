@@ -1,13 +1,13 @@
 import { getLanguage, MarkdownView, Notice, Plugin } from 'obsidian';
 
-import type { FactionWorld } from './factions/model';
-import type { EditTarget } from './factions/world-graph';
+import type { EditTarget, FactionWorld } from './factions/model';
 
 import { createT } from './i18n/strings';
 import { CardManager } from './obsidian/card-view';
 import { DEFAULT_SETTINGS, type Settings, SettingsTab } from './obsidian/settings';
 import { WarningsModal } from './obsidian/warnings-modal';
 import { ModeStore } from './obsidian/mode-store';
+import { SessionLog } from './obsidian/session-log';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
 import { WorldCache } from './obsidian/world-cache';
 import { WORLD_VIEW, WorldView } from './obsidian/world-view';
@@ -22,10 +22,23 @@ export default class Dnd5ePlugin extends Plugin {
       ...((await this.loadData()) as Partial<Settings> | null),
     };
     const cache = new WorldCache(this);
-    const cards = new CardManager(this, cache, t, () => this.options);
+    const cards = new CardManager(
+      this,
+      cache,
+      t,
+      () => this.options,
+      (change) => sessionLog.offer(change),
+    );
     cards.start();
 
     const modes = new ModeStore();
+    const sessionLog = new SessionLog(
+      this,
+      cache,
+      t,
+      () => this.options,
+      (s) => save(s),
+    );
     const save = async (settings: Settings) => {
       this.options = settings;
       await this.saveData(settings);
@@ -89,8 +102,7 @@ export default class Dnd5ePlugin extends Plugin {
           save,
           openNote,
           editValue,
-          addValue: (add, newLeaf) =>
-            void cards.open(add.path, { add: { field: add.field, key: add.key } }, newLeaf),
+          sessionLog,
           showWarnings,
           showTensions: () => void showTensions(),
         }),

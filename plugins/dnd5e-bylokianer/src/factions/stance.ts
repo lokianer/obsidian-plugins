@@ -72,3 +72,25 @@ export function allStances(world: FactionWorld, from: string, mode: Mode): Map<s
   }
   return result;
 }
+
+/**
+ * What `from` would stand towards `to` without its own entry in the field the mode writes (True:
+ * `secret_relations`, Public: `relations`) — the value "Reset to inherited" brings back. In True mode
+ * that is its own public value if it has one, else the stance of the faction above.
+ */
+export function fallbackStance(
+  world: FactionWorld,
+  from: string,
+  to: string,
+  mode: Mode,
+): Stance | null {
+  const entity = world.entities.get(from);
+  if (entity === undefined) return null;
+  if (mode === 'true') {
+    const own = toStance(from, entity, 'relations', to);
+    if (own !== null) return own;
+  }
+  if (entity.parent === null) return null;
+  const above = stance(world, entity.parent, to, mode);
+  return above === null ? null : { ...above, inherited: true };
+}

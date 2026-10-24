@@ -6,9 +6,9 @@
 import { type FactionView, type ViewArrow, type ViewBox } from '../factions/faction-view';
 import type { Point } from '../factions/layout';
 import { signed, stepColour, stepName } from '../factions/steps';
-import type { EditTarget } from '../factions/world-graph';
 import type { T } from '../i18n/strings';
 import { PanZoom } from './pan-zoom';
+import type { PopoverTarget } from './popover';
 
 const CHIP_W = 170;
 const CHIP_H = 36;
@@ -24,7 +24,8 @@ const ARROW = 9;
 export interface FactionViewActions {
   openNote: (path: string, newLeaf: boolean) => void;
   openFaction: (id: string) => void;
-  editValue: (edit: EditTarget, newLeaf: boolean) => void;
+  openValue: (target: PopoverTarget) => void;
+  history: (from: string, to: string) => string[];
 }
 
 /** An axis-aligned rectangle by its centre. */
@@ -305,11 +306,17 @@ export class FactionViewSvg {
       `${fromName} → ${toName}: ${signed(arrow.value)} ${stepName(arrow.value, this.t, this.stepNames())} · ${origin}`,
       ...(arrow.differs ? [this.t('world.trueTag')] : []),
       ...(arrow.why !== undefined ? [arrow.why] : []),
+      ...this.actions.history(arrow.from, arrow.to),
     ];
     group.createSvg('title').textContent = lines.join('\n');
+    // The popover edits the arrow's tail: an inherited value becomes the member's own.
     hit.addEventListener('click', (event) => {
       event.stopPropagation();
-      this.actions.editValue(arrow.edit, event.ctrlKey || event.metaKey);
+      this.actions.openValue({
+        subject: arrow.from,
+        target: arrow.to,
+        at: { x: event.clientX, y: event.clientY },
+      });
     });
   }
 

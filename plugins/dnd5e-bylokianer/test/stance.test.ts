@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import type { FactionWorld, ResolvedEntity } from '../src/factions/model';
-import { allStances, stance } from '../src/factions/stance';
+import { allStances, fallbackStance, stance } from '../src/factions/stance';
+import { buildWorld } from '../src/factions/world';
+import { loadExampleVault } from './fixture';
 
 type Values = Record<string, number>;
 
@@ -113,5 +115,25 @@ describe('allStances', () => {
     expect([...stances.keys()].sort()).toEqual(['Mira', 'Order']);
     expect(stances.get('Mira')).toMatchObject({ value: -2, inherited: false });
     expect(stances.get('Order')).toMatchObject({ value: -4, inherited: true });
+  });
+});
+
+describe('fallbackStance', () => {
+  it('is what remains without the own entry of the mode’s field', () => {
+    const w = buildWorld(loadExampleVault());
+    const F = 'Silverstadt/Factions';
+    const ORDER = `${F}/Order of the Lantern`;
+    const COURT = `${F}/The Gutter Court`;
+    const BENCH = `${COURT}/The Bench`;
+    // The Bench's secret +4 gone: its public face, inherited from the Court, applies.
+    expect(fallbackStance(w, BENCH, ORDER, 'true')).toMatchObject({ value: -4, source: COURT });
+    // Corvin's own −3 gone: the Archivists' 0.
+    expect(fallbackStance(w, `${F}/The Archivists/Corvin Marsh.md`, ORDER, 'public')).toMatchObject(
+      {
+        value: 0,
+        inherited: true,
+      },
+    );
+    expect(fallbackStance(w, ORDER, COURT, 'public')).toBeNull();
   });
 });

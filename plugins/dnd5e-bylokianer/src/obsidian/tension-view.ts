@@ -6,7 +6,7 @@ import { ItemView, type WorkspaceLeaf } from 'obsidian';
 import type { FactionWorld } from '../factions/model';
 import { signed, stepColour } from '../factions/steps';
 import { findTensions, type Tension, type Thresholds, type ValueRef } from '../factions/tension';
-import type { EditTarget } from '../factions/world-graph';
+import type { EditTarget } from '../factions/model';
 import type { StringKey, T } from '../i18n/strings';
 import type { ModeStore } from './mode-store';
 import type { WorldCache } from './world-cache';

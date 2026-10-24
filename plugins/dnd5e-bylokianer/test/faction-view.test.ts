@@ -37,7 +37,6 @@ describe('buildFactionView', () => {
       value: -4,
       inherited: true,
       sourceName: 'The Gutter Court',
-      edit: { path: `${COURT}/factions.md`, field: 'relations', target: ORDER },
     });
   });
 

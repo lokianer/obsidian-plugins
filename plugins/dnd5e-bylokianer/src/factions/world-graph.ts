@@ -6,14 +6,6 @@ import { PARTY, UNAFFILIATED } from './discover';
 import type { FactionWorld, Mode, RelationField, ResolvedEntity } from './model';
 import { stance } from './stance';
 
-/** Where an edit of a shown value goes: the note, the field, and the target as the card knows it. */
-export interface EditTarget {
-  path: string;
-  field: RelationField;
-  /** The target's entity id, or `?` + the name for a dangling target. */
-  target: string;
-}
-
 export type GraphNode =
   | { kind: 'faction'; id: string; name: string; power: number; notePath: string | null }
   | {
@@ -36,7 +28,6 @@ export interface GraphEdge {
   why?: string;
   /** True mode only: the true stance differs from the public one (or there is none). */
   differs: boolean;
-  edit: EditTarget;
 }
 
 export interface WorldGraph {
@@ -74,7 +65,6 @@ function ownEdges(world: FactionWorld, entity: ResolvedEntity, sourceNode: strin
       value: found.value,
       ...(found.why !== undefined && { why: found.why }),
       differs: mode === 'true' && publicValue !== found.value,
-      edit: { path: entity.notePath, field: found.field, target },
     });
   }
   return edges;

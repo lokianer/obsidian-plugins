@@ -8,11 +8,13 @@ import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
 import { buildFactionView, type FactionView } from '../factions/faction-view';
 import type { CachedPoint } from '../factions/layout';
 import { buildMatrix } from '../factions/matrix';
-import type { FactionWorld, Mode, RelationField } from '../factions/model';
-import type { EditTarget } from '../factions/world-graph';
+import type { FactionWorld, Mode } from '../factions/model';
+import type { EditTarget } from '../factions/model';
 import type { T } from '../i18n/strings';
 import { FactionViewSvg } from './faction-view-svg';
 import type { ModeStore } from './mode-store';
+import { type PopoverTarget, ValuePopover } from './popover';
+import type { SessionLog } from './session-log';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 import { WorldGraphSvg } from './world-graph-svg';
@@ -27,8 +29,9 @@ export interface WorldViewDeps {
   settings: () => Settings;
   save: (settings: Settings) => Promise<void>;
   openNote: (path: string, newLeaf: boolean) => void;
+  /** Open a note with the faction card on an entry (the popover's "Open card"). */
   editValue: (edit: EditTarget, newLeaf: boolean) => void;
-  addValue: (add: { path: string; field: RelationField; key: string }, newLeaf: boolean) => void;
+  sessionLog: SessionLog;
   showWarnings: (world: FactionWorld) => void;
   showTensions: () => void;
 }
@@ -42,6 +45,7 @@ export class WorldView extends ItemView {
   private graph: WorldGraphSvg | null = null;
   private factionView: FactionViewSvg | null = null;
   private relayoutAction: HTMLElement | null = null;
+  private popover: ValuePopover | null = null;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -74,6 +78,14 @@ export class WorldView extends ItemView {
         if (world !== null) this.graph?.relayout(world, this.mode);
       });
     }
+    this.popover = new ValuePopover(this.contentEl, {
+      app: this.app,
+      t,
+      stepNames: () => this.deps.settings().stepNames,
+      openCard: (edit) => this.deps.editValue(edit, false),
+      offerLog: (change) => this.deps.sessionLog.offer(change),
+    });
+    this.register(this.deps.sessionLog.onChange(() => this.render()));
     this.header = this.contentEl.createDiv({ cls: 'dnd5e-world-header' });
     this.body = this.contentEl.createDiv({ cls: 'dnd5e-world-body' });
     this.register(this.deps.cache.onChange(() => this.render()));
@@ -83,17 +95,20 @@ export class WorldView extends ItemView {
 
   async onClose(): Promise<void> {
     this.deps.modes.set('public');
+    this.popover?.close();
     this.graph = null;
     this.factionView = null;
     this.contentEl.empty();
   }
 
   private setMode(mode: Mode): void {
+    this.popover?.close();
     this.mode = mode;
     this.deps.modes.set(mode);
   }
 
   private openFaction(id: string | null): void {
+    this.popover?.close();
     this.focus = id;
     this.render();
   }
@@ -124,26 +139,34 @@ export class WorldView extends ItemView {
       return;
     }
     const stepNames = () => this.deps.settings().stepNames;
+    this.popover?.refresh(world, this.mode);
+    const values = {
+      openValue: (target: PopoverTarget) => this.popover?.open(target, world, this.mode),
+      history: (from: string, to: string) => this.deps.sessionLog.describe(from, to, this.mode),
+    };
     if (view !== null) {
       this.show('faction');
       this.factionView ??= new FactionViewSvg(this.body, t, stepNames, {
         openNote: this.deps.openNote,
         openFaction: (id) => this.openFaction(id),
-        editValue: this.deps.editValue,
+        ...values,
       });
       this.factionView.update(view, this.angles(world, view.id));
       return;
     }
     if (this.deps.settings().worldMode === 'matrix') {
       this.show('other');
-      renderMatrix(this.body, buildMatrix(world, this.mode), t, stepNames(), this.deps);
+      renderMatrix(this.body, buildMatrix(world, this.mode), t, stepNames(), {
+        openNote: this.deps.openNote,
+        ...values,
+      });
       return;
     }
     this.show('graph');
     if (this.graph === null) {
       this.graph = new WorldGraphSvg(this.body, t, stepNames, {
         openNote: this.deps.openNote,
-        editValue: this.deps.editValue,
+        ...values,
         openFaction: (id) => this.openFaction(id),
         savePositions: (positions) =>
           void this.savePositions(world.campaign?.path ?? '', positions),

@@ -8,6 +8,7 @@ import { buildCard, type CardModel } from '../factions/card';
 import type { FactionWorld } from '../factions/model';
 import type { T } from '../i18n/strings';
 import { CardRenderer, type CardUiState, type FocusTarget } from './card-render';
+import type { ValueChange } from './session-log';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 
@@ -62,6 +63,7 @@ export class CardManager {
     private readonly cache: WorldCache,
     private readonly t: T,
     private readonly settings: () => Settings,
+    private readonly offerLog: (change: ValueChange) => void,
   ) {}
 
   start(): void {
@@ -157,6 +159,7 @@ export class CardManager {
         t: this.t,
         ui,
         stepNames,
+        offerLog: this.offerLog,
         refresh: () => {
           const mount = this.mounts.get(view);
           if (mount !== undefined) mount.signature = '';

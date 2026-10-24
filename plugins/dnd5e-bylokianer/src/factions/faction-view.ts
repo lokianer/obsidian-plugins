@@ -4,7 +4,6 @@
 
 import type { FactionWorld, Mode } from './model';
 import { allStances, stance } from './stance';
-import type { EditTarget } from './world-graph';
 
 export interface ViewMember {
   id: string;
@@ -37,7 +36,6 @@ export interface ViewArrow {
   /** Name of the entity whose note holds the value. */
   sourceName: string;
   differs: boolean;
-  edit: EditTarget;
 }
 
 export interface FactionView {
@@ -83,7 +81,6 @@ export function buildFactionView(world: FactionWorld, id: string, mode: Mode): F
       inherited: found.inherited,
       sourceName: source?.name ?? '',
       differs: mode === 'true' && publicValue !== found.value,
-      edit: { path: source?.notePath ?? '', field: found.field, target: to },
     });
   };
   if (!faction.pseudo) {

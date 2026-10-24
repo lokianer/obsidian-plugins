@@ -1,16 +1,15 @@
 // Drawing the faction matrix: who (rows) towards whom (columns), each cell coloured with its
-// number and step name, inherited values set apart; a click leads into the faction card.
+// number and step name, inherited values set apart; a click opens the value popover.
 
 import { type MatrixCell, type WorldMatrix } from '../factions/matrix';
-import type { RelationField } from '../factions/model';
 import { signed, stepColour, stepName } from '../factions/steps';
-import type { EditTarget } from '../factions/world-graph';
 import type { T } from '../i18n/strings';
+import type { PopoverTarget } from './popover';
 
 export interface MatrixActions {
   openNote: (path: string, newLeaf: boolean) => void;
-  editValue: (edit: EditTarget, newLeaf: boolean) => void;
-  addValue: (add: { path: string; field: RelationField; key: string }, newLeaf: boolean) => void;
+  openValue: (target: PopoverTarget) => void;
+  history: (from: string, to: string) => string[];
 }
 
 export function renderMatrix(
@@ -49,13 +48,18 @@ export function renderMatrix(
       event.preventDefault();
       if (notePath !== null) actions.openNote(notePath, event.ctrlKey || event.metaKey);
     });
-    matrix.cells[r]?.forEach((cell) => renderCell(tr, cell, t, stepNames, actions));
+    matrix.cells[r]?.forEach((cell, c) => {
+      const column = matrix.columns[c];
+      if (column !== undefined) renderCell(tr, cell, row.id, column.id, t, stepNames, actions);
+    });
   });
 }
 
 function renderCell(
   tr: HTMLElement,
   cell: MatrixCell,
+  subject: string,
+  target: string,
   t: T,
   stepNames: readonly string[],
   actions: MatrixActions,
@@ -65,12 +69,12 @@ function renderCell(
     td.addClass('is-none');
     return;
   }
+  const open = (event: MouseEvent) =>
+    actions.openValue({ subject, target, at: { x: event.clientX, y: event.clientY } });
+  td.addEventListener('click', open);
   if (cell.kind === 'empty') {
     td.addClass('is-empty');
     td.setAttr('aria-label', t('card.add'));
-    td.addEventListener('click', (event) =>
-      actions.addValue(cell.add, event.ctrlKey || event.metaKey),
-    );
     return;
   }
   td.addClass('has-value');
@@ -83,9 +87,7 @@ function renderCell(
     cell.inheritedFrom === null ? null : t('world.inheritedFrom', { name: cell.inheritedFrom }),
     cell.differs ? t('world.trueTag') : null,
     cell.why ?? null,
+    ...actions.history(subject, target),
   ].filter((x): x is string => x !== null);
   if (notes.length > 0) td.setAttr('title', notes.join('\n'));
-  td.addEventListener('click', (event) =>
-    actions.editValue(cell.edit, event.ctrlKey || event.metaKey),
-  );
 }

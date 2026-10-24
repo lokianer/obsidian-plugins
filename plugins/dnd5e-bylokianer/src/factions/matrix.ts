@@ -4,7 +4,6 @@
 import { PARTY, UNAFFILIATED } from './discover';
 import type { FactionWorld, Mode, ResolvedEntity } from './model';
 import { allStances, stance } from './stance';
-import type { EditTarget } from './world-graph';
 
 export type MatrixRow =
   | { kind: 'group'; id: string; name: string }
@@ -25,9 +24,8 @@ export type MatrixCell =
       /** Name of the faction the value is inherited from, or null for an own value. */
       inheritedFrom: string | null;
       differs: boolean;
-      edit: EditTarget;
     }
-  | { kind: 'empty'; add: { path: string; field: EditTarget['field']; key: string } }
+  | { kind: 'empty' }
   | { kind: 'none' };
 
 export interface WorldMatrix {
@@ -99,15 +97,12 @@ export function buildMatrix(world: FactionWorld, mode: Mode): WorldMatrix {
     ...[...ghosts].sort().map((id) => ({ id, name: id.slice(1), depth: 0, ghost: true })),
   ];
 
-  const field = mode === 'true' ? 'secret_relations' : 'relations';
   const cells = rows.map((row): MatrixCell[] =>
     columns.map((column): MatrixCell => {
       if (row.kind === 'group' || row.id === column.id) return { kind: 'none' };
       const found = stances.get(row.id)?.get(column.id);
       if (found === undefined) {
-        return row.notePath === null
-          ? { kind: 'none' }
-          : { kind: 'empty', add: { path: row.notePath, field, key: column.name } };
+        return row.notePath === null ? { kind: 'none' } : { kind: 'empty' };
       }
       const source = world.entities.get(found.source);
       const publicValue =
@@ -118,7 +113,6 @@ export function buildMatrix(world: FactionWorld, mode: Mode): WorldMatrix {
         ...(found.why !== undefined && { why: found.why }),
         inheritedFrom: found.inherited ? (source?.name ?? null) : null,
         differs: mode === 'true' && publicValue !== found.value,
-        edit: { path: source?.notePath ?? '', field: found.field, target: column.id },
       };
     }),
   );

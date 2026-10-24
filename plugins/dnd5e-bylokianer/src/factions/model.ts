@@ -93,3 +93,11 @@ export interface Stance {
   field: RelationField;
   inherited: boolean;
 }
+
+/** Where an edit of a shown value goes: the note, the field, and the target as the card knows it. */
+export interface EditTarget {
+  path: string;
+  field: RelationField;
+  /** The target's entity id, or `?` + the name for a dangling target. */
+  target: string;
+}
