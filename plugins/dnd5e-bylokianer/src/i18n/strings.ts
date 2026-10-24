@@ -89,6 +89,8 @@ export const en = {
   'settings.showProperties': 'Show Obsidian’s properties on faction notes',
   'settings.showProperties.desc':
     'The faction card replaces the Properties block on faction and character notes. Turn this on to show both.',
+  'settings.stepNames': 'Step names',
+  'settings.stepNames.desc': 'Leave empty for the default name.',
   'step.-5': 'war',
   'step.-4': 'feud',
   'step.-3': 'hostile',
@@ -195,6 +197,8 @@ export const de: Record<StringKey, string> = {
   'settings.showProperties': 'Obsidians Eigenschaften auf Fraktionsnotizen zeigen',
   'settings.showProperties.desc':
     'Die Fraktionskarte ersetzt den Eigenschaften-Block auf Fraktions- und Charakternotizen. Einschalten, um beides zu zeigen.',
+  'settings.stepNames': 'Stufennamen',
+  'settings.stepNames.desc': 'Leer lassen für den Standardnamen.',
   'step.-5': 'Krieg',
   'step.-4': 'Fehde',
   'step.-3': 'feindlich',

@@ -126,7 +126,8 @@ export class CardManager {
     view.containerEl.addClass(VIEW_CLASS);
     view.containerEl.toggleClass(SHOW_PROPERTIES_CLASS, this.settings().showProperties);
 
-    const signature = JSON.stringify(card);
+    const { stepNames } = this.settings();
+    const signature = JSON.stringify([card, stepNames]);
     const old = this.mounts.get(view);
     const same = old !== undefined && old.path === file.path && old.mode === mode;
     if (same && old.el.isConnected) {
@@ -155,6 +156,7 @@ export class CardManager {
         world,
         t: this.t,
         ui,
+        stepNames,
         refresh: () => {
           const mount = this.mounts.get(view);
           if (mount !== undefined) mount.signature = '';

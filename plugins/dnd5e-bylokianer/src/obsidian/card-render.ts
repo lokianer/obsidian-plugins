@@ -36,6 +36,8 @@ interface CardContext {
   world: FactionWorld;
   t: T;
   ui: CardUiState;
+  /** The GM's step names from the settings (−5 … +5). */
+  stepNames: readonly string[];
   /** Asks for a rebuild from fresh data (after a refused edit). */
   refresh: () => void;
 }
@@ -335,7 +337,7 @@ export class CardRenderer extends Component {
       el.removeClass('is-unset');
       el.setCssProps({ '--dnd5e-value-colour': stepColour(v) });
       chip.setText(signed(v));
-      step.setText(stepName(v, this.t));
+      step.setText(stepName(v, this.t, this.ctx.stepNames));
     };
     show(row.value);
     if (row.invalid !== null) chip.addClass('is-invalid');

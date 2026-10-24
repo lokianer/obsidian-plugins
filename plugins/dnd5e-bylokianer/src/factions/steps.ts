@@ -10,8 +10,17 @@ export function toStep(value: number): number {
   return Math.min(MAX_VALUE, Math.max(MIN_VALUE, Math.round(value))) || 0;
 }
 
-export function stepName(value: number, t: T): string {
-  return t(`step.${toStep(value)}` as StringKey);
+/** Every step from −5 to +5, in order. */
+export const STEPS: readonly number[] = Array.from({ length: 11 }, (_, i) => i + MIN_VALUE);
+
+/**
+ * The name of a value's step: the GM's own name from the settings (`custom`, indexed −5 … +5 as
+ * 0 … 10) where one is set, else the default of the interface language.
+ */
+export function stepName(value: number, t: T, custom: readonly string[] = []): string {
+  const step = toStep(value);
+  const own = custom[step - MIN_VALUE]?.trim();
+  return own !== undefined && own !== '' ? own : t(`step.${step}` as StringKey);
 }
 
 /** A signed number as the card writes it: `+3`, `0`, `−3` (typographic minus). */

@@ -18,6 +18,12 @@ describe('steps', () => {
     expect(stepName(9, en)).toBe('sworn');
   });
 
+  it('prefers the GM’s own names where set', () => {
+    const custom = ['', '', 'enemies', '', '', '  '];
+    expect(stepName(-3, createT('en'), custom)).toBe('enemies');
+    expect(stepName(0, createT('en'), custom)).toBe('neutral');
+  });
+
   it('rounds and clamps to the scale, without −0', () => {
     expect([toStep(-7), toStep(2.4), toStep(-0.2)]).toEqual([-5, 2, 0]);
     expect(Object.is(toStep(-0.2), 0)).toBe(true);
