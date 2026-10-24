@@ -1,7 +1,7 @@
 // Lists what the plugin could not read cleanly: one card per note, its warnings grouped by what
 // happened to the data, each showing the key, the value as written and what it was read as.
 
-import { type App, Keymap, Modal, setIcon } from 'obsidian';
+import { type App, Keymap, Modal, type PaneType, setIcon } from 'obsidian';
 
 import type { FactionWorld, Warning } from '../factions/model';
 import {
@@ -37,7 +37,7 @@ export class WarningsModal extends Modal {
     private readonly world: FactionWorld,
     private readonly t: T,
     /** Opens the faction card on the entry a warning is about. */
-    private readonly onFix?: (warning: Warning, newLeaf: boolean) => void,
+    private readonly onFix?: (warning: Warning, newLeaf: PaneType | boolean) => void,
   ) {
     super(app);
   }
@@ -140,7 +140,7 @@ export class WarningsModal extends Modal {
       fix.createSpan({ text: t('fix.button') });
       fix.addEventListener('click', (event) => {
         this.close();
-        onFix(warning, Keymap.isModEvent(event) !== false);
+        onFix(warning, Keymap.isModEvent(event));
       });
     }
   }

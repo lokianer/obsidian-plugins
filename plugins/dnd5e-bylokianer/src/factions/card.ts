@@ -7,7 +7,7 @@ import { keyLookup } from './keys';
 import type { FactionWorld, RelationField, ResolvedEntity, Warning } from './model';
 import { asWritten, parseRelationValue } from './values';
 
-export const RELATION_FIELDS: readonly RelationField[] = ['relations', 'secret_relations'];
+const RELATION_FIELDS: readonly RelationField[] = ['relations', 'secret_relations'];
 const OWN_KEYS = new Set(['name', 'power', 'relations', 'secret_relations']);
 
 export interface CardRow {

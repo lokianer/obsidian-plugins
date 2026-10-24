@@ -17,7 +17,7 @@ import { PARTY, UNAFFILIATED } from '../factions/discover';
 import type { FactionWorld, RelationField, Warning } from '../factions/model';
 import { signed, stepColour, stepName } from '../factions/steps';
 import { targetsFor } from '../factions/targets';
-import type { StringKey, T } from '../i18n/strings';
+import type { T } from '../i18n/strings';
 import type { EditOp } from '../yaml/edit';
 import { TargetSuggest } from './target-suggest';
 import { editInSource, undoableWrite, writeOp } from './write';
@@ -28,7 +28,7 @@ export interface CardUiState {
   fieldsOpen: boolean;
 }
 
-export interface CardContext {
+interface CardContext {
   app: App;
   view: MarkdownView;
   file: TFile;
@@ -51,6 +51,12 @@ function scalarText(value: unknown): string {
     : '';
 }
 
+/** A warning row's button: what it says and what it writes. */
+interface WarningAction {
+  label: string;
+  run: () => Promise<boolean>;
+}
+
 function warningMatches(a: Warning, b: Warning): boolean {
   return a.code === b.code && a.key === b.key && a.field === b.field && a.path === b.path;
 }
@@ -65,6 +71,11 @@ export class CardRenderer extends Component {
 
   private get t(): T {
     return this.ctx.t;
+  }
+
+  /** "1 warning" / "3 warnings": the `.one` or `.many` string of a key. */
+  private count(key: 'card.warnings' | 'card.items', n: number): string {
+    return n === 1 ? this.t(`${key}.one`) : this.t(`${key}.many`, { count: n });
   }
 
   render(): void {
@@ -111,10 +122,7 @@ export class CardRenderer extends Component {
     if (card.warningCount > 0) {
       const badge = line.createEl('button', {
         cls: 'dnd5e-card-badge',
-        text:
-          card.warningCount === 1
-            ? this.t('card.warnings.one')
-            : this.t('card.warnings.many', { count: card.warningCount }),
+        text: this.count('card.warnings', card.warningCount),
       });
       setIcon(badge.createSpan({ cls: 'dnd5e-card-icon' }), 'alert-triangle');
       badge.addEventListener('click', () => {
@@ -145,7 +153,7 @@ export class CardRenderer extends Component {
       name.addEventListener('keydown', (e) => e.key === 'Enter' && edit());
     }
     if (card.power !== null) {
-      this.renderPower(title, card.power);
+      this.renderPower(title, head, card.power);
     }
   }
 
@@ -155,7 +163,11 @@ export class CardRenderer extends Component {
     return p.name;
   }
 
-  private renderPower(parent: HTMLElement, power: NonNullable<CardModel['power']>): void {
+  private renderPower(
+    parent: HTMLElement,
+    warningsParent: HTMLElement,
+    power: NonNullable<CardModel['power']>,
+  ): void {
     const box = parent.createDiv({ cls: 'dnd5e-card-power', attr: { 'data-focus': 'power' } });
     box.createSpan({ cls: 'dnd5e-card-label', text: this.t('card.power') });
     const pips = box.createDiv({ cls: 'dnd5e-card-pips' });
@@ -172,13 +184,11 @@ export class CardRenderer extends Component {
     }
     box.createSpan({ cls: 'dnd5e-card-number', text: String(power.value) });
     for (const warning of power.warnings) {
-      this.renderWarning(
-        parent,
-        warning,
-        () =>
+      this.renderWarning(warningsParent, warning, {
+        label: this.t('card.write', { value: power.value }),
+        run: () =>
           this.write({ op: 'set-scalar', key: 'power', expect: power.expect, value: power.value }),
-        power.value,
-      );
+      });
     }
   }
 
@@ -186,19 +196,16 @@ export class CardRenderer extends Component {
     const { card } = this.ctx;
     for (const warning of card.noteWarnings) {
       if (warning.code === 'missing-type') {
-        this.renderWarning(
-          parent,
-          warning,
-          () =>
+        this.renderWarning(parent, warning, {
+          label: this.t('card.setType'),
+          run: () =>
             this.write({
               op: 'set-scalar',
               key: 'type',
               expect: card.fields.find((f) => f.key === 'type')?.expect,
               value: 'faction',
             }),
-          undefined,
-          this.t('card.setType'),
-        );
+        });
       } else {
         this.renderWarning(parent, warning);
       }
@@ -230,10 +237,7 @@ export class CardRenderer extends Component {
     for (const row of section.rows) {
       this.renderRow(box, row);
     }
-    const add = box.createEl('button', { cls: 'dnd5e-card-add' });
-    setIcon(add.createSpan({ cls: 'dnd5e-card-icon' }), 'plus');
-    add.createSpan({ text: this.t('card.add') });
-    add.addEventListener('click', () => this.addRow(box, add, section.field));
+    this.addButton(box, this.t('card.add'), (add) => this.addRow(box, add, section.field));
   }
 
   private renderRow(parent: HTMLElement, row: CardRow): void {
@@ -245,7 +249,47 @@ export class CardRenderer extends Component {
     if (row.warnings.length > 0) el.addClass('has-warning');
     const main = el.createDiv({ cls: 'dnd5e-card-row-main' });
 
-    // Target.
+    const target = this.renderTarget(main, row);
+    this.renderValue(main, el, row);
+    const remove = this.iconButton(main, 'x', this.t('card.remove'), 'dnd5e-card-remove');
+    remove.setAttr('data-focus', 'remove');
+    remove.addEventListener('click', () => {
+      void undoableWrite(this.ctx.app, this.ctx.file, this.t, row.key, {
+        op: 'remove-entry',
+        field: row.field,
+        key: row.rawKey,
+        expect: row.expect,
+      }).then((ok) => !ok && this.ctx.refresh());
+    });
+
+    this.renderWhy(el, target, row);
+
+    for (const warning of row.warnings) {
+      const { value } = row;
+      const adjusted =
+        (warning.code === 'value-out-of-range' || warning.code === 'value-not-integer') &&
+        value !== null;
+      this.renderWarning(
+        el,
+        warning,
+        adjusted
+          ? {
+              label: this.t('card.write', { value: signed(value) }),
+              run: () =>
+                this.write({
+                  op: 'set-value',
+                  field: row.field,
+                  key: row.rawKey,
+                  expect: row.expect,
+                  value,
+                }),
+            }
+          : undefined,
+      );
+    }
+  }
+
+  private renderTarget(main: HTMLElement, row: CardRow): HTMLElement {
     const target = main.createDiv({ cls: 'dnd5e-card-target' });
     const entity = row.targetId === null ? undefined : this.ctx.world.entities.get(row.targetId);
     if (entity?.notePath) {
@@ -269,8 +313,10 @@ export class CardRenderer extends Component {
     const rename = this.iconButton(target, 'pencil', this.t('card.edit'), 'dnd5e-card-rename');
     rename.setAttr('data-focus', 'target');
     rename.addEventListener('click', () => this.renameRow(target, row));
+    return target;
+  }
 
-    // Value.
+  private renderValue(main: HTMLElement, el: HTMLElement, row: CardRow): void {
     const value = main.createDiv({ cls: 'dnd5e-card-value' });
     const slider = value.createEl('input', {
       cls: 'dnd5e-card-slider',
@@ -315,19 +361,9 @@ export class CardRenderer extends Component {
       show(Number(slider.value));
     });
     slider.addEventListener('change', () => commit());
+  }
 
-    const remove = this.iconButton(main, 'x', this.t('card.remove'), 'dnd5e-card-remove');
-    remove.setAttr('data-focus', 'remove');
-    remove.addEventListener('click', () => {
-      void undoableWrite(this.ctx.app, this.ctx.file, this.t, row.key, {
-        op: 'remove-entry',
-        field: row.field,
-        key: row.rawKey,
-        expect: row.expect,
-      }).then((ok) => !ok && this.ctx.refresh());
-    });
-
-    // Why.
+  private renderWhy(el: HTMLElement, target: HTMLElement, row: CardRow): void {
     const why = el.createDiv({
       cls: row.why === null ? 'dnd5e-card-why is-empty' : 'dnd5e-card-why',
     });
@@ -356,27 +392,6 @@ export class CardRenderer extends Component {
             },
       );
     });
-
-    for (const warning of row.warnings) {
-      const adjusted =
-        (warning.code === 'value-out-of-range' || warning.code === 'value-not-integer') &&
-        row.value !== null;
-      this.renderWarning(
-        el,
-        warning,
-        adjusted
-          ? () =>
-              this.write({
-                op: 'set-value',
-                field: row.field,
-                key: row.rawKey,
-                expect: row.expect,
-                value: row.value ?? 0,
-              })
-          : undefined,
-        row.value ?? undefined,
-      );
-    }
   }
 
   private renameRow(target: HTMLElement, row: CardRow): void {
@@ -396,60 +411,36 @@ export class CardRenderer extends Component {
     );
   }
 
-  /** A target field with suggestions; Enter or a picked suggestion writes, Esc cancels. */
+  /**
+   * A target field with suggestions; Enter or a picked suggestion writes, Esc cancels. Leaving the
+   * field cancels too, after a moment, so that a click on a suggestion still counts.
+   */
   private targetInput(
     parent: HTMLElement,
     initial: string,
     toOp: (value: string) => EditOp | null,
   ): void {
-    parent.empty();
-    const input = parent.createEl('input', {
-      cls: 'dnd5e-card-input',
-      attr: { type: 'text', placeholder: this.t('card.targetPlaceholder') },
-    });
-    input.value = initial;
-    let done = false;
-    const finish = (commit: boolean) => {
-      if (done) return;
-      done = true;
-      suggest.close();
-      const op = commit ? toOp(input.value.trim()) : null;
-      if (op === null) {
-        this.ctx.refresh();
-        return;
-      }
-      void this.write(op);
-    };
-    const suggest = new TargetSuggest(
-      this.ctx.app,
-      input,
-      targetsFor(this.ctx.world, this.ctx.card.entityId),
-      this.t,
+    const { input, finish } = this.inlineEdit(
+      parent,
+      initial,
+      this.t('card.targetPlaceholder'),
+      toOp,
+      'cancel',
     );
+    const targets = targetsFor(this.ctx.world, this.ctx.card.entityId);
+    const suggest = new TargetSuggest(this.ctx.app, input, targets, this.t);
     suggest.onSelect((target) => {
       input.value = target.key;
       finish(true);
     });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.isComposing) finish(true);
-      if (e.key === 'Escape') finish(false);
-    });
-    input.addEventListener('blur', () => window.setTimeout(() => finish(false), 200));
-    input.focus();
   }
 
   // ── other fields ───────────────────────────────────────────────────────────────────────────
 
   private shortValue(field: CardField): string {
     const { value } = field;
-    if (Array.isArray(value)) {
-      return value.length === 1
-        ? this.t('card.items.one')
-        : this.t('card.items.many', { count: value.length });
-    }
     if (value !== null && typeof value === 'object') {
-      const n = Object.keys(value).length;
-      return n === 1 ? this.t('card.items.one') : this.t('card.items.many', { count: n });
+      return this.count('card.items', Object.keys(value).length);
     }
     return value === null || value === undefined ? '—' : scalarText(value);
   }
@@ -497,10 +488,7 @@ export class CardRenderer extends Component {
         this.sourceButton(row, field.key);
       }
     }
-    const add = parent.createEl('button', { cls: 'dnd5e-card-add' });
-    setIcon(add.createSpan({ cls: 'dnd5e-card-icon' }), 'plus');
-    add.createSpan({ text: this.t('card.addField') });
-    add.addEventListener('click', () => this.addField(list, add));
+    this.addButton(parent, this.t('card.addField'), (add) => this.addField(list, add));
   }
 
   private addField(list: HTMLElement, add: HTMLElement): void {
@@ -561,25 +549,21 @@ export class CardRenderer extends Component {
     });
   }
 
-  private renderWarning(
-    parent: HTMLElement,
-    warning: Warning,
-    fix?: () => Promise<boolean>,
-    value?: number,
-    label?: string,
-  ): void {
+  private renderWarning(parent: HTMLElement, warning: Warning, action?: WarningAction): void {
     const box = parent.createDiv({ cls: 'dnd5e-card-warning' });
     setIcon(box.createSpan({ cls: 'dnd5e-card-icon' }), 'alert-triangle');
-    box.createSpan({
-      text: this.t(`warning.${warning.code}` as StringKey, { written: warning.written ?? '' }),
-    });
-    if (fix !== undefined) {
-      const button = box.createEl('button', {
-        cls: 'dnd5e-card-write',
-        text: label ?? this.t('card.write', { value: value === undefined ? '' : signed(value) }),
-      });
-      button.addEventListener('click', () => void fix());
+    box.createSpan({ text: this.t(`warning.${warning.code}`, { written: warning.written ?? '' }) });
+    if (action !== undefined) {
+      const button = box.createEl('button', { cls: 'dnd5e-card-write', text: action.label });
+      button.addEventListener('click', () => void action.run());
     }
+  }
+
+  private addButton(parent: HTMLElement, label: string, onClick: (button: HTMLElement) => void) {
+    const button = parent.createEl('button', { cls: 'dnd5e-card-add' });
+    setIcon(button.createSpan({ cls: 'dnd5e-card-icon' }), 'plus');
+    button.createSpan({ text: label });
+    button.addEventListener('click', () => onClick(button));
   }
 
   private iconButton(parent: HTMLElement, icon: string, label: string, cls: string): HTMLElement {
@@ -599,13 +583,14 @@ export class CardRenderer extends Component {
     button.addEventListener('click', () => void editInSource(this.ctx.view, key));
   }
 
-  /** Replaces an element's content with a text field; Enter or blur writes, Esc cancels. */
+  /** Replaces an element's content with a text field; Enter writes, Esc cancels, blur either. */
   private inlineEdit(
     host: HTMLElement,
     initial: string,
     placeholder: string,
     toOp: (value: string) => EditOp | null,
-  ): void {
+    onBlur: 'commit' | 'cancel' = 'commit',
+  ): { input: HTMLInputElement; finish: (commit: boolean) => void } {
     host.empty();
     const input = host.createEl('input', {
       cls: 'dnd5e-card-input',
@@ -627,9 +612,13 @@ export class CardRenderer extends Component {
       if (e.key === 'Enter' && !e.isComposing) finish(true);
       if (e.key === 'Escape') finish(false);
     });
-    input.addEventListener('blur', () => finish(true));
+    input.addEventListener('blur', () => {
+      if (onBlur === 'commit') finish(true);
+      else window.setTimeout(() => finish(false), 200);
+    });
     input.focus();
     input.select();
+    return { input, finish };
   }
 
   private async write(op: EditOp): Promise<boolean> {

@@ -2,6 +2,8 @@
 // Only block-style YAML is understood; anything else is reported as unsupported with a reason, so
 // the editor can refuse instead of guessing. Pure: no Obsidian, no factions.
 
+const BOM = '\uFEFF';
+
 export interface Lines {
   lines: string[];
   eol: '\n' | '\r\n';
@@ -9,13 +11,13 @@ export interface Lines {
 }
 
 export function splitLines(text: string): Lines {
-  const bom = text.startsWith('﻿');
+  const bom = text.startsWith(BOM);
   const body = bom ? text.slice(1) : text;
   return { lines: body.split(/\r?\n/), eol: body.includes('\r\n') ? '\r\n' : '\n', bom };
 }
 
 export function joinLines({ lines, eol, bom }: Lines): string {
-  return (bom ? '﻿' : '') + lines.join(eol);
+  return (bom ? BOM : '') + lines.join(eol);
 }
 
 /** Line indices of the opening and closing `---`. */
@@ -53,8 +55,6 @@ export interface KeyLine {
   key: string;
   /** Column just after the key text (where `:` stands). */
   keyEnd: number;
-  /** Column where the value token starts (after `: `), or the line's length when it has none. */
-  valueStart: number;
   /** The value token as written, quotes included; empty when the key has no inline value. */
   token: string;
   /** Trailing comment with the whitespace before it, or empty. */
@@ -66,7 +66,7 @@ function indentOf(line: string): number {
   return line.length - line.trimStart().length;
 }
 
-export function isBlankOrComment(line: string): boolean {
+function isBlankOrComment(line: string): boolean {
   const t = line.trim();
   return t === '' || t.startsWith('#');
 }
@@ -115,11 +115,9 @@ function splitValue(
     if (quoted === null) {
       return null;
     }
+    // After the closing quote only a comment may follow, and only after whitespace.
     const after = body.slice(quoted.end);
-    if (after.trim() !== '' && !after.trimStart().startsWith('#')) {
-      return null;
-    }
-    if (after.trim() !== '' && after === after.trimStart()) {
+    if (after.trim() !== '' && !/^\s+#/.test(after)) {
       return null;
     }
     return {
@@ -168,9 +166,7 @@ export function parseKeyLine(line: string): KeyLine | null {
   if (split === null) {
     return null;
   }
-  const valueStart =
-    split.token === '' ? line.length - split.comment.length : line.indexOf(split.token, keyEnd + 1);
-  return { indent, key, keyEnd, valueStart, ...split };
+  return { indent, key, keyEnd, ...split };
 }
 
 /** Why a value token cannot be edited in place, or null when it is a plain or quoted scalar. */
@@ -198,7 +194,7 @@ export function tokenText(token: string): string {
   return token === '~' || token === 'null' ? '' : token;
 }
 
-export interface TopKey {
+interface TopKey {
   key: string;
   line: number;
   /** The last line that belongs to this key: its own, or the deepest of its indented lines. */
@@ -240,11 +236,17 @@ export interface Entry {
   parsed: KeyLine;
   /** plain: `Key: 3` or `Key:`; structured: `Key:` with `value:` and `why:` lines below. */
   form: 'plain' | 'structured';
-  valueLine?: number;
-  whyLine?: number;
+  /** The `value:` and `why:` lines of a structured entry. */
+  value?: ChildLine;
+  why?: ChildLine;
   /** Indent of the `value:` / `why:` lines of a structured entry. */
   childIndent?: number;
   unsupported?: Unsupported;
+}
+
+export interface ChildLine {
+  line: number;
+  parsed: KeyLine;
 }
 
 export type FieldBlock =
@@ -283,10 +285,10 @@ function readEntry(lines: readonly string[], line: number, last: number): Entry 
     if (child.indent !== structured.childIndent) {
       return { ...entry, unsupported: 'nested' };
     }
-    if (child.key === 'value' && structured.valueLine === undefined) {
-      structured.valueLine = i;
-    } else if (child.key === 'why' && structured.whyLine === undefined) {
-      structured.whyLine = i;
+    if (child.key === 'value' && structured.value === undefined) {
+      structured.value = { line: i, parsed: child };
+    } else if (child.key === 'why' && structured.why === undefined) {
+      structured.why = { line: i, parsed: child };
     } else {
       return { ...entry, unsupported: 'nested' };
     }

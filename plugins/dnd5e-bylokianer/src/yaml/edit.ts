@@ -10,7 +10,6 @@ import {
   joinLines,
   type KeyLine,
   type Lines,
-  parseKeyLine,
   type Range,
   splitLines,
   tokenProblem,
@@ -32,19 +31,23 @@ export type EditOp =
   | { op: 'set-scalar'; key: string; expect: Expect; value: string | number }
   | { op: 'remove-scalar'; key: string; expect: Expect };
 
-export type RefusalCode = 'not-found' | 'changed' | 'exists' | 'unsupported';
+type Op<K extends EditOp['op']> = Extract<EditOp, { op: K }>;
 
 export interface Refusal {
-  code: RefusalCode;
+  code: 'not-found' | 'changed' | 'exists' | 'unsupported';
   reason?: Unsupported;
 }
 
-export type EditResult = { ok: true; text: string } | { ok: false; refusal: Refusal };
+type Refused = { ok: false; refusal: Refusal };
+type EditResult = { ok: true; text: string } | Refused;
+type Block = Extract<FieldBlock, { kind: 'block' }>;
 
-const refuse = (code: RefusalCode, reason?: Unsupported): EditResult => ({
+const refuse = (code: Refusal['code'], reason?: Unsupported): Refused => ({
   ok: false,
   refusal: reason === undefined ? { code } : { code, reason },
 });
+
+const done = (L: Lines): EditResult => ({ ok: true, text: joinLines(L) });
 
 /** Whether a token still says what the caller saw; numbers compare by value (`+7` is 7). */
 function matches(token: string, expect: Expect): boolean {
@@ -60,21 +63,12 @@ function matches(token: string, expect: Expect): boolean {
 
 /** The line with a new value token in place of the old one; key and comment untouched. */
 function withToken(line: string, parsed: KeyLine, token: string): string {
-  const head = line.slice(0, parsed.keyEnd + 1);
-  return `${head} ${token}${parsed.comment}`;
-}
-
-function withValue(line: string, parsed: KeyLine, value: number): string {
-  return withToken(line, parsed, formatNumber(value, parsed.quote));
+  return `${line.slice(0, parsed.keyEnd + 1)} ${token}${parsed.comment}`;
 }
 
 /** Where a new top-level key goes: before `tags:`, else at the end of the frontmatter. */
 function insertionLine(lines: readonly string[], range: Range): number {
   return topLevelKeys(lines, range).find((k) => k.key === 'tags')?.line ?? range.close;
-}
-
-function done(L: Lines): EditResult {
-  return { ok: true, text: joinLines(L) };
 }
 
 /** The range, creating an empty frontmatter block at the top when the note has none. */
@@ -87,178 +81,130 @@ function ensureRange(L: Lines): Range {
   return { open: 0, close: 1 };
 }
 
-function findEntry(
-  L: Lines,
-  field: string,
-  key: string,
-): { block: Extract<FieldBlock, { kind: 'block' }>; entry: Entry } | Refusal {
+function findEntry(L: Lines, field: string, key: string): { block: Block; entry: Entry } | Refused {
   const range = frontmatterRange(L.lines);
-  if (range === null) {
-    return { code: 'not-found' };
+  const block = range === null ? null : fieldBlock(L.lines, range, field);
+  if (block?.kind === 'unsupported') {
+    return refuse('unsupported', block.reason);
   }
-  const block = fieldBlock(L.lines, range, field);
-  if (block.kind === 'unsupported') {
-    return { code: 'unsupported', reason: block.reason };
-  }
-  if (block.kind !== 'block') {
-    return { code: 'not-found' };
-  }
-  const entry = block.entries.find((e) => e.rawKey === key);
-  if (entry === undefined) {
-    return { code: 'not-found' };
-  }
-  return { block, entry };
+  const entry = block?.kind === 'block' ? block.entries.find((e) => e.rawKey === key) : undefined;
+  return block?.kind === 'block' && entry !== undefined ? { block, entry } : refuse('not-found');
 }
 
-function isRefusal(x: object): x is Refusal {
-  return 'code' in x;
-}
-
-/** A child line of a structured entry; the entry reader has already checked it parses. */
-function child(L: Lines, line: number): { text: string; parsed: KeyLine } {
-  const text = L.lines[line] ?? '';
-  const parsed = parseKeyLine(text) ?? {
-    indent: 0,
-    key: '',
-    keyEnd: text.length,
-    valueStart: text.length,
-    token: '',
-    comment: '',
-    quote: null,
-  };
-  return { text, parsed };
+/** The entry, provided it is editable and still holds the value the caller saw. */
+function findEditable(
+  L: Lines,
+  op: { field: string; key: string; expect: Expect },
+  token: (entry: Entry) => string = valueToken,
+): { block: Block; entry: Entry } | Refused {
+  const found = findEntry(L, op.field, op.key);
+  if ('ok' in found) return found;
+  if (found.entry.unsupported !== undefined) {
+    return refuse('unsupported', found.entry.unsupported);
+  }
+  return matches(token(found.entry), op.expect) ? found : refuse('changed');
 }
 
 /** The token that holds an entry's value: its own line, or its `value:` line. */
-function valueToken(L: Lines, entry: Entry): string {
-  if (entry.form === 'plain') {
-    return entry.parsed.token;
-  }
-  return entry.valueLine === undefined ? '' : child(L, entry.valueLine).parsed.token;
+function valueToken(entry: Entry): string {
+  return entry.form === 'plain' ? entry.parsed.token : (entry.value?.parsed.token ?? '');
 }
 
-function childIndent(block: Extract<FieldBlock, { kind: 'block' }>, entry: Entry): number {
-  if (entry.childIndent !== undefined) {
-    return entry.childIndent;
-  }
-  const step = block.indent ?? 2;
-  return entry.parsed.indent + (step > 0 ? step : 2);
+/** Indent for a new `value:` / `why:` line: the entry's own children, else one level deeper. */
+function childPad(block: Block, entry: Entry): string {
+  return ' '.repeat(entry.childIndent ?? entry.parsed.indent + (block.indent ?? 2));
 }
 
-function setValue(L: Lines, op: Extract<EditOp, { op: 'set-value' }>): EditResult {
-  const found = findEntry(L, op.field, op.key);
-  if (isRefusal(found)) {
-    return { ok: false, refusal: found };
-  }
+function setValue(L: Lines, op: Op<'set-value'>): EditResult {
+  const found = findEditable(L, op);
+  if ('ok' in found) return found;
   const { block, entry } = found;
-  if (entry.unsupported !== undefined) {
-    return refuse('unsupported', entry.unsupported);
-  }
-  if (!matches(valueToken(L, entry), op.expect)) {
-    return refuse('changed');
-  }
-  if (entry.form === 'plain') {
-    L.lines[entry.line] = withValue(L.lines[entry.line] ?? '', entry.parsed, op.value);
-  } else if (entry.valueLine !== undefined) {
-    const { text, parsed } = child(L, entry.valueLine);
-    L.lines[entry.valueLine] = withValue(text, parsed, op.value);
+  const target = entry.form === 'plain' ? { line: entry.line, parsed: entry.parsed } : entry.value;
+  if (target === undefined) {
+    L.lines.splice(entry.line + 1, 0, `${childPad(block, entry)}value: ${formatNumber(op.value)}`);
   } else {
-    const pad = ' '.repeat(childIndent(block, entry));
-    L.lines.splice(entry.line + 1, 0, `${pad}value: ${formatNumber(op.value)}`);
+    const token = formatNumber(op.value, target.parsed.quote);
+    L.lines[target.line] = withToken(L.lines[target.line] ?? '', target.parsed, token);
   }
   return done(L);
 }
 
-function setWhy(L: Lines, op: Extract<EditOp, { op: 'set-why' }>): EditResult {
-  const found = findEntry(L, op.field, op.key);
-  if (isRefusal(found)) {
-    return { ok: false, refusal: found };
-  }
+function setWhy(L: Lines, op: Op<'set-why'>): EditResult {
+  const found = findEditable(L, op, (entry) => entry.why?.parsed.token ?? '');
+  if ('ok' in found) return found;
   const { block, entry } = found;
-  if (entry.unsupported !== undefined) {
-    return refuse('unsupported', entry.unsupported);
-  }
-  const current = entry.whyLine === undefined ? '' : child(L, entry.whyLine).parsed.token;
-  if (!matches(current, op.expect)) {
-    return refuse('changed');
-  }
-  const pad = ' '.repeat(childIndent(block, entry));
+  const { why } = entry;
   if (op.why === null || op.why === '') {
-    if (entry.whyLine !== undefined) {
-      L.lines.splice(entry.whyLine, 1);
-    }
+    if (why !== undefined) L.lines.splice(why.line, 1);
     return done(L);
   }
-  if (entry.whyLine !== undefined) {
-    const { text, parsed } = child(L, entry.whyLine);
-    L.lines[entry.whyLine] = withToken(text, parsed, formatStringLike(op.why, parsed.quote));
+  if (why !== undefined) {
+    const token = formatStringLike(op.why, why.parsed.quote);
+    L.lines[why.line] = withToken(L.lines[why.line] ?? '', why.parsed, token);
     return done(L);
   }
-  const whyText = `${pad}why: ${formatString(op.why)}`;
+  const pad = childPad(block, entry);
+  const whyLine = `${pad}why: ${formatString(op.why)}`;
   if (entry.form === 'structured') {
-    L.lines.splice((entry.valueLine ?? entry.line) + 1, 0, whyText);
+    L.lines.splice((entry.value?.line ?? entry.line) + 1, 0, whyLine);
     return done(L);
   }
   // A plain entry becomes the structured form: the key keeps its line and comment.
-  const line = L.lines[entry.line] ?? '';
   const { parsed } = entry;
-  const head = line.slice(0, parsed.keyEnd + 1);
-  const added = parsed.token === '' ? [] : [`${pad}value: ${parsed.token}`];
-  L.lines.splice(entry.line, 1, `${head}${parsed.comment}`, ...added, whyText);
+  const head = (L.lines[entry.line] ?? '').slice(0, parsed.keyEnd + 1);
+  const value = parsed.token === '' ? [] : [`${pad}value: ${parsed.token}`];
+  L.lines.splice(entry.line, 1, `${head}${parsed.comment}`, ...value, whyLine);
   return done(L);
 }
 
-function addEntry(L: Lines, op: Extract<EditOp, { op: 'add-entry' }>): EditResult {
+function addEntry(L: Lines, op: Op<'add-entry'>): EditResult {
   const range = ensureRange(L);
   const block = fieldBlock(L.lines, range, op.field);
-  const entryText = (indent: number) =>
+  const entryLine = (indent: number) =>
     `${' '.repeat(indent)}${formatKey(op.key)}: ${formatNumber(op.value)}`;
-  if (block.kind === 'unsupported') {
-    return refuse('unsupported', block.reason);
+  switch (block.kind) {
+    case 'unsupported':
+      return refuse('unsupported', block.reason);
+    case 'none':
+      L.lines.splice(insertionLine(L.lines, range), 0, `${op.field}:`, entryLine(2));
+      return done(L);
+    case 'empty-flow': {
+      const { line, parsed } = block.key;
+      L.lines[line] = `${(L.lines[line] ?? '').slice(0, parsed.keyEnd + 1)}${parsed.comment}`;
+      L.lines.splice(line + 1, 0, entryLine(2));
+      return done(L);
+    }
+    case 'block': {
+      if (block.entries.some((e) => e.rawKey === op.key)) {
+        return refuse('exists');
+      }
+      const last = block.entries[block.entries.length - 1]?.last ?? block.key.line;
+      L.lines.splice(last + 1, 0, entryLine(block.indent ?? 2));
+      return done(L);
+    }
   }
-  if (block.kind === 'none') {
-    const at = insertionLine(L.lines, range);
-    L.lines.splice(at, 0, `${op.field}:`, entryText(2));
-    return done(L);
-  }
-  if (block.kind === 'empty-flow') {
-    const line = L.lines[block.key.line] ?? '';
-    L.lines[block.key.line] =
-      `${line.slice(0, block.key.parsed.keyEnd + 1)}${block.key.parsed.comment}`;
-    L.lines.splice(block.key.line + 1, 0, entryText(2));
-    return done(L);
-  }
-  if (block.entries.some((e) => e.rawKey === op.key)) {
-    return refuse('exists');
-  }
-  const last = block.entries[block.entries.length - 1]?.last ?? block.key.line;
-  L.lines.splice(last + 1, 0, entryText(block.indent ?? 2));
-  return done(L);
 }
 
-function removeEntry(L: Lines, op: Extract<EditOp, { op: 'remove-entry' }>): EditResult {
+function removeEntry(L: Lines, op: Op<'remove-entry'>): EditResult {
   const found = findEntry(L, op.field, op.key);
-  if (isRefusal(found)) {
-    return { ok: false, refusal: found };
-  }
+  if ('ok' in found) return found;
   const { entry } = found;
-  if (entry.unsupported === undefined && !matches(valueToken(L, entry), op.expect)) {
+  // An entry the editor cannot otherwise edit can still go as a whole.
+  if (entry.unsupported === undefined && !matches(valueToken(entry), op.expect)) {
     return refuse('changed');
   }
   L.lines.splice(entry.line, entry.last - entry.line + 1);
   return done(L);
 }
 
-function renameEntry(L: Lines, op: Extract<EditOp, { op: 'rename-entry' }>): EditResult {
+function renameEntry(L: Lines, op: Op<'rename-entry'>): EditResult {
   const found = findEntry(L, op.field, op.key);
-  if (isRefusal(found)) {
-    return { ok: false, refusal: found };
-  }
+  if ('ok' in found) return found;
   const { block, entry } = found;
   if (entry.unsupported === 'duplicate') {
     return refuse('unsupported', entry.unsupported);
   }
-  if (entry.unsupported === undefined && !matches(valueToken(L, entry), op.expect)) {
+  if (entry.unsupported === undefined && !matches(valueToken(entry), op.expect)) {
     return refuse('changed');
   }
   if (block.entries.some((e) => e.rawKey === op.to)) {
@@ -270,35 +216,34 @@ function renameEntry(L: Lines, op: Extract<EditOp, { op: 'rename-entry' }>): Edi
   return done(L);
 }
 
-function topKey(L: Lines, key: string) {
+/** The single-line top-level key, null when absent, or a refusal when it cannot be edited. */
+function findScalar(L: Lines, key: string) {
   const range = frontmatterRange(L.lines);
-  if (range === null) {
-    return { range: null, matches: [] };
+  const found = range === null ? [] : topLevelKeys(L.lines, range).filter((k) => k.key === key);
+  const current = found[0];
+  if (current === undefined) return null;
+  if (found.length > 1) return refuse('unsupported', 'duplicate');
+  const problem = tokenProblem(current.parsed.token);
+  if (problem !== null || current.last !== current.line) {
+    return refuse('unsupported', problem ?? 'nested');
   }
-  return { range, matches: topLevelKeys(L.lines, range).filter((k) => k.key === key) };
+  return current;
 }
 
-function setScalar(L: Lines, op: Extract<EditOp, { op: 'set-scalar' }>): EditResult {
-  const { matches: found } = topKey(L, op.key);
-  if (found.length > 1) {
-    return refuse('unsupported', 'duplicate');
-  }
-  const current = found[0];
+function setScalar(L: Lines, op: Op<'set-scalar'>): EditResult {
+  const current = findScalar(L, op.key);
+  if (current !== null && 'ok' in current) return current;
   const token = (quote: KeyLine['quote']) =>
     typeof op.value === 'number'
       ? formatNumber(op.value, quote)
       : formatStringLike(op.value, quote);
-  if (current === undefined) {
+  if (current === null) {
     if (op.expect !== null && op.expect !== undefined) {
       return refuse('changed');
     }
     const range = ensureRange(L);
     L.lines.splice(insertionLine(L.lines, range), 0, `${formatKey(op.key)}: ${token(null)}`);
     return done(L);
-  }
-  const problem = tokenProblem(current.parsed.token);
-  if (problem !== null || current.last !== current.line) {
-    return refuse('unsupported', problem ?? 'nested');
   }
   if (!matches(current.parsed.token, op.expect)) {
     return refuse('changed');
@@ -308,15 +253,10 @@ function setScalar(L: Lines, op: Extract<EditOp, { op: 'set-scalar' }>): EditRes
   return done(L);
 }
 
-function removeScalar(L: Lines, op: Extract<EditOp, { op: 'remove-scalar' }>): EditResult {
-  const { matches: found } = topKey(L, op.key);
-  const current = found[0];
-  if (current === undefined) {
-    return refuse('not-found');
-  }
-  if (found.length > 1 || current.last !== current.line) {
-    return refuse('unsupported', found.length > 1 ? 'duplicate' : 'nested');
-  }
+function removeScalar(L: Lines, op: Op<'remove-scalar'>): EditResult {
+  const current = findScalar(L, op.key);
+  if (current === null) return refuse('not-found');
+  if ('ok' in current) return current;
   if (!matches(current.parsed.token, op.expect)) {
     return refuse('changed');
   }

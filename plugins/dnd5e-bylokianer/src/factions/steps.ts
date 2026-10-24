@@ -2,8 +2,8 @@
 
 import type { StringKey, T } from '../i18n/strings';
 
-export const MIN_VALUE = -5;
-export const MAX_VALUE = 5;
+const MIN_VALUE = -5;
+const MAX_VALUE = 5;
 
 /** The value clamped to the scale and rounded, so every caller names the same step. */
 export function toStep(value: number): number {

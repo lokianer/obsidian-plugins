@@ -2,9 +2,10 @@
 // Obsidian's Properties block sits. This is the one module that knows Obsidian's view DOM; every
 // selector it relies on is here, with a fallback that keeps the card visible if one is missing.
 
-import { MarkdownView, type Plugin, type TFile, type WorkspaceLeaf } from 'obsidian';
+import { MarkdownView, type PaneType, type Plugin, type TFile } from 'obsidian';
 
 import { buildCard, type CardModel } from '../factions/card';
+import type { FactionWorld } from '../factions/model';
 import type { T } from '../i18n/strings';
 import { CardRenderer, type CardUiState, type FocusTarget } from './card-render';
 import type { Settings } from './settings';
@@ -103,13 +104,15 @@ export class CardManager {
   }
 
   /** The card a view should show now, or null. */
-  private cardFor(view: MarkdownView): { file: TFile; card: CardModel } | null {
+  private cardFor(
+    view: MarkdownView,
+  ): { file: TFile; card: CardModel; world: FactionWorld } | null {
     const file = view.file;
     const world = this.cache.current;
     if (file === null || world === null) return null;
     const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
     const card = buildCard(file.path, frontmatter, world);
-    return card === null ? null : { file, card };
+    return card === null ? null : { file, card, world };
   }
 
   ensure(view: MarkdownView): void {
@@ -119,9 +122,7 @@ export class CardManager {
       this.unmount(view);
       return;
     }
-    const { file, card } = found;
-    const world = this.cache.current;
-    if (world === null) return;
+    const { file, card, world } = found;
     view.containerEl.addClass(VIEW_CLASS);
     view.containerEl.toggleClass(SHOW_PROPERTIES_CLASS, this.settings().showProperties);
 
@@ -197,11 +198,11 @@ export class CardManager {
   }
 
   /** Opens a note, makes sure its card shows, and focuses what `target` points at. */
-  async open(path: string, target: FocusTarget, newLeaf: boolean): Promise<void> {
+  async open(path: string, target: FocusTarget, newLeaf: PaneType | boolean): Promise<void> {
     const { app } = this.plugin;
     const file = app.vault.getFileByPath(path);
     if (file === null) return;
-    const leaf: WorkspaceLeaf = app.workspace.getLeaf(newLeaf);
+    const leaf = app.workspace.getLeaf(newLeaf);
     await leaf.openFile(file);
     const view = leaf.view;
     if (!(view instanceof MarkdownView)) return;

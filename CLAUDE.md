@@ -74,6 +74,10 @@ so a published plugin gets a release mirror repository, pushed by CI from its su
   finished slice, never one without green tests and clean lint. The body says what changed, then why,
   then what was deliberately left out. Commit or push only when the maintainer asks. A history rewrite
   needs the maintainer's explicit choice.
+- **Clean up before every commit.** Re-read the slice's code: remove dead code (unused exports,
+  functions, parameters, fields, imports), merge duplicated logic, and simplify where it reads
+  better — then `pnpm check`. Exports used only by tests stay only when they are the module's
+  tested contract.
 - **Phases.** Work in phases, each with a short spec, a plan and a review stop. Never pull a feature
   forward from a later phase.
 - **Dependencies.** Larger new dependencies only with a short justification first.

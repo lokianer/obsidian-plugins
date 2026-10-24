@@ -9,10 +9,6 @@ import { frontmatterRange, splitLines, topLevelKeys } from '../yaml/lines';
 
 const UNDO_TIME = 5000;
 
-function keyOf(op: EditOp): string {
-  return op.key;
-}
-
 function explain(refusal: Refusal, t: T): string {
   if (refusal.code === 'unsupported') {
     return t(`refusal.${refusal.reason ?? 'nested'}` as StringKey);
@@ -24,7 +20,7 @@ function notifyRefusal(refusal: Refusal, op: EditOp, t: T): void {
   new Notice(
     refusal.code === 'changed'
       ? t('notice.changed')
-      : t('notice.refused', { key: keyOf(op), reason: explain(refusal, t) }),
+      : t('notice.refused', { key: op.key, reason: explain(refusal, t) }),
   );
 }
 

@@ -101,4 +101,4 @@ booleans edited in source; ASCII minus; no "Reset to inherited".
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 124 tests pass (was 64 at the start of the day).
+`pnpm check` at the root: exit 0; 124 tests pass (was 64 at the start of the day). A cleanup pass after the card (dead exports, a duplicated frontmatter regex, `edit.ts` and `card-render.ts` simplified) is in the commit after `a15f842`.

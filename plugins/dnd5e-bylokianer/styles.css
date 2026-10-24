@@ -428,12 +428,21 @@
 }
 
 .dnd5e-card-warning {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--size-4-2);
+  position: relative;
   margin-top: var(--size-4-1);
+  padding-left: 24px;
   color: var(--text-warning);
+}
+
+/* The icon hangs in the left margin, so a long message wraps under its own first line. */
+.dnd5e-card-warning > .dnd5e-card-icon {
+  position: absolute;
+  top: 0.2em;
+  left: 0;
+}
+
+.dnd5e-card-warning > .dnd5e-card-write {
+  margin-left: var(--size-4-2);
 }
 
 .dnd5e-card-add,
@@ -499,10 +508,6 @@
   .dnd5e-card-fields {
     grid-template-columns: 1fr;
   }
-}
-
-.dnd5e-card-warning > span:nth-child(2) {
-  flex: 1 1 12em;
 }
 
 .dnd5e-card-section-title.is-toggle > span:nth-child(2) {

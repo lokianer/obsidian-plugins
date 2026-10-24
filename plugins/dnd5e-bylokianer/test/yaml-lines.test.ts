@@ -89,7 +89,7 @@ describe('fieldBlock', () => {
     if (b.kind !== 'block') return;
     expect(b.indent).toBe(2);
     expect(
-      b.entries.map((e) => [e.rawKey, e.form, e.line, e.last, e.valueLine, e.whyLine]),
+      b.entries.map((e) => [e.rawKey, e.form, e.line, e.last, e.value?.line, e.why?.line]),
     ).toEqual([
       ['A', 'plain', 2, 2, undefined, undefined],
       ['B', 'structured', 3, 5, 4, 5],

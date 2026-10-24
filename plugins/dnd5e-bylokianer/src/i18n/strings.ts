@@ -1,7 +1,7 @@
 // Interface strings. English is the source of every key; German follows it key for key.
 // Placeholders are written {name} and filled by the function createT returns.
 
-export type Lang = 'en' | 'de';
+type Lang = 'en' | 'de';
 
 export const en = {
   'command.showWarnings': 'Show faction warnings',

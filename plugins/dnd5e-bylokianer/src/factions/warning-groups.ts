@@ -5,7 +5,7 @@ import type { Warning, WarningCode } from './model';
 /** skipped: the value is not used · adjusted: used, but changed · names: a key or name clash · notes: the note itself. */
 export type WarningGroup = 'skipped' | 'adjusted' | 'names' | 'notes';
 
-export const GROUP_ORDER: readonly WarningGroup[] = ['skipped', 'adjusted', 'names', 'notes'];
+const GROUP_ORDER: readonly WarningGroup[] = ['skipped', 'adjusted', 'names', 'notes'];
 
 const GROUPS: Record<WarningCode, WarningGroup> = {
   'value-not-a-number': 'skipped',
