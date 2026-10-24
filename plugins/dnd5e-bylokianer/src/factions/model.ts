@@ -37,3 +37,25 @@ export interface Warning {
 }
 
 export type Warn = (warning: Warning) => void;
+
+/** A faction (real or pseudo) or a character, as discovered from the notes. */
+export interface Entity {
+	/** Faction: its folder path. Character: its note path. Pseudo-faction: PARTY or UNAFFILIATED. */
+	id: string;
+	kind: 'faction' | 'character';
+	/** True for the Party and Unaffiliated groups, which have no note. */
+	pseudo: boolean;
+	/** Faction: frontmatter `name`, else the folder name. Character: the note's base name. */
+	name: string;
+	/** Factions only: the folder's own name, also accepted as a relation key. */
+	folderName?: string;
+	/** The note holding the frontmatter; null for pseudo-factions. */
+	notePath: string | null;
+	/** Id of the enclosing faction; null for top-level factions and pseudo-factions. */
+	parent: string | null;
+	/** 1–5; only drawn for factions. */
+	power: number;
+	/** Keys as written in the note, not yet resolved. */
+	relations: Map<string, Relation>;
+	secretRelations: Map<string, Relation>;
+}
