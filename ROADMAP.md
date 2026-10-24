@@ -17,7 +17,11 @@ plugin's `DECISIONS.md` once it exists.
 in Obsidian.** Everything is implemented and tested in Node and in a browser against a stub of the
 Obsidian API; it has not run inside Obsidian yet. The maintainer reloads the plugin in
 `examples/vault` and goes through `HANDOFF.md` → "Half-finished". Fix what that turns up; once the
-maintainer accepts phase 2, brainstorm and plan **phase 3 — world view** from design §5.1.
+maintainer accepts phase 2 (planned for 2026-10-25, on the PC), get the review of the **phase 3 —
+world view** spec and plan, already written:
+[`docs/superpowers/specs/2026-10-24-world-view-design.md`](docs/superpowers/specs/2026-10-24-world-view-design.md),
+[`docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md`](docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md)
+(spec §7 lists the calls to check). Build phase 3 only after both.
 
 ---
 
@@ -56,8 +60,9 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
   - [x] Line editor `src/yaml/` (`2712fb1`), steps and targets (`fc3c807`), card model
         (`e3b446d`, `2263924`), card in Obsidian with Fix and settings (`61984a4`)
   - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 3 — World view**: graph with bloc layout and matrix, switchable; colours, step names
-      and their settings; Public/True toggle (Public by default); warnings badge; click behaviour
+- [ ] **Phase 3 — World view** (spec and plan drafted 2026-10-24, awaiting review): own tab; graph
+      with bloc layout (d3-force, chosen by the maintainer) and matrix, switchable; step-name
+      settings; Public/True toggle (Public on open); warnings badge; clicks lead into the faction card
 - [ ] **Phase 4 — Faction view and tension panel**
 - [ ] **Phase 5 — In-view editing and history**: sliders in matrix, arrows and notes on the phase 2
       line editor; shared "tonight's session" package with the offer to create session N+1; history

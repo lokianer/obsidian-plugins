@@ -15,13 +15,16 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 2026-10-24, cloud (second session of the day, continued). Minor findings fixed, Prettier enforced,
 the editor redesigned as a **faction card that replaces Properties**, and phase 2 built in full.
-**Not yet run inside Obsidian.**
+**Not yet run inside Obsidian.** A later short session cleaned up the code (`674cf8e`) and drafted
+phase 3 (world view): spec and plan, nothing built.
 
 ## Where to continue
 
-1. The maintainer checks phase 2 in Obsidian (list under "Half-finished"). Fix what turns up — the
-   likeliest place is the mounting in `src/obsidian/card-view.ts`.
-2. Once phase 2 is accepted: phase 3, world view (design §5.1) — spec, plan, review stop, build.
+1. The maintainer checks phase 2 in Obsidian (list under "Half-finished"; planned for 2026-10-25 on
+   the PC). Fix what turns up — the likeliest place is the mounting in `src/obsidian/card-view.ts`.
+2. Then the review of phase 3: `docs/superpowers/specs/2026-10-24-world-view-design.md` (§7 lists
+   the calls to check) and `docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md`. Build
+   only after phase 2 is accepted and the plan approved.
 
 ## State of the working tree
 
@@ -41,6 +44,8 @@ vault: never commit it as part of a task.
   names, colours, target suggestions; `e3b446d` + `2263924` card model (the first went in with two
   lint errors because I chained with `;` — fixed in the second, plus `pnpm check`); `61984a4` the card
   in Obsidian: world cache, mounting, renderer, target suggest, settings, Fix buttons, command.
+- Phase 3 drafted: the maintainer chose **its own tab** and **d3-force** for the layout (rendering
+  stays our SVG). Spec and plan as named above; nothing added to `package.json` yet.
 - Card rendered in Chromium against a stub of the Obsidian API with the example vault's data, at
   800 px and 400 px, English and German: no runtime errors; layout fixed for phones.
 
@@ -78,6 +83,8 @@ booleans edited in source; ASCII minus; no "Reset to inherited".
 
 ## Open questions for the maintainer
 
+- Phase 3 spec §7 (world view calls): node click selects until the faction view exists; arrows
+  only for own values; Party/Unaffiliated as frames; static cached layout; edits via the card.
 - The spec §7 calls above — confirm or correct after trying the card.
 - Merge the branch into `main`, or a pull request?
 
