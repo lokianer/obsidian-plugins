@@ -74,3 +74,13 @@ export interface FactionWorld {
 	entities: Map<string, ResolvedEntity>;
 	warnings: Warning[];
 }
+
+/** How one entity stands towards another, and where in its faction chain that was written. */
+export interface Stance {
+	value: number;
+	why?: string;
+	/** The entity whose note holds the value: the entity itself or one of its factions. */
+	source: string;
+	field: RelationField;
+	inherited: boolean;
+}
