@@ -13,8 +13,9 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · Phase 2: world view.** Phase 1 is built (2026-10-24) and waits for
-the maintainer's review. Once approved, write the phase 2 plan from the design
+**dnd5e-byLokianer · Factions · next phase — ask first.** Phase 1 is accepted (2026-10-24). The
+maintainer also wants a **faction editor** (all frontmatter incl. relations, see `HANDOFF.md`);
+ask whether it comes before the world view. Then write the next phase's spec and plan from the design
 ([`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md))
 with superpowers:writing-plans; build only once the maintainer has approved that plan.
 
@@ -31,7 +32,7 @@ Statblocks. Test vault: `examples/vault/` (start at its `Home.md`).
 
 Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpowers/specs/2026-10-24-factions-design.md)
 
-- [x] **Phase 1 — Skeleton and data** (built 2026-10-24, awaiting review)
+- [x] **Phase 1 — Skeleton and data** (accepted 2026-10-24)
   - [x] Plugin scaffold: official sample plugin, pnpm workspace, strict TypeScript, esbuild, Vitest,
         eslint (+ `eslint-plugin-obsidianmd` if current), prettier, CI on Linux/macOS/Windows
   - [x] `commit-msg` hook rejecting attribution lines (see `CLAUDE.md`), next to the existing
@@ -44,7 +45,9 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
   - [x] Relation parsing: plain and `{ value, why }` forms, all warnings, clamping
   - [x] Resolution: public and true stance with inheritance, as one pure function taking the mode
   - [x] Tests against every case in `examples/vault/` (The Drowned Choir holds the broken ones)
-- [ ] **Phase 2 — World view** ← *next*: graph with bloc layout and matrix, switchable; colours and step names;
+- [ ] **Faction editor** (wish 2026-10-24, placement open): form for all frontmatter incl.
+      relations, Fix button from the warnings modal; line edits as in spec §5.6
+- [ ] **Phase 2 — World view** ← *next, unless the editor goes first*: graph with bloc layout and matrix, switchable; colours and step names;
       Public/True toggle (Public by default); warnings badge; click behaviour
 - [ ] **Phase 3 — Faction view and tension panel**
 - [ ] **Phase 4 — Editing and history**: sliders writing line edits; shared "tonight's session"

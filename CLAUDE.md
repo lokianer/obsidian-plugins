@@ -114,4 +114,4 @@ so a published plugin gets a release mirror repository, pushed by CI from its su
 
 | Plugin  | Folder | Status                                                                                       |
 | ------- | ------ | -------------------------------------------------------------------------------------------- |
-| dnd5e-byLokianer (`dnd5e-bylokianer`) | `plugins/dnd5e-bylokianer/` | Factions phase 1 (data model, warnings command) built, awaiting review. Design: `docs/superpowers/specs/2026-10-24-factions-design.md`. Licence MIT |
+| dnd5e-byLokianer (`dnd5e-bylokianer`) | `plugins/dnd5e-bylokianer/` | Factions phase 1 (data model, warnings command) accepted; next phase open (editor or world view). Design: `docs/superpowers/specs/2026-10-24-factions-design.md`. Licence MIT |
