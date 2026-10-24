@@ -1,3 +1,7 @@
 # Hooks must keep LF line endings or sh refuses them
 .githooks/* text eol=lf
 *.sh text eol=lf
+
+# Keep LF everywhere in the working tree
+* text=auto eol=lf
+*.png binary

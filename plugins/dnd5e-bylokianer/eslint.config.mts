@@ -41,5 +41,10 @@ export default defineConfig(
 				projectService: false,
 			},
 		},
+		rules: {
+			// Tests read examples/vault from disk with Node; the plugin itself never does.
+			'obsidianmd/no-nodejs-modules': 'off',
+			'obsidianmd/hardcoded-config-path': 'off',
+		},
 	},
 );
