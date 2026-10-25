@@ -43,6 +43,7 @@ import { SpellBuilderModal } from '../../src/obsidian/spell-builder';
 import type { SpellDraft } from '../../src/spells/draft';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
+import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/monster-manual-view';
 import { linkSpells } from '../../src/obsidian/spell-links';
 import { spellFinder } from '../../src/spells/links';
 import type { SrdSpell } from '../../src/spells/model';
@@ -1176,5 +1177,83 @@ describe('spell builder', () => {
     );
     expect(el.querySelector<HTMLInputElement>('.dnd5e-spell-name')?.value).toBe('Frost Needle');
     expect(texts(el, '.dnd5e-npc-card-tag')).toEqual(['Cold', 'Ranged spell attack', 'Wizard']);
+  });
+});
+
+describe('monster manual', () => {
+  async function open(lang: 'en' | 'de', state: unknown = null) {
+    const saved: MonsterManualState[] = [];
+    const inserted: string[] = [];
+    const notes: string[] = [];
+    const view = new MonsterManualView({} as WorkspaceLeaf, {
+      t: createT(lang),
+      lang: () => lang,
+      state: () => state,
+      saveState: (s) => saved.push(s),
+      insert: (m) => inserted.push(m.index),
+      makeNote: (m) => notes.push(m.index),
+    });
+    root.appendChild(view.contentEl);
+    await view.onOpen();
+    const el = view.contentEl;
+    const rows = () => [...el.querySelectorAll<HTMLElement>('.dnd5e-spells-row')];
+    const row = (name: string) =>
+      rows().find((r) => r.querySelector('.dnd5e-spells-row-name')?.textContent === name);
+    return { el, rows, row, saved, inserted, notes };
+  }
+
+  it('lists all 334 monsters by challenge rating and opens a stat block', async () => {
+    const { el, rows, row, inserted, notes } = await open('en');
+    expect(rows()).toHaveLength(334);
+    expect(el.querySelector('.dnd5e-spells-count')?.textContent).toBe('334 monsters');
+    expect(texts(el, '.dnd5e-spells-level > span:first-child')[0]).toBe('CR 0');
+    expect(row('Owlbear')?.querySelector('.dnd5e-spells-row-meta')?.textContent).toBe(
+      'Monstrosity · Large · AC 13 · HP 59',
+    );
+    row('Adult Red Dragon')?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-sb-name')).toEqual(['Adult Red Dragon']);
+    expect(texts(el, '.dnd5e-spells-card-other')).toEqual(['Ausgewachsener Roter Drache']);
+    expect(el.querySelector('.dnd5e-sb-meta')?.textContent).toBe('Huge dragon, chaotic evil');
+    expect(row('Adult Red Dragon')?.querySelectorAll('.dnd5e-spells-mark')).toHaveLength(2);
+    el.querySelector('.dnd5e-monsters-insert')?.dispatchEvent(new MouseEvent('click'));
+    el.querySelector('.dnd5e-monsters-note')?.dispatchEvent(new MouseEvent('click'));
+    expect(inserted).toEqual(['adult-red-dragon']);
+    expect(notes).toEqual(['adult-red-dragon']);
+  });
+
+  it('filters by band, type, legendary and keeps the filters', async () => {
+    const { el, rows, saved } = await open('en');
+    el.querySelector<HTMLElement>('[data-band="17"]')?.dispatchEvent(new MouseEvent('click'));
+    el.querySelector<HTMLElement>('[data-type="dragon"]')?.dispatchEvent(new MouseEvent('click'));
+    expect(rows().length).toBeGreaterThan(0);
+    expect(
+      rows().every((r) =>
+        r.querySelector('.dnd5e-spells-row-meta')?.textContent?.includes('Dragon'),
+      ),
+    ).toBe(true);
+    // Counts follow the other filters: of the dragons, only the Pseudodragon is CR ½ or less.
+    expect(el.querySelector('[data-band="0"] .dnd5e-spells-chip-count')?.textContent).toBe('1');
+    await new Promise((resolve) => window.setTimeout(resolve, 450));
+    expect(saved[saved.length - 1]?.filters).toMatchObject({ bands: ['17'], types: ['dragon'] });
+  });
+
+  it('shows German names and a German stat block header, and switches the card', async () => {
+    const { el, rows, row } = await open('de', { filters: { query: 'eulenb' }, selected: null });
+    expect(rows().map((r) => r.querySelector('.dnd5e-spells-row-name')?.textContent)).toEqual([
+      'Eulenbär',
+    ]);
+    expect(row('Eulenbär')?.querySelector('.dnd5e-spells-row-meta')?.textContent).toBe(
+      'Monstrosität · Groß · RK 13 · TP 59',
+    );
+    row('Eulenbär')?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-sb-name')).toEqual(['Eulenbär']);
+    expect(el.querySelector('.dnd5e-sb-meta')?.textContent).toBe(
+      'Große Monstrosität, gesinnungslos',
+    );
+    expect(el.querySelector('.dnd5e-sb-lines')?.textContent).toContain('12 m');
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-world-segmented button')]
+      .find((b) => b.textContent === 'EN')
+      ?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear']);
   });
 });

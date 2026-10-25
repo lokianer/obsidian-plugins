@@ -49,6 +49,10 @@ export interface Settings {
   deckSize: 13 | 22;
   /** The folder in the campaign new own decks go to. */
   deckFolder: string;
+  /** The folder in the campaign monster notes go to. */
+  monsterFolder: string;
+  /** The Monster Manual's filters and picked monster, read back with care (readFilters). */
+  monsterManual: unknown;
   /** The folder in the campaign new own spells go to. */
   spellFolder: string;
   /** The deck the Deck tab showed last: `standard` or an own deck's path. */
@@ -74,6 +78,8 @@ export const DEFAULT_SETTINGS: Settings = {
   deckSize: 22,
   deckFolder: 'Decks',
   spellFolder: 'Spells',
+  monsterFolder: 'Monsters',
+  monsterManual: null,
   deckSelected: 'standard',
 };
 
@@ -86,7 +92,8 @@ type PathKey =
   | 'tablesFolder'
   | 'npcFolder'
   | 'deckFolder'
-  | 'spellFolder';
+  | 'spellFolder'
+  | 'monsterFolder';
 const PATHS: readonly PathKey[] = [
   'sessionTemplate',
   'npcTemplate',
@@ -96,6 +103,7 @@ const PATHS: readonly PathKey[] = [
   'npcFolder',
   'deckFolder',
   'spellFolder',
+  'monsterFolder',
 ];
 const LANGS = ['auto', 'en', 'de'] as const;
 const DECK_SIZES = ['22', '13'] as const;

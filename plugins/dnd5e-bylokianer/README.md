@@ -245,6 +245,23 @@ a **JSON file**:
 deck is written as a note in the campaign's deck folder (setting, `Decks` by default) and opens in
 the tab; edit it there afterwards.
 
+## The Monster Manual
+
+**Open Monster Manual** (command, or the skull in the left ribbon) opens a tab with the 334
+monsters of the SRD 5.1, laid out like the spellbook. Search by English or German name; narrow by
+challenge rating in five bands (0–½, 1–4, 5–10, 11–16, 17+, each chip with its count), type (in its
+colour), size, movement (flies, swims, burrows, climbs), Legendary and Spellcaster. The list is
+grouped by challenge rating with type, size, AC and HP and marks for legendary (L), flying (✈) and
+spellcasting (✦). The card is the full stat block in the plugin's own view — the same as in a
+note — with the spell names of a Spellcasting trait linked to the spellbook. With German Obsidian
+(or the dice-text setting) names, sizes and types ("Großer Drache"), alignments, armour, speeds and
+senses in metres, languages, damage types, conditions, saves and skills are German; the traits'
+and actions' texts follow in the next phase. EN / DE switches the card.
+
+**Insert into note** puts the stat block as a `dnd5e-statblock` block below the cursor of the last
+note you were in; **Make a note** writes a `type: monster` note with the block in the campaign's
+monster folder (setting, `Monsters` by default).
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -256,6 +273,7 @@ the tab; edit it there afterwards.
 - **Open Deck of Many Things** — draw from the SRD deck or an own one.
 - **New deck** — the deck builder.
 - **New spell** — the spell builder.
+- **Open Monster Manual** — the SRD monsters to look up and drop into notes.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

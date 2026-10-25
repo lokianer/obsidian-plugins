@@ -45,6 +45,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Deck builder | `Silverstadt/Decks/Omens of the Road.json` | **New deck** (or + in the Deck tab): fill from the standard deck, pasted text (`Name — effect`, lists, tables) or this JSON file; writes a note in `Decks/` |
 | Spell builder | command **New spell** or + in the spellbook | Start from an SRD spell, by hand, or a JSON file; writes `Silverstadt/Spells/<name>.md` and opens it in the spellbook |
 | Deck reset | the Deck tab's reset button | Clear the history only, or the history and every ticked card |
+| Monster Manual | none needed | **Open Monster Manual** (ribbon skull): 334 SRD monsters, filters, stat block card; **Insert into note** below the cursor of the last note, **Make a note** into `Silverstadt/Monsters/` |
 | Spellbook | none needed | **Open spellbook** (ribbon book icon): the 319 SRD spells, German names and metres with German Obsidian |
 | Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md`; its Loot table starts with Mira's calling card `(from [[Session 14 – Bell Square]])` (also via **Start next session**) |
 

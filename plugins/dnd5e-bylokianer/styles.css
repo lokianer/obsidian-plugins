@@ -2842,3 +2842,32 @@ a.dnd5e-tensions-name:hover {
   border-radius: var(--radius-l);
   color: var(--text-accent);
 }
+
+/* ── Monster Manual: the spellbook's layout, the stat block as the card ── */
+
+.dnd5e-monsters-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-monsters-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  font-size: 16px;
+}
+
+.dnd5e-monsters-insert {
+  color: var(--text-on-accent);
+  background-color: var(--interactive-accent);
+}
+
+.dnd5e-monsters-insert:hover {
+  background-color: var(--interactive-accent-hover);
+}
+
+.dnd5e-monsters-card .dnd5e-statblock {
+  margin: 0;
+  border-color: rgba(var(--dnd5e-school-rgb), 0.35);
+}

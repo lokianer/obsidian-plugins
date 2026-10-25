@@ -24,8 +24,10 @@ import { NoteStatblocks } from './obsidian/note-statblocks';
 import { NpcBuilder } from './obsidian/npc-builder';
 import { tableLang } from './obsidian/npc-modal';
 import { newNote } from './obsidian/new-note';
+import { MONSTER_VIEW, MonsterManualView } from './obsidian/monster-manual-view';
 import { OwnSpells } from './obsidian/own-spells';
 import { SpellBuilderModal } from './obsidian/spell-builder';
+import type { SrdMonster } from './monsters/model';
 import { spellNoteText } from './spells/draft';
 import { ownIndex } from './spells/own';
 import { linkSpells } from './obsidian/spell-links';
@@ -218,6 +220,70 @@ export default class Dnd5ePlugin extends Plugin {
         },
       }).open();
     this.addCommand({ id: 'new-spell', name: t('command.newSpell'), callback: newSpell });
+
+    // The note a monster goes into: the last Markdown note the GM was in.
+    let lastNote: MarkdownView | null = null;
+    this.registerEvent(
+      this.app.workspace.on('active-leaf-change', (leaf) => {
+        if (leaf?.view instanceof MarkdownView) lastNote = leaf.view;
+      }),
+    );
+    const fence = (monster: SrdMonster) => `\`\`\`${BLOCK}\n${monster.yaml}\n\`\`\``;
+    this.registerView(
+      MONSTER_VIEW,
+      (leaf) =>
+        new MonsterManualView(leaf, {
+          t,
+          lang: () => tableLang(this.options, getLanguage()),
+          state: () => this.options.monsterManual,
+          saveState: (monsterManual) => void save({ ...this.options, monsterManual }),
+          spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
+          insert: (monster) => {
+            const file = lastNote?.file ?? null;
+            if (lastNote === null || file === null) {
+              new Notice(t('monsters.noNote'));
+              return;
+            }
+            const line = lastNote.editor.getCursor().line;
+            void this.app.vault
+              .process(file, (text) => {
+                const lines = text.split('\n');
+                lines.splice(line + 1, 0, '', fence(monster), '');
+                return lines.join('\n');
+              })
+              .then(
+                () =>
+                  new Notice(t('monsters.inserted', { name: monster.name, note: file.basename })),
+              );
+          },
+          makeNote: (monster) =>
+            void (async () => {
+              const text = `---\ntype: monster\ncr: "${monster.cr}"\n---\n\n# ${monster.name}\n\n${fence(monster)}\n`;
+              const path = await newNote(
+                this.app,
+                cache,
+                this.options.monsterFolder,
+                monster.name,
+                text,
+              );
+              new Notice(t('monsters.created', { path }));
+              openStatblocks.add(path);
+              openNote(path, false);
+            })(),
+        }),
+    );
+    const openMonsters = async () => {
+      const { workspace } = this.app;
+      const leaf = workspace.getLeavesOfType(MONSTER_VIEW)[0] ?? workspace.getLeaf('tab');
+      await leaf.setViewState({ type: MONSTER_VIEW, active: true });
+      await workspace.revealLeaf(leaf);
+    };
+    this.addCommand({
+      id: 'open-monster-manual',
+      name: t('command.openMonsters'),
+      callback: openMonsters,
+    });
+    this.addRibbonIcon('skull', t('command.openMonsters'), () => void openMonsters());
 
     const deckStore = new DeckStore(
       this,

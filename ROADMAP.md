@@ -13,11 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Monster Manual** (module 5, asked for 2026-10-25): built like the spellbook,
-before the battle tracker — design drafted
-(`docs/superpowers/specs/2026-10-25-monster-manual-design.md`), waiting for the maintainer's review. Built and waiting for the maintainer's check in
-Obsidian: spellbook S3 (links, own spells), the spell builder and the restyled deck builder. The
-faction world redesign also still waits for its check. Nothing is published for now.
+**dnd5e-byLokianer · Monster Manual** (module 5): M1 (the tab) is built and waits for the
+maintainer's check in Obsidian; next M2, the German texts of all traits and actions. Also waiting
+for the check: spellbook S3 (links, own spells), the spell builder (now with casting time and
+duration dropdowns) and the restyled deck builder; the faction world redesign. Then module 6, the
+battle tracker. Nothing is published for now.
 
 ---
 
@@ -148,10 +148,11 @@ battle tracker". The SRD 5.1's monsters (about 330, CC-BY-4.0) in their own tab:
 (challenge rating, type, size, environment …), a list and the stat block as the card, English and
 German. The battle tracker will draw its monsters from here.
 Design: [`docs/superpowers/specs/2026-10-25-monster-manual-design.md`](docs/superpowers/specs/2026-10-25-monster-manual-design.md)
-(draft, waiting for review).
+(reviewed 2026-10-25).
 
-- [ ] **M1 — Monster Manual tab**: the 334 monsters as data, German names and meta, search,
-      filters, list, stat block card, Insert into note, Make a note
+- [ ] **M1 — Monster Manual tab** ← _built 2026-10-25, awaiting the check in Obsidian_: the 334
+      monsters as data, German names and meta, search, filters, list, stat block card, Insert into
+      note, Make a note. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m1.md`
 - [ ] **M2 — German texts** of all traits and actions
 - [ ] **M3 — Own monsters and a monster builder**
 

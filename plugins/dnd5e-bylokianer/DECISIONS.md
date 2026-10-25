@@ -453,3 +453,30 @@ Asked for by the maintainer. The options are every casting time (9) and duration
 spells use, stored in the SRD's English words and shown in the GM's language; the spellbook
 translates them as it does the SRD's. A value from a JSON file that is not among them is offered as
 an extra first option. Range stays a text field (too many shapes to list).
+
+## 2026-10-25 · Monster Manual, phase M1
+
+Design: `docs/superpowers/specs/2026-10-25-monster-manual-design.md`; the maintainer accepted every
+call in its §7.
+
+- Data generated once from the 5e-bits SRD monsters into our `dnd5e-statblock` YAML, with the list
+  and filter fields beside it. Usage written as the SRD prints it ("(3/Day)", "(Recharge 5–6)",
+  "(Recharges after a Short or Long Rest)"); armour notes from the extra AC entries ("15 with mage
+  armor", "11 while prone"); the Cult Fanatic's 33 hit points fixed as in `SRD_NPCS`. The SRD's
+  legendary-actions paragraph is not in the database; it is written in the SRD's words with the
+  monster's short name ("The dragon can take 3 legendary actions …").
+- The 21 NPCs appear too and agree with the NPC builder's in tests (usage suffixes aside).
+- The tab reuses the spellbook's layout and styles; type colours from Obsidian's palette. The card
+  is the stat block view of notes.
+- German in M1: names (all 334, none twice) and the stat block's header and lines — sizes declined
+  for the type's gender ("Großer Drache", "Große Monstrosität"), the SRD's swarms as "Schwarm
+  winziger Tiere", alignments, armour, speeds and senses in metres, languages and phrases like
+  "versteht …, kann aber nicht sprechen", damage types and conditions, saves as Str/Ges/Kon/Int/
+  Wei/Cha, skills by their German names, hit dice with W. A test checks that no English word is left
+  in any monster's German header and lines. In the list the type comes before the size, so German
+  needs no declension there.
+- Insert into note edits the last Markdown note through `vault.process`, below its cursor line, not
+  through the editor. Make a note writes `type: monster` and `cr`, then the block.
+- `main.js` grows to about 1.7 MB with the monster data.
+
+Left out: German traits and actions (M2), own monsters and the monster builder (M3).

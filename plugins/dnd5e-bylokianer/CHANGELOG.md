@@ -8,6 +8,12 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Monster Manual** (module 5, phase M1): the 334 SRD monsters in their own tab, built like the
+  spellbook — search in English or German, challenge rating bands, type, size, movement, legendary
+  and spellcaster filters, a list by challenge rating and the stat block as the card with spell
+  links; German names and German stat block headers and lines (metres); Insert into note and Make a
+  note. Generated from the 5e-bits SRD data by `scripts/monsters-from-srd.mjs`, checked in tests.
+
 - Spell builder: **casting time and duration are dropdowns** of every value the SRD's spells use,
   shown in your language; a spell copied or imported keeps its own value as an extra option.
 - **Spell builder**: **New spell** (command, or + in the spellbook) — a dialog in the New NPC
