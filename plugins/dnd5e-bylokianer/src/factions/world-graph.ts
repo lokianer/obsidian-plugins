@@ -3,7 +3,7 @@
 // value a source's own note states towards a faction. Pure.
 
 import { PARTY, UNAFFILIATED } from './discover';
-import type { FactionWorld, Mode, RelationField, ResolvedEntity } from './model';
+import type { FactionWorld, Mode, ResolvedEntity } from './model';
 import { stance } from './stance';
 
 export type GraphNode =
