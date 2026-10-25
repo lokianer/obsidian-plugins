@@ -2597,57 +2597,30 @@ a.dnd5e-tensions-name:hover {
   gap: var(--size-4-2);
 }
 
-/* ── Deck builder ── */
+/* ── Deck and spell builders: the New NPC dialog's layout, form left, preview right ── */
 
-.dnd5e-builder {
-  display: flex;
-  flex-direction: column;
-  gap: var(--size-4-4);
-  font-size: 16px;
-}
-
-.dnd5e-builder-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--size-2-2);
+.dnd5e-builder-file {
+  display: none;
 }
 
 .dnd5e-builder-label {
   color: var(--text-muted);
+  font-size: 16px;
   font-weight: var(--font-semibold);
 }
 
-.dnd5e-builder-check {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--size-4-2);
-  cursor: pointer;
-}
-
-.dnd5e-builder-check input {
-  margin-top: 4px;
-}
-
-.dnd5e-builder-hint {
-  color: var(--text-muted);
-}
-
-.dnd5e-builder-fill,
-.dnd5e-builder-tools {
-  display: flex;
-  flex-wrap: wrap;
+.dnd5e-builder-import {
+  display: inline-flex;
   align-items: center;
   gap: var(--size-4-2);
-}
-
-.dnd5e-builder-file {
-  display: none;
+  font-size: 16px;
 }
 
 .dnd5e-builder-pastebox {
   display: none;
   flex-direction: column;
   gap: var(--size-4-2);
+  padding-bottom: var(--size-4-3);
 }
 
 .dnd5e-builder-pastebox.is-open {
@@ -2655,9 +2628,31 @@ a.dnd5e-tensions-name:hover {
 }
 
 .dnd5e-builder-pastebox textarea,
-.dnd5e-builder-fields textarea {
+.dnd5e-builder-fields textarea,
+.dnd5e-builder-area textarea {
   width: 100%;
   resize: vertical;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.dnd5e-builder-sources {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  max-height: none;
+  padding-bottom: var(--size-4-3);
+}
+
+.dnd5e-deck-builder .setting-item-heading .setting-item-name,
+.dnd5e-spell-builder .setting-item-heading .setting-item-name {
+  font-size: var(--font-ui-medium);
+}
+
+.dnd5e-builder-count {
+  margin-left: var(--size-4-2);
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-l);
+  background-color: var(--background-modifier-hover);
+  color: var(--text-muted);
   font-size: 16px;
 }
 
@@ -2665,25 +2660,45 @@ a.dnd5e-tensions-name:hover {
   display: flex;
   flex-direction: column;
   gap: var(--size-4-2);
-  max-height: 50vh;
+  max-height: 46vh;
   overflow-y: auto;
+  padding: 2px;
 }
 
 .dnd5e-builder-row {
   display: flex;
   align-items: flex-start;
   gap: var(--size-4-2);
-  padding: var(--size-4-2);
-  border-radius: var(--radius-m);
-  background: var(--background-secondary);
+  padding: var(--size-4-2) var(--size-4-3);
   border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background-color: var(--background-primary);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.dnd5e-builder-row.is-current {
+  border-color: var(--interactive-accent);
+  background-color: hsla(var(--interactive-accent-hsl), 0.08);
 }
 
 .dnd5e-builder-number {
-  min-width: 2ch;
-  padding-top: 6px;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-m);
+  background-color: var(--background-secondary);
   color: var(--text-muted);
-  text-align: right;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-builder-row.is-current .dnd5e-builder-number {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
 }
 
 .dnd5e-builder-fields {
@@ -2696,6 +2711,21 @@ a.dnd5e-tensions-name:hover {
 
 .dnd5e-builder-fields input {
   width: 100%;
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-builder-add {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--size-4-1);
+  margin-top: var(--size-4-2);
+  font-size: 16px;
+}
+
+.dnd5e-builder-icon {
+  display: inline-flex;
 }
 
 .dnd5e-builder-flags {
@@ -2705,31 +2735,75 @@ a.dnd5e-tensions-name:hover {
 }
 
 .dnd5e-builder-flag {
+  height: auto;
+  padding: var(--size-2-1) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
   border-radius: var(--radius-l);
+  background-color: var(--background-primary);
   box-shadow: none;
-  background: var(--background-modifier-hover);
   color: var(--text-muted);
+  font-size: 16px;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.dnd5e-builder-flag:hover {
+  border-color: var(--interactive-accent);
 }
 
 .dnd5e-builder-flag.is-active {
-  background: rgba(var(--color-orange-rgb), 0.18);
-  color: var(--color-orange);
+  border-color: var(--interactive-accent);
+  background-color: hsla(var(--interactive-accent-hsl), 0.15);
+  color: var(--text-normal);
 }
 
-.dnd5e-builder-icon {
-  display: inline-flex;
-  margin-right: var(--size-2-2);
-}
-
-.dnd5e-builder-footer {
+.dnd5e-builder-row-chips,
+.dnd5e-builder-area {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--size-4-3);
+  flex-direction: column;
+  gap: var(--size-4-2);
+  padding: var(--size-4-3) 0;
+  border-top: 1px solid var(--background-modifier-border);
 }
 
-.dnd5e-builder-count {
-  color: var(--text-muted);
+/* School tiles and SRD spell tiles wear the school's colour on their icon. */
+.dnd5e-npc-tile.has-school .dnd5e-npc-tile-icon {
+  color: var(--dnd5e-school);
+  background-color: rgba(var(--dnd5e-school-rgb), 0.15);
+}
+
+.dnd5e-npc-tile.has-school.is-selected {
+  border-color: var(--dnd5e-school);
+  background-color: rgba(var(--dnd5e-school-rgb), 0.12);
+}
+
+.dnd5e-npc-tile.has-school.is-selected .dnd5e-npc-tile-icon {
+  color: var(--text-on-accent);
+  background-color: var(--dnd5e-school);
+}
+
+.dnd5e-spell-schools {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  max-height: none;
+  padding-bottom: var(--size-4-3);
+}
+
+.dnd5e-spell-preview {
+  border-top: 3px solid var(--dnd5e-school);
+  background:
+    linear-gradient(180deg, rgba(var(--dnd5e-school-rgb), 0.14), transparent 200px),
+    var(--background-secondary);
+}
+
+.dnd5e-spell-preview .dnd5e-npc-card-eyebrow {
+  color: var(--dnd5e-school);
+}
+
+.dnd5e-builder-face {
+  align-self: center;
+  width: 100%;
+  max-width: 280px;
 }
 
 @media (prefers-reduced-motion: reduce) {

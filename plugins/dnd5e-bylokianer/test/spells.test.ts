@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { parse } from 'yaml';
 
 import { DE_NAMES } from '../src/spells/de';
 import { DE_TEXTS } from '../src/spells/de-texts';
@@ -6,6 +7,7 @@ import { filterSpells, levelCounts, NO_FILTERS, readFilters } from '../src/spell
 import { castingTime, components, duration, levelLine, range } from '../src/spells/meta';
 import { listsSpells, spellFinder } from '../src/spells/links';
 import type { SrdSpell } from '../src/spells/model';
+import { draftFromSpell, emptyDraft, parseSpellJson, spellNoteText } from '../src/spells/draft';
 import { ownIndex, parseOwnSpell } from '../src/spells/own';
 import { SRD_SPELLS } from '../src/spells/srd-spells';
 
@@ -271,5 +273,96 @@ describe('spell names in stat blocks', () => {
     expect(listsSpells('Innate Spellcasting')).toBe(true);
     expect(listsSpells('Zauberwirken')).toBe(true);
     expect(listsSpells('Multiattack')).toBe(false);
+  });
+});
+
+describe('spell builder drafts', () => {
+  const readBack = (text: string) => {
+    const [, yaml = '', body = ''] = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(text) ?? [];
+    return parseOwnSpell({
+      path: 'Spells/Fireball.md',
+      basename: 'Fireball',
+      frontmatter: parse(yaml) as Record<string, unknown>,
+      body,
+    });
+  };
+
+  it('writes a note that reads back as the same spell', () => {
+    const fireball = spell('fireball');
+    if (fireball === undefined) throw new Error('no fireball');
+    const draft = draftFromSpell(fireball, 'en');
+    const back = readBack(spellNoteText(draft));
+    expect(back).toMatchObject({
+      name: 'Fireball',
+      level: 3,
+      school: 'evocation',
+      casting: '1 action',
+      range: '150 feet',
+      components: ['V', 'S', 'M'],
+      material: fireball.material,
+      duration: 'Instantaneous',
+      classes: fireball.classes,
+      damage: ['fire'],
+      save: 'dex',
+      higher: fireball.higher,
+    });
+    expect(back?.text).toBe(fireball.text);
+  });
+
+  it('copies a spell in German, concentration apart from the duration', () => {
+    const hold = spell('hold-person');
+    if (hold === undefined) throw new Error('no spell');
+    const draft = draftFromSpell(hold, 'de');
+    expect(draft.name).toBe('Person festhalten');
+    expect(draft.range).toBe('18 m');
+    expect(draft.duration).toBe('Bis zu 1 Minute');
+    expect(draft.concentration).toBe(true);
+    expect(draft.text).toContain('Weisheitsrettungswurf');
+  });
+
+  it('reads a spell from 5e-bits, Open5e or its own JSON, and refuses the rest', () => {
+    const bits = parseSpellJson(
+      JSON.stringify({
+        name: 'Frost Needle',
+        level: 1,
+        school: { name: 'Evocation' },
+        classes: [{ name: 'Wizard' }, { name: 'Sorcerer' }],
+        desc: ['One.', 'Two.'],
+        higher_level: ['More.'],
+        dc: { dc_type: { name: 'CON' } },
+        concentration: false,
+      }),
+    );
+    expect(bits.ok && bits.draft).toMatchObject({
+      name: 'Frost Needle',
+      school: 'evocation',
+      classes: ['wizard', 'sorcerer'],
+      text: 'One.\n\nTwo.',
+      higher: 'More.',
+      save: 'con',
+    });
+    const open5e = parseSpellJson(
+      JSON.stringify({
+        name: 'Glow',
+        level_int: 0,
+        school: 'Illusion',
+        dnd_class: 'Bard, Wizard',
+        desc: 'Light.',
+        components: 'V, S',
+        concentration: 'yes',
+        ritual: 'no',
+      }),
+    );
+    expect(open5e.ok && open5e.draft).toMatchObject({
+      level: 0,
+      school: 'illusion',
+      classes: ['bard', 'wizard'],
+      components: ['V', 'S'],
+      concentration: true,
+      ritual: false,
+    });
+    expect(parseSpellJson('{')).toEqual({ ok: false, reason: 'syntax' });
+    expect(parseSpellJson('{"level": 2}')).toEqual({ ok: false, reason: 'shape' });
+    expect(emptyDraft().components).toEqual(['V', 'S']);
   });
 });

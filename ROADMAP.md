@@ -13,10 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Spellbook S3** (links from stat blocks, own spells) is built and waits for the
-maintainer's check in Obsidian. The NPC builder, the spellbook S1–S2 and the Deck of Many Things
-(D1, D2) are accepted (2026-10-25); the faction world redesign still waits for its check. Then
-module 5, the battle tracker: brainstorm and design first. Nothing is published for now.
+**dnd5e-byLokianer · Monster Manual** (module 5, asked for 2026-10-25): built like the spellbook,
+before the battle tracker — a short design first. Built and waiting for the maintainer's check in
+Obsidian: spellbook S3 (links, own spells), the spell builder and the restyled deck builder. The
+faction world redesign also still waits for its check. Nothing is published for now.
 
 ---
 
@@ -120,6 +120,10 @@ the NPC builder is done; German distances in metres (5 ft = 1.5 m).
 - [ ] **S3 — Links and own spells** ← _built 2026-10-25, awaiting the check in Obsidian_: spell
       names in stat blocks open the spellbook; `type: spell` notes join the list. Plan
       `docs/superpowers/plans/2026-10-25-spellbook-s3.md`
+- [ ] **Spell builder** ← _built 2026-10-25, awaiting the check in Obsidian_ (asked for by the
+      maintainer): New spell dialog in the New NPC dialog's style — start from an SRD spell, by
+      hand, or a JSON file (own keys or the 5e-bits / Open5e shape) — with a live preview; writes a
+      `type: spell` note. The deck builder got the same style
 
 ### Module 4 — Deck of Many Things (after the spellbook)
 
@@ -136,12 +140,19 @@ Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs
       text, a JSON file), reset of the history (and the cards). Plan
       `docs/superpowers/plans/2026-10-25-deck-d2.md`
 
-### Module 5 — Battle tracker
+### Module 5 — Monster Manual (after the spellbook and the deck)
+
+Asked for 2026-10-25: "a Monster Manual beside the spellbook, built like the spellbook, before the
+battle tracker". The SRD 5.1's monsters (about 330, CC-BY-4.0) in their own tab: search, filters
+(challenge rating, type, size, environment …), a list and the stat block as the card, English and
+German. Needs a short design first; the battle tracker will draw its monsters from here.
+
+### Module 6 — Battle tracker
 
 Not brainstormed yet. Starting point: `examples/vault/Silverstadt/Encounters/Ambush under the second
 arch.md` (provisional format), party notes with `ac`, `hp`, `initiative`.
 
-### Module 6 — Dice
+### Module 7 — Dice
 
 Not brainstormed yet. Starting points: Rhizom's dice grammar and rollable-table rules (handoff §4),
 `examples/vault/Silverstadt/Tables/Street Rumours.md`, `Decks/Omens of the River.md`, roll lines in

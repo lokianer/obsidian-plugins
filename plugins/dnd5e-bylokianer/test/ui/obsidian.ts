@@ -122,6 +122,7 @@ export class Setting {
     return this;
   }
   setHeading(): this {
+    this.settingEl.addClass('setting-item-heading');
     return this;
   }
   addText(cb: (text: TextComponent) => void): this {
@@ -134,6 +135,10 @@ export class Setting {
   }
   addButton(cb: (button: ButtonComponent) => void): this {
     cb(new ButtonComponent(this.controlEl));
+    return this;
+  }
+  addToggle(cb: (toggle: ToggleComponent) => void): this {
+    cb(new ToggleComponent(this.controlEl));
     return this;
   }
   addExtraButton(cb: (button: ButtonComponent) => void): this {
@@ -157,6 +162,24 @@ class TextComponent {
   }
   onChange(cb: (value: string) => unknown): this {
     this.inputEl.addEventListener('input', () => cb(this.inputEl.value));
+    return this;
+  }
+}
+
+class ToggleComponent {
+  readonly toggleEl: HTMLInputElement;
+  constructor(parent: HTMLElement) {
+    this.toggleEl = parent.createEl('input', {
+      cls: 'checkbox-container',
+      attr: { type: 'checkbox' },
+    });
+  }
+  setValue(on: boolean): this {
+    this.toggleEl.checked = on;
+    return this;
+  }
+  onChange(cb: (on: boolean) => unknown): this {
+    this.toggleEl.addEventListener('change', () => cb(this.toggleEl.checked));
     return this;
   }
 }

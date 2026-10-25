@@ -8,6 +8,16 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Spell builder**: **New spell** (command, or + in the spellbook) — a dialog in the New NPC
+  dialog's style with a live preview: start from an SRD spell (its text in your language), fill it
+  by hand, or load a JSON file (own keys, 5e-bits or Open5e format); writes a `type: spell` note in
+  the spell folder (new setting) and opens it in the spellbook.
+
+### Changed
+
+- The **deck builder** is laid out like the New NPC dialog: settings rows, source tiles, numbered
+  card rows and a live preview of the deck and the card being edited.
+
 - **Spell links and own spells** (spellbook, phase S3): spell names in a stat block's Spellcasting
   trait are links that open the spellbook on that spell; notes with `type: spell` (level, school,
   casting time, range, components, duration, classes … in English or German; the description and

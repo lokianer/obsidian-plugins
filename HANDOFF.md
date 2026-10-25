@@ -22,12 +22,15 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 1. Accepted by the maintainer on 2026-10-25: the NPC builder (phases 1–4b), the spellbook (S1, S2)
    and the Deck of Many Things (D1, D2). The faction world redesign (points 20–21) still waits for
    its check.
-2. **Spellbook S3** (links from stat blocks, own spells) is built and waits for the check (points
-   34–36 below). Code: `src/spells/links.ts` + `src/obsidian/spell-links.ts` (links),
-   `src/spells/own.ts` + `src/obsidian/own-spells.ts` (own spells).
-3. Next: module 5, the **battle tracker** — not brainstormed yet; start with the maintainer
-   (questions, a short design, the plan), from `examples/vault/Silverstadt/Encounters/Ambush under
-the second arch.md`.
+2. Built and waiting for the check: **spellbook S3** (links from stat blocks, own spells), the
+   **spell builder** and the **deck builder** in the New NPC dialog's style (points 34–38 below).
+   Code: `src/spells/links.ts`, `src/spells/own.ts`, `src/spells/draft.ts`,
+   `src/obsidian/spell-builder.ts`, `src/obsidian/deck-builder.ts`, `src/obsidian/new-note.ts`.
+3. Next: module 5, the **Monster Manual** (asked for 2026-10-25), built like the spellbook, before
+   the battle tracker. Short design first (spec), then the plan; the SRD monster data is in the
+   5e-bits database (`src/2014/en/5e-SRD-Monsters.json`, 334 entries; `scripts/` has the spell
+   generator to follow). Then module 6, the battle tracker. The maintainer also asked to make the
+   Pages site fancier following the Vercel Web Interface Guidelines.
 
 ## State of the working tree
 
@@ -224,6 +227,15 @@ fields)
     note button. Edit its level to 3: the list follows without reopening the tab.
 36. A note with `type: spell` but no school stays out of the list.
 
+**Spell builder and deck builder restyle**
+
+37. - in the spellbook (or **New spell**): the dialog looks like New NPC — search "feuerb", pick
+      Feuerball: every field and the preview fill in German (Hervorrufung des 3. Grades, 45 m, 8W6);
+      change level and school (tile colours follow), toggle classes, create: the note lands in
+      `Silverstadt/Spells/` and the spellbook opens on it. A 5e-bits spell JSON fills it too.
+38. **New deck**: settings rows, three source tiles, numbered rows; editing a row shows that card
+    in the preview as it will turn over; the count sits beside "Cards".
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).
@@ -260,5 +272,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 321 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 327 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

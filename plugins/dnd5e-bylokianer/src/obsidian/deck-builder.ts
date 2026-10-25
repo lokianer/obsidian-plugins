@@ -1,8 +1,10 @@
-// The deck builder: a dialog for a new own deck — its name, whether drawn cards return, and the
-// cards as rows typed in by hand or filled from the standard deck, pasted text or a JSON file. It
-// hands the finished deck over to be written as a note; it never rewrites a note.
+// The deck builder, built like the New NPC dialog: on the left the form — the deck's name and
+// whether drawn cards return as Obsidian settings, three tiles to fill it from (the standard deck,
+// pasted text, a JSON file), the cards as rows — and on the right a live preview: the deck, and
+// the card being edited as it will turn over on the table. It hands the finished deck over to be
+// written as a note; it never rewrites a note.
 
-import { type App, Modal, Notice, setIcon } from 'obsidian';
+import { type App, Component, MarkdownRenderer, Modal, Notice, setIcon, Setting } from 'obsidian';
 
 import { deckOf } from '../deck/cards';
 import {
@@ -26,9 +28,15 @@ const blank = (): DraftCard => ({ name: '', effect: '', leaves: false, ends: fal
 
 export class DeckBuilderModal extends Modal {
   private deck: DraftDeck = { name: '', returns: true, cards: [blank()] };
+  /** The card the preview shows: the one last edited. */
+  private current = 0;
   private listEl!: HTMLElement;
   private countEl!: HTMLElement;
   private pasteEl!: HTMLElement;
+  private previewEl!: HTMLElement;
+  private returnsSet: ((on: boolean) => void) | null = null;
+  private nameSet: ((name: string) => void) | null = null;
+  private preview: Component | null = null;
 
   constructor(
     app: App,
@@ -40,51 +48,72 @@ export class DeckBuilderModal extends Modal {
   onOpen(): void {
     const { t } = this.deps;
     this.setTitle(t('builder.title'));
+    this.modalEl.addClass('dnd5e-npc-modal', 'dnd5e-npc-dialog');
     const el = this.contentEl;
-    el.empty();
-    el.addClass('dnd5e-builder');
+    el.addClass('dnd5e-deck-builder');
+    const body = el.createDiv({ cls: 'dnd5e-npc-body' });
+    const form = body.createDiv({ cls: 'dnd5e-npc-form' });
+    this.previewEl = body.createDiv({ cls: 'dnd5e-npc-preview' });
 
-    const name = el.createEl('label', { cls: 'dnd5e-builder-field' });
-    name.createSpan({ cls: 'dnd5e-builder-label', text: t('builder.name') });
-    const nameInput = name.createEl('input', {
-      cls: 'dnd5e-builder-name',
-      attr: { type: 'text', placeholder: t('builder.namePlaceholder') },
+    new Setting(form).setName(t('builder.name')).addText((text) => {
+      text.inputEl.addClass('dnd5e-builder-name');
+      text
+        .setPlaceholder(t('builder.namePlaceholder'))
+        .setValue(this.deck.name)
+        .onChange((value) => {
+          this.deck.name = value;
+          this.drawPreview();
+        });
+      this.nameSet = (name) => {
+        text.setValue(name);
+      };
     });
-    nameInput.value = this.deck.name;
-    nameInput.addEventListener('input', () => (this.deck.name = nameInput.value));
+    new Setting(form)
+      .setName(t('builder.returns'))
+      .setDesc(t('builder.returns.desc'))
+      .addToggle((toggle) => {
+        toggle.toggleEl.addClass('dnd5e-builder-returns');
+        toggle.setValue(this.deck.returns).onChange((on) => {
+          this.deck.returns = on;
+          this.renderList();
+        });
+        this.returnsSet = (on) => {
+          toggle.setValue(on);
+        };
+      });
 
-    const returns = el.createEl('label', { cls: 'dnd5e-builder-check' });
-    const box = returns.createEl('input', { attr: { type: 'checkbox' } });
-    box.checked = this.deck.returns;
-    const words = returns.createDiv();
-    words.createDiv({ text: t('builder.returns') });
-    words.createDiv({ cls: 'dnd5e-builder-hint', text: t('builder.returns.desc') });
-    box.addEventListener('change', () => {
-      this.deck.returns = box.checked;
-      this.renderList();
-    });
-
-    const fill = el.createDiv({ cls: 'dnd5e-builder-fill' });
-    fill.createSpan({ cls: 'dnd5e-builder-label', text: t('builder.fill') });
-    const standard = fill.createEl('button', { text: t('builder.standard') });
-    standard.addEventListener('click', () => this.add(standardDrafts(deckOf(22), this.deps.lang)));
-    const paste = fill.createEl('button', { cls: 'dnd5e-builder-paste', text: t('builder.paste') });
-    paste.addEventListener('click', () =>
-      this.pasteEl.toggleClass('is-open', !this.pasteEl.hasClass('is-open')),
+    new Setting(form).setName(t('builder.fill')).setHeading();
+    const sources = form.createDiv({ cls: ['dnd5e-npc-tiles', 'dnd5e-builder-sources'] });
+    this.source(
+      sources,
+      'standard',
+      'layers',
+      t('builder.standard'),
+      t('builder.standard.line'),
+      () => this.add(standardDrafts(deckOf(22), this.deps.lang)),
     );
-    const json = fill.createEl('button', { text: t('builder.json') });
-    const file = fill.createEl('input', {
+    this.source(
+      sources,
+      'paste',
+      'clipboard-paste',
+      t('builder.paste'),
+      t('builder.paste.line'),
+      () => this.pasteEl.toggleClass('is-open', !this.pasteEl.hasClass('is-open')),
+    );
+    const file = form.createEl('input', {
       cls: 'dnd5e-builder-file',
       attr: { type: 'file', accept: '.json,application/json' },
     });
-    json.addEventListener('click', () => file.click());
+    this.source(sources, 'json', 'file-json', t('builder.json'), t('builder.json.line'), () =>
+      file.click(),
+    );
     file.addEventListener('change', () => {
       const chosen = file.files?.[0];
       if (chosen !== undefined) void chosen.text().then((text) => this.importJson(text));
       file.value = '';
     });
 
-    this.pasteEl = el.createDiv({ cls: 'dnd5e-builder-pastebox' });
+    this.pasteEl = form.createDiv({ cls: 'dnd5e-builder-pastebox' });
     const area = this.pasteEl.createEl('textarea', {
       attr: { rows: '6', placeholder: t('builder.pastePlaceholder') },
     });
@@ -99,31 +128,40 @@ export class DeckBuilderModal extends Modal {
       }
     });
 
-    this.listEl = el.createDiv({ cls: 'dnd5e-builder-list' });
-    const tools = el.createDiv({ cls: 'dnd5e-builder-tools' });
-    const add = tools.createEl('button');
+    const cards = new Setting(form).setName(t('builder.cards')).setHeading();
+    this.countEl = cards.settingEl.createSpan({ cls: 'dnd5e-builder-count' });
+    cards.addExtraButton((button) =>
+      button
+        .setIcon('trash-2')
+        .setTooltip(t('builder.clear'))
+        .onClick(() => {
+          this.deck.cards = [blank()];
+          this.current = 0;
+          this.renderList();
+        }),
+    );
+    this.listEl = form.createDiv({ cls: 'dnd5e-builder-list' });
+    const add = form.createEl('button', { cls: 'dnd5e-builder-add' });
     setIcon(add.createSpan({ cls: 'dnd5e-builder-icon' }), 'plus');
     add.appendText(t('builder.add'));
     add.addEventListener('click', () => {
       this.deck.cards.push(blank());
+      this.current = this.deck.cards.length - 1;
       this.renderList();
       this.listEl.querySelector<HTMLInputElement>('.dnd5e-builder-row:last-child input')?.focus();
     });
-    const clear = tools.createEl('button', { text: t('builder.clear') });
-    clear.addEventListener('click', () => {
-      this.deck.cards = [blank()];
-      this.renderList();
-    });
 
-    const footer = el.createDiv({ cls: 'dnd5e-builder-footer' });
-    this.countEl = footer.createSpan({ cls: 'dnd5e-builder-count' });
-    const create = footer.createEl('button', { cls: 'mod-cta', text: t('builder.create') });
-    create.addEventListener('click', () => void this.finish());
+    new Setting(form).addButton((button) =>
+      button
+        .setButtonText(t('builder.create'))
+        .setCta()
+        .onClick(() => void this.finish()),
+    );
     this.renderList();
-    nameInput.focus();
   }
 
   onClose(): void {
+    this.preview?.unload();
     this.contentEl.empty();
   }
 
@@ -144,15 +182,30 @@ export class DeckBuilderModal extends Modal {
     }
     if (result.deck.name !== undefined && this.deck.name.trim() === '') {
       this.deck.name = result.deck.name;
-      const input = this.contentEl.querySelector<HTMLInputElement>('.dnd5e-builder-name');
-      if (input !== null) input.value = result.deck.name;
+      this.nameSet?.(result.deck.name);
     }
     if (result.deck.returns !== undefined) {
       this.deck.returns = result.deck.returns;
-      const box = this.contentEl.querySelector<HTMLInputElement>('.dnd5e-builder-check input');
-      if (box !== null) box.checked = result.deck.returns;
+      this.returnsSet?.(result.deck.returns);
     }
     this.add(result.deck.cards);
+  }
+
+  private source(
+    parent: HTMLElement,
+    key: string,
+    icon: string,
+    name: string,
+    line: string,
+    click: () => void,
+  ): void {
+    const button = parent.createEl('button', { cls: 'dnd5e-npc-tile' });
+    button.dataset.source = key;
+    setIcon(button.createDiv({ cls: 'dnd5e-npc-tile-icon' }), icon);
+    const text = button.createDiv({ cls: 'dnd5e-npc-tile-text' });
+    text.createDiv({ cls: 'dnd5e-npc-tile-name', text: name });
+    text.createDiv({ cls: 'dnd5e-npc-tile-line', text: line });
+    button.addEventListener('click', click);
   }
 
   private add(cards: DraftCard[]): void {
@@ -160,6 +213,7 @@ export class DeckBuilderModal extends Modal {
     // An untouched first row gives way to the cards brought in.
     const kept = this.deck.cards.filter((c) => c.name.trim() !== '' || c.effect.trim() !== '');
     this.deck.cards = [...kept, ...cards];
+    this.current = kept.length;
     this.renderList();
     new Notice(
       cards.length === 1 ? t('builder.added.one') : t('builder.added', { count: cards.length }),
@@ -171,7 +225,9 @@ export class DeckBuilderModal extends Modal {
     const list = this.listEl;
     list.empty();
     this.deck.cards.forEach((card, i) => {
-      const row = list.createDiv({ cls: 'dnd5e-builder-row' });
+      const row = list.createDiv({
+        cls: i === this.current ? ['dnd5e-builder-row', 'is-current'] : 'dnd5e-builder-row',
+      });
       row.createSpan({ cls: 'dnd5e-builder-number', text: String(i + 1) });
       const fields = row.createDiv({ cls: 'dnd5e-builder-fields' });
       const name = fields.createEl('input', {
@@ -182,10 +238,6 @@ export class DeckBuilderModal extends Modal {
         },
       });
       name.value = card.name;
-      name.addEventListener('input', () => {
-        card.name = name.value;
-        this.renderCount();
-      });
       const effect = fields.createEl('textarea', {
         attr: {
           rows: '2',
@@ -194,7 +246,22 @@ export class DeckBuilderModal extends Modal {
         },
       });
       effect.value = card.effect;
-      effect.addEventListener('input', () => (card.effect = effect.value));
+      const focus = () => {
+        if (this.current === i) return;
+        list.querySelector('.is-current')?.removeClass('is-current');
+        row.addClass('is-current');
+        this.current = i;
+        this.drawPreview();
+      };
+      for (const input of [name, effect]) input.addEventListener('focus', focus);
+      name.addEventListener('input', () => {
+        card.name = name.value;
+        this.drawPreview();
+      });
+      effect.addEventListener('input', () => {
+        card.effect = effect.value;
+        this.drawPreview();
+      });
       const flags = fields.createDiv({ cls: 'dnd5e-builder-flags' });
       if (this.deck.returns) this.flag(flags, card, 'leaves', t('deck.leaves'));
       this.flag(flags, card, 'ends', t('deck.ends'));
@@ -206,10 +273,11 @@ export class DeckBuilderModal extends Modal {
       remove.addEventListener('click', () => {
         this.deck.cards.splice(i, 1);
         if (this.deck.cards.length === 0) this.deck.cards.push(blank());
+        this.current = Math.min(this.current, this.deck.cards.length - 1);
         this.renderList();
       });
     });
-    this.renderCount();
+    this.drawPreview();
   }
 
   private flag(parent: HTMLElement, card: DraftCard, key: 'leaves' | 'ends', text: string): void {
@@ -222,6 +290,7 @@ export class DeckBuilderModal extends Modal {
       card[key] = !card[key];
       chip.toggleClass('is-active', card[key]);
       chip.setAttr('aria-pressed', String(card[key]));
+      this.drawPreview();
     });
   }
 
@@ -229,10 +298,54 @@ export class DeckBuilderModal extends Modal {
     return this.deck.cards.filter((c) => c.name.trim() !== '');
   }
 
-  private renderCount(): void {
+  // ── the preview ────────────────────────────────────────────────────────────────────────────
+
+  private drawPreview(): void {
     const { t } = this.deps;
     const n = this.named().length;
-    this.countEl.setText(n === 1 ? t('deck.cards.one') : t('deck.cards', { count: n }));
+    const count = n === 1 ? t('deck.cards.one') : t('deck.cards', { count: n });
+    this.countEl.setText(count);
+    this.preview?.unload();
+    this.preview = new Component();
+    this.preview.load();
+    this.previewEl.empty();
+    const card = this.previewEl.createDiv({ cls: ['dnd5e-npc-card', 'dnd5e-deck-preview'] });
+    card.createDiv({ cls: 'dnd5e-npc-card-eyebrow', text: t('npc.preview') });
+    const name = this.deck.name.trim();
+    card.createDiv({
+      cls: name === '' ? ['dnd5e-npc-card-name', 'is-empty'] : 'dnd5e-npc-card-name',
+      text: name === '' ? t('builder.unnamed') : name,
+    });
+    card.createDiv({
+      cls: 'dnd5e-npc-card-sub',
+      text: `${count} · ${t(this.deck.returns ? 'deck.rules.returns' : 'deck.rules.stays')}`,
+    });
+
+    const shown = this.deck.cards[this.current];
+    const face = card
+      .createDiv({ cls: ['dnd5e-deck-card', 'is-turned', 'dnd5e-builder-face'] })
+      .createDiv({ cls: 'dnd5e-deck-card-inner' })
+      .createDiv({ cls: 'dnd5e-deck-card-face' });
+    face.createDiv({ cls: 'dnd5e-deck-corner', text: String(this.current + 1) });
+    face.createDiv({
+      cls: 'dnd5e-deck-card-name',
+      text: shown === undefined || shown.name.trim() === '' ? '…' : shown.name,
+    });
+    if (shown !== undefined && ((shown.leaves && this.deck.returns) || shown.ends)) {
+      face.createSpan({
+        cls: 'dnd5e-deck-badge',
+        text: t(shown.ends ? 'deck.ends' : 'deck.leaves'),
+      });
+    }
+    const text = face.createDiv({ cls: ['dnd5e-deck-card-text', 'markdown-rendered'] });
+    if (shown !== undefined && shown.effect.trim() !== '') {
+      void MarkdownRenderer.render(this.app, shown.effect, text, '', this.preview);
+    }
+    face.createDiv({ cls: ['dnd5e-deck-corner', 'is-bottom'], text: String(this.current + 1) });
+
+    const tags = card.createDiv({ cls: 'dnd5e-npc-card-tags' });
+    for (const c of this.named()) tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: c.name });
+    if (n === 0) card.createDiv({ cls: 'dnd5e-npc-card-hint', text: t('builder.previewHint') });
   }
 
   private async finish(): Promise<void> {
@@ -251,7 +364,6 @@ export class DeckBuilderModal extends Modal {
   }
 }
 
-/** Asks how far to reset a deck: the history only, or every card back too; null when cancelled. */
 export function askReset(app: App, t: T): Promise<'log' | 'all' | null> {
   return new Promise((resolve) => {
     let answer: 'log' | 'all' | null = null;

@@ -49,6 +49,7 @@ plugin shows and suggests, the GM decides. It grows in modules, one after anothe
 | 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | ✅ Accepted in Obsidian                        |
 | ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | ✅ Accepted in Obsidian (tab and German texts) |
 | 🃏 **Deck of Many Things:** the standard deck or your own, a deck builder with import                               | ✅ Accepted in Obsidian                        |
+| 🐉 **Monster Manual:** the SRD's monsters in their own tab, like the spellbook                                      | 🗓️ Next                                        |
 | 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                     |
 | 🎲 **Dice**                                                                                                         | 🗓️ Planned                                     |
 

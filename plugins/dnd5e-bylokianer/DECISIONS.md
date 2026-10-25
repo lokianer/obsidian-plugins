@@ -426,3 +426,23 @@ spellbook spec (§4.3, §5).
 
 Left out: plain spell names in ordinary notes (only stat blocks), a "New spell" command (a template
 does it).
+
+## 2026-10-25 · Spell builder; both builders in the New NPC dialog's style
+
+Asked for by the maintainer: "such a spell builder" (like the deck builder), and "make all
+builders, deck and spell, fancier, with Obsidian's design in focus like the NPC builder".
+
+- Both dialogs reuse the New NPC dialog's layout and classes: Obsidian settings rows and headings
+  on the left, tiles for choices, a sticky live preview card on the right (above the form on
+  phones).
+- Spell builder sources: an SRD spell (search over the 319 as tiles, its words copied in the GM's
+  language — German meta and text stay German in the note), by hand, or a JSON file: our own keys
+  or the 5e-bits / Open5e spell shape (`school.name`, `classes[].name`, `desc` paragraphs,
+  `higher_level`, `dc.dc_type`, `damage.damage_type`, `attack_type`, `level_int`, `dnd_class`).
+  One spell per file.
+- Concentration is a field of its own; a copied duration keeps only its span.
+- New spells go to a spell folder inside the campaign (setting `Spells`); the builder waits for
+  the note's metadata, then opens it in the spellbook. Notes are written, never rewritten.
+
+Left out: pasted-text import for spells (a spell has too many fields for one line), editing an
+existing spell in the builder.

@@ -168,6 +168,13 @@ What a higher slot adds.
 They join the list marked "own", filter and search like the SRD's, link from stat blocks, and their
 card has a button to open the note. A note without a valid `level` or `school` stays out.
 
+**New spell** (command, or + in the spellbook) opens the spell builder, laid out like the New NPC
+dialog with a live preview of the card in its school's colour: start from one of the 319 SRD spells
+(search the tiles; its text comes in your language, to change), fill every field by hand — level
+and school as chips and tiles, components, classes and damage as chips — or load a JSON file (the
+keys above, or a spell in the 5e-bits or Open5e SRD format). It writes the note in the campaign's
+spell folder (setting, `Spells` by default) and opens it in the spellbook.
+
 ## The Deck of Many Things
 
 **Open Deck of Many Things** (command, or the layers icon in the left ribbon) puts the SRD's deck on
@@ -219,8 +226,9 @@ ends: ['Midnight'] # these end the drawing
 - [ ] Midnight — No more fortunes tonight.
 ```
 
-**New deck** (command, or + in the tab) opens the deck builder: a name, whether drawn cards return,
-and the cards as rows — name, effect, "leaves the deck", "ends the drawing" — typed in one by one or
+**New deck** (command, or + in the tab) opens the deck builder, laid out like the New NPC dialog with
+a live preview of the deck and the card being edited: a name, whether drawn cards return, and the
+cards as rows — name, effect, "leaves the deck", "ends the drawing" — typed in one by one or
 filled from **the standard deck** (all 22 cards in your language, to edit), **pasted text** (one card
 per line: `Name — effect`, `Name: effect`, `**Name.** effect`, list items or Markdown table rows) or
 a **JSON file**:
@@ -247,6 +255,7 @@ the tab; edit it there afterwards.
 - **Open spellbook** — the SRD spells to look up.
 - **Open Deck of Many Things** — draw from the SRD deck or an own one.
 - **New deck** — the deck builder.
+- **New spell** — the spell builder.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

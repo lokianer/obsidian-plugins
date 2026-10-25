@@ -45,7 +45,7 @@ import { SRD_SPELLS } from '../spells/srd-spells';
 export const SPELLBOOK_VIEW = 'dnd5e-spellbook';
 
 /** Each school in a colour of Obsidian's palette. */
-const SCHOOL_HUES: Record<School, string> = {
+export const SCHOOL_HUES: Record<School, string> = {
   abjuration: 'blue',
   conjuration: 'yellow',
   divination: 'cyan',
@@ -73,9 +73,12 @@ export interface SpellbookDeps {
   own: () => readonly SrdSpell[];
   onOwnChange: (listener: () => void) => () => void;
   openNote: (path: string) => void;
+  /** Opens the spell builder. */
+  newSpell: () => void;
 }
 
-function hue(el: HTMLElement, school: School): void {
+/** Gives an element its school's colour as `--dnd5e-school` and `--dnd5e-school-rgb`. */
+export function hue(el: HTMLElement, school: School): void {
   const colour = SCHOOL_HUES[school];
   el.setCssProps({
     '--dnd5e-school': `var(--color-${colour})`,
@@ -199,6 +202,12 @@ export class SpellbookView extends ItemView {
     });
     if (focused) input.focus();
     top.createDiv({ cls: 'dnd5e-spells-count' });
+    const add = top.createEl('button', {
+      cls: ['clickable-icon', 'dnd5e-spells-new'],
+      attr: { 'aria-label': t('spells.new') },
+    });
+    setIcon(add, 'plus');
+    add.addEventListener('click', () => this.deps.newSpell());
     if (isFiltered(this.filters)) {
       const reset = top.createEl('button', {
         cls: 'clickable-icon',

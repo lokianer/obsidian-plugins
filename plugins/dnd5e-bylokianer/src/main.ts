@@ -23,7 +23,11 @@ import { SessionLog } from './obsidian/session-log';
 import { NoteStatblocks } from './obsidian/note-statblocks';
 import { NpcBuilder } from './obsidian/npc-builder';
 import { tableLang } from './obsidian/npc-modal';
+import { newNote } from './obsidian/new-note';
 import { OwnSpells } from './obsidian/own-spells';
+import { SpellBuilderModal } from './obsidian/spell-builder';
+import { spellNoteText } from './spells/draft';
+import { ownIndex } from './spells/own';
 import { linkSpells } from './obsidian/spell-links';
 import { SPELLBOOK_VIEW, SpellbookView } from './obsidian/spellbook-view';
 import { spellFinder } from './spells/links';
@@ -165,6 +169,7 @@ export default class Dnd5ePlugin extends Plugin {
           own: () => ownSpells.list,
           onOwnChange: (listener) => ownSpells.onChange(listener),
           openNote: (path) => openNote(path, false),
+          newSpell: () => newSpell(),
         }),
     );
     const openSpellbook = async () => {
@@ -185,6 +190,34 @@ export default class Dnd5ePlugin extends Plugin {
         if (leaf.view instanceof SpellbookView) leaf.view.show(index);
       }
     };
+    const newSpell = () =>
+      new SpellBuilderModal(this.app, {
+        t,
+        lang: tableLang(this.options, getLanguage()),
+        spells: SRD_SPELLS,
+        create: async (draft) => {
+          const path = await newNote(
+            this.app,
+            cache,
+            this.options.spellFolder,
+            draft.name,
+            spellNoteText(draft),
+          );
+          new Notice(t('spellBuilder.created', { path }));
+          // The new note's metadata first, then the spellbook can show it.
+          await new Promise<void>((resolve) => {
+            const ref = this.app.metadataCache.on('changed', (file) => {
+              if (file.path !== path) return;
+              this.app.metadataCache.offref(ref);
+              resolve();
+            });
+            window.setTimeout(resolve, 2000);
+          });
+          await ownSpells.reload();
+          await openSpell(ownIndex(path));
+        },
+      }).open();
+    this.addCommand({ id: 'new-spell', name: t('command.newSpell'), callback: newSpell });
 
     const deckStore = new DeckStore(
       this,

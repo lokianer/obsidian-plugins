@@ -18,6 +18,7 @@ import {
 import { type DraftDeck, type OwnCard, ownCards, ownDeckText } from '../deck/own';
 import { PARTY } from '../factions/discover';
 import type { T } from '../i18n/strings';
+import { campaignFolder, newNote } from './new-note';
 import type { WorldCache } from './world-cache';
 
 const DECK_NOTE = 'Deck of Many Things.md';
@@ -187,31 +188,21 @@ export class DeckStore implements DeckSource {
 
   /** Writes a new own deck in the campaign's deck folder; returns its path. */
   async create(deck: DraftDeck): Promise<string> {
-    const { vault } = this.plugin.app;
-    const dir = await this.folder(this.settings().deckFolder);
-    const base = deck.name.trim().replace(/[\\/:*?"<>|#^[\]]/g, '') || 'Deck';
-    let path = normalizePath(dir === '' ? `${base}.md` : `${dir}/${base}.md`);
-    for (let n = 2; vault.getAbstractFileByPath(path) !== null; n++) {
-      path = normalizePath(dir === '' ? `${base} ${n}.md` : `${dir}/${base} ${n}.md`);
-    }
-    if (dir !== '' && vault.getAbstractFileByPath(dir) === null) await vault.createFolder(dir);
-    await vault.create(path, ownDeckText(deck));
+    const { app } = this.plugin;
+    const path = await newNote(
+      app,
+      this.cache,
+      this.settings().deckFolder,
+      deck.name,
+      ownDeckText(deck),
+    );
     new Notice(this.t('deck.created', { path }));
     return path;
   }
 
-  /** A folder inside the campaign (the vault root without one). */
-  private async folder(name: string): Promise<string> {
-    const { campaign } = await this.cache.get();
-    const root = campaign?.folder ?? '';
-    const inner = name.trim();
-    const joined = [root, inner].filter((p) => p !== '').join('/');
-    return joined === '' ? '' : normalizePath(joined);
-  }
-
   private async createStandard(): Promise<TFile> {
     const { vault } = this.plugin.app;
-    const dir = await this.folder('');
+    const dir = await campaignFolder(this.cache, '');
     const path = normalizePath(dir === '' ? DECK_NOTE : `${dir}/${DECK_NOTE}`);
     const existing = vault.getFileByPath(path);
     if (existing !== null) return existing;

@@ -39,6 +39,8 @@ import {
 } from '../../src/deck/note';
 import { type DraftDeck, ownCards, ownDeckText } from '../../src/deck/own';
 import { DeckBuilderModal } from '../../src/obsidian/deck-builder';
+import { SpellBuilderModal } from '../../src/obsidian/spell-builder';
+import type { SpellDraft } from '../../src/spells/draft';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
 import { linkSpells } from '../../src/obsidian/spell-links';
@@ -612,6 +614,7 @@ describe('spellbook', () => {
       own: () => own,
       onOwnChange: () => () => undefined,
       openNote,
+      newSpell: vi.fn(),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -988,50 +991,63 @@ describe('deck builder', () => {
         return Promise.resolve();
       },
     });
-    root.appendChild(modal.contentEl);
+    root.appendChild(modal.modalEl);
     modal.onOpen();
     const el = modal.contentEl;
     const names = () =>
       [...el.querySelectorAll<HTMLInputElement>('.dnd5e-builder-row input')].map((i) => i.value);
-    const press = (text: string) =>
-      [...el.querySelectorAll<HTMLElement>('button')]
-        .find((b) => b.textContent === text)
+    const press = (selector: string, text?: string) =>
+      [...el.querySelectorAll<HTMLElement>(selector)]
+        .find((b) => text === undefined || b.textContent === text)
         ?.dispatchEvent(new MouseEvent('click'));
-    return { modal, el, created, names, press };
+    const type = (input: HTMLInputElement | HTMLTextAreaElement | null, value: string) => {
+      if (input === null) throw new Error('no input');
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      input.dispatchEvent(new Event('focus'));
+    };
+    return { modal, el, created, names, press, type };
   }
 
-  it('builds a deck typed in by hand', async () => {
-    const { el, created, names, press } = builder();
-    const name = el.querySelector<HTMLInputElement>('.dnd5e-builder-name');
-    if (name === null) throw new Error('no name');
-    name.value = 'Road omens';
-    name.dispatchEvent(new Event('input'));
-    const card = el.querySelector<HTMLInputElement>('.dnd5e-builder-row input');
-    if (card === null) throw new Error('no row');
-    card.value = 'Crow';
-    card.dispatchEvent(new Event('input'));
-    press('Add a card');
+  it('builds a deck typed in by hand, the edited card in the preview', async () => {
+    const { el, created, names, press, type } = builder();
+    type(el.querySelector('.dnd5e-builder-name'), 'Road omens');
+    expect(texts(el, '.dnd5e-npc-card-name')).toEqual(['Road omens']);
+    type(el.querySelector('.dnd5e-builder-row input'), 'Crow');
+    type(el.querySelector('.dnd5e-builder-row textarea'), 'Bad luck.');
+    expect(texts(el, '.dnd5e-builder-face .dnd5e-deck-card-name')).toEqual(['Crow']);
+    expect(el.querySelector('.dnd5e-builder-face .dnd5e-deck-card-text')?.textContent).toBe(
+      'Bad luck.',
+    );
+    press('.dnd5e-builder-add');
     expect(names()).toEqual(['Crow', '']);
-    const box = el.querySelector<HTMLInputElement>('.dnd5e-builder-check input');
-    if (box === null) throw new Error('no box');
-    box.checked = false;
-    box.dispatchEvent(new Event('change'));
-    expect(el.querySelectorAll('.dnd5e-builder-flag')).toHaveLength(2);
-    el.querySelector<HTMLElement>('.dnd5e-builder-flag')?.dispatchEvent(new MouseEvent('click'));
+    const returns = el.querySelector<HTMLInputElement>('.dnd5e-builder-returns');
+    if (returns === null) throw new Error('no toggle');
+    returns.checked = false;
+    returns.dispatchEvent(new Event('change'));
+    expect(texts(el, '.dnd5e-npc-card-sub')[0]).toContain(
+      'Each card drawn stays out until the deck is reset.',
+    );
+    press('.dnd5e-builder-flag');
     expect(el.querySelector('.dnd5e-builder-count')?.textContent).toBe('1 card');
-    press('Create deck');
+    press('button', 'Create deck');
     await new Promise((resolve) => window.setTimeout(resolve, 0));
     expect(created).toEqual([
       {
         name: 'Road omens',
         returns: false,
-        cards: [{ name: 'Crow', effect: '', leaves: false, ends: true }],
+        cards: [{ name: 'Crow', effect: 'Bad luck.', leaves: false, ends: true }],
       },
     ]);
   });
 
   it('fills from pasted text, a JSON file and the standard deck', () => {
     const { modal, el, names, press } = builder('de');
+    expect(texts(el, '.dnd5e-builder-sources .dnd5e-npc-tile-name')).toEqual([
+      'Dem Standarddeck',
+      'Eingefügtem Text',
+      'JSON-Datei',
+    ]);
     expect(
       modal.importText('| Card | Effect |\n| --- | --- |\n| Crow | Bad luck |\n- **Moth.** Light'),
     ).toBe(true);
@@ -1041,12 +1057,114 @@ describe('deck builder', () => {
     );
     expect(names()).toEqual(['Crow', 'Moth', 'Owl']);
     expect(el.querySelector<HTMLInputElement>('.dnd5e-builder-name')?.value).toBe('Imported');
-    expect(el.querySelector<HTMLInputElement>('.dnd5e-builder-check input')?.checked).toBe(false);
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-builder-returns')?.checked).toBe(false);
     modal.importJson('not json');
     expect(notices[notices.length - 1]).toBe('Die Datei ist kein gültiges JSON.');
-    press('Alle Karten entfernen');
-    press('Dem Standarddeck');
+    press('.setting-item button[aria-label="Alle Karten entfernen"]');
+    expect(names()).toEqual(['']);
+    press('[data-source="standard"]');
     expect(names()).toHaveLength(22);
     expect(names()[0]).toBe('Wesir');
+    expect(texts(el, '.dnd5e-npc-card-tag')).toHaveLength(22);
+  });
+});
+
+describe('spell builder', () => {
+  function builder(lang: 'en' | 'de' = 'en') {
+    const created: SpellDraft[] = [];
+    const modal = new SpellBuilderModal(app, {
+      t: createT(lang),
+      lang,
+      spells: SRD_SPELLS,
+      create: (draft) => {
+        created.push(draft);
+        return Promise.resolve();
+      },
+    });
+    root.appendChild(modal.modalEl);
+    modal.onOpen();
+    return { modal, el: modal.contentEl, created };
+  }
+
+  it('starts from an SRD spell picked in the tiles, in the GM’s language', () => {
+    const { el } = builder('de');
+    const search = el.querySelector<HTMLInputElement>('.dnd5e-npc-search');
+    if (search === null) throw new Error('no search');
+    search.value = 'feuerb';
+    search.dispatchEvent(new Event('input'));
+    expect(texts(el, '.dnd5e-spell-tiles .dnd5e-npc-tile-name')[0]).toBe('Feuerball');
+    el.querySelector<HTMLElement>('.dnd5e-spell-tiles .dnd5e-npc-tile')?.dispatchEvent(
+      new MouseEvent('click'),
+    );
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-spell-name')?.value).toBe('Feuerball');
+    expect(texts(el, '.dnd5e-npc-card-name')).toEqual(['Feuerball']);
+    expect(texts(el, '.dnd5e-npc-card-sub')[0]).toBe('Hervorrufung des 3. Grades');
+    expect(texts(el, '.dnd5e-spells-grid-value')).toEqual([
+      '1 Aktion',
+      '45 m',
+      'V, G, M',
+      'Unmittelbar',
+    ]);
+    expect(el.querySelector<HTMLTextAreaElement>('.dnd5e-spell-text')?.value).toContain('8W6');
+    expect(el.querySelector('.dnd5e-spell-schools .is-selected')?.textContent).toBe('Hervorrufung');
+  });
+
+  it('builds a spell by hand: level and school chips, components, classes, text', async () => {
+    const { el, created } = builder();
+    const name = el.querySelector<HTMLInputElement>('.dnd5e-spell-name');
+    if (name === null) throw new Error('no name');
+    name.value = 'Ember Lance';
+    name.dispatchEvent(new Event('input'));
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-builder-flag')]
+      .find((c) => c.textContent === 'Level 2')
+      ?.dispatchEvent(new MouseEvent('click'));
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-spell-schools .dnd5e-npc-tile')]
+      .find((c) => c.textContent === 'Abjuration')
+      ?.dispatchEvent(new MouseEvent('click'));
+    for (const value of ['M', 'wizard', 'fire']) {
+      el.querySelector<HTMLElement>(`.dnd5e-builder-flag[data-value="${value}"]`)?.dispatchEvent(
+        new MouseEvent('click'),
+      );
+    }
+    const text = el.querySelector<HTMLTextAreaElement>('.dnd5e-spell-text');
+    if (text === null) throw new Error('no text');
+    text.value = 'A lance of embers.';
+    text.dispatchEvent(new Event('input'));
+    expect(texts(el, '.dnd5e-npc-card-sub')[0]).toBe('2nd-level abjuration');
+    expect(texts(el, '.dnd5e-npc-card-tag')).toEqual(['Fire', 'Wizard']);
+    [...el.querySelectorAll<HTMLElement>('button')]
+      .find((b) => b.textContent === 'Create spell')
+      ?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(created[0]).toMatchObject({
+      name: 'Ember Lance',
+      level: 2,
+      school: 'abjuration',
+      components: ['V', 'S', 'M'],
+      classes: ['wizard'],
+      damage: ['fire'],
+      text: 'A lance of embers.',
+    });
+  });
+
+  it('fills from a JSON file in the 5e-bits shape', () => {
+    const { modal, el } = builder();
+    modal.importJson(
+      JSON.stringify({
+        name: 'Frost Needle',
+        level: 1,
+        school: { name: 'Evocation' },
+        classes: [{ name: 'Wizard' }],
+        desc: ['A needle of ice.'],
+        components: ['V', 'S'],
+        casting_time: '1 action',
+        range: '60 feet',
+        duration: 'Instantaneous',
+        damage: { damage_type: { name: 'Cold' } },
+        attack_type: 'ranged',
+      }),
+    );
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-spell-name')?.value).toBe('Frost Needle');
+    expect(texts(el, '.dnd5e-npc-card-tag')).toEqual(['Cold', 'Ranged spell attack', 'Wizard']);
   });
 });

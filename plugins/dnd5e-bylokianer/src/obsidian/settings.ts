@@ -49,6 +49,8 @@ export interface Settings {
   deckSize: 13 | 22;
   /** The folder in the campaign new own decks go to. */
   deckFolder: string;
+  /** The folder in the campaign new own spells go to. */
+  spellFolder: string;
   /** The deck the Deck tab showed last: `standard` or an own deck's path. */
   deckSelected: string;
 }
@@ -71,6 +73,7 @@ export const DEFAULT_SETTINGS: Settings = {
   spellbook: null,
   deckSize: 22,
   deckFolder: 'Decks',
+  spellFolder: 'Spells',
   deckSelected: 'standard',
 };
 
@@ -82,7 +85,8 @@ type PathKey =
   | 'racesFolder'
   | 'tablesFolder'
   | 'npcFolder'
-  | 'deckFolder';
+  | 'deckFolder'
+  | 'spellFolder';
 const PATHS: readonly PathKey[] = [
   'sessionTemplate',
   'npcTemplate',
@@ -91,6 +95,7 @@ const PATHS: readonly PathKey[] = [
   'tablesFolder',
   'npcFolder',
   'deckFolder',
+  'spellFolder',
 ];
 const LANGS = ['auto', 'en', 'de'] as const;
 const DECK_SIZES = ['22', '13'] as const;
