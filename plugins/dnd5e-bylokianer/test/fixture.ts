@@ -1,6 +1,8 @@
-// Reads examples/vault from disk the way the Obsidian adapter would hand it to the pure modules.
+// Reads examples/vault from disk the way the Obsidian adapter would hand it to the pure modules,
+// with the notes of test/fixtures/vault laid over it: notes whose frontmatter is broken on purpose,
+// kept out of the example vault so that it stays clean to play with in Obsidian.
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
@@ -10,6 +12,7 @@ import type { FactionWorld } from '../src/factions/model';
 import type { NoteInput } from '../src/types';
 
 const vaultRoot = fileURLToPath(new URL('../../../examples/vault', import.meta.url));
+const fixtureRoot = fileURLToPath(new URL('./fixtures/vault', import.meta.url));
 
 function markdownFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -50,19 +53,24 @@ export function noteFromText(path: string, text: string): NoteInput {
 
 let cache: NoteInput[] | undefined;
 
-/** Every note of the example vault, with vault-relative POSIX paths. */
+function notesUnder(root: string): NoteInput[] {
+  return markdownFiles(root).map((file) =>
+    noteFromText(relative(root, file).split(sep).join('/'), readFileSync(file, 'utf8')),
+  );
+}
+
+/** Every note of the example vault and the fixtures, with vault-relative POSIX paths. */
 export function loadExampleVault(): NoteInput[] {
-  cache ??= markdownFiles(vaultRoot)
-    .map((file) =>
-      noteFromText(relative(vaultRoot, file).split(sep).join('/'), readFileSync(file, 'utf8')),
-    )
-    .sort((a, b) => (a.path < b.path ? -1 : 1));
+  cache ??= [...notesUnder(vaultRoot), ...notesUnder(fixtureRoot)].sort((a, b) =>
+    a.path < b.path ? -1 : 1,
+  );
   return cache;
 }
 
-/** The text of one note of the example vault, by its vault path. */
+/** The text of one note of the example vault or the fixtures, by its vault path. */
 export function readExampleNote(path: string): string {
-  return readFileSync(join(vaultRoot, ...path.split('/')), 'utf8');
+  const fixture = join(fixtureRoot, ...path.split('/'));
+  return readFileSync(existsSync(fixture) ? fixture : join(vaultRoot, ...path.split('/')), 'utf8');
 }
 
 /** The same world with every secret relation gone: Public views must not tell them apart. */

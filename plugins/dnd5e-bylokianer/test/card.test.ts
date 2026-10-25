@@ -8,7 +8,7 @@ import { loadExampleVault, noteFromText, readExampleNote } from './fixture';
 const notes = loadExampleVault();
 const world = buildWorld(notes);
 const F = 'Silverstadt/Factions';
-const CHOIR = `${F}/The Drowned Choir/factions.md`;
+const HYMNAL = `${F}/The Garbled Hymnal/factions.md`;
 
 function card(path: string, w = world, list = notes) {
   return buildCard(path, list.find((n) => n.path === path)?.frontmatter, w);
@@ -20,30 +20,30 @@ describe('buildCard', () => {
     expect(card('Silverstadt/Quests/The Missing Bellringer.md')).toBeNull();
   });
 
-  it('shows every entry of the Drowned Choir, broken ones with their warnings', () => {
-    const choir = card(CHOIR);
-    expect(choir?.kind).toBe('faction');
-    const rows = choir?.sections.relations.rows ?? [];
+  it('shows every entry of the Garbled Hymnal, broken ones with their warnings', () => {
+    const hymnal = card(HYMNAL);
+    expect(hymnal?.kind).toBe('faction');
+    const rows = hymnal?.sections.relations.rows ?? [];
     expect(rows.map((r) => [r.key, r.value, r.invalid, r.warnings.map((w) => w.code)])).toEqual([
       ['The Archivists', 5, null, ['value-out-of-range']],
       ['Order of the Lantern', null, 'hates', ['value-not-a-number']],
       ['The Gutter Court', -1, null, []],
       ['The Salt Kings', -2, null, ['unknown-target']],
-      ['The Drowned Choir', 5, null, ['self-relation']],
+      ['The Garbled Hymnal', 5, null, ['self-relation']],
       ['Sable', null, null, []],
       ['Elder Wren', null, null, ['structured-without-value']],
     ]);
     expect(rows[0]?.expect).toBe(7);
     expect(rows[3]?.targetId).toBeNull();
     expect(rows[6]?.why).toBe('[[Elder Wren]]');
-    expect(choir?.power).toMatchObject({ value: 5, expect: 9 });
-    expect(choir?.power?.warnings.map((w) => w.code)).toEqual(['power-out-of-range']);
-    expect(choir?.nameField).toEqual({
-      value: 'The Drowned Choir',
-      expect: 'The Drowned Choir',
-      placeholder: 'The Drowned Choir',
+    expect(hymnal?.power).toMatchObject({ value: 5, expect: 9 });
+    expect(hymnal?.power?.warnings.map((w) => w.code)).toEqual(['power-out-of-range']);
+    expect(hymnal?.nameField).toEqual({
+      value: 'The Garbled Hymnal',
+      expect: 'The Garbled Hymnal',
+      placeholder: 'The Garbled Hymnal',
     });
-    expect(choir?.fields.map((f) => [f.key, f.editable])).toEqual([
+    expect(hymnal?.fields.map((f) => [f.key, f.editable])).toEqual([
       ['type', true],
       ['tags', false],
     ]);
@@ -85,10 +85,10 @@ describe('buildCard', () => {
   });
 });
 
-describe('fixing the Drowned Choir through the card', () => {
+describe('fixing the Garbled Hymnal through the card', () => {
   it('leaves only the legal dangling target', () => {
-    const choir = card(CHOIR);
-    const rows = choir?.sections.relations.rows ?? [];
+    const hymnal = card(HYMNAL);
+    const rows = hymnal?.sections.relations.rows ?? [];
     const row = (key: string) => {
       const found = rows.find((r) => r.key === key);
       if (found === undefined) throw new Error(key);
@@ -109,18 +109,18 @@ describe('fixing the Drowned Choir through the card', () => {
         expect: 'hates',
         value: -3,
       },
-      { op: 'remove-entry', field: 'relations', key: 'The Drowned Choir', expect: 5 },
+      { op: 'remove-entry', field: 'relations', key: 'The Garbled Hymnal', expect: 5 },
       { op: 'set-value', field: 'relations', key: 'Elder Wren', expect: undefined, value: 1 },
-      { op: 'set-scalar', key: 'power', expect: choir?.power?.expect, value: 5 },
+      { op: 'set-scalar', key: 'power', expect: hymnal?.power?.expect, value: 5 },
     ];
-    let text = readExampleNote(CHOIR);
+    let text = readExampleNote(HYMNAL);
     for (const op of ops) {
       const result = applyOp(text, op);
       expect(result.ok, op.op + ' ' + ('key' in op ? op.key : '')).toBe(true);
       if (result.ok) text = result.text;
     }
-    const fixed = notes.map((n) => (n.path === CHOIR ? noteFromText(CHOIR, text) : n));
-    const left = buildWorld(fixed).warnings.filter((w) => w.path === CHOIR);
+    const fixed = notes.map((n) => (n.path === HYMNAL ? noteFromText(HYMNAL, text) : n));
+    const left = buildWorld(fixed).warnings.filter((w) => w.path === HYMNAL);
     expect(left.map((w) => [w.code, w.key])).toEqual([['unknown-target', 'The Salt Kings']]);
   });
 });

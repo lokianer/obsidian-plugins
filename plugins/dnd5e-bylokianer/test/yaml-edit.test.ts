@@ -256,8 +256,8 @@ describe('set-scalar and remove-scalar', () => {
   });
 });
 
-describe('the Drowned Choir', () => {
-  const path = 'Silverstadt/Factions/The Drowned Choir/factions.md';
+describe('the Garbled Hymnal', () => {
+  const path = 'Silverstadt/Factions/The Garbled Hymnal/factions.md';
   const text = readExampleNote(path);
   const before = data(text).relations as Record<string, unknown>;
 

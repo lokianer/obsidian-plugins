@@ -1,5 +1,6 @@
 # Notes are test fixtures and private writing: their exact text is the contract.
 examples/vault/
+plugins/*/test/fixtures/
 Obsidian Plugins Vault/
 .superpowers/
 

@@ -1,23 +1,14 @@
 ---
 type: faction
 name: The Drowned Choir
-# out of range: the plugin should clamp to 5 and warn
-power: 9
+power: 5
 relations:
-  # out of range: clamp to +5, warn
-  The Archivists: 7
-  # not a number: ignore, warn, never crash
-  Order of the Lantern: hates
-  # a number written as a string: accept
+  The Archivists: 5
+  Order of the Lantern: -3
   The Gutter Court: "-1"
-  # no such faction or character: show as dangling, warn
-  The Salt Kings: -2
-  # relation to itself: ignore, warn
-  The Drowned Choir: 5
-  # empty value: treat as "no relation"
   Sable:
-  # structured form without a value: ignore, warn
   Elder Wren:
+    value: 1
     why: "[[Elder Wren]]"
 tags:
   - faction
@@ -25,9 +16,7 @@ tags:
 
 # The Drowned Choir
 
-A cult that sings to the river at low tide, and the **test faction** of this vault: every value in its frontmatter is broken in a different way, with a comment saying what the plugin should do. Nothing here may crash a view; each problem should show up once in a list of warnings.
-
-The Choir has no members yet — [[Brother Silt]]'s frontmatter is broken, so he is not read as one — and opening it one level deeper should show an empty faction, not an error.
+A cult that sings to the river at low tide. Its only member so far is its cantor, [[Brother Silt]].
 
 > [!gm]
 > They are right about the thing under the river. That is the worst part.

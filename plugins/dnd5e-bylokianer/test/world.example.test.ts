@@ -1,5 +1,6 @@
 // The example vault as the contract: every expectation here is a fact written in its notes.
-// If one fails because a note is wrong, fix the note (and Home.md), never the expectation.
+// If one fails because a note is wrong, fix the note (and Home.md), never the expectation. The
+// notes with broken frontmatter live in test/fixtures/vault (see fixture.ts).
 
 import { describe, expect, it } from 'vitest';
 
@@ -13,7 +14,7 @@ const ORDER = `${F}/Order of the Lantern`;
 const ARCHIVISTS = `${F}/The Archivists`;
 const COURT = `${F}/The Gutter Court`;
 const BENCH = `${COURT}/The Bench`;
-const CHOIR = `${F}/The Drowned Choir`;
+const HYMNAL = `${F}/The Garbled Hymnal`;
 const ISOLDE = `${ORDER}/Isolde Ferrant.md`;
 const CORVIN = `${ARCHIVISTS}/Corvin Marsh.md`;
 const ONDINE = `${ARCHIVISTS}/Ondine Vale.md`;
@@ -76,10 +77,10 @@ describe('the example vault — stances', () => {
     });
   });
 
-  it('reads what can be read from the Drowned Choir and nothing else', () => {
-    const choir = world.entities.get(CHOIR);
-    expect(choir?.power).toBe(5);
-    expect([...(choir?.relations ?? [])]).toEqual([
+  it('reads what can be read from the Garbled Hymnal and nothing else', () => {
+    const hymnal = world.entities.get(HYMNAL);
+    expect(hymnal?.power).toBe(5);
+    expect([...(hymnal?.relations ?? [])]).toEqual([
       [ARCHIVISTS, { value: 5 }],
       [COURT, { value: -1 }],
       ['?The Salt Kings', { value: -2 }],
@@ -98,15 +99,15 @@ describe('the example vault — entities and warnings', () => {
     expect(membersOf(UNAFFILIATED)).toEqual(['Brannoc Ironweld', 'Elder Wren']);
   });
 
-  it('counts 5 factions and 14 characters', () => {
+  it('counts 7 factions and 15 characters', () => {
     const all = [...world.entities.values()];
-    expect(all.filter((e) => e.kind === 'faction' && !e.pseudo)).toHaveLength(5);
-    expect(all.filter((e) => e.kind === 'character')).toHaveLength(14);
+    expect(all.filter((e) => e.kind === 'faction' && !e.pseudo)).toHaveLength(7);
+    expect(all.filter((e) => e.kind === 'character')).toHaveLength(15);
   });
 
-  it('warns only about the Drowned Choir and the two broken notes, once per problem', () => {
-    const choir = world.warnings.filter((w) => w.path === `${CHOIR}/factions.md`);
-    expect(choir.map((w) => w.code).sort()).toEqual([
+  it('warns only about the Garbled Hymnal and the two broken notes, once per problem', () => {
+    const hymnal = world.warnings.filter((w) => w.path === `${HYMNAL}/factions.md`);
+    expect(hymnal.map((w) => w.code).sort()).toEqual([
       'power-out-of-range',
       'self-relation',
       'structured-without-value',
@@ -114,9 +115,9 @@ describe('the example vault — entities and warnings', () => {
       'value-not-a-number',
       'value-out-of-range',
     ]);
-    expect(world.warnings.filter((w) => w.path !== `${CHOIR}/factions.md`)).toEqual([
-      { path: `${CHOIR}/Brother Silt.md`, code: 'broken-frontmatter' },
-      { path: 'Silverstadt/Quests/The Missing Bellringer.md', code: 'broken-frontmatter' },
+    expect(world.warnings.filter((w) => w.path !== `${HYMNAL}/factions.md`)).toEqual([
+      { path: `${HYMNAL}/Broken YAML – unclosed list.md`, code: 'broken-frontmatter' },
+      { path: 'Silverstadt/Quests/Broken YAML – unclosed quote.md', code: 'broken-frontmatter' },
     ]);
   });
 });

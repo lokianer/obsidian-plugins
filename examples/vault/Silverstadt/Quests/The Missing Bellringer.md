@@ -1,6 +1,6 @@
 ---
 type: quest
-title: "The Missing Bellringer
+title: "The Missing Bellringer"
 status: open
 giver: Hesta at The Cracked Bell
 reward: 200

@@ -1,9 +1,13 @@
 ---
 type: npc
+race: human
+class: cleric
 relations:
-  The Archivists: [3
+  The Archivists: 3
+tags:
+  - campaign/silverstadt/npcs
 ---
 
 # Brother Silt
 
-The Choir's cantor, and a **test note**: his frontmatter is broken on purpose (the list after *The Archivists* is never closed), so it does not parse. The plugin must name this note in its warnings instead of dropping him silently; until the YAML is fixed he is not a member of anything.
+The Choir's cantor, and so far its only member. He trusts the [[The Archivists/factions|Archivists]] more than his own choir does, because they let him read the old tide hymns.

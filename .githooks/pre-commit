@@ -1,8 +1,9 @@
 #!/bin/sh
 # Refuse a commit whose staged files are not formatted with Prettier (see CLAUDE.md).
-files=$(git diff --cached --name-only --diff-filter=ACMR)
-[ -z "$files" ] && exit 0
-echo "$files" | tr '\n' '\0' | xargs -0 pnpm exec prettier --check --ignore-unknown --log-level warn || {
+# -z keeps paths raw: without it git quotes non-ASCII names (an en dash) and Prettier misses them.
+[ -z "$(git diff --cached --name-only --diff-filter=ACMR)" ] && exit 0
+git diff --cached --name-only -z --diff-filter=ACMR |
+  xargs -0 pnpm exec prettier --check --ignore-unknown --log-level warn || {
   echo "pre-commit: run 'pnpm format' and stage the result." >&2
   exit 1
 }

@@ -16,7 +16,7 @@ describe('buildGraph', () => {
 
   it('draws factions, frames and ghosts', () => {
     const kinds = graph.nodes.map((n) => [n.kind, n.name]);
-    expect(kinds.filter(([k]) => k === 'faction')).toHaveLength(5);
+    expect(kinds.filter(([k]) => k === 'faction')).toHaveLength(7);
     expect(kinds).toContainEqual(['ghost', 'The Salt Kings']);
     const party = graph.nodes.find((n) => n.id === PARTY);
     expect(party?.kind === 'frame' && party.rows.map((r) => r.name)).toEqual([

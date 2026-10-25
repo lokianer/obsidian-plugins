@@ -1,4 +1,8 @@
 ---
+type: place
+tags:
+  - campaign/silverstadt
+  - place/landmark
 ---
 
 # Archive
