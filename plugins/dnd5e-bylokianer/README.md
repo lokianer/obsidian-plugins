@@ -335,7 +335,11 @@ encounter is. **Create encounter** writes the note into the encounter folder (se
 and opens it in the Battle tab. **Add to encounter** on a Monster Manual card adds the monster to an
 encounter note you pick.
 
-The XP is the sum of the defeated enemies' XP by challenge rating. The setting **Battle log** offers
+Experience points are optional: with the setting **Experience points** off (the default, for
+milestone levelling) the builder shows no XP — the tiles say how dangerous each difficulty is and
+the preview how much of the budget is used — and the log's end line carries none. Switched on, the
+builder shows the budgets and every monster's XP, and the end line sums the defeated enemies' XP by
+challenge rating. The setting **Battle log** offers
 each line in a notice with **Log → Session N** (the default), writes them automatically, or keeps
 them out.
 

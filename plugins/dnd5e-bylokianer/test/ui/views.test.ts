@@ -51,6 +51,7 @@ import type { BattleEvent } from '../../src/battle/log';
 import { MonsterBuilderModal } from '../../src/obsidian/monster-builder';
 import { EncounterBuilderModal } from '../../src/obsidian/encounter-builder';
 import type { EncounterDraft } from '../../src/battle/budget';
+import type { PartyMember } from '../../src/obsidian/battle-store';
 import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/monster-manual-view';
 import type { SrdMonster } from '../../src/monsters/model';
 import { ownMonster } from '../../src/monsters/own';
@@ -1654,11 +1655,12 @@ describe('battle tab', () => {
 describe('encounter builder', () => {
   function builder(
     lang: 'en' | 'de',
-    party = [
+    party: PartyMember[] = [
       { name: 'Dagny', level: 6 },
       { name: 'Ilex', level: 6 },
       { name: 'Orrin Quill', level: null },
     ],
+    experience = true,
   ) {
     const created: EncounterDraft[] = [];
     const modal = new EncounterBuilderModal(app, {
@@ -1666,6 +1668,7 @@ describe('encounter builder', () => {
       lang,
       monsters: SRD_MONSTERS,
       party,
+      experience,
       create: (draft) => {
         created.push(structuredClone(draft));
         return Promise.resolve();
@@ -1745,6 +1748,26 @@ describe('encounter builder', () => {
         monsters: [{ name: 'Owlbear', count: 1 }],
       },
     ]);
+  });
+
+  it('shows no experience points when the setting is off', () => {
+    const { el, type, tile, click } = builder('en', [{ name: 'Dagny', level: 6 }], false);
+    expect(texts(el, '.dnd5e-encounter-difficulty .dnd5e-npc-tile-line')).toEqual([
+      'Victory, maybe a scare or two',
+      'Could go badly',
+      'Could be lethal',
+    ]);
+    type('.dnd5e-npc-search', 'owlbe');
+    expect(tile('Owlbear')?.querySelector('.dnd5e-npc-tile-line')?.textContent).toBe(
+      'CR 3 · Monstrosity',
+    );
+    click(tile('Owlbear'));
+    expect(el.querySelector('.dnd5e-encounter-spent')?.textContent).toBe(
+      '70 % of the Moderate budget',
+    );
+    expect(el.querySelector('.dnd5e-encounter-left')).toBeNull();
+    expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Moderate difficulty');
+    expect(el.textContent).not.toContain('XP');
   });
 
   it('counts a party it is told about when the campaign has none, in German', () => {

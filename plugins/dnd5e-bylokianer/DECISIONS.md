@@ -595,3 +595,13 @@ rules' group multipliers, so the builder does the same.
 
 Left out: notes and written combatants in the builder (added in the note by hand), editing an
 existing encounter in the builder, the difficulty of a running fight in the Battle tab.
+
+## 2026-10-25 · Experience points are optional, off by default
+
+The maintainer: "Level up und EP sind immer optional". Asked and answered: a setting **Experience
+points**, **off** by default; off hides only the XP reward — the encounter builder still counts the
+SRD 5.2.1 budget internally and rates encounters Low / Moderate / High, showing the budget as a
+share and the difficulties by their danger instead of XP; the battle log's end line drops its XP.
+
+Left out: anything about levelling up (the plugin does not track character advancement); the XP
+in a stat block's challenge line stays, as it is part of the SRD stat block.

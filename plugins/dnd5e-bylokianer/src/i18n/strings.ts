@@ -192,6 +192,13 @@ export const en = {
   'settings.encounterFolder': 'Folder for encounter notes',
   'settings.encounterFolder.desc': 'In the campaign. The encounter builder writes its notes here.',
   'encounterBuilder.title': 'New encounter',
+  'settings.experience': 'Experience points',
+  'settings.experience.desc':
+    'Show XP: in the encounter builder and at the end of a fight in the battle log. Off for milestone levelling; the builder still rates encounters as Low, Moderate or High.',
+  'encounterBuilder.low.line': 'Victory, maybe a scare or two',
+  'encounterBuilder.moderate.line': 'Could go badly',
+  'encounterBuilder.high.line': 'Could be lethal',
+  'encounterBuilder.share': '{percent} % of the {difficulty} budget',
   'encounterBuilder.namePlaceholder': 'Ambush at the mill',
   'encounterBuilder.location': 'Place',
   'encounterBuilder.location.placeholder': '[[Lantern Bridge]]',
@@ -789,6 +796,13 @@ export const de: Record<StringKey, string> = {
   'settings.encounterFolder.desc':
     'In der Kampagne. Der Begegnungs-Builder legt seine Notizen hier an.',
   'encounterBuilder.title': 'Neue Begegnung',
+  'settings.experience': 'Erfahrungspunkte',
+  'settings.experience.desc':
+    'EP anzeigen: im Begegnungs-Builder und am Kampfende im Kampfprotokoll. Aus für Stufenaufstieg nach Meilensteinen; der Builder bewertet Begegnungen weiter als Niedrig, Mittel oder Hoch.',
+  'encounterBuilder.low.line': 'Sieg, vielleicht ein, zwei Schrecken',
+  'encounterBuilder.moderate.line': 'Kann schiefgehen',
+  'encounterBuilder.high.line': 'Kann tödlich sein',
+  'encounterBuilder.share': '{percent} % des Budgets für {difficulty}',
   'encounterBuilder.namePlaceholder': 'Hinterhalt an der Mühle',
   'encounterBuilder.location': 'Ort',
   'encounterBuilder.location.placeholder': '[[Lantern Bridge]]',

@@ -37,8 +37,8 @@ export function battleEvents(
   return events;
 }
 
-/** The line for an event; `encounter` is the encounter note's link. */
-export function battleLine(event: BattleEvent, encounter: string): string {
+/** The line for an event; `encounter` is the encounter note's link; XP only when `withXp`. */
+export function battleLine(event: BattleEvent, encounter: string, withXp = true): string {
   switch (event.kind) {
     case 'begin':
       return `Combat begins: ${encounter}`;
@@ -50,7 +50,7 @@ export function battleLine(event: BattleEvent, encounter: string): string {
       return `Round ${event.round}: ${event.id} dies`;
     case 'end': {
       const rounds = `${event.rounds} ${event.rounds === 1 ? 'round' : 'rounds'}`;
-      const xp = event.xp > 0 ? ` — ${event.xp.toLocaleString('en-US')} XP` : '';
+      const xp = withXp && event.xp > 0 ? ` — ${event.xp.toLocaleString('en-US')} XP` : '';
       return `Combat ends after ${rounds}${xp}`;
     }
   }

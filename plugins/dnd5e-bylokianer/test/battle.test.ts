@@ -344,6 +344,10 @@ describe('a fight changing mid-way (B2)', () => {
       'Combat ends after 5 rounds — 1,400 XP',
     );
     expect(battleLine({ kind: 'end', rounds: 1, xp: 0 }, link)).toBe('Combat ends after 1 round');
+    // Without experience points (milestone play) the end line has none.
+    expect(battleLine({ kind: 'end', rounds: 5, xp: 1400 }, link, false)).toBe(
+      'Combat ends after 5 rounds',
+    );
   });
 
   it('restores combatants added mid-fight from the extras, by their base name', () => {

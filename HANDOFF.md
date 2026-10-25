@@ -315,6 +315,9 @@ fields)
 59. Create encounter: `Silverstadt/Encounters/<name>.md` with `type: encounter`, `difficulty`,
     `location` (if given), `combatants: - monster: Owlbear / count: 2`; the Battle tab opens on it
     and Start runs it.
+    60a. Settings → **Experience points** is off at first: the builder's tiles read "Victory, maybe a
+    scare or two" / "Could go badly" / "Could be lethal", the preview "70 % of the Moderate
+    budget", no XP anywhere; the log's end line has no XP. Switched on: points 57–58 as written.
 60. Monster Manual → a monster → **Add to encounter** → pick the ambush: `- monster: <name>` at the
     end of its `combatants`; again → `count: 2`. Revert the example vault afterwards.
 
@@ -323,7 +326,8 @@ fields)
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session", "No non-SRD
 monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
-builder uses the SRD 5.2.1's XP budget" (all 2026-10-25).
+builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default" (all
+2026-10-25).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -357,5 +361,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 379 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 380 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

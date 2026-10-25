@@ -1,7 +1,8 @@
 // The encounter builder, built like the New NPC dialog: on the left the encounter's name and
 // place, the campaign's party (chips, all on), the difficulty as three tiles with their XP budget,
 // the Monster Manual's monsters as tiles with a search and the chosen ones as rows with counts; on
-// the right the budget filling up live. It hands the draft over to be written as an encounter
+// the right the budget filling up live. Experience points are optional (the setting): without
+// them the budget still rates the encounter but shows as Low / Moderate / High only. It hands the draft over to be written as an encounter
 // note. Also the picker that chooses an encounter note for Add to encounter.
 
 import { type App, FuzzySuggestModal, Modal, Notice, setIcon, Setting } from 'obsidian';
@@ -26,6 +27,8 @@ export interface EncounterBuilderDeps {
   lang: Lang;
   monsters: readonly SrdMonster[];
   party: readonly PartyMember[];
+  /** Show experience points (the setting); off, the budget shows only as a difficulty. */
+  experience: boolean;
   /** Writes the encounter; the dialog closes once it is written. */
   create: (draft: EncounterDraft) => Promise<void>;
 }
@@ -135,6 +138,11 @@ export class EncounterBuilderModal extends Modal {
     });
   }
 
+  /** A line with the XP after it, when experience points are shown. */
+  private withXp(line: string, n: number): string {
+    return this.deps.experience ? `${line} · ${this.xp(n)}` : line;
+  }
+
   private changed(): void {
     this.drawDifficulty();
     this.drawPicks();
@@ -196,7 +204,10 @@ export class EncounterBuilderModal extends Modal {
       setIcon(tile.createDiv({ cls: 'dnd5e-npc-tile-icon' }), ICONS[d]);
       const text = tile.createDiv({ cls: 'dnd5e-npc-tile-text' });
       text.createDiv({ cls: 'dnd5e-npc-tile-name', text: t(`encounterBuilder.${d}`) });
-      text.createDiv({ cls: 'dnd5e-npc-tile-line', text: this.xp(budget(levels, d)) });
+      text.createDiv({
+        cls: 'dnd5e-npc-tile-line',
+        text: this.deps.experience ? this.xp(budget(levels, d)) : t(`encounterBuilder.${d}.line`),
+      });
       tile.addEventListener('click', () => {
         this.difficulty = d;
         this.changed();
@@ -217,7 +228,7 @@ export class EncounterBuilderModal extends Modal {
       text.createDiv({ cls: 'dnd5e-npc-tile-name', text: monsterName(m, lang) });
       text.createDiv({
         cls: 'dnd5e-npc-tile-line',
-        text: `${t('monsters.cr', { cr: m.cr })} · ${this.xp(experience(m.cr) ?? 0)} · ${typeLabel(m.type, lang)}`,
+        text: `${this.withXp(t('monsters.cr', { cr: m.cr }), experience(m.cr) ?? 0)} · ${typeLabel(m.type, lang)}`,
       });
       tile.addEventListener('click', () => this.add(m));
     }
@@ -245,7 +256,10 @@ export class EncounterBuilderModal extends Modal {
       fields.createDiv({ cls: 'dnd5e-encounter-pick-name', text: monsterName(p.monster, lang) });
       fields.createDiv({
         cls: 'dnd5e-encounter-pick-line',
-        text: `${t('monsters.cr', { cr: p.monster.cr })} · ${this.xp((experience(p.monster.cr) ?? 0) * p.count)}`,
+        text: this.withXp(
+          t('monsters.cr', { cr: p.monster.cr }),
+          (experience(p.monster.cr) ?? 0) * p.count,
+        ),
       });
       const stepper = row.createDiv({ cls: 'dnd5e-encounter-stepper' });
       const step = (icon: string, label: string, by: number) => {
@@ -289,26 +303,27 @@ export class EncounterBuilderModal extends Modal {
     const spent = this.spent();
     const total = budget(levels, this.difficulty);
     const meter = card.createDiv({ cls: 'dnd5e-encounter-meter' });
+    const ratio = total > 0 ? spent / total : 0;
+    const difficulty = t(`encounterBuilder.${this.difficulty}`);
     meter.createDiv({
       cls: 'dnd5e-encounter-spent',
-      text: t('encounterBuilder.spent', {
-        spent: this.xp(spent),
-        budget: this.xp(total),
-        difficulty: t(`encounterBuilder.${this.difficulty}`),
-      }),
+      text: this.deps.experience
+        ? t('encounterBuilder.spent', { spent: this.xp(spent), budget: this.xp(total), difficulty })
+        : t('encounterBuilder.share', { percent: Math.round(ratio * 100), difficulty }),
     });
     const bar = meter.createDiv({ cls: 'dnd5e-encounter-bar' });
     const fill = bar.createDiv({ cls: 'dnd5e-encounter-fill' });
-    const ratio = total > 0 ? spent / total : 0;
     fill.setCssProps({ '--dnd5e-fill': `${Math.round(Math.min(1, ratio) * 100)}%` });
     fill.toggleClass('is-over', ratio > 1);
-    meter.createDiv({
-      cls: 'dnd5e-encounter-left',
-      text:
-        spent > total
-          ? t('encounterBuilder.over', { xp: this.xp(spent - total) })
-          : t('encounterBuilder.left', { xp: this.xp(total - spent) }),
-    });
+    if (this.deps.experience) {
+      meter.createDiv({
+        cls: 'dnd5e-encounter-left',
+        text:
+          spent > total
+            ? t('encounterBuilder.over', { xp: this.xp(spent - total) })
+            : t('encounterBuilder.left', { xp: this.xp(total - spent) }),
+      });
+    }
     const rated = rating(spent, levels);
     const chip = card.createDiv({
       cls: ['dnd5e-encounter-rating', `is-${rated}`],
@@ -321,7 +336,10 @@ export class EncounterBuilderModal extends Modal {
     const list = card.createEl('ul', { cls: 'dnd5e-encounter-lines' });
     for (const p of this.picks) {
       list.createEl('li', {
-        text: `${p.count} × ${monsterName(p.monster, lang)} — ${this.xp((experience(p.monster.cr) ?? 0) * p.count)}`,
+        text: this.withXp(
+          `${p.count} × ${monsterName(p.monster, lang)}`,
+          (experience(p.monster.cr) ?? 0) * p.count,
+        ),
       });
     }
   }

@@ -8,6 +8,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Experience points are optional** (setting **Experience points**, off by default): off, the
+  encounter builder shows no XP — the difficulty tiles describe the danger, the preview fills the
+  budget as a percentage and still rates the encounter — and the battle log's end line carries no
+  XP. Milestone levelling needs nothing from the plugin.
+
 - **Encounter builder** (battle tracker, phase B3): **New encounter** (command, or + in the Battle
   tab) opens a builder in the New NPC dialog's style — the campaign's party with their levels as
   chips, Low / Moderate / High with the XP budget of the SRD 5.2.1, the Monster Manual's monsters

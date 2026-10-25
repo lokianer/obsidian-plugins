@@ -17,6 +17,8 @@ import type { T } from '../i18n/strings';
 export interface Settings {
   /** Show Obsidian's Properties block on faction and character notes, beside the card. */
   showProperties: boolean;
+  /** Experience points shown (encounter XP, the XP in the battle log); off for milestone play. */
+  experience: boolean;
   /** The GM's names for the steps −5 … +5 (index 0 … 10); empty means the default name. */
   stepNames: string[];
   /** The world view's last mode: graph or matrix. */
@@ -70,6 +72,7 @@ const BATTLE_LOGS: readonly BattleLog[] = ['ask', 'auto', 'off'];
 
 export const DEFAULT_SETTINGS: Settings = {
   showProperties: false,
+  experience: false,
   stepNames: [],
   worldMode: 'graph',
   thresholds: DEFAULT_THRESHOLDS,
@@ -158,6 +161,11 @@ export class SettingsTab extends PluginSettingTab {
         control: { type: 'toggle', key: 'showProperties', defaultValue: false },
       },
       {
+        name: this.t('settings.experience'),
+        desc: this.t('settings.experience.desc'),
+        control: { type: 'toggle', key: 'experience', defaultValue: false },
+      },
+      {
         name: this.t('settings.tableLanguage'),
         desc: this.t('settings.tableLanguage.desc'),
         control: {
@@ -227,12 +235,16 @@ export class SettingsTab extends PluginSettingTab {
     if (key === 'tableLanguage') return this.settings().tableLanguage;
     if (key === 'deckSize') return String(this.settings().deckSize);
     if (key === 'battleLog') return this.settings().battleLog;
+    if (key === 'experience') return this.settings().experience;
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
 
   async setControlValue(key: string, value: unknown): Promise<void> {
     if (key === 'showProperties' && typeof value === 'boolean') {
       await this.save({ ...this.settings(), showProperties: value });
+    }
+    if (key === 'experience' && typeof value === 'boolean') {
+      await this.save({ ...this.settings(), experience: value });
     }
     if (isPath(key) && typeof value === 'string') await this.setPath(key, value);
     if (key === 'tableLanguage') await this.setLanguage(value);
@@ -290,6 +302,14 @@ export class SettingsTab extends PluginSettingTab {
         toggle
           .setValue(this.settings().showProperties)
           .onChange((value) => this.save({ ...this.settings(), showProperties: value })),
+      );
+    new Setting(containerEl)
+      .setName(t('settings.experience'))
+      .setDesc(t('settings.experience.desc'))
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.settings().experience)
+          .onChange((value) => this.save({ ...this.settings(), experience: value })),
       );
     new Setting(containerEl)
       .setName(t('settings.tableLanguage'))

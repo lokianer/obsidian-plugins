@@ -440,7 +440,9 @@ export default class Dnd5ePlugin extends Plugin {
             const file = this.app.vault.getFileByPath(path);
             if (file === null) return;
             const link = this.app.fileManager.generateMarkdownLink(file, '');
-            for (const event of events) sessionLog.offerLine(battleLine(event, link));
+            for (const event of events) {
+              sessionLog.offerLine(battleLine(event, link, this.options.experience));
+            }
           },
         }),
     );
@@ -462,6 +464,7 @@ export default class Dnd5ePlugin extends Plugin {
         lang: tableLang(this.options, getLanguage()),
         monsters: [...SRD_MONSTERS, ...ownMonsters.list],
         party: await battleStore.party(),
+        experience: this.options.experience,
         create: async (draft) => {
           const path = await newNote(
             this.app,
