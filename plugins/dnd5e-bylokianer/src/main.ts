@@ -200,6 +200,11 @@ export default class Dnd5ePlugin extends Plugin {
       callback: () => void npcs.newArchetype(),
     });
     this.addCommand({
+      id: 'new-race',
+      name: t('command.newRace'),
+      callback: () => void npcs.newRace(),
+    });
+    this.addCommand({
       id: 'add-statblock',
       name: t('command.addStatblock'),
       callback: () => void npcs.addStatblock(),

@@ -13,11 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder phase 4 (races and a richer dialog)** — asked for by the maintainer;
-spec §10 written, phase 4a plan (races, own races, bilingual larger tables, new fields)
-**awaits approval**: `docs/superpowers/plans/2026-10-25-npc-phase-4a-races-tables.md`; 4b (live
-preview, roll everything with locks, tiles) follows. Phases 2 and 3 still wait for the check in
-Obsidian. Nothing is published for now.
+**dnd5e-byLokianer · NPC builder** — phases 2, 3 and 4a are built and wait for the maintainer's check
+in Obsidian (`HANDOFF.md`). Next: the phase 4b plan (live preview, roll everything with locks,
+tiles) and a **spellbook** the maintainer asked for (every regular 5e spell and cantrip to look up;
+only SRD 5.1 spells may ship) — both need a plan and a review stop. Nothing is published for now.
 
 ---
 
@@ -100,11 +99,18 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
       `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`
 - [ ] **Phase 3 — Editing and template builder** ← _built 2026-10-25, awaiting the check in
       Obsidian_: editing in the rendered block, New archetype.
-- [ ] **Phase 4a — Races and richer tables** ← _plan written, awaiting approval_: SRD races and own
+- [ ] **Phase 4a — Races and richer tables** ← _built 2026-10-25, awaiting the check in Obsidian_: SRD races and own
       `type: race` notes into the stat block and the dice; English and German tables (≥ 50 each);
       occupation, age, build, voice, ideal, bond, flaw, secret, hook
 - [ ] **Phase 4b — A fancier dialog**: live preview card, roll everything with locks, race and
       archetype tiles Plan `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
+
+### Spellbook (asked for 2026-10-25, not designed yet)
+
+A spellbook to look up every regular D&D 5e spell, cantrips included. Only the SRD 5.1's spells
+(about 320) are free to ship (CC-BY-4.0); the rest of the Player's Handbook is not. Questions for the
+maintainer before a spec: where it lives (its own tab, a sidebar, notes), filters, links from stat
+blocks' spellcasting, German names.
 
 ### Module 3 — Battle tracker
 

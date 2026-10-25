@@ -21,10 +21,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 1. The maintainer checks NPC builder phases 2 and 3 in Obsidian (lists under "Half-finished"). Fix
    what turns up.
-2. The maintainer asked for phase 4 (races, German and more dice texts, a fancier dialog). Spec §10
-   and the phase 4a plan are written and await approval
-   (`docs/superpowers/plans/2026-10-25-npc-phase-4a-races-tables.md`); 4b follows. Build only after
-   "passt".
+2. Phase 4a (races, own races, German and larger dice tables, new fields) is built and waits for
+   the check (points 11–14 below). Then the phase 4b plan (live preview, roll everything with locks,
+   tiles).
+3. The maintainer asked for a **spellbook** with every regular 5e spell to look up. Only SRD 5.1
+   spells may ship; clarify the shape with them (ROADMAP "Spellbook"), then spec, plan, review stop.
 
 ## State of the working tree
 
@@ -77,6 +78,13 @@ From the maintainer's check in Obsidian, in order:
   (rendering), `stat-summaries.ts` (the card's `AC · HP · CR`, read from the note's text), the
   command Convert stat block, example vault notes on the new block (Ondine kept on `statblock`),
   README attribution. Seen in Chromium at desktop and phone width.
+- A bug the maintainer found: links in the card's other fields (`leader: "[[Isolde Ferrant]]"`)
+  were plain text; fixed in `9f6287d` (rendered and opened via openLinkText).
+- Phase 4 asked for (races, German and more dice texts, fancier dialog); spec §10, plan 4a approved
+  ("ja") and built: `races.ts`, `srd-races.ts`, `text-tables.ts` (12 tables × ≥ 50 entries in
+  English and German), `tables.ts` by language, new fields in `note.ts`, the dialog's race field
+  and race-aware dice, the generic New archetype / New race dialog, settings for races folder and
+  dice language, `Templates/Races/Tideborn.md`.
 - Phase 3 plan written after the maintainer said "mach weiter" (they test phase 2 later); approved
   with its deviation ("passt") and built: `src/npc/block-edit.ts` (scalars via the frontmatter line
   editor on the block's lines, one ability, entries set/add/remove), `statblock-edits.ts` (writes,
@@ -125,6 +133,17 @@ Bench/<name>.md` opens: frontmatter `type: npc`, race, alignment, `archetype: Gu
 10. **New archetype**: name "Archive Spy", start from Spy → `Templates/Archetypes/Archive Spy.md`
     opens with the block unfolded and editable; it is offered in New NPC's archetype search.
 
+**Phase 4a — races and dice texts**
+
+11. New NPC: type "Zwerg" (or pick Dwarf) as race, roll name (dwarf names), appearance (beard,
+    eyes, skin + a detail, in German with German Obsidian), age (50–300); create with Guard → the
+    stat block shows speed 25 ft., darkvision 60 ft., Dwarvish, poison resistance, Dwarven
+    Resilience …; frontmatter `race: Dwarf`.
+12. The new fields (occupation, age, build, voice, ideal, bond, flaw, secret, hook) roll and land
+    in the note (labels "Ideal:", "Makel:" …; Secrets as its own section).
+13. Own race: pick Tideborn → its traits and names; **New race** from Elf writes a race note.
+14. Settings: language of the dice texts (As Obsidian / English / German), races folder.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).
@@ -161,5 +180,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 247 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 258 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

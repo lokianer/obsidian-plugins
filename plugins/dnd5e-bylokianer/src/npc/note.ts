@@ -7,27 +7,53 @@ import type { FactionWorld } from '../factions/model';
 import { applyOp } from '../yaml/edit';
 import { frontmatterRange, splitLines, tokenText, topLevelKeys } from '../yaml/lines';
 import { type Archetype, withName } from './archetypes';
+import { applyRace, type Race } from './races';
 import { BLOCK, findStatblocks } from './statblock';
 
-export interface NpcChoices {
+/** The dialog's text fields that become lines in the note. */
+export type LineField =
+  | 'appearance'
+  | 'build'
+  | 'manner'
+  | 'want'
+  | 'ideal'
+  | 'bond'
+  | 'voice'
+  | 'quirk'
+  | 'flaw'
+  | 'secret'
+  | 'hook';
+
+export interface NpcChoices extends Record<LineField, string> {
   name: string;
+  /** The race as written into `race:` (a model's English name, or what the GM typed). */
   race: string;
+  /** The race model whose traits go into the stat block, when one was picked. */
+  raceModel: Race | null;
   class: string;
   alignment: string;
+  occupation: string;
+  age: string;
   archetype: Archetype | null;
-  appearance: string;
-  manner: string;
-  want: string;
-  quirk: string;
 }
 
-/** The headings the personality lines go under (the example template's), by field. */
-const SECTIONS = {
+/** The headings the lines go under (the example template's, plus Secrets), by field. */
+const SECTIONS: Record<LineField, string> = {
   appearance: 'Appearance and manner',
+  build: 'Appearance and manner',
   manner: 'Appearance and manner',
   want: 'What they want',
+  ideal: 'What they want',
+  bond: 'What they want',
+  voice: 'Voice notes',
   quirk: 'Voice notes',
-} as const;
+  flaw: 'Voice notes',
+  secret: 'Secrets',
+  hook: 'Secrets',
+};
+
+/** Fields whose line starts with a label in the note's language (`Ideal:`, `Makel:` …). */
+export type Labels = Record<'ideal' | 'bond' | 'flaw' | 'hook', string>;
 
 const STATS = 'Stats';
 
@@ -48,8 +74,13 @@ const MINIMAL = [
   '',
 ].join('\n');
 
+/** A whole number as a number (`age: 47`), anything else as text. */
+function typedValue(value: string): string | number {
+  return /^\d+$/.test(value) ? Number(value) : value;
+}
+
 /** Sets a top-level frontmatter key to `value`, whatever it held; the note is left as it was on a refusal. */
-function setKey(text: string, key: string, value: string): string {
+function setKey(text: string, key: string, value: string | number): string {
   const { lines } = splitLines(text);
   const range = frontmatterRange(lines);
   const current =
@@ -99,23 +130,31 @@ function fenced(yaml: string): string[] {
  * chosen race, class, alignment and archetype in the frontmatter, the personality lines under their
  * headings, and the archetype's stat block in place of the template's (or under `## Stats`).
  */
-export function npcNote(template: string | null, choices: NpcChoices): string {
+export function npcNote(
+  template: string | null,
+  choices: NpcChoices,
+  labels: Labels,
+  parse: (yaml: string) => unknown,
+): string {
   const eol = template?.includes('\r\n') === true ? '\r\n' : '\n';
   let text = (template ?? MINIMAL).replace(/\{\{\s*title\s*\}\}/g, choices.name);
   text = setKey(text, 'type', 'npc');
-  for (const key of ['race', 'class', 'alignment'] as const) {
-    if (choices[key].trim() !== '') text = setKey(text, key, choices[key].trim());
+  for (const key of ['race', 'class', 'alignment', 'occupation', 'age'] as const) {
+    if (choices[key].trim() !== '') text = setKey(text, key, typedValue(choices[key].trim()));
   }
   if (choices.archetype !== null) text = setKey(text, 'archetype', choices.archetype.name);
 
   const lines = text.split(/\r?\n/);
-  const personality = (['appearance', 'manner', 'want', 'quirk'] as const).filter(
-    (field) => choices[field].trim() !== '',
-  );
-  for (const field of personality) addUnder(lines, SECTIONS[field], [`- ${choices[field].trim()}`]);
+  for (const field of Object.keys(SECTIONS) as LineField[]) {
+    const value = choices[field].trim();
+    if (value === '') continue;
+    const label = field in labels ? `${labels[field as keyof Labels]}: ` : '';
+    addUnder(lines, SECTIONS[field], [`- ${label}${value}`]);
+  }
 
   if (choices.archetype !== null) {
-    const yaml = withName(choices.archetype.yaml, choices.name);
+    const named = withName(choices.archetype.yaml, choices.name);
+    const yaml = choices.raceModel === null ? named : applyRace(named, choices.raceModel, parse);
     const block = findStatblocks(lines.join('\n'))[0];
     if (block === undefined) addUnder(lines, STATS, fenced(yaml));
     else lines.splice(block.open, block.close - block.open + 1, ...fenced(yaml));

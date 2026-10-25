@@ -291,3 +291,25 @@ Calls made while building:
 
 Left out: editing saves and skills, spells, and Fantasy Statblocks' `statblock` blocks (convert
 first).
+
+## 2026-10-25 · NPC builder phase 4a: races and German dice texts
+
+Approved ("ja"), including an exception the maintainer confirmed: the rolled texts land in German
+in the note when Obsidian (or the setting) is German, although vault notes are otherwise English;
+keys, file names and the headings the plugin reads stay English.
+
+Calls made while building:
+
+- A race never changes ability scores (NPC stat blocks already include them). It sets size, the
+  walking speed and `subtype`, puts darkvision in front of the senses, merges languages (an "any …
+  language" line is replaced) and resistances, appends its traits once.
+- Dragonborn default to red ancestry (fire); the trait says to change it for another colour.
+- Race names in the note are English (`race: Dwarf`), the dialog shows German labels; typing a race
+  that is not a model writes it as typed, with no traits.
+- New lines go under the template's headings: build with appearance and manner, ideal and bond
+  under "What they want" (labelled), voice and flaw under "Voice notes", secret and hook under a new
+  "Secrets" heading; occupation and age are frontmatter keys.
+- An own race without a `## Traits` list is not offered (named in a notice); missing name lists or
+  age fall back to the Human race's.
+
+Left out (phase 4b): the live preview, roll everything with locks, tiles.

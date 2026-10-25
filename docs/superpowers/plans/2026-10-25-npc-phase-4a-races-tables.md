@@ -1,6 +1,6 @@
 # NPC Builder Phase 4a — Races and Richer Tables — Implementation Plan
 
-**Status:** draft, awaiting the maintainer's approval.
+**Status:** approved ("ja", 2026-10-25) and built; tasks 1–5 done, the check in Obsidian is open.
 
 **Goal:** A New NPC can have a race — one of the nine SRD races or an own `type: race` note — that
 adds its traits to the stat block and gives the name and appearance dice race-fitting lists. The

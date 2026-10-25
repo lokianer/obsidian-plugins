@@ -9,6 +9,7 @@ import {
 } from 'obsidian';
 
 import type { Point } from '../factions/layout';
+import type { Lang } from '../npc/races';
 import { STEPS, signed, stepName } from '../factions/steps';
 import { DEFAULT_THRESHOLDS, type Thresholds } from '../factions/tension';
 import type { T } from '../i18n/strings';
@@ -38,6 +39,10 @@ export interface Settings {
   tablesFolder: string;
   /** The folder in the campaign that takes NPCs of no faction. */
   npcFolder: string;
+  /** Where the GM's own race notes live. */
+  racesFolder: string;
+  /** The language of the dice texts: Obsidian's (auto), English or German. */
+  tableLanguage: 'auto' | Lang;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -53,17 +58,27 @@ export const DEFAULT_SETTINGS: Settings = {
   archetypeFolder: 'Templates/Archetypes',
   tablesFolder: 'Templates/Tables',
   npcFolder: 'NPCs',
+  racesFolder: 'Templates/Races',
+  tableLanguage: 'auto',
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */
-type PathKey = 'sessionTemplate' | 'npcTemplate' | 'archetypeFolder' | 'tablesFolder' | 'npcFolder';
+type PathKey =
+  | 'sessionTemplate'
+  | 'npcTemplate'
+  | 'archetypeFolder'
+  | 'racesFolder'
+  | 'tablesFolder'
+  | 'npcFolder';
 const PATHS: readonly PathKey[] = [
   'sessionTemplate',
   'npcTemplate',
   'archetypeFolder',
+  'racesFolder',
   'tablesFolder',
   'npcFolder',
 ];
+const LANGS = ['auto', 'en', 'de'] as const;
 const isPath = (key: string): key is PathKey => (PATHS as readonly string[]).includes(key);
 
 const STEP_KEY = 'step:';
@@ -99,6 +114,15 @@ export class SettingsTab extends PluginSettingTab {
         name: this.t('settings.showProperties'),
         desc: this.t('settings.showProperties.desc'),
         control: { type: 'toggle', key: 'showProperties', defaultValue: false },
+      },
+      {
+        name: this.t('settings.tableLanguage'),
+        desc: this.t('settings.tableLanguage.desc'),
+        control: {
+          type: 'dropdown',
+          key: 'tableLanguage',
+          options: Object.fromEntries(LANGS.map((l) => [l, this.t(`settings.tableLanguage.${l}`)])),
+        },
       },
       ...PATHS.map((key) => ({
         name: this.t(`settings.${key}`),
@@ -138,6 +162,7 @@ export class SettingsTab extends PluginSettingTab {
       return this.settings().thresholds[key.slice(THRESHOLD_KEY.length) as keyof Thresholds];
     }
     if (isPath(key)) return this.settings()[key];
+    if (key === 'tableLanguage') return this.settings().tableLanguage;
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
 
@@ -146,12 +171,18 @@ export class SettingsTab extends PluginSettingTab {
       await this.save({ ...this.settings(), showProperties: value });
     }
     if (isPath(key) && typeof value === 'string') await this.setPath(key, value);
+    if (key === 'tableLanguage') await this.setLanguage(value);
     if (key.startsWith(STEP_KEY) && typeof value === 'string') {
       await this.setStepName(Number(key.slice(STEP_KEY.length)), value);
     }
     if (key.startsWith(THRESHOLD_KEY)) {
       await this.setThreshold(key.slice(THRESHOLD_KEY.length) as keyof Thresholds, value);
     }
+  }
+
+  private async setLanguage(value: unknown): Promise<void> {
+    const lang = LANGS.find((l) => l === value);
+    if (lang !== undefined) await this.save({ ...this.settings(), tableLanguage: lang });
   }
 
   private async setPath(key: PathKey, value: string): Promise<void> {
@@ -183,6 +214,15 @@ export class SettingsTab extends PluginSettingTab {
           .setValue(this.settings().showProperties)
           .onChange((value) => this.save({ ...this.settings(), showProperties: value })),
       );
+    new Setting(containerEl)
+      .setName(t('settings.tableLanguage'))
+      .setDesc(t('settings.tableLanguage.desc'))
+      .addDropdown((dropdown) => {
+        for (const l of LANGS) dropdown.addOption(l, t(`settings.tableLanguage.${l}`));
+        dropdown
+          .setValue(this.settings().tableLanguage)
+          .onChange((value) => this.setLanguage(value));
+      });
     for (const key of PATHS) {
       new Setting(containerEl)
         .setName(t(`settings.${key}`))

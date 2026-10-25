@@ -25,6 +25,9 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Stat block view | [[Isolde Ferrant]], [[Aldric Thane]], [[Mira Voss]] | `dnd5e-statblock` blocks render as 5e stat blocks (Mira's has an unknown key, `ledger_pages`, which is kept and ignored); [[Sergeant Pell]] has none yet |
 | Convert stat block | [[Ondine Vale]] | Still a Fantasy Statblocks `statblock` block: **Convert stat block** turns it into `dnd5e-statblock` and back |
 | New NPC | any faction card (**New NPC** button) or the command | Writes `Templates/NPC.md` into the faction's folder (Party → `Silverstadt/Party`, Unaffiliated → `Silverstadt/NPCs`); dice for name and personality; archetype from the SRD or [[Lantern Warden]] |
+| Race in New NPC | the race field of **New NPC** | Dwarf, Elf, … (SRD) write their traits into the stat block (speed, darkvision, languages, resistances, traits) and steer the name, looks and age dice; free text is just written as `race:` |
+| Own race | [[Tideborn]] | `type: race` note in `Templates/Races/` with traits and name lists; offered first; **New race** writes one from a base race |
+| Dice texts in German | settings → language of the dice texts | German Obsidian (or the setting) rolls German texts; keys and headings stay English; every table ≥ 50 entries |
 | Own archetype | [[Lantern Warden]] | `type: archetype` note in `Templates/Archetypes/`, listed first in the archetype search |
 | Dice table override | [[NPC quirks]] | Replaces the default quirks table; the other tables stay the plugin's |
 | Add stat block | [[Sergeant Pell]] | Has no stat block: **Add stat block** inserts one under a new `## Stats`; a second run refuses |

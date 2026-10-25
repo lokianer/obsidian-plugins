@@ -87,6 +87,15 @@ Archetypes are the 21 SRD NPCs and your own: notes with `type: archetype` and a 
 replaces that dice table. **Add stat block** gives the open note a stat block from an archetype,
 under a new `## Stats` heading; it leaves a note that has one alone.
 
+**Races and dice texts.** The race field offers the nine SRD races (Dwarf, Elf, Halfling, Human,
+Dragonborn, Gnome, Half-Elf, Half-Orc, Tiefling) and your own `type: race` notes in
+`Templates/Races/` — **New race** writes one from a base race. A picked race writes its traits into
+the stat block (size, speed, darkvision, languages, resistances, racial traits; never ability scores)
+and makes the name, looks and age dice roll to fit. The dice texts — appearance, build, manner,
+voice, occupation, wants, ideal, bond, flaw, quirk, secret, hook, each at least fifty entries — come
+in English or German, following Obsidian's language unless the setting pins one. Keys and headings
+in the note stay English.
+
 **Editing a stat block.** Opened, a stat block is editable where it stands: click the name, AC, HP,
 speed, senses, languages, CR or an ability score, type, Enter writes (Esc cancels). Traits, actions,
 bonus actions and reactions have a pencil (name and text) and × (with Undo) on hover, and **+ Add**

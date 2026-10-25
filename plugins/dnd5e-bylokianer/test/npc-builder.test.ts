@@ -14,22 +14,36 @@ import {
 } from '../src/npc/note';
 import { SRD_NPCS } from '../src/npc/srd';
 import { findStatblocks, parseStatblock } from '../src/npc/statblock';
-import { DEFAULT_TABLES, pick, TABLE_NAMES, tableFromNote, tableNote } from '../src/npc/tables';
+import { pick, TABLE_NAMES, tableFromNote, tableNote, tablesFor } from '../src/npc/tables';
+import { TEXT_TABLES } from '../src/npc/text-tables';
+import { SRD_RACES } from '../src/npc/srd-races';
 import { loadExampleVault, readExampleNote } from './fixture';
 
 const guard = SRD_NPCS.find((a) => a.name === 'Guard') as Archetype;
 const choices = (over: Partial<NpcChoices> = {}): NpcChoices => ({
   name: 'Wenna Tidewell',
   race: 'human',
+  raceModel: null,
   class: '',
   alignment: 'neutral',
+  occupation: '',
+  age: '',
   archetype: guard,
   appearance: 'Freckled, sunburnt, smells of tar',
+  build: '',
   manner: '',
+  voice: '',
   want: 'To see the bells under the river',
+  ideal: '',
+  bond: '',
+  flaw: '',
   quirk: 'Feeds the gulls and names them',
+  secret: '',
+  hook: '',
   ...over,
 });
+const labels = { ideal: 'Ideal', bond: 'Bond', flaw: 'Flaw', hook: 'Hook' };
+const note = (template: string | null, c: NpcChoices) => npcNote(template, c, labels, parse);
 
 describe('archetypes', () => {
   it('reads the GM’s own archetype from a note, or says why not', () => {
@@ -80,8 +94,15 @@ describe('archetypes', () => {
 });
 
 describe('tables', () => {
-  it('has about thirty or twenty entries per default table', () => {
-    for (const name of TABLE_NAMES) expect(DEFAULT_TABLES[name].length).toBeGreaterThanOrEqual(20);
+  it('has at least fifty entries per table in English and German, none twice', () => {
+    for (const lang of ['en', 'de'] as const) {
+      const tables = tablesFor(lang);
+      for (const name of TABLE_NAMES) {
+        expect(tables[name].length, `${lang} ${name}`).toBeGreaterThanOrEqual(50);
+        expect(new Set(tables[name]).size, `${lang} ${name}`).toBe(tables[name].length);
+      }
+    }
+    expect(tablesFor('de').ideal[0]).toBe(TEXT_TABLES.ideal[0]?.[1]);
     expect(tableNote('first-names')).toBe('NPC first names.md');
   });
 
@@ -100,7 +121,7 @@ describe('npcNote', () => {
   const template = readExampleNote('Templates/NPC.md');
 
   it('fills the example template: title, frontmatter, personality, stat block', () => {
-    const text = npcNote(template, choices());
+    const text = note(template, choices());
     expect(text).toContain('# Wenna Tidewell');
     expect(text).not.toContain('{{title}}');
     const head = text.slice(0, text.indexOf('\n---', 3));
@@ -118,14 +139,51 @@ describe('npcNote', () => {
     expect([block.name, block.ac, block.hp, block.cr]).toEqual(['Wenna Tidewell', 16, 11, '1/8']);
   });
 
+  it('writes the new fields with labels and applies the race to the stat block', () => {
+    const dwarf = SRD_RACES.find((r) => r.name === 'Dwarf') ?? null;
+    const text = note(
+      template,
+      choices({
+        race: 'Dwarf',
+        raceModel: dwarf,
+        occupation: 'Bell-ringer',
+        age: '120',
+        build: 'Short and stocky',
+        ideal: 'Order: rules keep the city alive',
+        flaw: 'Holds grudges forever',
+        secret: 'Informs for the watch',
+        hook: 'Lost a key and offers a reward',
+      }),
+    );
+    const head = text.slice(0, text.indexOf('\n---', 3));
+    expect(head).toContain('race: Dwarf');
+    expect(head).toContain('occupation: Bell-ringer');
+    expect(head).toContain('age: 120');
+    expect(text).toContain('- Freckled, sunburnt, smells of tar\n- Short and stocky');
+    expect(text).toContain(
+      '- To see the bells under the river\n- Ideal: Order: rules keep the city alive',
+    );
+    expect(text).toContain('- Feeds the gulls and names them\n- Flaw: Holds grudges forever');
+    expect(text).toContain(
+      '## Secrets\n\n- Informs for the watch\n- Hook: Lost a key and offers a reward',
+    );
+    const block = parseStatblock(parse(findStatblocks(text)[0]?.source ?? ''));
+    expect([block.name, block.speed, block.subtype, block.damageResistances]).toEqual([
+      'Wenna Tidewell',
+      '25 ft.',
+      'dwarf',
+      'poison',
+    ]);
+  });
+
   it('keeps the template’s stat block without an archetype, and works without a template', () => {
-    const plain = npcNote(template, choices({ archetype: null }));
+    const plain = note(template, choices({ archetype: null }));
     expect(parseStatblock(parse(findStatblocks(plain)[0]?.source ?? '')).name).toBe(
       'Wenna Tidewell',
     );
     expect(plain).not.toContain('archetype:');
 
-    const minimal = npcNote(null, choices());
+    const minimal = note(null, choices());
     expect(minimal.startsWith('---\ntype: npc\n')).toBe(true);
     expect(minimal).toContain('# Wenna Tidewell');
     expect(minimal).toContain('## Stats\n\n```dnd5e-statblock\nname: Wenna Tidewell');

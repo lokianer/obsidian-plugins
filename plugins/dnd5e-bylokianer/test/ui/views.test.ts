@@ -20,12 +20,13 @@ import { buildWorld } from '../../src/factions/world';
 import { createT } from '../../src/i18n/strings';
 import { SRD_NPCS } from '../../src/npc/srd';
 import type { NpcChoices } from '../../src/npc/note';
-import { DEFAULT_TABLES } from '../../src/npc/tables';
+import { SRD_RACES } from '../../src/npc/srd-races';
+import { tablesFor } from '../../src/npc/tables';
 import { findStatblocks, parseStatblock, type Statblock } from '../../src/npc/statblock';
 import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
-import { NewArchetypeModal, NewNpcModal } from '../../src/obsidian/npc-modal';
+import { archetypeKind, NewFromBaseModal, NewNpcModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
@@ -340,7 +341,9 @@ describe('New NPC dialog', () => {
       t,
       world,
       archetypes: SRD_NPCS,
-      tables: DEFAULT_TABLES,
+      tables: tablesFor('en'),
+      races: SRD_RACES,
+      lang: 'en',
       faction: COURT,
       create,
       random: () => 0,
@@ -375,12 +378,45 @@ describe('New NPC dialog', () => {
     expect(create).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'Alda Ashgrove',
-        quirk: DEFAULT_TABLES.quirks[0],
+        quirk: tablesFor('en').quirks[0],
       }),
       BENCH,
     );
     const calls = create.mock.calls as unknown as [NpcChoices, string][];
     expect(calls[0]?.[0].archetype?.name).toBe('Guard');
+  });
+
+  it('rolls names and looks for the chosen race, in the dialog’s language', () => {
+    const modal = new NewNpcModal({
+      app,
+      t,
+      world,
+      archetypes: SRD_NPCS,
+      races: SRD_RACES,
+      tables: tablesFor('de'),
+      lang: 'de',
+      faction: COURT,
+      create: () => Promise.resolve(),
+      random: () => 0,
+    });
+    modal.onOpen();
+    const row = (label: string) =>
+      [...modal.contentEl.querySelectorAll('.setting-item')].find(
+        (r) => r.querySelector('.setting-item-name')?.textContent === label,
+      );
+    const race = row('Race')?.querySelector('input');
+    if (race) {
+      race.value = 'Zwerg';
+      race.dispatchEvent(new Event('input'));
+    }
+    row('Name')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
+    expect(row('Name')?.querySelector('input')?.value).toBe('Adran Anvilhand');
+    row('Appearance')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
+    expect(row('Appearance')?.querySelector('input')?.value).toBe(
+      'ein geflochtener roter Bart, tiefliegende braune Augen, rötliche, wettergegerbte Haut; Tintenfleckige Finger und eine Feder hinter dem Ohr',
+    );
+    row('Age')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
+    expect(row('Age')?.querySelector('input')?.value).toBe('50');
   });
 
   it('refuses without a name or with an unknown archetype', () => {
@@ -390,7 +426,9 @@ describe('New NPC dialog', () => {
       t,
       world,
       archetypes: SRD_NPCS,
-      tables: DEFAULT_TABLES,
+      tables: tablesFor('en'),
+      races: SRD_RACES,
+      lang: 'en',
       faction: COURT,
       create,
     });
@@ -398,8 +436,11 @@ describe('New NPC dialog', () => {
     modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
     expect(create).not.toHaveBeenCalled();
     expect(notices[notices.length - 1]).toBe('Give the NPC a name');
-    const inputs = [...modal.contentEl.querySelectorAll('input')];
-    const [name, archetype] = [inputs[0], inputs[1]];
+    const rowInput = (label: string) =>
+      [...modal.contentEl.querySelectorAll('.setting-item')]
+        .find((r) => r.querySelector('.setting-item-name')?.textContent === label)
+        ?.querySelector('input');
+    const [name, archetype] = [rowInput('Name'), rowInput('Archetype')];
     if (name && archetype) {
       name.value = 'Pell';
       name.dispatchEvent(new Event('input'));
@@ -415,7 +456,7 @@ describe('New NPC dialog', () => {
 describe('New archetype dialog', () => {
   it('hands over the name and the archetype to start from', async () => {
     const create = vi.fn(() => Promise.resolve());
-    const modal = new NewArchetypeModal(app, t, SRD_NPCS, create);
+    const modal = new NewFromBaseModal(app, t, archetypeKind(app, t, SRD_NPCS), create);
     modal.onOpen();
     const [name, base] = [...modal.contentEl.querySelectorAll('input')];
     if (name && base) {

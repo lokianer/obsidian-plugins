@@ -8,6 +8,10 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Races and richer dice** (NPC builder, phase 4a): the nine SRD races and own `type: race` notes
+  in New NPC, writing their traits into the stat block and steering name, looks and age; command
+  **New race**; dice texts in English and German (Obsidian's language or a setting), each table at
+  least fifty entries; new fields occupation, age, build, voice, ideal, bond, flaw, secret, hook.
 - **Editing in the stat block** (NPC builder, phase 3): values, ability scores and entries of an
   opened block are edited in place as line edits; entries added and removed (with Undo); command
   **New archetype** writes an archetype note from a base, opened for editing.
