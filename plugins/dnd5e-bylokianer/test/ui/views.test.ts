@@ -5,8 +5,11 @@
 
 import './dom';
 
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import type { App, MarkdownView, TFile, WorkspaceLeaf } from 'obsidian';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { parse } from 'yaml';
 
 import { buildCard } from '../../src/factions/card';
 import { buildFactionView } from '../../src/factions/faction-view';
@@ -15,16 +18,20 @@ import { DEFAULT_THRESHOLDS } from '../../src/factions/tension';
 import { buildGraph } from '../../src/factions/world-graph';
 import { buildWorld } from '../../src/factions/world';
 import { createT } from '../../src/i18n/strings';
+import { SRD_NPCS } from '../../src/npc/srd';
+import { findStatblocks, parseStatblock } from '../../src/npc/statblock';
 import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
 import { ValuePopover } from '../../src/obsidian/popover';
+import { renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
 import type { WorldCache } from '../../src/obsidian/world-cache';
 import { WorldGraphSvg } from '../../src/obsidian/world-graph-svg';
 import { renderMatrix } from '../../src/obsidian/world-matrix';
 import { loadExampleVault } from '../fixture';
 
+const vault = join(import.meta.dirname, '../../../../examples/vault');
 const notes = loadExampleVault();
 const world = buildWorld(notes);
 const t = createT('en');
@@ -53,10 +60,10 @@ beforeEach(() => {
 });
 
 describe('faction card', () => {
-  const render = (path: string) => {
+  const render = (path: string, stats: string | null = null) => {
     const card = buildCard(path, notes.find((n) => n.path === path)?.frontmatter, world);
     if (card === null) throw new Error(`no card for ${path}`);
-    const renderer = new CardRenderer(
+    const renderer: CardRenderer = new CardRenderer(
       {
         app,
         view: {} as MarkdownView,
@@ -67,7 +74,10 @@ describe('faction card', () => {
         ui: { secretOpen: false, fieldsOpen: false },
         stepNames: [],
         offerLog: () => {},
-        refresh: () => renderer.render(),
+        stats,
+        refresh: () => {
+          renderer.render();
+        },
       },
       root,
     );
@@ -78,6 +88,11 @@ describe('faction card', () => {
     render(`${F}/The Drowned Choir/factions.md`);
     expect(texts(root, '.dnd5e-card-name')).toEqual(['The Drowned Choir']);
     expect(root.querySelectorAll('.dnd5e-card-row').length).toBeGreaterThan(0);
+  });
+
+  it('shows a character’s AC, HP and CR from its stat block', () => {
+    render(`${F}/Order of the Lantern/Aldric Thane.md`, 'AC 18 · HP 52 · CR 3');
+    expect(texts(root, '.dnd5e-card-stats')).toEqual(['AC 18 · HP 52 · CR 3']);
   });
 
   it('keeps a character’s secret section closed', () => {
@@ -138,6 +153,7 @@ describe('faction view', () => {
       openFaction: () => {},
       openValue: () => {},
       history: () => [],
+      stats: (path) => (path.endsWith('Mira Voss.md') ? 'AC 16 · HP 84 · CR 5' : null),
       moves: (id) => saved[id] ?? {},
       saveMoves: (id, moves) => (saved[id] = moves),
     });
@@ -152,6 +168,9 @@ describe('faction view', () => {
     expect(texts(root, '.dnd5e-fv-frame-title')).toEqual(['The Gutter Court']);
     expect(texts(root, '.dnd5e-fv-chip text')).toEqual(['Mira Voss', 'Sable', 'The Bench']);
     expect(texts(root, '.dnd5e-fv-box-title')).toContain('Order of the Lantern');
+    expect(texts(root, '.dnd5e-fv-chip title')[0]).toBe(
+      'Mira Voss · AC 16 · HP 84 · CR 5 · out of line with its faction',
+    );
   });
 
   it('keeps where the frame was dragged', () => {
@@ -163,6 +182,56 @@ describe('faction view', () => {
     window.dispatchEvent(pointer('pointermove', 50));
     window.dispatchEvent(pointer('pointerup', 50));
     expect(saved[COURT]?.[COURT]).toEqual({ x: 50, y: 0 });
+  });
+});
+
+describe('stat block', () => {
+  const markdown = (md: string, el: HTMLElement) => {
+    el.createEl('p', { text: md });
+  };
+
+  it('renders a full block: name, abilities with modifiers, properties and actions', () => {
+    const text = readFileSync(join(vault, `${F}/The Gutter Court/Mira Voss.md`), 'utf8');
+    const block = findStatblocks(text)[0];
+    renderStatblock(root, parseStatblock(parse(block?.source ?? '')), { t, markdown });
+    expect(texts(root, '.dnd5e-sb-name')).toEqual(['Mira Voss']);
+    expect(texts(root, '.dnd5e-sb-meta')).toEqual(['Medium humanoid (half-elf), lawful evil']);
+    expect(texts(root, '.dnd5e-sb-ability')).toEqual([
+      'STR11 (+0)',
+      'DEX18 (+4)',
+      'CON14 (+2)',
+      'INT17 (+3)',
+      'WIS15 (+2)',
+      'CHA16 (+3)',
+    ]);
+    expect(texts(root, '.dnd5e-sb-line')).toContain('Saving ThrowsDex +7, Int +6');
+    expect(texts(root, '.dnd5e-sb-line')).toContain('Challenge5 (1,800 XP)');
+    expect(texts(root, '.dnd5e-sb-line')).toContain('Proficiency Bonus+3');
+    expect(texts(root, '.dnd5e-sb-section-title')).toEqual(['Actions', 'Reactions']);
+    expect(texts(root, '.dnd5e-sb-entry')[0]).toMatch(/^\*\*\*Cunning Action\.\*\*\* On each/);
+  });
+
+  it('renders every SRD NPC in German without unreadable values', () => {
+    const de = createT('de');
+    for (const archetype of SRD_NPCS) {
+      renderStatblock(root, parseStatblock(parse(archetype.yaml)), { t: de, markdown });
+    }
+    expect(root.querySelectorAll('.dnd5e-statblock').length).toBe(21);
+    expect(root.querySelector('.dnd5e-sb-warning')).toBeNull();
+    expect(texts(root, '.dnd5e-sb-ability-label').slice(0, 6)).toEqual([
+      'STÄ',
+      'GES',
+      'KON',
+      'INT',
+      'WEI',
+      'CHA',
+    ]);
+  });
+
+  it('shows unparsable YAML as text with a warning', () => {
+    renderInvalid(root, 'name: [broken', t);
+    expect(texts(root, '.dnd5e-sb-warning')).toEqual(['This stat block is not valid YAML.']);
+    expect(texts(root, 'pre')).toEqual(['name: [broken']);
   });
 });
 

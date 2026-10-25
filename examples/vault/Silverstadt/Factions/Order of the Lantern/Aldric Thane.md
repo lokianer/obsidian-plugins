@@ -57,7 +57,7 @@ Short sentences. Calls everyone "citizen" until he decides to use their name, wh
 
 Uses the Knight stat block with Divine Smite and Lay on Hands added; AC 18, 52 hit points, a +2 longsword he calls Vigil. Does not draw it in the city if he can avoid it.
 
-```statblock
+```dnd5e-statblock
 name: Captain Aldric Thane
 size: Medium
 type: humanoid

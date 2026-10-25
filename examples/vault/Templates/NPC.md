@@ -20,7 +20,7 @@ One line: who they are and where the party met them.
 
 ## Stats
 
-```statblock
+```dnd5e-statblock
 name: {{title}}
 size: Medium
 type: humanoid

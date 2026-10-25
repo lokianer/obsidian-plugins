@@ -34,6 +34,8 @@ export interface FactionViewActions {
   openFaction: (id: string) => void;
   openValue: (target: PopoverTarget) => void;
   history: (from: string, to: string) => string[];
+  /** A character note's `AC · HP · CR`, or null. */
+  stats: (path: string) => string | null;
   /** The offsets dragged in a faction's view, by frame or box id. */
   moves: (view: string) => Record<string, Point>;
   saveMoves: (view: string, moves: Record<string, Point>) => void;
@@ -270,9 +272,17 @@ export class FactionViewSvg {
       });
       const label = chip.createSvg('text', { attr: { x: r.x, y: r.y + 6 } });
       label.textContent = member.name;
-      chip.createSvg('title').textContent = member.ring
-        ? `${member.name} · ${this.t('faction.outOfLine')}`
-        : member.name;
+      const stats =
+        member.kind === 'character' && member.notePath !== null
+          ? this.actions.stats(member.notePath)
+          : null;
+      chip.createSvg('title').textContent = [
+        member.name,
+        stats,
+        member.ring ? this.t('faction.outOfLine') : null,
+      ]
+        .filter((part) => part !== null)
+        .join(' · ');
       this.bindDrag(chip, view.id);
       chip.addEventListener('click', (event) => {
         event.stopPropagation();

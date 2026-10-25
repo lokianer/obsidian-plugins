@@ -19,12 +19,9 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-1. The maintainer reviews the NPC builder spec
-   (`docs/superpowers/specs/2026-10-25-npc-builder-design.md`, especially §9 "calls I made") and the
-   phase 1 plan (`docs/superpowers/plans/2026-10-25-npc-phase-1-statblock.md`). Build phase 1 only
-   after their "passt".
-2. Task 1 of the plan starts by checking Fantasy Statblocks' current README for its 5e keys
-   (`plugins.javalent.com` did not resolve from the cloud; try its GitHub README).
+1. The maintainer checks NPC builder phase 1 in Obsidian (list under "Half-finished"). Fix what
+   turns up.
+2. Then write the phase 2 plan (builder) from the approved spec §8 and stop for review.
 
 ## State of the working tree
 
@@ -63,13 +60,31 @@ From the maintainer's check in Obsidian, in order:
 - `be72b23` UI smoke tests: `test/ui/` renders card, graph, matrix, faction view, popover and
   tension panel in happy-dom (stand-in `obsidian` module aliased in `vitest.config.ts`, DOM helpers
   strict about class tokens); with the old graph bug put back two tests fail.
-- NPC builder spec and phase 1 plan written.
+- NPC builder spec and phase 1 plan written; the maintainer approved both ("passt").
+- NPC builder phase 1 built: `src/npc/statblock.ts` (model, derived values, blocks in a note,
+  Convert), `src/npc/srd.ts` (21 SRD NPCs from the 5e-bits database, checked against the SRD in
+  tests — which caught a wrong Cult Fanatic HP there — with `NOTICE.md`), `statblock-view.ts`
+  (rendering), `stat-summaries.ts` (the card's `AC · HP · CR`, read from the note's text), the
+  command Convert stat block, example vault notes on the new block (Ondine kept on `statblock`),
+  README attribution. Seen in Chromium at desktop and phone width.
 
-## Half-finished
+## Half-finished — check in Obsidian
 
-Nothing. The whole checklist passed in Obsidian: card placement and edits, Fix, secrets, settings,
-mobile, world graph and matrix, True mode, live update, drill-down, tension panel, thresholds,
-popover, Log and session N+1, history tooltips, design.
+Rebuild and install: `pnpm --filter dnd5e-bylokianer build`, then
+`pnpm --filter dnd5e-bylokianer install-example`, reload Obsidian in `examples/vault`.
+
+1. **Stat block**: Aldric Thane, Isolde Ferrant, Mira Voss in Reading view and Live Preview — a 5e
+   stat block in Obsidian's look (name, type line, AC/HP/speed, six abilities with modifiers,
+   saves, skills, senses, languages, Challenge with XP, Proficiency Bonus, traits, actions,
+   reactions); Ondine's spell list as a list. Source mode shows the YAML.
+2. **Phone width** (`app.emulateMobile(true)`): the abilities wrap to three columns.
+3. **Card line**: the cards of Aldric (`AC 18 · HP 52 · CR 3`) and Ondine (her block is still
+   `statblock`) show the line; after changing `hp:` in the block the card updates.
+4. **Faction view**: hovering Mira Voss's chip in The Gutter Court's view shows her line.
+5. **Convert stat block** on Ondine Vale: the fence becomes `dnd5e-statblock` and renders; running it
+   again turns it back; `git diff` shows only the fence line. Revert afterwards.
+6. **German** UI: labels in German (Rüstungsklasse, Trefferpunkte, STÄ GES KON …).
+7. **Light theme** and one community theme: the accent rules and muted labels read well.
 
 ## Decisions taken this session
 
@@ -79,7 +94,7 @@ boxes drag); label widths are estimated, not measured.
 
 ## Open questions for the maintainer
 
-- The NPC builder spec's §9 and the phase 1 plan.
+- None beyond the check in Obsidian.
 - The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
   the maintainer wants something changed.
 
@@ -107,5 +122,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 166 plugin tests (9 of them UI tests) and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 221 plugin tests (13 of them UI tests) and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

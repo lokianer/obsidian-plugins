@@ -22,7 +22,9 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Faction card | [[Corvin Marsh]], [[Sable]], [[The Bench/factions\|The Bench]] | Corvin: a reason rendered as a link; Sable: secret relations closed until opened; Bench: place shown as The Gutter Court |
 | Relation history | [[Session 14 – Bell Square]] | A log line `Order of the Lantern → The Gutter Court: −2 → −3`; it shows in the tooltip of that arrow and matrix cell as `−2 → −3 in S14` |
 | Value popover | Faction world → Matrix → The Bench × Order of the Lantern | Public: inherited −4 from the Court (moving it gives The Bench its own value); True: its own secret +4 with Reset to inherited |
-| NPC builder / stat blocks | [[Isolde Ferrant]], [[Ondine Vale]], [[Aldric Thane]], [[Mira Voss]] | Full 5e stat blocks; [[Sergeant Pell]] has none yet |
+| Stat block view | [[Isolde Ferrant]], [[Aldric Thane]], [[Mira Voss]] | `dnd5e-statblock` blocks render as 5e stat blocks (Mira's has an unknown key, `ledger_pages`, which is kept and ignored); [[Sergeant Pell]] has none yet |
+| Convert stat block | [[Ondine Vale]] | Still a Fantasy Statblocks `statblock` block: **Convert stat block** turns it into `dnd5e-statblock` and back |
+| AC · HP · CR on the card | [[Aldric Thane]], [[Ondine Vale]] | The card shows `AC 18 · HP 52 · CR 3`; it reads either block name; the faction view's member tooltips too |
 | Battle tracker | [[Ambush under the second arch]] | Party, a named NPC, groups with `count`; provisional format |
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |
 | Decks | [[Omens of the River]] | Two of eight cards already drawn |

@@ -41,6 +41,8 @@ interface CardContext {
   stepNames: readonly string[];
   /** Offer to log a change of a relation value. */
   offerLog: (change: ValueChange) => void;
+  /** A character's `AC · HP · CR` from its stat block, or null. */
+  stats: string | null;
   /** Asks for a rebuild from fresh data (after a refused edit). */
   refresh: () => void;
 }
@@ -164,6 +166,7 @@ export class CardRenderer extends Component {
     if (card.power !== null) {
       this.renderPower(title, head, card.power);
     }
+    if (this.ctx.stats !== null) head.createDiv({ cls: 'dnd5e-card-stats', text: this.ctx.stats });
   }
 
   private placeName(p: { id: string; name: string }): string {

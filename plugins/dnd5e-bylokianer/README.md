@@ -67,6 +67,14 @@ and the re-layout button in the tab's header puts everything back.
 pairs, members out of line, public faces hiding a different truth (True mode only) and allies split
 over a third faction. It follows the world's Public / True toggle; thresholds are in the settings.
 
+**Stat blocks.** A ` ```dnd5e-statblock ` block holds a 5e stat block in YAML — the keys Fantasy
+Statblocks uses (`name`, `size`, `type`, `ac`, `ac_class`, `hp`, `hit_dice`, `speed`, `stats`,
+`saves`, `skillsaves`, `senses`, `languages`, `cr`, `traits`, `actions`, `reactions`, …) — and
+renders as a stat block with ability modifiers, XP and proficiency bonus worked out. Its own block
+name keeps it apart from Fantasy Statblocks; **Convert stat block** switches a note's blocks
+between the two names. A character's faction card shows `AC · HP · CR` from its first stat block
+(either name). The 21 NPC stat blocks of the SRD 5.1 come with the plugin for the NPC builder.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -113,3 +121,10 @@ plugins.
 ## Licence
 
 MIT — see [LICENSE](LICENSE).
+
+## Attribution
+
+This plugin includes material from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the
+Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is
+licensed under the Creative Commons Attribution 4.0 International License, available at
+https://creativecommons.org/licenses/by/4.0/legalcode. See `src/npc/NOTICE.md`.

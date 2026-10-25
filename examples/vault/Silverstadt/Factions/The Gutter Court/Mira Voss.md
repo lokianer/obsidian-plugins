@@ -52,7 +52,7 @@ To be the only one in the city who knows what everyone owes. The tidewater chart
 
 Master Thief stat block, no weapons on her person. Four bodyguards, always in the next room.
 
-```statblock
+```dnd5e-statblock
 name: Mira Voss
 size: Medium
 type: humanoid

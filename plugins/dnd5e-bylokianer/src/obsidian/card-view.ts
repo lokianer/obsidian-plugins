@@ -10,6 +10,7 @@ import type { T } from '../i18n/strings';
 import { CardRenderer, type CardUiState, type FocusTarget } from './card-render';
 import type { ValueChange } from './session-log';
 import type { Settings } from './settings';
+import type { StatSummaries } from './stat-summaries';
 import type { WorldCache } from './world-cache';
 
 const VIEW_CLASS = 'dnd5e-entity-view';
@@ -64,6 +65,7 @@ export class CardManager {
     private readonly t: T,
     private readonly settings: () => Settings,
     private readonly offerLog: (change: ValueChange) => void,
+    private readonly stats: StatSummaries,
   ) {}
 
   start(): void {
@@ -72,8 +74,8 @@ export class CardManager {
     this.plugin.registerEvent(workspace.on('file-open', refresh));
     this.plugin.registerEvent(workspace.on('layout-change', refresh));
     this.plugin.registerEvent(workspace.on('active-leaf-change', refresh));
-    const stop = this.cache.onChange(refresh);
-    this.plugin.register(stop);
+    this.plugin.register(this.cache.onChange(refresh));
+    this.plugin.register(this.stats.onChange(refresh));
     // Reading view re-renders its sections; put the card back once it has.
     this.plugin.registerMarkdownPostProcessor((_el, ctx) => {
       for (const view of this.views()) {
@@ -129,7 +131,8 @@ export class CardManager {
     view.containerEl.toggleClass(SHOW_PROPERTIES_CLASS, this.settings().showProperties);
 
     const { stepNames } = this.settings();
-    const signature = JSON.stringify([card, stepNames]);
+    const stats = card.kind === 'character' ? this.stats.get(file.path) : null;
+    const signature = JSON.stringify([card, stepNames, stats]);
     const old = this.mounts.get(view);
     const same = old !== undefined && old.path === file.path && old.mode === mode;
     if (same && old.el.isConnected) {
@@ -160,6 +163,7 @@ export class CardManager {
         ui,
         stepNames,
         offerLog: this.offerLog,
+        stats,
         refresh: () => {
           const mount = this.mounts.get(view);
           if (mount !== undefined) mount.signature = '';

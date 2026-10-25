@@ -15,6 +15,7 @@ import { FactionViewSvg } from './faction-view-svg';
 import type { ModeStore } from './mode-store';
 import { type PopoverTarget, ValuePopover } from './popover';
 import type { SessionLog } from './session-log';
+import type { StatSummaries } from './stat-summaries';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 import { WorldGraphSvg } from './world-graph-svg';
@@ -32,6 +33,8 @@ export interface WorldViewDeps {
   /** Open a note with the faction card on an entry (the popover's "Open card"). */
   editValue: (edit: EditTarget, newLeaf: boolean) => void;
   sessionLog: SessionLog;
+  /** Characters' `AC · HP · CR` for the faction view's tooltips. */
+  stats: StatSummaries;
   showWarnings: (world: FactionWorld) => void;
   showTensions: () => void;
 }
@@ -91,6 +94,7 @@ export class WorldView extends ItemView {
     this.header = this.contentEl.createDiv({ cls: 'dnd5e-world-header' });
     this.body = this.contentEl.createDiv({ cls: 'dnd5e-world-body' });
     this.register(this.deps.cache.onChange(() => this.render()));
+    this.register(this.deps.stats.onChange(() => this.render()));
     await this.deps.cache.get();
     this.render();
   }
@@ -152,6 +156,7 @@ export class WorldView extends ItemView {
         openNote: this.deps.openNote,
         openFaction: (id) => this.openFaction(id),
         ...values,
+        stats: (path) => this.deps.stats.get(path),
         moves: (id) => this.deps.settings().viewMoves[id] ?? {},
         saveMoves: (id, moves) => void this.saveMoves(id, moves),
       });

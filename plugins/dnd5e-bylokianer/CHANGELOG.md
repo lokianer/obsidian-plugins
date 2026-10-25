@@ -8,6 +8,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Stat blocks** (NPC builder, phase 1): ` ```dnd5e-statblock ` blocks render as 5e stat blocks
+  (Fantasy Statblocks' keys, ability modifiers, XP, proficiency bonus); command **Convert stat block**
+  between the two block names; `AC · HP · CR` on a character's card and in the faction view's
+  member tooltips; the 21 SRD 5.1 NPC stat blocks as data, with attribution.
+- UI smoke tests in happy-dom for every view.
 - Faction data model: campaign scope, factions and members, relation parsing with warnings,
   public and true stances with inheritance.
 - Command **Show faction warnings** (English and German): counts at the top, one card per note,

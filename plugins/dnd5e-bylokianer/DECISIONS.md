@@ -229,3 +229,19 @@ template builder for own archetypes. **Nothing is published for now** — no rel
 
 Left out: depending on those plugins at runtime; the release preparation (mirror repository, name
 check), which waits until the maintainer wants a release.
+
+## 2026-10-25 · NPC builder: block name, archetypes, look
+
+The maintainer approved the NPC builder spec ("passt") with its calls: the stat block's block name
+is `dnd5e-statblock`, with Fantasy Statblocks' keys inside (its AC note is `ac_class`); NPC notes
+get an `archetype:` key; own archetypes and table overrides live as notes in
+`Templates/Archetypes/` and `Templates/Tables/`; unaffiliated NPCs go to the campaign's `NPCs`
+folder; the stat block takes Obsidian's look, not a parchment imitation; no CR calculator (the SRD
+5.1 has no table for it), the proficiency bonus and XP follow from CR.
+
+Phase 1 calls: the card line is read from the note's text (the metadata cache has no block
+contents), once per note and again when it changes; the 21 SRD NPCs were transcribed from the
+5e-bits SRD database and checked against the SRD in tests, which caught one error there (the Cult
+Fanatic's hit points).
+
+Left out of phase 1: editing in the block, the builder modal, archetype notes, random tables.

@@ -1,13 +1,24 @@
-import { getLanguage, MarkdownView, Notice, Plugin } from 'obsidian';
+import {
+  getLanguage,
+  MarkdownRenderChild,
+  MarkdownRenderer,
+  MarkdownView,
+  Notice,
+  parseYaml,
+  Plugin,
+} from 'obsidian';
 
 import type { EditTarget, FactionWorld } from './factions/model';
 
 import { createT } from './i18n/strings';
+import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
 import { DEFAULT_SETTINGS, type Settings, SettingsTab } from './obsidian/settings';
 import { WarningsModal } from './obsidian/warnings-modal';
 import { ModeStore } from './obsidian/mode-store';
 import { SessionLog } from './obsidian/session-log';
+import { StatSummaries } from './obsidian/stat-summaries';
+import { renderInvalid, renderStatblock } from './obsidian/statblock-view';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
 import { WorldCache } from './obsidian/world-cache';
 import { WORLD_VIEW, WorldView } from './obsidian/world-view';
@@ -22,12 +33,14 @@ export default class Dnd5ePlugin extends Plugin {
       ...((await this.loadData()) as Partial<Settings> | null),
     };
     const cache = new WorldCache(this);
+    const stats = new StatSummaries(this);
     const cards = new CardManager(
       this,
       cache,
       t,
       () => this.options,
       (change) => sessionLog.offer(change),
+      stats,
     );
     cards.start();
 
@@ -103,6 +116,7 @@ export default class Dnd5ePlugin extends Plugin {
           openNote,
           editValue,
           sessionLog,
+          stats,
           showWarnings,
           showTensions: () => void showTensions(),
         }),
@@ -119,6 +133,38 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openWorld,
     });
     this.addRibbonIcon('network', t('command.openWorld'), () => void openWorld());
+
+    this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {
+      let data: unknown;
+      try {
+        data = parseYaml(source);
+      } catch {
+        renderInvalid(el, source, t);
+        return;
+      }
+      const child = new MarkdownRenderChild(el);
+      ctx.addChild(child);
+      renderStatblock(el, parseStatblock(data), {
+        t,
+        markdown: (markdown, target) =>
+          void MarkdownRenderer.render(this.app, markdown, target, ctx.sourcePath, child),
+      });
+    });
+    this.addCommand({
+      id: 'convert-statblock',
+      name: t('command.convertStatblock'),
+      callback: async () => {
+        const file = this.app.workspace.getActiveFile();
+        if (file === null) return;
+        let count = 0;
+        await this.app.vault.process(file, (text) => {
+          const converted = convertBlocks(text);
+          count = converted.count;
+          return converted.text;
+        });
+        new Notice(count === 0 ? t('notice.noStatblock') : t('notice.converted', { count }));
+      },
+    });
 
     this.addCommand({
       id: 'start-next-session',

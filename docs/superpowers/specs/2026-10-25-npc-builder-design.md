@@ -1,6 +1,6 @@
 # NPC builder — design
 
-Date: 2026-10-25. Status: **draft for the maintainer's review**. Module 2 of `dnd5e-byLokianer`.
+Date: 2026-10-25. Status: **approved ("passt", 2026-10-25)**; phase 1 built. Module 2 of `dnd5e-byLokianer`.
 Build only after this spec and the phase 1 plan are approved.
 
 Decided with the maintainer on 2026-10-25:
@@ -84,7 +84,7 @@ type: humanoid
 subtype: human
 alignment: neutral good
 ac: 16
-ac_note: chain shirt, shield
+ac_class: chain shirt, shield
 hp: 11
 hit_dice: 2d8+2
 speed: 30 ft.
@@ -100,11 +100,12 @@ actions:
 ```
 
 - Block name `dnd5e-statblock` (call made, §9). Keys as Fantasy Statblocks' basic 5e layout uses
-  them (`name`, `size`, `type`, `subtype`, `alignment`, `ac`, `hp`, `hit_dice`, `speed`, `stats`,
+  them (`name`, `size`, `type`, `subtype`, `alignment`, `ac`, `ac_class`, `hp`, `hit_dice`, `speed`, `stats`,
   `saves`, `skillsaves`, `damage_vulnerabilities`, `damage_resistances`, `damage_immunities`,
   `condition_immunities`, `senses`, `languages`, `cr`, `traits`, `actions`, `bonus_actions`,
-  `reactions`, `legendary_actions`), so a note converts by renaming the block; `ac_note` is ours
-  and ignored there. To be checked against Fantasy Statblocks' current README in phase 1.
+  `reactions`, `legendary_description`, `legendary_actions`, `spells`), so a note converts by
+  renaming the block. Checked against Fantasy Statblocks' basic 5e layout on 2026-10-25 (its AC
+  note is `ac_class`); keys we do not show (`lair_actions`, `mythic_actions` …) are kept.
 - Readable without the plugin: it is YAML in a code block — every editor shows it as such.
 - **Convert** (command): renames a `statblock` block of the active note to `dnd5e-statblock`, or
   back. The example vault keeps one Fantasy Statblocks block to exercise it.

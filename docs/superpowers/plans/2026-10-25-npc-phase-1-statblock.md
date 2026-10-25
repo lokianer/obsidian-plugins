@@ -1,6 +1,6 @@
 # NPC Builder Phase 1 — Stat Block Model and View — Implementation Plan
 
-**Status:** draft, awaiting the maintainer's approval.
+**Status:** approved ("passt", 2026-10-25) and built; tasks 1–5 done, the check in Obsidian is open.
 
 **Goal:** A `dnd5e-statblock` block renders as a 5e stat block in Reading view and Live Preview;
 the faction card and the faction view show `AC · HP · CR` for members with a stat block (ours or

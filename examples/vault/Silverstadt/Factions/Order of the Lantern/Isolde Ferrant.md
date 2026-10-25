@@ -21,7 +21,7 @@ The charter. She is the only living member who knows it exists.
 
 ## Stats
 
-```statblock
+```dnd5e-statblock
 name: Commander Isolde Ferrant
 size: Medium
 type: humanoid
