@@ -8,6 +8,7 @@ import {
   type SettingDefinitionItem,
 } from 'obsidian';
 
+import type { Point } from '../factions/layout';
 import { STEPS, signed, stepName } from '../factions/steps';
 import { DEFAULT_THRESHOLDS, type Thresholds } from '../factions/tension';
 import type { T } from '../i18n/strings';
@@ -27,6 +28,8 @@ export interface Settings {
   sessionAnswer: { date: string; choice: 'next' | 'keep' } | null;
   /** Graph positions per campaign note path, by node id. */
   positions: Record<string, Record<string, { x: number; y: number; pinned?: boolean }>>;
+  /** What the GM dragged in a faction view, per viewed faction: offsets by frame or box id. */
+  viewMoves: Record<string, Record<string, Point>>;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -37,6 +40,7 @@ export const DEFAULT_SETTINGS: Settings = {
   sessionTemplate: 'Templates/Session.md',
   sessionAnswer: null,
   positions: {},
+  viewMoves: {},
 };
 
 const STEP_KEY = 'step:';

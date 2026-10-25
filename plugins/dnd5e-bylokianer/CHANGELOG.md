@@ -27,7 +27,7 @@ All notable changes to this plugin are documented here. The format follows
   Public/True toggle (Public on opening), warnings badge; arrows and cells lead into the faction
   card; nodes can be pinned by dragging, positions are kept per campaign.
 - **Faction view** inside the faction world: members, rings on those out of line, own and inherited
-  arrows, breadcrumb.
+  arrows, breadcrumb; the frame and the boxes can be dragged, kept per faction, re-layout resets.
 - **Tension panel** in the right sidebar with four rules and thresholds in the settings, following
   the Public/True toggle.
 - **Value popover** on matrix cells and arrows: slider, reason, Reset to inherited, Open card;

@@ -57,7 +57,8 @@ changes, read back from those lines.
 frame with its members, the factions it relates to around it, own values as solid arrows. Members
 whose own values differ from their faction's line have a yellow ring. Click a member to see all its
 stances, inherited ones dashed; click a sub-faction to go one level deeper; the breadcrumb leads
-back.
+back. Drag the frame (it carries its members) or a box to move it; the view keeps it per faction,
+and the re-layout button in the tab's header puts everything back.
 
 **Tensions.** The lightning button in the tab's header (or **Show faction tensions**) opens a sidebar listing one-sided
 pairs, members out of line, public faces hiding a different truth (True mode only) and allies split

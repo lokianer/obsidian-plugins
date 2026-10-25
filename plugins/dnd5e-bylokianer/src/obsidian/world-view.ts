@@ -6,7 +6,7 @@
 import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
 
 import { buildFactionView, type FactionView } from '../factions/faction-view';
-import type { CachedPoint } from '../factions/layout';
+import type { CachedPoint, Point } from '../factions/layout';
 import { buildMatrix } from '../factions/matrix';
 import type { FactionWorld, Mode } from '../factions/model';
 import type { EditTarget } from '../factions/model';
@@ -75,7 +75,9 @@ export class WorldView extends ItemView {
       this.addAction('zap', t('command.showTensions'), () => this.deps.showTensions());
       this.relayoutAction = this.addAction('refresh-cw', t('world.relayout'), () => {
         const world = this.deps.cache.current;
-        if (world !== null) this.graph?.relayout(world, this.mode);
+        if (world === null) return;
+        if (this.focus !== null) this.factionView?.resetMoves();
+        else this.graph?.relayout(world, this.mode);
       });
     }
     this.popover = new ValuePopover(this.contentEl, {
@@ -150,6 +152,8 @@ export class WorldView extends ItemView {
         openNote: this.deps.openNote,
         openFaction: (id) => this.openFaction(id),
         ...values,
+        moves: (id) => this.deps.settings().viewMoves[id] ?? {},
+        saveMoves: (id, moves) => void this.saveMoves(id, moves),
       });
       this.factionView.update(view, this.angles(world, view.id));
       return;
@@ -203,6 +207,17 @@ export class WorldView extends ItemView {
     });
   }
 
+  private async saveMoves(id: string, moves: Record<string, Point>): Promise<void> {
+    const settings = this.deps.settings();
+    const others = Object.fromEntries(
+      Object.entries(settings.viewMoves).filter(([view]) => view !== id),
+    );
+    await this.deps.save({
+      ...settings,
+      viewMoves: Object.keys(moves).length === 0 ? others : { ...others, [id]: moves },
+    });
+  }
+
   private renderHeader(world: FactionWorld, view: FactionView | null): void {
     const { t } = this.deps;
     this.header.empty();
@@ -245,10 +260,11 @@ export class WorldView extends ItemView {
       setIcon(badge.createSpan({ cls: 'dnd5e-card-icon' }), 'alert-triangle');
       badge.addEventListener('click', () => this.deps.showWarnings(world));
     }
-    // Re-layout lives in Obsidian's own view header; it only means something on the graph.
+    // Re-layout lives in Obsidian's own view header; it means something on the graph and in a
+    // faction view (where it forgets what was dragged).
     this.relayoutAction?.toggleClass(
       'dnd5e-hidden',
-      view !== null || settings.worldMode !== 'graph' || world.campaign === null,
+      view === null && (settings.worldMode !== 'graph' || world.campaign === null),
     );
   }
 

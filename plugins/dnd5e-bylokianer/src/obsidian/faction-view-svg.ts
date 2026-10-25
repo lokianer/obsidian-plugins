@@ -34,6 +34,9 @@ export interface FactionViewActions {
   openFaction: (id: string) => void;
   openValue: (target: PopoverTarget) => void;
   history: (from: string, to: string) => string[];
+  /** The offsets dragged in a faction's view, by frame or box id. */
+  moves: (view: string) => Record<string, Point>;
+  saveMoves: (view: string, moves: Record<string, Point>) => void;
 }
 
 /** An axis-aligned rectangle by its centre. */
@@ -68,6 +71,10 @@ export class FactionViewSvg {
   private selected: string | null = null;
   private fittedFor: string | null = null;
   private last: { view: FactionView; angles: ReadonlyMap<string, number> } | null = null;
+  /** Offsets dragged in the current view: the frame (with its chips) and boxes, by id. */
+  private moves = new Map<string, Point>();
+  /** Set by a drag, so the click that ends it does not select or open anything. */
+  private dragged = false;
 
   constructor(
     parent: HTMLElement,
@@ -78,7 +85,10 @@ export class FactionViewSvg {
     this.svg = parent.createSvg('svg', { cls: ['dnd5e-world-graph', 'dnd5e-faction-view'] });
     this.stage = this.svg.createSvg('g');
     this.panZoom = new PanZoom(this.svg, this.stage);
-    this.svg.addEventListener('click', () => this.select(null));
+    this.svg.addEventListener('pointerdown', () => (this.dragged = false), true);
+    this.svg.addEventListener('click', () => {
+      if (!this.dragged) this.select(null);
+    });
   }
 
   /**
@@ -86,7 +96,10 @@ export class FactionViewSvg {
    * world graph, so the boxes keep the map's arrangement; missing ones are spread evenly.
    */
   update(view: FactionView, angles: ReadonlyMap<string, number>): void {
-    if (this.last?.view.id !== view.id) this.selected = null;
+    if (this.last?.view.id !== view.id) {
+      this.selected = null;
+      this.moves = new Map(Object.entries(this.actions.moves(view.id)));
+    }
     this.last = { view, angles };
     const places = this.place(view, angles);
     this.draw(view, places);
@@ -98,6 +111,14 @@ export class FactionViewSvg {
       this.panZoom.fit(corners, 60);
       this.fittedFor = view.id;
     }
+  }
+
+  /** Forgets what was dragged in the current view. */
+  resetMoves(): void {
+    if (this.last === null) return;
+    this.moves.clear();
+    this.actions.saveMoves(this.last.view.id, {});
+    this.update(this.last.view, this.last.angles);
   }
 
   private select(id: string | null): void {
@@ -175,6 +196,19 @@ export class FactionViewSvg {
       });
     });
     spreadBoxes(ordered, places);
+
+    // Dragged offsets last: the frame carries its chips, a box its characters.
+    const shift = (ids: readonly string[], by: Point | undefined) => {
+      if (by === undefined) return;
+      for (const id of ids) {
+        const r = places.get(id);
+        if (r !== undefined) places.set(id, { ...r, x: r.x + by.x, y: r.y + by.y });
+      }
+    };
+    shift([view.id, ...view.members.map((m) => m.id)], this.moves.get(view.id));
+    for (const box of view.boxes) {
+      shift([box.id, ...box.characters.map((c) => c.id)], this.moves.get(box.id));
+    }
     return places;
   }
 
@@ -198,18 +232,21 @@ export class FactionViewSvg {
     const edgeLayer = this.stage.createSvg('g');
     const shapes = this.stage.createSvg('g');
 
+    const left = frame.x - frame.w / 2;
+    const top = frame.y - frame.h / 2;
     frameGroup.createSvg('rect', {
-      attr: { x: -frame.w / 2, y: -frame.h / 2, width: frame.w, height: frame.h, rx: 12 },
+      attr: { x: left, y: top, width: frame.w, height: frame.h, rx: 12 },
     });
+    this.bindDrag(frameGroup, view.id);
     const title = frameGroup.createSvg('text', {
       cls: 'dnd5e-fv-frame-title',
-      attr: { x: -frame.w / 2 + 20, y: -frame.h / 2 + 34 },
+      attr: { x: left + 20, y: top + 34 },
     });
     title.textContent = view.name;
     if (view.power !== null) {
       const power = frameGroup.createSvg('text', {
         cls: 'dnd5e-fv-frame-power',
-        attr: { x: frame.w / 2 - 20, y: -frame.h / 2 + 34 },
+        attr: { x: left + frame.w - 20, y: top + 34 },
       });
       power.textContent = `${this.t('card.power')} ${view.power}`;
     }
@@ -236,8 +273,10 @@ export class FactionViewSvg {
       chip.createSvg('title').textContent = member.ring
         ? `${member.name} · ${this.t('faction.outOfLine')}`
         : member.name;
+      this.bindDrag(chip, view.id);
       chip.addEventListener('click', (event) => {
         event.stopPropagation();
+        if (this.dragged) return;
         if ((event.ctrlKey || event.metaKey) && member.notePath !== null) {
           this.actions.openNote(member.notePath, true);
         } else if (member.kind === 'faction') {
@@ -267,6 +306,7 @@ export class FactionViewSvg {
     group.createSvg('rect', {
       attr: { x: r.x - r.w / 2, y: r.y - r.h / 2, width: r.w, height: r.h, rx: 8 },
     });
+    this.bindDrag(group, box.id);
     const name = group.createSvg('text', {
       cls: 'dnd5e-fv-box-title',
       attr: { x: r.x, y: r.y - r.h / 2 + 26 },
@@ -277,6 +317,7 @@ export class FactionViewSvg {
         : box.name;
     name.addEventListener('click', (event) => {
       event.stopPropagation();
+      if (this.dragged) return;
       if ((event.ctrlKey || event.metaKey) && box.notePath !== null) {
         this.actions.openNote(box.notePath, true);
       } else if (box.kind !== 'ghost') {
@@ -294,6 +335,7 @@ export class FactionViewSvg {
       const path = character.notePath;
       text.addEventListener('click', (event) => {
         event.stopPropagation();
+        if (this.dragged) return;
         if (path !== null) this.actions.openNote(path, event.ctrlKey || event.metaKey);
       });
     }
@@ -365,6 +407,36 @@ export class FactionViewSvg {
         target: arrow.to,
         at: { x: event.clientX, y: event.clientY },
       });
+    });
+  }
+
+  /**
+   * Dragging `el` moves the frame or box `id`. The view is redrawn while dragging, which replaces
+   * `el`, so the pointer is followed on the window rather than captured on the element.
+   */
+  private bindDrag(el: SVGGElement, id: string): void {
+    el.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0 || this.last === null) return;
+      event.stopPropagation();
+      const view = this.last.view.id;
+      const start = { x: event.clientX, y: event.clientY };
+      const origin = this.moves.get(id) ?? { x: 0, y: 0 };
+      const win = el.ownerDocument.defaultView ?? window;
+      const move = (e: PointerEvent) => {
+        const dx = (e.clientX - start.x) / this.panZoom.scale;
+        const dy = (e.clientY - start.y) / this.panZoom.scale;
+        if (!this.dragged && Math.hypot(dx, dy) < 4) return;
+        this.dragged = true;
+        this.moves.set(id, { x: origin.x + dx, y: origin.y + dy });
+        if (this.last !== null) this.update(this.last.view, this.last.angles);
+      };
+      const up = () => {
+        win.removeEventListener('pointermove', move);
+        win.removeEventListener('pointerup', up);
+        if (this.dragged) this.actions.saveMoves(view, Object.fromEntries(this.moves));
+      };
+      win.addEventListener('pointermove', move);
+      win.addEventListener('pointerup', up);
     });
   }
 
