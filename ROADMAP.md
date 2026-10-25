@@ -13,10 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder phases 2 and 3 — built, waiting for the maintainer's check in
-Obsidian** (lists in `HANDOFF.md`). That finishes module 2 as designed. After the check: the next
-module (battle tracker or dice, own code compatible with Initiative Tracker / Dice Roller formats)
-— to be brainstormed with the maintainer. Nothing is published for now.
+**dnd5e-byLokianer · NPC builder phase 4 (races and a richer dialog)** — asked for by the maintainer;
+spec §10 written, phase 4a plan (races, own races, bilingual larger tables, new fields)
+**awaits approval**: `docs/superpowers/plans/2026-10-25-npc-phase-4a-races-tables.md`; 4b (live
+preview, roll everything with locks, tiles) follows. Phases 2 and 3 still wait for the check in
+Obsidian. Nothing is published for now.
 
 ---
 
@@ -98,7 +99,12 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
       NPC modal into the faction's folder, Add stat block, random tables with overrides. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`
 - [ ] **Phase 3 — Editing and template builder** ← _built 2026-10-25, awaiting the check in
-      Obsidian_: editing in the rendered block, New archetype. Plan `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
+      Obsidian_: editing in the rendered block, New archetype.
+- [ ] **Phase 4a — Races and richer tables** ← _plan written, awaiting approval_: SRD races and own
+      `type: race` notes into the stat block and the dice; English and German tables (≥ 50 each);
+      occupation, age, build, voice, ideal, bond, flaw, secret, hook
+- [ ] **Phase 4b — A fancier dialog**: live preview card, roll everything with locks, race and
+      archetype tiles Plan `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
 
 ### Module 3 — Battle tracker
 

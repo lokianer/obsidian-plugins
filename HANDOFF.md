@@ -21,8 +21,10 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 1. The maintainer checks NPC builder phases 2 and 3 in Obsidian (lists under "Half-finished"). Fix
    what turns up.
-2. Then brainstorm the next module (battle tracker or dice) with the maintainer: spec, plan, review
-   stop.
+2. The maintainer asked for phase 4 (races, German and more dice texts, a fancier dialog). Spec §10
+   and the phase 4a plan are written and await approval
+   (`docs/superpowers/plans/2026-10-25-npc-phase-4a-races-tables.md`); 4b follows. Build only after
+   "passt".
 
 ## State of the working tree
 

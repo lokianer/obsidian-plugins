@@ -167,3 +167,35 @@ Each phase: spec section → plan → review stop → build → check in Obsidia
 - Unaffiliated NPCs go to the campaign's `NPCs` folder.
 - Look: Obsidian's style, not a parchment imitation of the printed book.
 - The proficiency bonus is shown beside CR; no CR calculator (SRD has no table for it).
+
+## 10. Phase 4 — races and a richer dialog (added 2026-10-25)
+
+Asked for by the maintainer after phase 3: "fancier", a race selection from ready-made models plus
+own races, and the dice texts in German too and with many more options. Decided with them:
+
+- **Races change the NPC:** a chosen race writes its SRD 5.1 traits into the stat block (size,
+  speed, darkvision in senses, languages, damage resistances, racial traits as traits), and makes
+  the name and appearance dice roll from lists for that race (names; age, height, build, skin,
+  hair, eyes).
+- **Ready-made races:** the nine SRD 5.1 races — Dwarf, Elf, Halfling, Human, Dragonborn, Gnome,
+  Half-Elf, Half-Orc, Tiefling — with the SRD's subrace where the SRD has one (Hill Dwarf, High Elf,
+  Lightfoot Halfling, Rock Gnome). Traits from the SRD (CC-BY-4.0); name and appearance lists are
+  our own text.
+- **Own races** are notes like archetypes: `type: race` in `Templates/Races/` (setting) with
+  frontmatter for size, speed, darkvision, languages, resistances, a `## Traits` list, and optional
+  `## Names` / `## Family names` lists; a command **New race** writes one from a base race.
+- **Dice texts follow Obsidian's language:** German Obsidian → German tables, otherwise English;
+  a setting can pin one. Keys, file names and headings the plugin reads stay English (CLAUDE.md
+  nomenclature); only the rolled text is German.
+- **Many more options:** every table at least 50 entries in both languages, and new fields:
+  occupation, age, build, voice, ideal, bond, flaw, secret, hook (all optional).
+- **Fancier dialog:** a live preview card beside the fields (name, race, archetype with AC · HP ·
+  CR, the rolled lines) that updates as you roll; **Roll everything** with a lock per field that
+  keeps it; race and archetype chosen from tiles (icon, name, a short line) with a search, instead
+  of a text field.
+
+Anti-goals: a race silently changes an archetype's numbers beyond the SRD traits (no ability score
+bonuses — NPC stat blocks already include them); German text in keys or headings.
+
+Phases: **4a** race model, own races, bilingual and larger tables, new fields in the note; **4b** the
+dialog: preview, roll everything with locks, tiles. Each with a plan and a review stop.
