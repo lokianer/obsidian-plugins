@@ -1,6 +1,6 @@
 # Spellbook S3 — Links and own spells — Implementation Plan
 
-**Status:** built 2026-10-25; awaiting the maintainer's check in Obsidian.
+**Status:** built 2026-10-25; accepted in Obsidian on 2026-10-25.
 
 **Goal:** Spell names in a stat block's Spellcasting trait open the spellbook on that spell; the
 GM's own `type: spell` notes join the spellbook's list.

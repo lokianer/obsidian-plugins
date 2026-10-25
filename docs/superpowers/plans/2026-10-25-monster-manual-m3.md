@@ -1,6 +1,6 @@
 # Monster Manual M3 — Own Monsters and the Monster Builder — Implementation Plan
 
-**Status:** built 2026-10-25; awaiting the maintainer's check in Obsidian.
+**Status:** built 2026-10-25; accepted in Obsidian on 2026-10-25.
 
 **Goal:** Notes with `type: monster` and a stat block join the Monster Manual, marked "own"; **New
 monster** opens a monster builder in the New NPC dialog's style — start from an SRD monster or from

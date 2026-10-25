@@ -1,6 +1,6 @@
 # Monster Manual M1 — The Monster Manual Tab — Implementation Plan
 
-**Status:** built 2026-10-25; awaiting the maintainer's check in Obsidian.
+**Status:** built 2026-10-25; accepted in Obsidian on 2026-10-25.
 
 **Goal:** A Monster Manual tab with the 334 SRD monsters, built like the spellbook: search, filters
 (CR bands, type, size, movement, legendary, spellcaster), a list grouped by challenge rating and the

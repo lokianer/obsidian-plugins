@@ -13,11 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Monster Manual** (module 5): M1 (the tab, liked by the maintainer) and M3
-(own monsters, the monster builder with a file import for the GM's own non-SRD monsters — pulled ahead on request) are built and wait for the check in
-Obsidian; next M2, the German texts of all traits and actions. Also waiting for the check: spellbook
-S3, the spell builder (with casting time and duration dropdowns), the restyled deck builder, the
-faction world redesign. Then module 6, the battle tracker. Nothing is published for now.
+**dnd5e-byLokianer · Battle tracker** (module 6) — brainstormed with the maintainer, design drafted
+(`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`), waiting for review; then the B1 plan.
+Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
+restyled deck builder, the Monster Manual (M1, M3 with the import). Open for later: the Monster
+Manual's German traits and actions (M2); the faction world redesign's check. Nothing is published.
 
 ---
 
@@ -107,7 +107,7 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
       preview card, roll everything with locks, race and archetype tiles. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-4b-dialog.md`
 
-### Module 3 — Spellbook (after module 2)
+### Module 3 — Spellbook ✅ done (accepted 2026-10-25)
 
 Design: [`docs/superpowers/specs/2026-10-25-spellbook-design.md`](docs/superpowers/specs/2026-10-25-spellbook-design.md).
 Its own tab, filters, German, fancy; the 319 SRD 5.1 spells (others as own notes later). Starts when
@@ -118,15 +118,15 @@ the NPC builder is done; German distances in metres (5 ft = 1.5 m).
       `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
 - [x] **S2 — German texts** (built and accepted 2026-10-25): descriptions,
       At Higher Levels and materials of all 319 spells
-- [ ] **S3 — Links and own spells** ← _built 2026-10-25, awaiting the check in Obsidian_: spell
+- [x] **S3 — Links and own spells** (built and accepted 2026-10-25): spell
       names in stat blocks open the spellbook; `type: spell` notes join the list. Plan
       `docs/superpowers/plans/2026-10-25-spellbook-s3.md`
-- [ ] **Spell builder** ← _built 2026-10-25, awaiting the check in Obsidian_ (asked for by the
+- [x] **Spell builder** (built and accepted 2026-10-25; asked for by the
       maintainer): New spell dialog in the New NPC dialog's style — start from an SRD spell, by
       hand, or a JSON file (own keys or the 5e-bits / Open5e shape) — with a live preview; writes a
       `type: spell` note. The deck builder got the same style
 
-### Module 4 — Deck of Many Things (after the spellbook)
+### Module 4 — Deck of Many Things ✅ done (accepted 2026-10-25)
 
 Asked for 2026-10-25: the Deck of Many Things to draw from, the standard deck by default and the
 option to make one's own. The deck is in the SRD 5.1 (magic items), so its 22 cards can ship.
@@ -141,7 +141,7 @@ Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs
       text, a JSON file), reset of the history (and the cards). Plan
       `docs/superpowers/plans/2026-10-25-deck-d2.md`
 
-### Module 5 — Monster Manual (after the spellbook and the deck)
+### Module 5 — Monster Manual ✅ accepted 2026-10-25 (German traits and actions later)
 
 Asked for 2026-10-25: "a Monster Manual beside the spellbook, built like the spellbook, before the
 battle tracker". The SRD 5.1's monsters (about 330, CC-BY-4.0) in their own tab: search, filters
@@ -150,17 +150,24 @@ German. The battle tracker will draw its monsters from here.
 Design: [`docs/superpowers/specs/2026-10-25-monster-manual-design.md`](docs/superpowers/specs/2026-10-25-monster-manual-design.md)
 (reviewed 2026-10-25).
 
-- [ ] **M1 — Monster Manual tab** ← _built 2026-10-25, awaiting the check in Obsidian_: the 334
+- [x] **M1 — Monster Manual tab** (built and accepted 2026-10-25): the 334
       monsters as data, German names and meta, search, filters, list, stat block card, Insert into
       note, Make a note. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m1.md`
-- [ ] **M2 — German texts** of all traits and actions
-- [ ] **M3 — Own monsters and a monster builder** ← _built 2026-10-25 (ahead of M2, on request),
-      awaiting the check in Obsidian_. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m3.md`
+- [ ] **M2 — German texts** of all traits and actions (open, for later)
+- [x] **M3 — Own monsters, a monster builder and a file import** (built ahead of M2 on request,
+      accepted 2026-10-25). Plan `docs/superpowers/plans/2026-10-25-monster-manual-m3.md`
 
 ### Module 6 — Battle tracker
 
-Not brainstormed yet. Starting point: `examples/vault/Silverstadt/Encounters/Ambush under the second
-arch.md` (provisional format), party notes with `ac`, `hp`, `initiative`.
+Brainstormed with the maintainer 2026-10-25: its own tab; initiative, rounds, hit points and
+conditions; the session log; an encounter builder; combatants from encounter notes, the Monster
+Manual and the party; the fight's state in the encounter note.
+Design: [`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`](docs/superpowers/specs/2026-10-25-battle-tracker-design.md)
+(draft, waiting for review).
+
+- [ ] **B1 — The tracker**: encounter notes, initiative, rounds, HP, conditions, `## Combat` state
+- [ ] **B2 — Log and Monster Manual**: session log lines, Add to combat
+- [ ] **B3 — Encounter builder**: New encounter with an XP budget
 
 ### Module 7 — Dice
 
