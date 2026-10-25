@@ -13,8 +13,9 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Battle tracker** (module 6) — brainstormed with the maintainer, design drafted
-(`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`), waiting for review; then the B1 plan.
+**dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1 built** (plan
+`docs/superpowers/plans/2026-10-25-battle-b1.md`), waiting for the check in Obsidian (HANDOFF points
+47–52); then B2 (session log, Add to combat) and B3 (encounter builder).
 Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
 restyled deck builder, the Monster Manual (M1, M3 with the import). Open for later: the Monster
 Manual's German traits and actions (M2); the faction world redesign's check. Nothing is published.
@@ -163,9 +164,10 @@ Brainstormed with the maintainer 2026-10-25: its own tab; initiative, rounds, hi
 conditions; the session log; an encounter builder; combatants from encounter notes, the Monster
 Manual and the party; the fight's state in the encounter note.
 Design: [`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`](docs/superpowers/specs/2026-10-25-battle-tracker-design.md)
-(draft, waiting for review).
+(reviewed 2026-10-25).
 
-- [ ] **B1 — The tracker**: encounter notes, initiative, rounds, HP, conditions, `## Combat` state
+- [ ] **B1 — The tracker** (built 2026-10-25, awaiting the check): encounter notes, initiative,
+      rounds, HP, conditions, `## Combat` state. Plan `docs/superpowers/plans/2026-10-25-battle-b1.md`
 - [ ] **B2 — Log and Monster Manual**: session log lines, Add to combat
 - [ ] **B3 — Encounter builder**: New encounter with an XP budget
 

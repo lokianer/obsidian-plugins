@@ -57,6 +57,8 @@ export interface Settings {
   spellFolder: string;
   /** The deck the Deck tab showed last: `standard` or an own deck's path. */
   deckSelected: string;
+  /** The encounter note the Battle tab showed last. */
+  battleSelected: string | null;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -81,6 +83,7 @@ export const DEFAULT_SETTINGS: Settings = {
   monsterFolder: 'Monsters',
   monsterManual: null,
   deckSelected: 'standard',
+  battleSelected: null,
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */

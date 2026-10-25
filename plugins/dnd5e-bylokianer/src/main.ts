@@ -13,6 +13,8 @@ import type { EditTarget, FactionWorld } from './factions/model';
 import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
+import { BattleStore } from './obsidian/battle-store';
+import { BATTLE_VIEW, BattleView } from './obsidian/battle-view';
 import { askReset, DeckBuilderModal } from './obsidian/deck-builder';
 import { DeckStore } from './obsidian/deck-store';
 import { cryptoRandom, DECK_VIEW, DeckView } from './obsidian/deck-view';
@@ -389,6 +391,34 @@ export default class Dnd5ePlugin extends Plugin {
     });
     this.addRibbonIcon('layers', t('command.openDeck'), () => void openDeck());
     this.addCommand({ id: 'new-deck', name: t('command.newDeck'), callback: newDeck });
+
+    const battleStore = new BattleStore(this, cache, () => [...SRD_MONSTERS, ...ownMonsters.list]);
+    this.registerView(
+      BATTLE_VIEW,
+      (leaf) =>
+        new BattleView(leaf, {
+          t,
+          lang: () => tableLang(this.options, getLanguage()),
+          source: battleStore,
+          random: cryptoRandom,
+          selected: () => this.options.battleSelected,
+          select: (battleSelected) => void save({ ...this.options, battleSelected }),
+          openNote: (path) => openNote(path, false),
+          spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
+        }),
+    );
+    const openBattle = async () => {
+      const { workspace } = this.app;
+      const leaf = workspace.getLeavesOfType(BATTLE_VIEW)[0] ?? workspace.getLeaf('tab');
+      await leaf.setViewState({ type: BATTLE_VIEW, active: true });
+      await workspace.revealLeaf(leaf);
+    };
+    this.addCommand({
+      id: 'open-battle-tracker',
+      name: t('command.openBattle'),
+      callback: openBattle,
+    });
+    this.addRibbonIcon('swords', t('command.openBattle'), () => void openBattle());
 
     const openStatblocks = new Set<string>();
     this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {

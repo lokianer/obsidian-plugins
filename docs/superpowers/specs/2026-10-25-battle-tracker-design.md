@@ -1,6 +1,6 @@
 # Battle Tracker — design
 
-Date: 2026-10-25. Status: **draft, waiting for the maintainer's review**. Module 6 of
+Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §8 accepted); B1 built, awaiting the check**. Module 6 of
 `dnd5e-byLokianer`, after the Monster Manual.
 
 Asked for by the maintainer ("jetzt Battletracker"). Decided with them: **its own tab**; initiative

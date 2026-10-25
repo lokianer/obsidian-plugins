@@ -3,8 +3,8 @@
 Game-master tools for D&D 5e in Obsidian. The first module covers **factions and their relations**:
 factions are folders holding a `factions.md`, relations are frontmatter values from −5 (war) to +5
 (sworn), and members inherit their faction's stance unless they state their own. The second, the NPC
-builder, brings 5e stat blocks and a New NPC dialog; then a spellbook and the Deck of Many Things;
-a battle tracker and dice follow.
+builder, brings 5e stat blocks and a New NPC dialog; then a spellbook, the Deck of Many Things, a Monster Manual and a
+battle tracker; dice follow.
 
 Status: the factions module is built and accepted in Obsidian (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
@@ -279,6 +279,52 @@ own monsters. The plugin itself ships only the SRD's monsters: creatures outside
 demon lords, beholders and other monsters Wizards of the Coast keeps out of it) are not free to
 include, so bring them from your own books this way.
 
+## The battle tracker
+
+**Open battle tracker** (command, or the swords in the left ribbon) opens a tab that runs a fight
+from an encounter note — any note with `type: encounter` in the campaign:
+
+```yaml
+type: encounter
+party: true # the campaign's party joins (the default); false keeps it out
+combatants:
+  - '[[Sable]]' # a note: ac / hp / initiative from its frontmatter, else its stat block
+  - monster: Owlbear # from the Monster Manual (SRD or own), English or German name
+    count: 2
+  - name: Court thug # written right here
+    count: 4
+    ac: 11
+    hp: 32
+    initiative: 0
+    side: enemy # party, ally or enemy
+```
+
+**Start** sets up the order: monsters and NPCs roll d20 + their initiative bonus (a group with a
+`count` rolls once and is numbered "Court thug 1 … 4"), player characters' numbers are typed in or
+rolled with the dice button; ties go to the higher Dexterity, the arrows nudge a row. **Begin round
+1**, then **Next turn** and the arrow back; defeated monsters are skipped. Pick a row to see its
+card: hit points, temporary hit points, AC and initiative, one number with **Damage**, **Heal** and
+**Temp HP** (temporary hit points absorb damage first and don't stack), death saves when a character
+is down, the SRD's conditions as chips with an optional duration in rounds that counts down at the
+end of the combatant's turn, concentration — damage to a concentrating combatant shows the
+Constitution save's DC (10 or half the damage) — and the stat block. **End combat** closes the
+fight.
+
+Every change is written to the note's `## Combat` section, a plain table that reads without the
+plugin and is read back when the tab opens:
+
+```markdown
+## Combat
+
+Round 3 · Turn: Court thug 2
+
+| Init | Combatant    |       HP |  AC | Conditions               |
+| ---: | ------------ | -------: | --: | ------------------------ |
+|   21 | [[Dagny]]    | 54/71 +5 |  15 | prone (1), concentration |
+|   17 | Court thug 2 |    12/32 |  11 |                          |
+|    9 | Owlbear 1    |     0/59 |  13 | defeated                 |
+```
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -292,6 +338,7 @@ include, so bring them from your own books this way.
 - **New spell** — the spell builder.
 - **Open Monster Manual** — the SRD monsters to look up and drop into notes.
 - **New monster** — the monster builder.
+- **Open battle tracker** — run a fight from an encounter note.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

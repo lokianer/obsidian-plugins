@@ -8,6 +8,16 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Battle tracker** (module 6, phase B1): **Open battle tracker** (command, or the swords in the
+  ribbon) opens a tab that runs a fight from a `type: encounter` note. The campaign's party joins
+  by itself; combatants come from note links (frontmatter `ac` / `hp` / `initiative`, else their
+  stat block), from the Monster Manual (`monster: Owlbear`) and written inline, each with a `count`
+  — a group rolls one initiative and is numbered. Characters' initiative is typed in or rolled;
+  rounds and turns skip the defeated; damage, healing and temporary hit points; death saves for
+  downed characters; the SRD's conditions with durations that count down; concentration with the
+  Constitution save's DC as a notice. The fight is kept in the note's `## Combat` table and read
+  back from it. English and German.
+
 - **Monster import**: the monster builder reads monsters from a file — Fantasy Statblocks YAML or
   JSON, Markdown notes with stat blocks, 5e-bits and Open5e JSON, 5etools bestiaries (tags turned
   into text). One fills the form; several become tiles, with **Create all** writing them as own

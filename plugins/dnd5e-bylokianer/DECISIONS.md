@@ -525,3 +525,26 @@ the GM owns land in the GM's own vault as own monsters.
 
 Left out: fetching from websites (no network), 5etools' `_copy` references between monsters (a
 copied monster comes in with only its own fields).
+
+## 2026-10-25 · The battle tracker keeps the fight in the encounter note
+
+Designed with the maintainer (spec `docs/superpowers/specs/2026-10-25-battle-tracker-design.md`,
+every call in its §8 accepted): its own tab, the party joining by itself, combatants from notes,
+the Monster Manual and inline entries, and the running fight as a Markdown table under `## Combat`
+in the encounter note — nothing kept only in the plugin.
+
+- A group (`count` above 1) rolls one initiative and is numbered; player characters' initiative is
+  typed in, with a dice button using their bonus. Ties go to the higher Dexterity, then the name.
+- Monsters and NPCs at 0 hit points are defeated and skipped; player characters (the party, or
+  `tags: [pc]`) go down and make death saves; damage while down is a failed save; healing brings
+  them back with fresh saves.
+- Condition durations count down at the end of their holder's turn; Previous turn does not give
+  them back.
+- A row of the table is the truth for its combatant; a fight read back from the note keeps hit
+  points, temporary hit points, conditions, concentration and death saves. Conditions typed into
+  the table by hand are kept as written.
+- The party is the campaign's `Party` folder; a party member also linked in `combatants` joins once.
+
+Left out for B1: adding or removing combatants mid-fight and the session log (B2), the encounter
+builder (B3), drag-and-drop in the order (the arrows nudge instead), asking before Start again
+replaces an ended fight's table.

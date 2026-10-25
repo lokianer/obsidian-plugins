@@ -4,6 +4,9 @@ race: tiefling
 class: rogue
 alignment: chaotic neutral
 level: 5
+ac: 15
+hp: 40
+initiative: 4
 outlook: 85
 standing: 12
 relations:

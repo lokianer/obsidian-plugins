@@ -43,6 +43,10 @@ import { SpellBuilderModal } from '../../src/obsidian/spell-builder';
 import type { SpellDraft } from '../../src/spells/draft';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
+import { BattleView } from '../../src/obsidian/battle-view';
+import type { BattleSource } from '../../src/obsidian/battle-store';
+import type { Fight, Fighter } from '../../src/battle/fight';
+import { combatLines, readCombat } from '../../src/battle/table';
 import { MonsterBuilderModal } from '../../src/obsidian/monster-builder';
 import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/monster-manual-view';
 import type { SrdMonster } from '../../src/monsters/model';
@@ -1411,5 +1415,149 @@ describe('monster builder', () => {
     expect(notices[notices.length - 1]).toBe(
       'The file could not be read as JSON, YAML or Markdown.',
     );
+  });
+});
+
+describe('battle tab', () => {
+  const fighter = (name: string, more: Partial<Fighter> = {}): Fighter => ({
+    name,
+    side: 'enemy',
+    pc: false,
+    ac: 12,
+    maxHp: 10,
+    initBonus: 0,
+    dex: 10,
+    path: null,
+    monster: null,
+    group: null,
+    ...more,
+  });
+  const fighters = [
+    fighter('Dagny', { side: 'party', pc: true, ac: 15, maxHp: 71, path: 'Dagny.md' }),
+    fighter('Thug', { group: 'Thug', maxHp: 32 }),
+    fighter('Thug', { group: 'Thug', maxHp: 32 }),
+    fighter('Owlbear', { maxHp: 59, ac: 13, monster: 'owlbear' }),
+  ];
+
+  async function open(lang: 'en' | 'de', text = '') {
+    let note = text;
+    const saves: Fight[] = [];
+    const source: BattleSource = {
+      encounters: () => Promise.resolve([{ path: 'Ambush.md', title: 'Ambush' }]),
+      load: () => Promise.resolve({ fighters, table: readCombat(note) }),
+      save: (_path, fight, ended) => {
+        saves.push(fight);
+        note = combatLines(fight, ended).join('\n');
+        return Promise.resolve();
+      },
+      statblock: (f) =>
+        Promise.resolve(
+          f.monster === 'owlbear'
+            ? parseStatblock(parse(SRD_MONSTERS.find((m) => m.index === 'owlbear')?.yaml ?? ''))
+            : null,
+        ),
+    };
+    let selected: string | null = null;
+    // Monsters roll a 10 (d20 → 11 for 0.5).
+    const view = new BattleView({} as WorkspaceLeaf, {
+      t: createT(lang),
+      lang: () => lang,
+      source,
+      random: () => 0.5,
+      selected: () => selected,
+      select: (path) => (selected = path),
+      openNote: () => undefined,
+    });
+    root.appendChild(view.contentEl);
+    await view.onOpen();
+    const el = view.contentEl;
+    const settle = () => new Promise((resolve) => window.setTimeout(resolve, 0));
+    const click = async (selector: string, text?: string) => {
+      const button = [...el.querySelectorAll<HTMLElement>(selector)].find(
+        (b) => text === undefined || b.textContent === text,
+      );
+      if (button === undefined) throw new Error(`no ${selector} ${text ?? ''}`);
+      button.dispatchEvent(new MouseEvent('click'));
+      await settle();
+    };
+    const names = () => texts(el, '.dnd5e-battle-row .dnd5e-battle-name');
+    return { el, click, names, saves, note: () => note, selected: () => selected };
+  }
+
+  it('starts a fight, orders it, runs turns and writes the note', async () => {
+    const { el, click, names, saves, note, selected } = await open('en');
+    expect(selected()).toBe('Ambush.md');
+    expect(texts(el, '.dnd5e-battle-section')).toEqual(['Combatants (4)']);
+    await click('.dnd5e-battle-start');
+    // The thugs share one roll and are numbered; Dagny waits for her number.
+    expect(names()).toEqual(['Owlbear', 'Thug 1', 'Thug 2', 'Dagny']);
+    const init = el.querySelectorAll<HTMLInputElement>('.dnd5e-battle-init input')[3];
+    if (init === undefined) throw new Error('no input');
+    init.value = '18';
+    init.dispatchEvent(new Event('change'));
+    expect(names()[0]).toBe('Dagny');
+    await click('.dnd5e-battle-begin');
+    expect(el.querySelector('.dnd5e-battle-round')?.textContent).toBe('Round 1');
+    expect(el.querySelector('.is-turn .dnd5e-battle-name')?.textContent).toBe('Dagny');
+    expect(note()).toContain('Round 1 · Turn: Dagny');
+    await click('.dnd5e-battle-next');
+    expect(el.querySelector('.is-turn .dnd5e-battle-name')?.textContent).toBe('Owlbear');
+    // The owlbear's card shows its stat block; damage it down to defeated.
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear']);
+    const amount = el.querySelector<HTMLInputElement>('.dnd5e-battle-amount');
+    if (amount === null) throw new Error('no amount');
+    amount.value = '59';
+    amount.dispatchEvent(new Event('input'));
+    await click('.dnd5e-battle-damage');
+    expect(el.querySelector('.is-turn')?.classList.contains('is-out')).toBe(true);
+    expect(note()).toMatch(/\| Owlbear \| 0\/59 \| 13 \| defeated \|/);
+    await click('.dnd5e-battle-next');
+    expect(el.querySelector('.is-turn .dnd5e-battle-name')?.textContent).toBe('Thug 1');
+    // A condition with a duration on Thug 1.
+    const rounds = el.querySelector<HTMLInputElement>('.dnd5e-battle-duration input');
+    if (rounds === null) throw new Error('no rounds');
+    rounds.value = '1';
+    rounds.dispatchEvent(new Event('input'));
+    await click('.dnd5e-builder-flag', 'Prone');
+    expect(texts(el, '.is-turn .dnd5e-battle-chip')).toEqual(['Prone (1)']);
+    await click('.dnd5e-battle-next');
+    expect(texts(el, '.dnd5e-battle-chip')).toEqual(['Defeated']);
+    await click('.dnd5e-battle-end');
+    expect(note()).toContain('Ended after 1 round\n');
+    expect(el.querySelector('.dnd5e-battle-round')?.textContent).toBe('Ended after 1 round');
+    expect(el.querySelector('.dnd5e-battle-start')?.textContent).toBe('Start again');
+    expect(saves.length).toBeGreaterThan(5);
+  });
+
+  it('reads a running fight back and tracks a downed character in German', async () => {
+    const running = [
+      '## Combat',
+      '',
+      'Round 2 · Turn: Dagny',
+      '',
+      '| Init | Combatant | HP | AC | Conditions |',
+      '| ---: | --- | ---: | ---: | --- |',
+      '| 18 | [[Dagny]] | 3/71 | 15 | concentration |',
+      '| 11 | Owlbear | 59/59 | 13 | |',
+      '| 11 | Thug 1 | 32/32 | 12 | |',
+      '| 11 | Thug 2 | 32/32 | 12 | |',
+    ].join('\n');
+    const { el, click } = await open('de', running);
+    expect(el.querySelector('.dnd5e-battle-round')?.textContent).toBe('Runde 2');
+    const amount = el.querySelector<HTMLInputElement>('.dnd5e-battle-amount');
+    if (amount === null) throw new Error('no amount');
+    amount.value = '10';
+    amount.dispatchEvent(new Event('input'));
+    await click('.dnd5e-battle-damage');
+    expect(texts(el, '.is-turn .dnd5e-battle-chip')).toEqual(['Am Boden']);
+    await click('.dnd5e-battle-save-fail');
+    expect(texts(el, '.is-turn .dnd5e-battle-chip')).toEqual(['Am Boden ✗']);
+    const again = el.querySelector<HTMLInputElement>('.dnd5e-battle-amount');
+    if (again === null) throw new Error('no amount');
+    again.value = '5';
+    again.dispatchEvent(new Event('input'));
+    await click('.dnd5e-battle-heal');
+    expect(texts(el, '.is-turn .dnd5e-battle-meta span')[0]).toBe('TP 5/71');
   });
 });

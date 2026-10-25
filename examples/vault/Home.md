@@ -49,6 +49,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Own monster | [[Bell-Tower Gargoyle]] | `type: monster` note: joins the Monster Manual marked "own" (CR 3, elemental, flies); its card opens the note |
 | Monster builder | command **New monster** or + in the Monster Manual | Start from an SRD monster or from nothing; live stat block; writes `Silverstadt/Monsters/<name>.md` and shows it in the Monster Manual |
 | Monster import | `Silverstadt/Monsters/Import example (5etools).json` | **New monster** → **Import from a file**: two made-up monsters in 5etools format as tiles; pick one to edit or **Create all 2**. Also reads Fantasy Statblocks YAML/JSON, Markdown with stat blocks, 5e-bits and Open5e JSON |
+| Battle tracker | [[Ambush under the second arch]] | **Open battle tracker** (ribbon swords): the party joins by itself, [[Sable]] with her frontmatter AC/HP, four Court thugs and two sharpshooters (one roll per group), three Bridge rats from the Monster Manual. **Start**, type the characters' initiative, **Begin round 1**; damage, conditions and turns are written to the note's `## Combat` table |
 | Spellbook | none needed | **Open spellbook** (ribbon book icon): the 319 SRD spells, German names and metres with German Obsidian |
 | Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md`; its Loot table starts with Mira's calling card `(from [[Session 14 – Bell Square]])` (also via **Start next session**) |
 

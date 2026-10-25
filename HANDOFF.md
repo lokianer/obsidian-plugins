@@ -19,10 +19,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-1. **Battle tracker** (module 6): brainstormed with the maintainer; design drafted in
-   `docs/superpowers/specs/2026-10-25-battle-tracker-design.md`, waiting for review (§8 lists the
-   calls to check). After the review: the B1 plan, then B1 (the tracker, the `## Combat` state in
-   encounter notes), B2 (session log, Add to combat), B3 (encounter builder, SRD 5.2 XP budget).
+1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
+   `encounter.ts`, `fight.ts`, `table.ts`, tested in `test/battle.test.ts`), `battle-store.ts`
+   (vault adapter), `battle-view.ts` (the tab). Waiting for the check (points 47–52 below). Next:
+   B2 (session log lines, Add to combat from the Monster Manual, add/remove mid-fight), then B3
+   (encounter builder; verify the SRD 5.2 XP budget table before using it).
 2. Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
    restyled deck builder, the Monster Manual (M1, M3 with the file import). Open for later: the
    Monster Manual's German traits and actions (M2: about 48,500 words, in batches by challenge
@@ -261,9 +262,31 @@ fields)
     Statblocks export or a note with stat blocks works the same. Non-SRD monsters (demon lords,
     beholders) are not shipped — licence; see DECISIONS.
 
+**Battle tracker B1**
+
+47. The swords in the ribbon (or **Open battle tracker**) open the tab on "Ambush under the second
+    arch": the lineup lists the four party members (once each, though the note links them too),
+    Sable (AC 15, HP 40 from her frontmatter), Court thug ×4, Court sharpshooter ×2, Bridge rat ×3.
+48. **Start**: the thugs share one number, so do the sharpshooters and the rats ("Bridge rat 1 …
+    3"); the characters have empty fields — type them or use the dice; the arrows nudge ties.
+    `## Combat` appears in the note with "Rolling initiative".
+49. **Begin round 1**, **Next turn**: the marked row moves, the round counts up after the last; the
+    arrow goes back. Pick a row: its card with HP, temp, AC, initiative; a rat's card shows the
+    Giant Rat stat block named "Bridge rat 2" (German Obsidian: German header lines).
+50. Damage a thug to 0 → dimmed, "Defeated", skipped by Next turn. Damage a character to 0 → "Down",
+    death save buttons; ✗ shows on the row; Heal brings them back. Temp HP 5 then damage 7 → 2 off
+    the hit points.
+51. Duration 1 + Prone on the active combatant → "Prone (1)", gone after its turn ends.
+    Concentration on Sable, damage 24 → notice "Constitution save, DC 12".
+52. Close and reopen the tab: the fight is back from the note. `git diff` shows only the
+    `## Combat` section (and Sable's line). **End combat** → "Ended after N rounds"; **Start again**
+    replaces it. Revert the example vault afterwards (`git checkout examples/vault`).
+
 ## Decisions taken this session
 
-In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).
+In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session", "No non-SRD
+monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
+encounter note" (all 2026-10-25).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -297,5 +320,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 355 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 367 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

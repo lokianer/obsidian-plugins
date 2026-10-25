@@ -1,6 +1,6 @@
 ---
 type: encounter
-# Provisional format — the battle tracker's real format is not designed yet.
+# The party joins by itself (party: false keeps it out); the links below are skipped as duplicates.
 location: "[[Lantern Bridge]]"
 difficulty: hard
 combatants:
@@ -22,6 +22,9 @@ combatants:
     hp: 27
     initiative: 3
     side: enemy
+  - monster: Giant Rat # from the Monster Manual, rolled once for the group
+    name: Bridge rat
+    count: 3
 tags:
   - encounter
 ---
