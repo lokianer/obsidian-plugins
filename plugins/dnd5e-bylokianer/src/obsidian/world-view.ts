@@ -204,7 +204,7 @@ export class WorldView extends ItemView {
         moves: (id) => this.deps.settings().viewMoves[id] ?? {},
         saveMoves: (id, moves) => void this.saveMoves(id, moves),
       });
-      this.factionView.update(view, this.angles(world, view.id));
+      this.factionView.update(view, this.angles(world, view.id), factionHues(world));
       return;
     }
     if (this.deps.settings().worldMode === 'matrix') {

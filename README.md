@@ -43,17 +43,22 @@ repository, pushed by CI from its subfolder (Obsidian reads `manifest.json` from
 A game master's thinking tool for D&D 5e campaigns kept in Obsidian. It is not a rules engine: the
 plugin shows and suggests, the GM decides. It grows in modules, one after another:
 
-| Module                                                                                             | Status                                               |
-| -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| ⚔️ **Factions:** factions as folders, relations as numbers, a faction world, tensions, session log | ✅ Built and accepted in Obsidian                    |
-| 📜 **NPC builder:** 5e stat blocks, New NPC with races, archetypes and dice tables (EN/DE)         | 🚧 Phases 1–4b built, awaiting the check in Obsidian |
-| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German          | 📐 Designed, after the NPC builder                   |
-| 🛡️ **Battle tracker**                                                                              | 🗓️ Planned                                           |
-| 🎲 **Dice**                                                                                        | 🗓️ Planned                                           |
+| Module                                                                                                              | Status                                               |
+| ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log     | ✅ Built and accepted in Obsidian                    |
+| 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | 🚧 Phases 1–4b built, awaiting the check in Obsidian |
+| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | 📐 Designed, after the NPC builder                   |
+| 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                           |
+| 🎲 **Dice**                                                                                                         | 🗓️ Planned                                           |
 
 <p align="center">
   <img src="site/assets/card.webp" alt="Faction card" width="360">
   <img src="site/assets/npc.webp" alt="Character card with short stats" width="360">
+</p>
+
+<p align="center">
+  <img src="site/assets/faction.webp" alt="Faction view of The Gutter Court in the faction colours" width="360">
+  <img src="site/assets/npc-dialog.webp" alt="The New NPC dialog with tiles and a live preview" width="360">
 </p>
 
 Everything about it — conventions, views, commands, settings — is in its

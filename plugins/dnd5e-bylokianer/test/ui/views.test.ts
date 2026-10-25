@@ -222,7 +222,7 @@ describe('faction view', () => {
     });
     const court = buildFactionView(world, COURT, 'public');
     if (court === null) throw new Error('no court');
-    view.update(court, new Map());
+    view.update(court, new Map(), factionHues(world));
     return saved;
   };
 
@@ -234,6 +234,21 @@ describe('faction view', () => {
     expect(texts(root, '.dnd5e-fv-chip title')[0]).toBe(
       'Mira Voss · AC 16 · HP 84 · CR 5 · out of line with its faction',
     );
+  });
+
+  it('speaks the graph’s language: colours, initials, hover lighting arrows', () => {
+    setup();
+    expect(root.querySelector('.dnd5e-fv-frame')?.classList.contains('has-hue')).toBe(true);
+    expect(texts(root, '.dnd5e-fv-initials')).toContain('GC');
+    const order = [...root.querySelectorAll('.dnd5e-fv-box')].find(
+      (b) => b.querySelector('.dnd5e-fv-box-title')?.textContent === 'Order of the Lantern',
+    );
+    order?.dispatchEvent(new Event('pointerenter'));
+    expect(root.querySelector('svg')?.classList.contains('is-focusing')).toBe(true);
+    expect(order?.classList.contains('is-lit')).toBe(true);
+    expect(root.querySelectorAll('.dnd5e-world-edge.is-lit').length).toBeGreaterThan(0);
+    order?.dispatchEvent(new Event('pointerleave'));
+    expect(root.querySelectorAll('.is-lit').length).toBe(0);
   });
 
   it('keeps where the frame was dragged', () => {

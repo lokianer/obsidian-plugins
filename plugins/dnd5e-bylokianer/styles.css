@@ -888,12 +888,6 @@
   font-weight: var(--font-normal);
 }
 
-.dnd5e-fv-box rect {
-  fill: var(--background-secondary);
-  stroke: var(--background-modifier-border);
-  stroke-width: 1.5;
-}
-
 /* Party and Unaffiliated: a card with a header, like a group on the canvas. */
 .dnd5e-world-frame {
   fill: var(--background-primary);
@@ -908,7 +902,9 @@
 }
 
 .dnd5e-world-frame-title,
-.dnd5e-world-frame-row {
+.dnd5e-world-frame-row,
+.dnd5e-fv-box-title,
+.dnd5e-fv-box-row {
   text-anchor: start;
 }
 
@@ -922,7 +918,6 @@
   fill: var(--text-faint);
 }
 
-.dnd5e-fv-box.is-group rect,
 .dnd5e-fv-box.is-ghost rect {
   stroke-dasharray: 5 4;
 }
@@ -949,10 +944,60 @@
   fill: var(--text-accent);
 }
 
-.dnd5e-fv-frame rect {
-  fill: var(--background-primary-alt, var(--background-secondary));
+/* The faction view in the graph's language: cards on the canvas, tinted by the faction's colour,
+   initials on discs, chips as pills with a colour dot. */
+.dnd5e-fv-frame rect,
+.dnd5e-fv-box rect {
+  fill: var(--background-primary);
   stroke: var(--background-modifier-border-hover, var(--background-modifier-border));
   stroke-width: 1.5;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.18));
+}
+
+.dnd5e-fv-frame.has-hue rect {
+  fill: color-mix(in srgb, var(--dnd5e-hue) 6%, var(--background-primary));
+  stroke: rgba(var(--dnd5e-hue-rgb), 0.6);
+  stroke-width: 2;
+}
+
+.dnd5e-fv-box.has-hue rect {
+  stroke: rgba(var(--dnd5e-hue-rgb), 0.55);
+}
+
+.dnd5e-fv-rule {
+  stroke: var(--background-modifier-border);
+  stroke-width: 1;
+}
+
+.dnd5e-fv-disc {
+  fill: var(--background-modifier-hover);
+  stroke: var(--background-modifier-border-hover, var(--text-faint));
+  stroke-width: 2;
+}
+
+.has-hue > .dnd5e-fv-disc {
+  fill: color-mix(in srgb, var(--dnd5e-hue) 22%, var(--background-primary));
+  stroke: var(--dnd5e-hue);
+}
+
+.dnd5e-fv-initials {
+  fill: var(--text-muted);
+  font-size: 16px;
+  font-weight: var(--font-bold);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.has-hue > .dnd5e-fv-initials {
+  fill: var(--dnd5e-hue);
+}
+
+.dnd5e-fv-dot {
+  fill: var(--text-faint);
+}
+
+.has-hue > .dnd5e-fv-dot {
+  fill: var(--dnd5e-hue);
 }
 
 .dnd5e-fv-frame-title {
@@ -972,13 +1017,19 @@
 }
 
 .dnd5e-fv-chip rect {
-  fill: var(--background-secondary);
+  fill: var(--background-primary);
   stroke: var(--background-modifier-border);
   stroke-width: 1.5;
 }
 
-.dnd5e-fv-chip:hover rect {
-  stroke: var(--interactive-accent);
+.dnd5e-fv-chip.has-hue rect {
+  stroke: rgba(var(--dnd5e-hue-rgb), 0.45);
+}
+
+.dnd5e-fv-chip:hover rect,
+.dnd5e-fv-chip.is-lit rect {
+  stroke: var(--dnd5e-hue, var(--interactive-accent));
+  stroke-width: 2;
 }
 
 /* A member out of line with its faction. */
@@ -988,13 +1039,24 @@
 }
 
 .dnd5e-fv-chip.is-selected rect {
-  fill: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-secondary));
+  fill: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-primary));
   stroke: var(--interactive-accent);
   stroke-width: 2.5;
 }
 
 .dnd5e-fv-chip.is-dim {
   opacity: 0.4;
+}
+
+/* Hover dims what the hovered element is not connected to, as in the graph. */
+.dnd5e-faction-view .dnd5e-fv-chip,
+.dnd5e-faction-view .dnd5e-fv-box {
+  transition: opacity 0.15s ease;
+}
+
+.dnd5e-faction-view.is-focusing .dnd5e-fv-chip:not(.is-lit),
+.dnd5e-faction-view.is-focusing .dnd5e-fv-box:not(.is-lit) {
+  opacity: 0.25;
 }
 
 /* Floating over the canvas: zoom buttons on the right, the colour scale at the bottom. */

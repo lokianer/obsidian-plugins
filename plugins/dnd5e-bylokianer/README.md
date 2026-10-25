@@ -30,14 +30,19 @@ note a new session note is made from.
 
 ## The faction world
 
-**Open faction world** (command or ribbon icon) opens a tab with all factions of the campaign:
+**Open faction world** (command or ribbon icon) opens a tab with all factions of the campaign —
+zoom and fit buttons float on the right, the −5 … +5 colour scale at the bottom:
 
-- **Graph** — factions as circles sized by power, sub-factions tied to their parent, the Party and
-  the unaffiliated characters as frames, unknown targets as dashed ghosts. Arrows are coloured from
+- **Graph** — factions as circles sized by power, each in a colour of Obsidian's palette (shared by
+  its sub-factions and members) with its initials, the name on a pill; sub-factions tied to their
+  parent, the Party and the unaffiliated characters as cards, unknown targets as dashed ghosts, all
+  on Obsidian's canvas dots. Hover a faction and its arrows and neighbours light up with the
+  values on the arrows while the rest fades. Arrows are coloured from
   red (−5) to green (+5); two arrows bow apart when both sides have a value. Friends cluster, enemies
   drift apart. Drag a faction to pin it, drag the background to pan, scroll or pinch to zoom.
 - **Matrix** — who (rows) towards whom (columns), each cell with its number and step name; values a
-  sub-faction or member only inherits are dashed.
+  sub-faction or member only inherits are dashed. Rows and columns carry the faction colours;
+  hovering a cell marks its row and column.
 - **Public / True** — Public every time the view opens; True adds the secret stances and marks
   where they differ from the public face.
 
@@ -57,7 +62,8 @@ newest session needs watching. The views' tooltips show each relation's last cha
 those lines.
 
 **Faction view.** Click a faction (or the Party / Unaffiliated frame) to open it: the faction as a
-frame with its members, the factions it relates to around it, own values as solid arrows. Members
+card in its colour with its members as pills, the factions it relates to as cards around it, own
+values as solid arrows — in the graph's look, hover included. Members
 whose own values differ from their faction's line have a yellow ring. Click a member to see all its
 stances, inherited ones dashed; click a sub-faction to go one level deeper; the breadcrumb leads
 back. Drag the frame (it carries its members) or a box to move it; the view keeps it per faction,

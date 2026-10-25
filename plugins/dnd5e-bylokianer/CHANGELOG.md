@@ -72,7 +72,9 @@ All notable changes to this plugin are documented here. The format follows
   on the arrows; Party and Unaffiliated as cards with a header and a count; floating zoom and fit
   buttons and a −5 … +5 colour scale. The matrix sits on a card like an Obsidian table, with colour
   dots and initials on rows and columns, a crosshair on the hovered cell's row and column and
-  hatched self cells.
+  hatched self cells. The faction view follows the same look: the faction as a card in its colour
+  with an initials disc, members as pills with a colour dot, the factions around as cards, hover
+  lighting an element's arrows with their values.
 - A cleaner look closer to Obsidian across card, faction world, faction view, tension panel and
   warnings modal: no nested boxes or coloured side bars, headings in normal case, values as a soft
   tint of their colour behind normal text, icon buttons that appear on hover (always on phones),

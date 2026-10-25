@@ -1,7 +1,8 @@
-// Drawing one faction's view: the faction as a frame with its member chips, the factions and groups
-// its arrows reach as boxes on a ring around it (in the world graph's angle order), and the arrows —
-// own values solid; a selected member's inherited ones dashed. Clicks lead into notes, deeper
-// faction views and the faction card.
+// Drawing one faction's view: the faction as a card with its member chips, the factions and groups
+// its arrows reach as cards on a ring around it (in the world graph's angle order), and the arrows —
+// own values solid; a selected member's inherited ones dashed. It speaks the world graph's language:
+// faction colours and initials, the canvas dots, hover lighting an element's arrows with their
+// values. Clicks lead into notes, deeper faction views and the faction card.
 
 import {
   type ChipSlot,
@@ -10,6 +11,7 @@ import {
   type ViewArrow,
   type ViewBox,
 } from '../factions/faction-view';
+import { type Hue, initials } from '../factions/hues';
 import type { Point } from '../factions/layout';
 import { signed, stepColour, stepName } from '../factions/steps';
 import type { T } from '../i18n/strings';
@@ -29,6 +31,19 @@ const BOX_HEAD = 40;
 const BOX_ROW = 26;
 const RING_GAP = 200;
 const ARROW = 9;
+const PILL = 26;
+/** Room the initials disc takes in a card's header. */
+const DISC = 48;
+
+/** Gives an SVG group its faction's colour, when it has one. */
+function paint(el: SVGGElement, hue: Hue | undefined): void {
+  if (hue === undefined) return;
+  el.addClass('has-hue');
+  el.setCssProps({
+    '--dnd5e-hue': `var(--color-${hue})`,
+    '--dnd5e-hue-rgb': `var(--color-${hue}-rgb)`,
+  });
+}
 
 export interface FactionViewActions {
   openNote: (path: string, newLeaf: boolean) => void;
@@ -72,6 +87,10 @@ export class FactionViewSvg {
   private moves = new Map<string, Point>();
   /** Set by a drag, so the click that ends it does not select or open anything. */
   private dragged = false;
+  private hues: ReadonlyMap<string, Hue> = new Map();
+  /** For hover: the drawn element of every id (a box stands for its characters too) and the arrows. */
+  private owners = new Map<string, SVGGElement>();
+  private arrowEls: { el: SVGGElement; ends: [string, string] }[] = [];
 
   constructor(
     parent: HTMLElement,
@@ -92,7 +111,12 @@ export class FactionViewSvg {
    * Draws a faction view. `angles` gives each faction's direction from the viewed faction in the
    * world graph, so the boxes keep the map's arrangement; missing ones are spread evenly.
    */
-  update(view: FactionView, angles: ReadonlyMap<string, number>): void {
+  update(
+    view: FactionView,
+    angles: ReadonlyMap<string, number>,
+    hues: ReadonlyMap<string, Hue> = this.hues,
+  ): void {
+    this.hues = hues;
     if (this.last?.view.id !== view.id) {
       this.selected = null;
       this.moves = new Map(Object.entries(this.actions.moves(view.id)));
@@ -154,7 +178,7 @@ export class FactionViewSvg {
     const frame: Rect = {
       x: 0,
       y: 0,
-      w: Math.max(gridW, 40 + textWidth(view.name, 18, true) + power),
+      w: Math.max(gridW, 40 + DISC + textWidth(view.name, 18, true) + power),
       h: FRAME_HEAD + Math.max(1, rows.length) * (CHIP_H + CHIP_GAP) + CHIP_GAP,
     };
     places.set(view.id, frame);
@@ -183,8 +207,8 @@ export class FactionViewSvg {
       const title = box.kind === 'group' ? '' : box.name;
       const w = Math.max(
         BOX_W,
-        textWidth(title, 16, true) + 32,
-        ...box.characters.map((c) => textWidth(c.name, 16) + 32),
+        textWidth(title, 16, true) + 32 + (box.kind === 'faction' ? DISC : 0),
+        ...box.characters.map((c) => textWidth(c.name, 16) + 48),
       );
       places.set(box.id, {
         x: Math.cos(angle) * radius * 1.3,
@@ -222,6 +246,8 @@ export class FactionViewSvg {
 
   private draw(view: FactionView, places: Map<string, Rect>): void {
     this.stage.empty();
+    this.owners.clear();
+    this.arrowEls = [];
     const frame = places.get(view.id);
     if (frame === undefined) return;
 
@@ -237,22 +263,29 @@ export class FactionViewSvg {
     const frameGroup = this.stage.createSvg('g', { cls: 'dnd5e-fv-frame' });
     const edgeLayer = this.stage.createSvg('g');
     const shapes = this.stage.createSvg('g');
+    paint(frameGroup, this.hues.get(view.id));
+    this.owners.set(view.id, frameGroup);
 
     const left = frame.x - frame.w / 2;
     const top = frame.y - frame.h / 2;
     frameGroup.createSvg('rect', {
-      attr: { x: left, y: top, width: frame.w, height: frame.h, rx: 12 },
+      attr: { x: left, y: top, width: frame.w, height: frame.h, rx: 14 },
     });
+    frameGroup.createSvg('line', {
+      cls: 'dnd5e-fv-rule',
+      attr: { x1: left, y1: top + FRAME_HEAD - 8, x2: left + frame.w, y2: top + FRAME_HEAD - 8 },
+    });
+    this.disc(frameGroup, left + 38, top + 25, 20, view.name, view.power !== null);
     this.bindDrag(frameGroup, view.id);
     const title = frameGroup.createSvg('text', {
       cls: 'dnd5e-fv-frame-title',
-      attr: { x: left + 20, y: top + 34 },
+      attr: { x: left + 22 + (view.power !== null ? DISC : 0), y: top + 31 },
     });
     title.textContent = view.name;
     if (view.power !== null) {
       const power = frameGroup.createSvg('text', {
         cls: 'dnd5e-fv-frame-power',
-        attr: { x: left + frame.w - 20, y: top + 34 },
+        attr: { x: left + frame.w - 20, y: top + 31 },
       });
       power.textContent = `${this.t('card.power')} ${view.power}`;
     }
@@ -265,16 +298,22 @@ export class FactionViewSvg {
       if (member.id === this.selected) cls.push('is-selected');
       if (this.selected !== null && member.id !== this.selected) cls.push('is-dim');
       const chip = shapes.createSvg('g', { cls });
+      paint(chip, this.hues.get(member.id));
+      this.owners.set(member.id, chip);
       chip.createSvg('rect', {
         attr: {
           x: r.x - r.w / 2,
           y: r.y - r.h / 2,
           width: r.w,
           height: r.h,
-          rx: member.kind === 'faction' ? 4 : r.h / 2,
+          rx: member.kind === 'faction' ? 10 : r.h / 2,
         },
       });
-      const label = chip.createSvg('text', { attr: { x: r.x, y: r.y + 6 } });
+      chip.createSvg('circle', {
+        cls: 'dnd5e-fv-dot',
+        attr: { cx: r.x - r.w / 2 + 18, cy: r.y, r: member.kind === 'faction' ? 6 : 5 },
+      });
+      const label = chip.createSvg('text', { attr: { x: r.x + 8, y: r.y + 6 } });
       label.textContent = member.name;
       const stats =
         member.kind === 'character' && member.notePath !== null
@@ -288,6 +327,7 @@ export class FactionViewSvg {
         .filter((part) => part !== null)
         .join(' · ');
       this.bindDrag(chip, view.id);
+      this.bindFocus(chip, [member.id]);
       chip.addEventListener('click', (event) => {
         event.stopPropagation();
         if (this.dragged) return;
@@ -313,17 +353,44 @@ export class FactionViewSvg {
     }
   }
 
+  /** A faction's initials on a tinted disc, as in the world graph; a plain group gets none. */
+  private disc(
+    group: SVGGElement,
+    x: number,
+    y: number,
+    r: number,
+    name: string,
+    show: boolean,
+  ): void {
+    if (!show) return;
+    group.createSvg('circle', { cls: 'dnd5e-fv-disc', attr: { cx: x, cy: y, r } });
+    const text = group.createSvg('text', {
+      cls: 'dnd5e-fv-initials',
+      attr: { x, y, dy: '0.35em' },
+    });
+    text.textContent = initials(name);
+  }
+
   private drawBox(layer: SVGGElement, box: ViewBox, places: Map<string, Rect>): void {
     const r = places.get(box.id);
     if (r === undefined) return;
     const group = layer.createSvg('g', { cls: ['dnd5e-fv-box', `is-${box.kind}`] });
-    group.createSvg('rect', {
-      attr: { x: r.x - r.w / 2, y: r.y - r.h / 2, width: r.w, height: r.h, rx: 8 },
-    });
+    paint(group, this.hues.get(box.id));
+    for (const id of [box.id, ...box.characters.map((c) => c.id)]) this.owners.set(id, group);
+    const [left, top] = [r.x - r.w / 2, r.y - r.h / 2];
+    group.createSvg('rect', { attr: { x: left, y: top, width: r.w, height: r.h, rx: 12 } });
+    if (box.characters.length > 0) {
+      group.createSvg('line', {
+        cls: 'dnd5e-fv-rule',
+        attr: { x1: left, y1: top + BOX_HEAD - 2, x2: left + r.w, y2: top + BOX_HEAD - 2 },
+      });
+    }
     this.bindDrag(group, box.id);
+    this.bindFocus(group, [box.id, ...box.characters.map((c) => c.id)]);
+    this.disc(group, left + 30, top + 20, 17, box.name, box.kind === 'faction');
     const name = group.createSvg('text', {
       cls: 'dnd5e-fv-box-title',
-      attr: { x: r.x, y: r.y - r.h / 2 + 26 },
+      attr: { x: left + 16 + (box.kind === 'faction' ? DISC - 6 : 0), y: top + 26 },
     });
     name.textContent =
       box.kind === 'group'
@@ -341,9 +408,10 @@ export class FactionViewSvg {
     for (const character of box.characters) {
       const c = places.get(character.id);
       if (c === undefined) continue;
+      group.createSvg('circle', { cls: 'dnd5e-fv-dot', attr: { cx: left + 20, cy: c.y, r: 3 } });
       const text = group.createSvg('text', {
         cls: 'dnd5e-fv-box-row',
-        attr: { x: c.x, y: c.y + 6 },
+        attr: { x: left + 32, y: c.y + 5.5 },
       });
       text.textContent = character.name;
       const path = character.notePath;
@@ -352,6 +420,25 @@ export class FactionViewSvg {
         if (this.dragged) return;
         if (path !== null) this.actions.openNote(path, event.ctrlKey || event.metaKey);
       });
+    }
+  }
+
+  /** Hovering an element lights its arrows and the elements at their other ends. */
+  private bindFocus(el: SVGGElement, ids: readonly string[]): void {
+    el.addEventListener('pointerenter', () => this.focusOn(ids));
+    el.addEventListener('pointerleave', () => this.focusOn(null));
+  }
+
+  private focusOn(ids: readonly string[] | null): void {
+    this.svg.toggleClass('is-focusing', ids !== null);
+    for (const el of this.owners.values()) el.removeClass('is-lit');
+    for (const { el } of this.arrowEls) el.removeClass('is-lit');
+    if (ids === null) return;
+    for (const id of ids) this.owners.get(id)?.addClass('is-lit');
+    for (const { el, ends } of this.arrowEls) {
+      if (!ends.some((end) => ids.includes(end))) continue;
+      el.addClass('is-lit');
+      for (const end of ends) this.owners.get(end)?.addClass('is-lit');
     }
   }
 
@@ -383,6 +470,7 @@ export class FactionViewSvg {
     if (arrow.inherited) cls.push('is-inherited');
     if (arrow.differs) cls.push('is-differs');
     const group = layer.createSvg('g', { cls });
+    this.arrowEls.push({ el: group, ends: [arrow.from, arrow.to] });
     group.setCssProps({ '--dnd5e-value-colour': stepColour(arrow.value) });
     group.createSvg('path', {
       cls: 'dnd5e-world-edge-line',
@@ -398,6 +486,13 @@ export class FactionViewSvg {
       cls: 'dnd5e-world-edge-hit',
       attr: { d: `M ${start.x} ${start.y} L ${tip.x} ${tip.y}` },
     });
+    // The value on a badge halfway, shown when the arrow is lit or hovered — as in the graph.
+    const badge = group.createSvg('g', {
+      cls: 'dnd5e-world-edge-value',
+      attr: { transform: `translate(${(start.x + base.x) / 2} ${(start.y + base.y) / 2})` },
+    });
+    badge.createSvg('rect', { attr: { x: -19, y: -13, width: 38, height: PILL, rx: 13 } });
+    badge.createSvg('text', { attr: { y: 6 } }).textContent = signed(arrow.value);
     const fromName =
       arrow.from === view.id
         ? view.name
