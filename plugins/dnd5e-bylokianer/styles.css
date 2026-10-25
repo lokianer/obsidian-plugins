@@ -1293,3 +1293,81 @@ a.dnd5e-tensions-name:hover {
     width: 100%;
   }
 }
+
+/* Editing in the opened stat block: values on hover, entry tools on hover (always on phones). */
+.dnd5e-statblock .is-editable {
+  border-radius: var(--radius-s);
+  cursor: text;
+}
+
+.dnd5e-statblock .is-editable:hover,
+.dnd5e-statblock .is-editable:focus-visible {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-sb-input,
+.dnd5e-sb-textarea {
+  width: 100%;
+  font-size: 16px;
+}
+
+.dnd5e-sb-line .dnd5e-sb-input {
+  width: auto;
+  min-width: 10em;
+  max-width: 100%;
+}
+
+.dnd5e-sb-ability .dnd5e-sb-input {
+  text-align: center;
+}
+
+.dnd5e-sb-textarea {
+  min-height: 6em;
+  margin-top: var(--size-4-1);
+  resize: vertical;
+}
+
+.dnd5e-sb-entry {
+  position: relative;
+}
+
+.dnd5e-sb-tools {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: var(--size-4-1);
+  opacity: 0;
+  background: var(--background-secondary);
+}
+
+.dnd5e-sb-entry:hover > .dnd5e-sb-tools,
+.dnd5e-sb-tools:focus-within,
+.is-mobile .dnd5e-sb-tools {
+  opacity: 1;
+}
+
+.is-mobile .dnd5e-sb-tools {
+  position: static;
+  justify-content: flex-end;
+}
+
+.dnd5e-sb-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin: var(--size-4-2) 0;
+}
+
+.dnd5e-sb-add {
+  margin-top: var(--size-4-1);
+  font-size: 16px;
+  color: var(--text-muted);
+  background: transparent;
+  box-shadow: none;
+}
+
+.dnd5e-sb-add:hover {
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
+}

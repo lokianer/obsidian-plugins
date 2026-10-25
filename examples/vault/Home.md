@@ -28,6 +28,8 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Own archetype | [[Lantern Warden]] | `type: archetype` note in `Templates/Archetypes/`, listed first in the archetype search |
 | Dice table override | [[NPC quirks]] | Replaces the default quirks table; the other tables stay the plugin's |
 | Add stat block | [[Sergeant Pell]] | Has no stat block: **Add stat block** inserts one under a new `## Stats`; a second run refuses |
+| Edit a stat block | [[Aldric Thane]], [[Lantern Warden]] | Open the block: click AC, HP, speed, senses, languages, CR, the name or an ability score to change it; pencil and × on traits and actions, **+ Add** under each section (Undo on remove) |
+| New archetype | command **New archetype** | Name and an archetype to start from (e.g. Spy) → a `type: archetype` note in `Templates/Archetypes/`, opened with its block unfolded |
 | AC · HP · CR on the card | [[Aldric Thane]], [[Ondine Vale]] | The card shows `AC 18 · HP 52 · CR 3`; it reads either block name; the faction view's member tooltips too |
 | Battle tracker | [[Ambush under the second arch]] | Party, a named NPC, groups with `count`; provisional format |
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |

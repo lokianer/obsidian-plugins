@@ -1,4 +1,4 @@
-// The NPC builder's commands: New NPC (also from a faction's card) and Add stat block. Writes a new
+// The NPC builder's commands: New NPC (also from a faction's card), New archetype and Add stat block. Writes a new
 // note with vault.create, changes an existing one with vault.process.
 
 import { normalizePath, Notice, type Plugin, TFile } from 'obsidian';
@@ -6,8 +6,21 @@ import { normalizePath, Notice, type Plugin, TFile } from 'obsidian';
 import { UNAFFILIATED } from '../factions/discover';
 import type { T } from '../i18n/strings';
 import { withName } from '../npc/archetypes';
-import { addStatblock, freePath, npcFolder, npcNote, type NpcChoices } from '../npc/note';
-import { ArchetypePicker, loadArchetypes, loadTables, NewNpcModal } from './npc-modal';
+import {
+  addStatblock,
+  archetypeNote,
+  freePath,
+  npcFolder,
+  npcNote,
+  type NpcChoices,
+} from '../npc/note';
+import {
+  ArchetypePicker,
+  loadArchetypes,
+  loadTables,
+  NewArchetypeModal,
+  NewNpcModal,
+} from './npc-modal';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 
@@ -18,6 +31,8 @@ export class NpcBuilder {
     private readonly t: T,
     private readonly settings: () => Settings,
     private readonly openNote: (path: string) => void,
+    /** Opens a note's stat block unfolded the next time it renders. */
+    private readonly unfold: (path: string) => void,
   ) {}
 
   /** Opens the New NPC dialog, with `faction` chosen (Unaffiliated when none is given). */
@@ -53,6 +68,21 @@ export class NpcBuilder {
     await vault.create(path, text);
     new Notice(this.t('npc.created', { path }));
     this.openNote(path);
+  }
+
+  /** New archetype: a note in the archetype folder from a base, opened with its block unfolded. */
+  async newArchetype(): Promise<void> {
+    const { app } = this.plugin;
+    const archetypes = await loadArchetypes(app, this.settings(), this.t);
+    new NewArchetypeModal(app, this.t, archetypes, async (name, base) => {
+      const folder = normalizePath(this.settings().archetypeFolder);
+      if (app.vault.getAbstractFileByPath(folder) === null) await app.vault.createFolder(folder);
+      const path = freePath(folder, name, (p) => app.vault.getAbstractFileByPath(p) !== null);
+      await app.vault.create(path, archetypeNote(name, base, this.t('archetype.intro')));
+      new Notice(this.t('archetype.created', { path }));
+      this.unfold(path);
+      this.openNote(path);
+    }).open();
   }
 
   /** Add stat block on the active note: pick an archetype, insert it under `## Stats`. */

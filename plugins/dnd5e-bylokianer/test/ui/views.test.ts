@@ -25,7 +25,7 @@ import { findStatblocks, parseStatblock, type Statblock } from '../../src/npc/st
 import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
-import { NewNpcModal } from '../../src/obsidian/npc-modal';
+import { NewArchetypeModal, NewNpcModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
@@ -247,6 +247,56 @@ describe('stat block', () => {
     expect(toggle).toHaveBeenCalledWith(true);
   });
 
+  it('edits values, abilities and entries in place through the given writes', async () => {
+    const aldric = `${F}/Order of the Lantern/Aldric Thane.md`;
+    const source = findStatblocks(readFileSync(join(vault, aldric), 'utf8'))[0]?.source ?? '';
+    const done = () => Promise.resolve(true);
+    const edit = {
+      scalar: vi.fn(done),
+      ability: vi.fn(done),
+      entry: vi.fn(done),
+      add: vi.fn(done),
+      remove: vi.fn(done),
+    };
+    renderStatblock(root, parseStatblock(parse(source)), { t, markdown, edit });
+    const type = (el: Element | null | undefined, value: string) => {
+      el?.dispatchEvent(new MouseEvent('click'));
+      const input = root.querySelector<HTMLInputElement>('input.dnd5e-sb-input');
+      if (input === null) throw new Error('no input');
+      input.value = value;
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    };
+    const ac = [...root.querySelectorAll('.dnd5e-sb-line')].find((l) =>
+      l.textContent?.startsWith('Armor Class'),
+    );
+    type(ac?.querySelector('.is-editable'), '17');
+    expect(edit.scalar).toHaveBeenCalledWith('ac', 18, 17);
+    type(root.querySelectorAll('.dnd5e-sb-ability .is-editable')[1], '14');
+    expect(edit.ability).toHaveBeenCalledWith(1, 11, 14);
+    type(root.querySelector('.dnd5e-sb-name'), 'Aldric the Brave');
+    expect(edit.scalar).toHaveBeenCalledWith('name', 'Captain Aldric Thane', 'Aldric the Brave');
+
+    expect(texts(root, '.dnd5e-sb-section-title')).toEqual([
+      'Traits',
+      'Actions',
+      'Bonus Actions',
+      'Reactions',
+    ]);
+    const actions = root.querySelectorAll('.dnd5e-sb-section')[1];
+    actions?.querySelector('.dnd5e-sb-add')?.dispatchEvent(new MouseEvent('click'));
+    expect(edit.add).toHaveBeenCalledWith('actions');
+    const lay = actions?.querySelectorAll('.dnd5e-sb-entry')[1];
+    lay?.querySelectorAll('.dnd5e-sb-tools button')[1]?.dispatchEvent(new MouseEvent('click'));
+    expect(edit.remove).toHaveBeenCalledWith('actions', 1, 'Lay on Hands');
+    lay?.querySelector('.dnd5e-sb-tools button')?.dispatchEvent(new MouseEvent('click'));
+    const name = lay?.querySelector<HTMLInputElement>('input');
+    if (name) name.value = 'Healing Touch';
+    lay?.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+    await Promise.resolve();
+    expect(edit.entry).toHaveBeenCalledWith('actions', 1, 'name', 'Lay on Hands', 'Healing Touch');
+    expect(edit.entry).toHaveBeenCalledTimes(1);
+  });
+
   it('renders every SRD NPC in German without unreadable values', () => {
     const de = createT('de');
     for (const archetype of SRD_NPCS) {
@@ -348,6 +398,26 @@ describe('New NPC dialog', () => {
     modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
     expect(create).not.toHaveBeenCalled();
     expect(notices[notices.length - 1]).toBe('No archetype called “Lantern Warden”');
+  });
+});
+
+describe('New archetype dialog', () => {
+  it('hands over the name and the archetype to start from', async () => {
+    const create = vi.fn(() => Promise.resolve());
+    const modal = new NewArchetypeModal(app, t, SRD_NPCS, create);
+    modal.onOpen();
+    const [name, base] = [...modal.contentEl.querySelectorAll('input')];
+    if (name && base) {
+      name.value = 'Archive Spy';
+      name.dispatchEvent(new Event('input'));
+      base.value = 'spy';
+      base.dispatchEvent(new Event('input'));
+    }
+    modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+    await Promise.resolve();
+    const calls = create.mock.calls as unknown as [string, { name: string } | null][];
+    expect(calls[0]?.[0]).toBe('Archive Spy');
+    expect(calls[0]?.[1]?.name).toBe('Spy');
   });
 });
 

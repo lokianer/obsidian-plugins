@@ -19,11 +19,10 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-1. The maintainer checks NPC builder phase 2 in Obsidian (list under "Half-finished"). Fix what
-   turns up.
-2. The phase 3 plan is written (`docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`) and
-   awaits the maintainer's approval — especially the proposed deviation: New archetype writes the
-   note from a base and the GM edits it in place, instead of a form modal. Build only after "passt".
+1. The maintainer checks NPC builder phases 2 and 3 in Obsidian (lists under "Half-finished"). Fix
+   what turns up.
+2. Then brainstorm the next module (battle tracker or dice) with the maintainer: spec, plan, review
+   stop.
 
 ## State of the working tree
 
@@ -76,7 +75,11 @@ From the maintainer's check in Obsidian, in order:
   (rendering), `stat-summaries.ts` (the card's `AC · HP · CR`, read from the note's text), the
   command Convert stat block, example vault notes on the new block (Ondine kept on `statblock`),
   README attribution. Seen in Chromium at desktop and phone width.
-- Phase 3 plan written after the maintainer said "mach weiter" (they test phase 2 later).
+- Phase 3 plan written after the maintainer said "mach weiter" (they test phase 2 later); approved
+  with its deviation ("passt") and built: `src/npc/block-edit.ts` (scalars via the frontmatter line
+  editor on the block's lines, one ability, entries set/add/remove), `statblock-edits.ts` (writes,
+  block found by its fence line), editable rendering in `statblock-view.ts`, `write.ts` generalised
+  to text edits (with Undo), `archetypeNote` and the New archetype dialog/command.
 - NPC builder phase 1 accepted ("passt"); phase 2 planned, approved ("Ja") and built:
   `src/npc/archetypes.ts` (own archetypes from notes, search, `withName`), `src/npc/tables.ts`
   (default dice tables, note overrides), `src/npc/note.ts` (NPC note from template, Add stat block,
@@ -108,6 +111,17 @@ Bench/<name>.md` opens: frontmatter `type: npc`, race, alignment, `archetype: Gu
 6. **Settings**: NPC template, archetype folder, tables folder, folder for NPCs of no faction — in
    both the settings search (1.13+) and the classic tab. German UI says "Neuer NSC".
 7. Revert the example vault afterwards (`git checkout examples/vault`, delete created notes).
+
+**Phase 3 — editing in the stat block**
+
+8. Open Aldric Thane's block: click Armor Class, type 19, Enter → `ac: 19` in the note (`git diff`:
+   one line); Esc cancels; click DEX 11 → 14 changes one number of `stats: [...]`; click the name.
+   In Live Preview the cursor must not jump into the block; the block stays open after the write.
+9. Actions: pencil on Lay on Hands → change name and text → Save writes them (a text with `:` gets
+   quoted); × removes it with an Undo notice that puts it back; **+ Add** under Bonus Actions starts
+   `bonus_actions:` with "New entry".
+10. **New archetype**: name "Archive Spy", start from Spy → `Templates/Archetypes/Archive Spy.md`
+    opens with the block unfolded and editable; it is offered in New NPC's archetype search.
 
 ## Decisions taken this session
 
@@ -145,5 +159,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 237 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 247 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

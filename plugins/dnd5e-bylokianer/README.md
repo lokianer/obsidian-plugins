@@ -87,6 +87,13 @@ Archetypes are the 21 SRD NPCs and your own: notes with `type: archetype` and a 
 replaces that dice table. **Add stat block** gives the open note a stat block from an archetype,
 under a new `## Stats` heading; it leaves a note that has one alone.
 
+**Editing a stat block.** Opened, a stat block is editable where it stands: click the name, AC, HP,
+speed, senses, languages, CR or an ability score, type, Enter writes (Esc cancels). Traits, actions,
+bonus actions and reactions have a pencil (name and text) and × (with Undo) on hover, and **+ Add**
+under each section. Every change is one line edit inside the block; when the note says something
+else than you saw, nothing is written. **New archetype** asks for a name and an archetype to start
+from (or none) and writes the archetype note, opened for editing.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button

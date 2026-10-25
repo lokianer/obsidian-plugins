@@ -16,32 +16,38 @@ function explain(refusal: Refusal, t: T): string {
   return t(`refusal.${refusal.code}` as StringKey);
 }
 
-function notifyRefusal(refusal: Refusal, op: EditOp, t: T): void {
+function notifyRefusal(refusal: Refusal, key: string, t: T): void {
   new Notice(
     refusal.code === 'changed'
       ? t('notice.changed')
-      : t('notice.refused', { key: op.key, reason: explain(refusal, t) }),
+      : t('notice.refused', { key, reason: explain(refusal, t) }),
   );
 }
 
-/** Applies one operation to the file; returns the texts before and after, or null if refused. */
+/** An edit of a note's whole text: the new text, or why not. */
+export type TextEdit = (
+  text: string,
+) => { ok: true; text: string } | { ok: false; refusal: Refusal };
+
+/** Applies one edit to the file; returns the texts before and after, or null if refused. */
 async function apply(
   app: App,
   file: TFile,
-  op: EditOp,
+  edit: TextEdit,
+  key: string,
   t: T,
 ): Promise<{ before: string; after: string } | null> {
   // Checked on the cached text first, so a refused edit does not touch the file at all.
-  const first = applyOp(await app.vault.read(file), op);
+  const first = edit(await app.vault.read(file));
   if (!first.ok) {
-    notifyRefusal(first.refusal, op, t);
+    notifyRefusal(first.refusal, key, t);
     return null;
   }
   let refusal: Refusal | null = null;
   let before = '';
   let after = '';
   await app.vault.process(file, (text) => {
-    const result = applyOp(text, op);
+    const result = edit(text);
     if (!result.ok) {
       refusal = result.refusal;
       return text;
@@ -51,25 +57,37 @@ async function apply(
     return result.text;
   });
   if (refusal !== null) {
-    notifyRefusal(refusal, op, t);
+    notifyRefusal(refusal, key, t);
     return null;
   }
   return { before, after };
 }
 
-export async function writeOp(app: App, file: TFile, op: EditOp, t: T): Promise<boolean> {
-  return (await apply(app, file, op, t)) !== null;
+/** Writes one edit; on a refusal a notice says why and nothing is written. */
+export async function writeEdit(
+  app: App,
+  file: TFile,
+  t: T,
+  key: string,
+  edit: TextEdit,
+): Promise<boolean> {
+  return (await apply(app, file, edit, key, t)) !== null;
 }
 
-/** Like writeOp, with a notice that can put the note back exactly as it was for a few seconds. */
+export async function writeOp(app: App, file: TFile, op: EditOp, t: T): Promise<boolean> {
+  return writeEdit(app, file, t, op.key, (text) => applyOp(text, op));
+}
+
+/** Like writeEdit, with a notice that can put the note back exactly as it was for a few seconds. */
 export async function undoableWrite(
   app: App,
   file: TFile,
   t: T,
   label: string,
-  op: EditOp,
+  edit: EditOp | TextEdit,
 ): Promise<boolean> {
-  const done = await apply(app, file, op, t);
+  const run: TextEdit = typeof edit === 'function' ? edit : (text) => applyOp(text, edit);
+  const done = await apply(app, file, run, typeof edit === 'function' ? label : edit.key, t);
   if (done === null) {
     return false;
   }

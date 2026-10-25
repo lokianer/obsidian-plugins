@@ -1,6 +1,6 @@
 # NPC Builder Phase 3 — Editing and Template Builder — Implementation Plan
 
-**Status:** draft, awaiting the maintainer's approval (one deviation from the spec, below).
+**Status:** approved with the deviation ("passt", 2026-10-25) and built; tasks 1–5 done, the check in Obsidian is open.
 
 **Goal:** The opened stat block is editable where it stands, like the faction card: click a value,
 type, Enter writes one line inside the block. Traits, actions, bonus actions, reactions and

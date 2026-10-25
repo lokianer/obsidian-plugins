@@ -8,6 +8,9 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Editing in the stat block** (NPC builder, phase 3): values, ability scores and entries of an
+  opened block are edited in place as line edits; entries added and removed (with Undo); command
+  **New archetype** writes an archetype note from a base, opened for editing.
 - **New NPC** (NPC builder, phase 2): a dialog (command, and a button on faction cards) that writes
   an NPC note from the template into the faction's folder, with dice tables for name and
   personality and a stat block from an archetype — the SRD NPCs or the GM's own `type: archetype`

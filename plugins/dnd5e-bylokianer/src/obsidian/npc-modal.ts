@@ -248,6 +248,64 @@ export class NewNpcModal extends Modal {
   }
 }
 
+/** New archetype: a name and an archetype to start from (or none, for a blank stat block). */
+export class NewArchetypeModal extends Modal {
+  private name = '';
+  private base = '';
+
+  constructor(
+    app: App,
+    private readonly t: T,
+    private readonly archetypes: readonly Archetype[],
+    private readonly create: (name: string, base: Archetype | null) => Promise<void>,
+  ) {
+    super(app);
+  }
+
+  onOpen(): void {
+    const { t } = this;
+    this.setTitle(t('archetype.title'));
+    this.modalEl.addClass('dnd5e-npc-modal');
+    new Setting(this.contentEl)
+      .setName(t('archetype.name'))
+      .addText((text) => text.onChange((value) => (this.name = value)));
+    new Setting(this.contentEl).setName(t('archetype.base')).addText((text) => {
+      text.setPlaceholder(t('archetype.base.placeholder')).onChange((v) => (this.base = v));
+      new ArchetypeSuggest(this.app, text.inputEl, this.archetypes, t).onSelect((archetype) => {
+        text.setValue(archetype.name);
+        this.base = archetype.name;
+      });
+    });
+    new Setting(this.contentEl).addButton((button) =>
+      button
+        .setButtonText(t('archetype.create'))
+        .setCta()
+        .onClick(() => void this.submit()),
+    );
+  }
+
+  private async submit(): Promise<void> {
+    const name = this.name.trim();
+    if (name === '') {
+      new Notice(this.t('npc.needName'));
+      return;
+    }
+    const wanted = this.base.trim().toLowerCase();
+    const base =
+      wanted === '' ? null : (this.archetypes.find((a) => a.name.toLowerCase() === wanted) ?? null);
+    if (wanted !== '' && base === null) {
+      new Notice(this.t('npc.unknownArchetype', { name: this.base.trim() }));
+      return;
+    }
+    await this.create(name, base);
+    this.close();
+  }
+
+  onClose(): void {
+    this.contentEl.empty();
+  }
+}
+
 /** Picks an archetype for Add stat block. */
 export class ArchetypePicker extends FuzzySuggestModal<Archetype> {
   constructor(

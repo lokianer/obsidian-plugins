@@ -19,6 +19,7 @@ import { ModeStore } from './obsidian/mode-store';
 import { SessionLog } from './obsidian/session-log';
 import { NoteStatblocks } from './obsidian/note-statblocks';
 import { NpcBuilder } from './obsidian/npc-builder';
+import { statblockEdits } from './obsidian/statblock-edits';
 import { renderFolded, renderInvalid } from './obsidian/statblock-view';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
 import { WorldCache } from './obsidian/world-cache';
@@ -147,7 +148,12 @@ export default class Dnd5ePlugin extends Plugin {
       }
       const child = new MarkdownRenderChild(el);
       ctx.addChild(child);
+      const file = this.app.vault.getFileByPath(ctx.sourcePath);
       renderFolded(el, parseStatblock(data), {
+        edit:
+          file === null
+            ? undefined
+            : statblockEdits(this.app, file, t, () => ctx.getSectionInfo(el)?.lineStart ?? null),
         t,
         markdown: (markdown, target) =>
           void MarkdownRenderer.render(this.app, markdown, target, ctx.sourcePath, child),
@@ -181,11 +187,17 @@ export default class Dnd5ePlugin extends Plugin {
       t,
       () => this.options,
       (path) => openNote(path, false),
+      (path) => openStatblocks.add(path),
     );
     this.addCommand({
       id: 'new-npc',
       name: t('command.newNpc'),
       callback: () => void npcs.newNpc(),
+    });
+    this.addCommand({
+      id: 'new-archetype',
+      name: t('command.newArchetype'),
+      callback: () => void npcs.newArchetype(),
     });
     this.addCommand({
       id: 'add-statblock',

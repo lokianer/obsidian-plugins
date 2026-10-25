@@ -159,3 +159,38 @@ export function freePath(folder: string, name: string, exists: (path: string) =>
   while (exists(at(n === 1 ? '' : ` ${n}`))) n++;
   return at(n === 1 ? '' : ` ${n}`);
 }
+
+/** A blank stat block for an archetype built from scratch: a commoner's numbers. */
+const BLANK = [
+  'size: Medium',
+  'type: humanoid',
+  'ac: 10',
+  'hp: 4',
+  'hit_dice: "1d8"',
+  'speed: "30 ft."',
+  'stats: [10, 10, 10, 10, 10, 10]',
+  'senses: passive Perception 10',
+  'languages: Common',
+  'cr: 0',
+  'actions:',
+  '  - name: Club',
+  '    desc: "Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage."',
+].join('\n');
+
+/** An archetype note: `type: archetype`, its name as heading, `intro`, and the stat block. */
+export function archetypeNote(name: string, base: Archetype | null, intro: string): string {
+  return [
+    '---',
+    'type: archetype',
+    'tags:',
+    '  - archetype',
+    '---',
+    '',
+    `# ${name}`,
+    '',
+    intro,
+    '',
+    ...fenced(withName(base?.yaml ?? BLANK, name)),
+    '',
+  ].join('\n');
+}

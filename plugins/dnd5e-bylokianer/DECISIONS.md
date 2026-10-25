@@ -272,3 +272,22 @@ Approved plan (maintainer: "Ja"). Calls made while building:
 - German UI says "NSC" for NPC, as German rulebooks do; keys and file names stay English.
 
 Left out (phase 3): editing inside the stat block and a dialog that builds archetypes.
+
+## 2026-10-25 · NPC builder phase 3: editing in place, New archetype without a form
+
+The maintainer approved the plan with its deviation from the spec ("passt"): **New archetype** asks
+for a name and an archetype to start from, writes the note and opens it; the archetype is shaped
+with the in-place editing of the stat block, not in a form modal — one editor instead of two.
+
+Calls made while building:
+
+- Scalars inside a block are edited by running the frontmatter line editor on the block's lines,
+  so quoting, comments and refusals behave exactly like the faction card's.
+- The block is found again by the line its fence opens on, asked at write time; when Obsidian
+  cannot tell, the note's only `dnd5e-statblock` block is used, else the edit is refused.
+- While editing, Traits, Actions, Bonus Actions and Reactions show even when empty (to add the
+  first entry); Legendary Actions only when present. A new entry is "New entry" with no text.
+- Saves, skills, damage and condition lines are read-only for now (they are lists of pairs).
+
+Left out: editing saves and skills, spells, and Fantasy Statblocks' `statblock` blocks (convert
+first).

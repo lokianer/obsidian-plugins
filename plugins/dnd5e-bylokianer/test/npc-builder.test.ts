@@ -4,7 +4,14 @@ import { parse } from 'yaml';
 import { PARTY, UNAFFILIATED } from '../src/factions/discover';
 import { buildWorld } from '../src/factions/world';
 import { ownArchetype, searchArchetypes, withName, type Archetype } from '../src/npc/archetypes';
-import { addStatblock, freePath, npcFolder, npcNote, type NpcChoices } from '../src/npc/note';
+import {
+  addStatblock,
+  archetypeNote,
+  freePath,
+  npcFolder,
+  npcNote,
+  type NpcChoices,
+} from '../src/npc/note';
 import { SRD_NPCS } from '../src/npc/srd';
 import { findStatblocks, parseStatblock } from '../src/npc/statblock';
 import { DEFAULT_TABLES, pick, TABLE_NAMES, tableFromNote, tableNote } from '../src/npc/tables';
@@ -158,5 +165,24 @@ describe('placement', () => {
     const taken = new Set(['A/Pell.md', 'A/Pell 2.md']);
     expect(freePath('A', 'Pell', (p) => taken.has(p))).toBe('A/Pell 3.md');
     expect(freePath('', 'Mira: Voss?', () => false)).toBe('Mira Voss.md');
+  });
+});
+
+describe('archetypeNote', () => {
+  it('writes an archetype note from a base, or from a blank block, that reads back as one', () => {
+    const spy = SRD_NPCS.find((a) => a.name === 'Spy') ?? null;
+    const note = archetypeNote('Archive Spy', spy, 'An archetype.');
+    const own = ownArchetype('Templates/Archetypes/Archive Spy.md', note, parse);
+    expect(own).toMatchObject({ name: 'Archive Spy', cr: '1' });
+    expect(parseStatblock(parse(findStatblocks(note)[0]?.source ?? '')).name).toBe('Archive Spy');
+    const blank = archetypeNote('Lamplighter', null, 'An archetype.');
+    const block = parseStatblock(parse(findStatblocks(blank)[0]?.source ?? ''));
+    expect([block.name, block.ac, block.hp, block.cr, block.unreadable]).toEqual([
+      'Lamplighter',
+      10,
+      4,
+      '0',
+      [],
+    ]);
   });
 });
