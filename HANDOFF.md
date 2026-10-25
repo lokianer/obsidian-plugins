@@ -61,6 +61,13 @@ From the maintainer's check in Obsidian, in order:
   tension panel in happy-dom (stand-in `obsidian` module aliased in `vitest.config.ts`, DOM helpers
   strict about class tokens); with the old graph bug put back two tests fail.
 - NPC builder spec and phase 1 plan written; the maintainer approved both ("passt").
+- Project page `site/` (static HTML/CSS, real screenshots from the renderers, dark and light, phone
+  width checked) and `.github/workflows/pages.yml`; root README rewritten to the current state. The
+  maintainer asked for it "with the brag skill" — no such skill exists in this environment, so it was
+  built by hand. **Needs once:** Settings → Pages → Source "GitHub Actions"; then it deploys from
+  `main` to https://lokianer.github.io/obsidian-plugins/. Screenshots were made in the scratchpad
+  harness (stub `obsidian` with Lucide-like icons, data from the clean example vault); redo them
+  when the views change.
 - NPC builder phase 1 built: `src/npc/statblock.ts` (model, derived values, blocks in a note,
   Convert), `src/npc/srd.ts` (21 SRD NPCs from the 5e-bits database, checked against the SRD in
   tests — which caught a wrong Cult Fanatic HP there — with `NOTICE.md`), `statblock-view.ts`

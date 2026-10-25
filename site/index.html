@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>dnd5e-byLokianer · Obsidian plugins for game masters</title>
+    <meta
+      name="description"
+      content="Local-first Obsidian plugins for D&amp;D 5e game masters: factions as folders, relations as numbers, a living faction world, 5e stat blocks — all plain Markdown."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4 58 19v26L32 60 6 45V19z' fill='%237f6df2'/%3E%3Cpath d='M32 4v56M6 19l26 15 26-15' stroke='%23fff' stroke-opacity='.5' fill='none' stroke-width='3'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="#top" aria-label="Home">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M32 4 58 19v26L32 60 6 45V19z" />
+          <path class="facet" d="M32 4v56M6 19l26 15 26-15" />
+        </svg>
+        <span>dnd5e<span class="dim">-byLokianer</span></span>
+      </a>
+      <nav>
+        <a href="#factions">Factions</a>
+        <a href="#npcs">NPCs</a>
+        <a href="#sessions">Sessions</a>
+        <a href="#roadmap">Roadmap</a>
+        <a class="button small" href="https://github.com/lokianer/obsidian-plugins">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Obsidian plugin · D&amp;D 5e · local-first</p>
+          <h1>
+            Your campaign already knows who hates whom.<br /><span class="grad"
+              >Now you can see it.</span
+            >
+          </h1>
+          <p class="lead">
+            A game master's thinking tool for campaigns kept in Obsidian. Factions are folders,
+            relations are numbers you type, NPCs carry their stat blocks — and the plugin turns
+            those plain Markdown notes into a living world you can read at a glance and change in
+            place.
+          </p>
+          <div class="cta">
+            <a class="button" href="#try">Try the example vault</a>
+            <a class="button ghost" href="https://github.com/lokianer/obsidian-plugins"
+              >Source on GitHub</a
+            >
+          </div>
+          <ul class="chips">
+            <li>Plain Markdown</li>
+            <li>No network, no accounts</li>
+            <li>Desktop &amp; mobile</li>
+            <li>English &amp; German</li>
+            <li>MIT</li>
+          </ul>
+        </div>
+        <figure class="window hero-shot">
+          <div class="window-bar"><i></i><i></i><i></i><span>Faction world</span></div>
+          <img
+            src="assets/graph.webp"
+            alt="The faction world graph of the Silverstadt example campaign: factions as circles sized by power, coloured arrows for their relations, the Party and Unaffiliated as frames."
+          />
+        </figure>
+      </section>
+
+      <section class="principles">
+        <div>
+          <strong>Files first.</strong> Your notes are the truth; everything the plugin shows is
+          rebuilt from them.
+        </div>
+        <div>
+          <strong>Readable without it.</strong> Every convention is hand-writable YAML any editor
+          shows sensibly.
+        </div>
+        <div>
+          <strong>Edits, not rewrites.</strong> Changes are single-line edits — comments, quotes and
+          order stay.
+        </div>
+        <div>
+          <strong>Every theme.</strong> Obsidian's own CSS variables only, dark first, at least
+          16&nbsp;px text.
+        </div>
+      </section>
+
+      <section id="factions" class="feature">
+        <div class="feature-copy">
+          <p class="eyebrow">Module 1 · Factions · accepted</p>
+          <h2>Factions are folders. Relations are numbers.</h2>
+          <p>
+            A folder with a <code>factions.md</code> is a faction; the character notes inside are
+            its members; a faction folder inside another is a sub-faction. Each relation is a value
+            from <b class="neg">−5</b> war to <b class="pos">+5</b> sworn — one-directional, with an
+            optional reason.
+          </p>
+          <pre><code><span class="k">type</span>: faction
+<span class="k">power</span>: 3
+<span class="k">relations</span>:            <span class="c"># the public face</span>
+  Order of the Lantern: -4
+  The Archivists:
+    value: 1
+    why: "[[Mira Voss]]"
+<span class="k">secret_relations</span>:     <span class="c"># the true stance, GM only</span>
+  The Archivists: -2</code></pre>
+          <ul class="ticks">
+            <li><b>Public and true.</b> Secrets never show in anything marked public.</li>
+            <li>
+              <b>Inheritance.</b> Members take their faction's stance unless they state their own.
+            </li>
+            <li>
+              <b>Never fatal.</b> Broken values become warnings with a one-click Fix, not a blank
+              view.
+            </li>
+          </ul>
+        </div>
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>The Drowned Choir</span></div>
+          <img
+            src="assets/card.webp"
+            alt="The faction card replacing Obsidian's Properties: power pips, relation sliders with step names, secret relations folded."
+            loading="lazy"
+          />
+        </figure>
+      </section>
+
+      <section class="gallery">
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>Matrix</span></div>
+          <img
+            src="assets/matrix.webp"
+            alt="Matrix of every faction towards every other, coloured cells with number and step name; inherited values dashed."
+            loading="lazy"
+          />
+          <figcaption><b>Matrix.</b> Every value at a glance; inherited ones dashed.</figcaption>
+        </figure>
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>The Gutter Court</span></div>
+          <img
+            src="assets/faction.webp"
+            alt="Faction view of The Gutter Court: the faction as a frame with its members, arrows to the factions it relates to."
+            loading="lazy"
+          />
+          <figcaption>
+            <b>Faction view.</b> Drill into a faction; drag the frame and boxes where you like.
+          </figcaption>
+        </figure>
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>Popover</span></div>
+          <img
+            src="assets/popover.webp"
+            alt="Value popover on a matrix cell: slider, reason, the inherited fallback, Reset to inherited and Open card."
+            loading="lazy"
+          />
+          <figcaption>
+            <b>Edit in place.</b> Click a cell or arrow; the write lands in the right note.
+          </figcaption>
+        </figure>
+        <figure class="window tall">
+          <div class="window-bar"><i></i><i></i><i></i><span>Tensions</span></div>
+          <img
+            src="assets/tensions.webp"
+            alt="Tension panel in True mode listing members out of line with their faction and public faces hiding a different truth."
+            loading="lazy"
+          />
+          <figcaption><b>Tensions.</b> Who is out of line, what the public face hides.</figcaption>
+        </figure>
+      </section>
+
+      <section id="npcs" class="feature reverse">
+        <div class="feature-copy">
+          <p class="eyebrow">Module 2 · NPC builder · phase 1</p>
+          <h2>Stat blocks where you need them.</h2>
+          <p>
+            A <code>dnd5e-statblock</code> block holds a 5e stat block in the YAML Fantasy
+            Statblocks users already know. The faction card puts AC, HP, CR, speed and the ability
+            modifiers right under the name; the full block waits, folded, where it stands in the
+            note — modifiers, XP and proficiency bonus worked out.
+          </p>
+          <ul class="ticks">
+            <li><b>All 21 SRD 5.1 NPCs</b> built in, checked against the SRD in tests.</li>
+            <li><b>Compatible.</b> One command converts Fantasy Statblocks blocks and back.</li>
+            <li>
+              <b>Coming next:</b> a New NPC dialog that files the note into its faction, your own
+              archetypes, dice tables.
+            </li>
+          </ul>
+        </div>
+        <div class="stack">
+          <figure class="window">
+            <div class="window-bar"><i></i><i></i><i></i><span>Mira Voss</span></div>
+            <img
+              src="assets/npc.webp"
+              alt="Character card of Mira Voss with short stats under the title: AC 16, HP 84, CR 5, speed 30 ft. and the six ability modifiers."
+              loading="lazy"
+            />
+          </figure>
+          <figure class="window offset">
+            <div class="window-bar"><i></i><i></i><i></i><span>Stat block</span></div>
+            <img
+              src="assets/statblock.webp"
+              alt="A full 5e stat block rendered in Obsidian's look: abilities, saves, skills, challenge with XP, traits, actions and reactions."
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section id="sessions" class="band">
+        <div>
+          <p class="eyebrow">The session note is the spine</p>
+          <h2>Change a stance, log it with one click.</h2>
+          <p>
+            After every change a notice offers <b>Log → Session 14</b>. One click writes a line
+            under <code>## Log</code> of tonight's session — secret changes inside a
+            <code>[!gm]</code> callout — and the views show each relation's history in their
+            tooltips. Starting the next session carries the loot over, each item marked with where
+            it was found, so there is only ever one note to watch.
+          </p>
+        </div>
+        <pre class="log"><code><span class="h">## Log</span>
+- 20:31 Order of the Lantern → The Gutter Court: −2 → −3
+- 21:40 The party now knows [[Lady Vermillion]].
+&gt; [!gm]
+&gt; - 21:52 The Bench → Order of the Lantern: −4 → +4
+
+<span class="h">## Loot</span>
+| Item | Who has it |
+| --- | --- |
+| Mira's calling card (from [[Session 14 – Bell Square]]) | Orrin |</code></pre>
+      </section>
+
+      <section id="roadmap" class="roadmap">
+        <h2>Where it stands</h2>
+        <ol>
+          <li class="done">
+            <span>Factions</span>data model, card, world graph &amp; matrix, faction view, tensions,
+            popover, session log — accepted in Obsidian
+          </li>
+          <li class="now">
+            <span>NPC builder</span>stat blocks and short stats (built) → New NPC dialog,
+            archetypes, dice tables → editing in the block
+          </li>
+          <li><span>Battle tracker</span>rounds, damage and outcomes into the session log</li>
+          <li><span>Dice</span>rolls and rollable tables logged to tonight's session</li>
+        </ol>
+        <p class="note">
+          In development, not released yet. Built in small, tested phases; every phase is checked
+          inside Obsidian before it counts.
+        </p>
+      </section>
+
+      <section id="try" class="try">
+        <h2>Try it on Silverstadt</h2>
+        <p>
+          The repository ships an example campaign — a city of tides, bells and records with five
+          factions, secret stances, stat blocks and session notes. Build the plugin into it and open
+          the folder as a vault.
+        </p>
+        <pre><code>git clone https://github.com/lokianer/obsidian-plugins
+cd obsidian-plugins
+pnpm install
+pnpm --filter dnd5e-bylokianer build
+pnpm --filter dnd5e-bylokianer install-example
+<span class="c"># open examples/vault in Obsidian, enable dnd5e-byLokianer</span></code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        © 2026 Lokianer · MIT licence ·
+        <a href="https://github.com/lokianer/obsidian-plugins"
+          >github.com/lokianer/obsidian-plugins</a
+        >
+      </p>
+      <p class="small">
+        Includes material from the System Reference Document 5.1 by Wizards of the Coast LLC,
+        licensed under
+        <a href="https://creativecommons.org/licenses/by/4.0/legalcode">CC-BY-4.0</a>. Not
+        affiliated with or endorsed by Wizards of the Coast or Obsidian.
+      </p>
+    </footer>
+  </body>
+</html>

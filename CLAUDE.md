@@ -54,6 +54,7 @@ an edge case, add a note for it there and a row to that table. Only `.obsidian/w
 plugins/<plugin-id>/     one Obsidian plugin each (manifest.json, src/, tests, its own docs)
 packages/<name>/         shared pure TypeScript (no Obsidian API, no DOM), unit-tested in Node
 examples/vault/          shared test vault, pushed
+site/                    project page (GitHub Pages, deployed from main by .github/workflows/pages.yml)
 Obsidian Plugins Vault/  private, git-ignored
 ```
 
