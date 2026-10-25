@@ -8,6 +8,13 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Deck of Many Things** (module 4, phase D1): a tab drawing from the SRD deck (22 cards, 13 as a
+  setting) by its rules — declared draws, the Fool's redraw, the Jester's and the Idiot's extra
+  draws, The Void and Donjon ending the drawing, the Fool and the Jester leaving the deck. Cards
+  turn over and show their playing card, both names and the effect in English or German. The state
+  and draw history live in a `type: deck` note made on the first draw; edits by hand show in the
+  tab. Command **Open Deck of Many Things** and a ribbon icon.
+
 - **German spell texts** (spellbook, phase S2): the descriptions, "At Higher Levels" and materials of
   all 319 spells in German — German dice notation (8W6), distances in metres, weights in kilograms,
   the German rules terms; tested for completeness and for keeping every numbered die of the

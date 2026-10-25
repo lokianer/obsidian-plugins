@@ -45,6 +45,8 @@ export interface Settings {
   tableLanguage: 'auto' | Lang;
   /** The spellbook's filters and picked spell, read back with care (readFilters). */
   spellbook: unknown;
+  /** The size of a new standard Deck of Many Things. */
+  deckSize: 13 | 22;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -63,6 +65,7 @@ export const DEFAULT_SETTINGS: Settings = {
   racesFolder: 'Templates/Races',
   tableLanguage: 'auto',
   spellbook: null,
+  deckSize: 22,
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */
@@ -82,6 +85,7 @@ const PATHS: readonly PathKey[] = [
   'npcFolder',
 ];
 const LANGS = ['auto', 'en', 'de'] as const;
+const DECK_SIZES = ['22', '13'] as const;
 const isPath = (key: string): key is PathKey => (PATHS as readonly string[]).includes(key);
 
 const STEP_KEY = 'step:';
@@ -127,6 +131,15 @@ export class SettingsTab extends PluginSettingTab {
           options: Object.fromEntries(LANGS.map((l) => [l, this.t(`settings.tableLanguage.${l}`)])),
         },
       },
+      {
+        name: this.t('settings.deckSize'),
+        desc: this.t('settings.deckSize.desc'),
+        control: {
+          type: 'dropdown',
+          key: 'deckSize',
+          options: Object.fromEntries(DECK_SIZES.map((n) => [n, this.t(`settings.deckSize.${n}`)])),
+        },
+      },
       ...PATHS.map((key) => ({
         name: this.t(`settings.${key}`),
         desc: this.t(`settings.${key}.desc`),
@@ -166,6 +179,7 @@ export class SettingsTab extends PluginSettingTab {
     }
     if (isPath(key)) return this.settings()[key];
     if (key === 'tableLanguage') return this.settings().tableLanguage;
+    if (key === 'deckSize') return String(this.settings().deckSize);
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
 
@@ -175,6 +189,7 @@ export class SettingsTab extends PluginSettingTab {
     }
     if (isPath(key) && typeof value === 'string') await this.setPath(key, value);
     if (key === 'tableLanguage') await this.setLanguage(value);
+    if (key === 'deckSize') await this.setDeckSize(value);
     if (key.startsWith(STEP_KEY) && typeof value === 'string') {
       await this.setStepName(Number(key.slice(STEP_KEY.length)), value);
     }
@@ -186,6 +201,12 @@ export class SettingsTab extends PluginSettingTab {
   private async setLanguage(value: unknown): Promise<void> {
     const lang = LANGS.find((l) => l === value);
     if (lang !== undefined) await this.save({ ...this.settings(), tableLanguage: lang });
+  }
+
+  private async setDeckSize(value: unknown): Promise<void> {
+    if (value === '13' || value === '22') {
+      await this.save({ ...this.settings(), deckSize: value === '13' ? 13 : 22 });
+    }
   }
 
   private async setPath(key: PathKey, value: string): Promise<void> {
@@ -225,6 +246,15 @@ export class SettingsTab extends PluginSettingTab {
         dropdown
           .setValue(this.settings().tableLanguage)
           .onChange((value) => this.setLanguage(value));
+      });
+    new Setting(containerEl)
+      .setName(t('settings.deckSize'))
+      .setDesc(t('settings.deckSize.desc'))
+      .addDropdown((dropdown) => {
+        for (const n of DECK_SIZES) dropdown.addOption(n, t(`settings.deckSize.${n}`));
+        dropdown
+          .setValue(String(this.settings().deckSize))
+          .onChange((value) => this.setDeckSize(value));
       });
     for (const key of PATHS) {
       new Setting(containerEl)

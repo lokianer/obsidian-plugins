@@ -29,12 +29,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    `scripts/spells-from-srd.mjs` from the 5e-bits file; not needed again unless the data changes),
    German names in `src/spells/de.ts`, German texts in `src/spells/de-texts/level-N.ts`. S3 (links
    from stat blocks, own spells as notes) is proposed, not planned.
-4. Then the **Deck of Many Things** (module 4): the standard SRD deck by default, own decks
-   possible. Design drafted (`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`),
-   waiting for review; its §8 lists the calls to check. Note: the 5e-bits entry lacks six card
-   effects (Star, Sun, Talons, Throne, Vizier, The Void); D1 types them in from the SRD document. Data source checked: the 5e-bits
-   SRD database has all 319 SRD spells (`src/2014/en/5e-SRD-Spells.json`, about 48,000 words of
-   text); no German there — S2 translates.
+4. **Deck of Many Things** (module 4): design reviewed, D1 (the standard deck) built (points 27–30
+   below). Next: D2, own decks — `type: deck` task-list notes (both kinds: cards that return, and
+   ticked-stays-out like `Omens of the River`), `returns` / `leaves` / `ends`, command New deck
+   (spec §4). Card data in `src/deck/cards.ts` (SRD text from the Open5e data; 5e-bits lacks six
+   effects), rules in `src/deck/rules.ts`, the note in `src/deck/note.ts`.
 
 ## State of the working tree
 
@@ -195,6 +194,19 @@ fields)
     Wetterkontrolle) render as tables. Spot-read a few for wording; corrections go into
     `src/spells/de-texts/`.
 
+**Deck of Many Things D1**
+
+27. The layers icon (and **Open Deck of Many Things**) opens the tab; in the example vault it finds
+    `Silverstadt/Decks/Deck of Many Things.md`: the Fool struck through, three draws in the history.
+28. Who draws suggests the party; declare 2, Declare and draw, Draw a card: the card turns over
+    (no turn with reduced motion), the history and the note get a line with the drawer linked.
+29. Fool → "draw again" without using a draw, ticked in the note; Jester → the two buttons; Idiot →
+    one more; The Void / Donjon → "The drawing has ended". Hard to force by hand: untick the Fool
+    first, or trust the tests.
+30. Without a deck note (rename the example one): the first draw makes `Deck of Many Things.md` in
+    the campaign folder with a notice; the setting 13 cards makes a 13-card note. Tick a card in
+    the note by hand: the tab strikes it through. German Obsidian: German names, D/B ranks, texts.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).
@@ -231,5 +243,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 258 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 302 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

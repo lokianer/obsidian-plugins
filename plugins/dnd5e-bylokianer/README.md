@@ -3,7 +3,8 @@
 Game-master tools for D&D 5e in Obsidian. The first module covers **factions and their relations**:
 factions are folders holding a `factions.md`, relations are frontmatter values from −5 (war) to +5
 (sworn), and members inherit their faction's stance unless they state their own. The second, the NPC
-builder, brings 5e stat blocks and a New NPC dialog; a spellbook, a battle tracker and dice follow.
+builder, brings 5e stat blocks and a New NPC dialog; then a spellbook and the Deck of Many Things;
+a battle tracker and dice follow.
 
 Status: the factions module is built and accepted in Obsidian (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
@@ -136,6 +137,39 @@ Levels" and material is there in German too, with German dice (8W6) and the Germ
 a narrow tab the card replaces the list,
 with a back button. The filters and the picked spell are kept.
 
+## The Deck of Many Things
+
+**Open Deck of Many Things** (command, or the layers icon in the left ribbon) puts the SRD's deck on
+the table: 22 cards, or 13 with the setting (most decks found have only 13). Name who draws — the
+party's characters are suggested — declare the number of cards and turn them one by one. The rules
+run themselves: the Fool and the Jester leave the deck once drawn, every other card returns; the
+Fool's redraw counts as the same declared draw; the Jester offers 10,000 XP or two more draws, the
+Idiot one more; The Void and Donjon end the drawing. Each card shows the playing card it stands for
+(K♦ for the Sun), its name in both languages, a badge when it leaves the deck or ends the drawing,
+and its effect in the plugin's language. Beside it the whole deck — a tap shows a card's effect
+between drawings, cards out of the deck are struck through — and the history of draws.
+
+The deck lives in a note, `Deck of Many Things.md` in the campaign folder, made on the first draw:
+
+```markdown
+---
+type: deck
+deck: standard-22
+---
+
+- [ ] Vizier
+- [ ] Sun
+- [x] Fool
+
+## Draws
+
+- 2026-10-25 · [[Mira]] · Fool
+```
+
+A ticked card is out of the deck; tick or untick one by hand and the tab follows. Each draw adds a
+line under `## Draws`, the drawer linked. Own decks are the next phase. Skull's avatar of death has
+no stat block here (the SRD data at hand has none).
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -144,6 +178,7 @@ with a back button. The filters and the picked spell are kept.
 - **Open faction world** — the graph and matrix of all factions.
 - **Show faction tensions** — the tension panel in the right sidebar.
 - **Open spellbook** — the SRD spells to look up.
+- **Open Deck of Many Things** — draw from the SRD deck.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

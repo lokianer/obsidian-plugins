@@ -38,6 +38,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |
 | Decks | [[Omens of the River]] | Two of eight cards already drawn |
 | GM gate | Almost every note | `[!gm]` callouts with and without `revealed:`, `%%comments%%`, a link hidden in a comment |
+| Deck of Many Things | [[Deck of Many Things]] | **Open Deck of Many Things** (ribbon layers icon): the Fool is out (ticked), three draws in the history; each new draw appends a line, the Fool and the Jester get ticked |
 | Spellbook | none needed | **Open spellbook** (ribbon book icon): the 319 SRD spells, German names and metres with German Obsidian |
 | Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md`; its Loot table starts with Mira's calling card `(from [[Session 14 – Bell Square]])` (also via **Start next session**) |
 

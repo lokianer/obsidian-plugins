@@ -13,6 +13,8 @@ import type { EditTarget, FactionWorld } from './factions/model';
 import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
+import { DeckStore } from './obsidian/deck-store';
+import { cryptoRandom, DECK_VIEW, DeckView } from './obsidian/deck-view';
 import { DEFAULT_SETTINGS, type Settings, SettingsTab } from './obsidian/settings';
 import { WarningsModal } from './obsidian/warnings-modal';
 import { ModeStore } from './obsidian/mode-store';
@@ -161,6 +163,45 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openSpellbook,
     });
     this.addRibbonIcon('book-open', t('command.openSpellbook'), () => void openSpellbook());
+
+    const deckStore = new DeckStore(
+      this,
+      cache,
+      t,
+      () => this.options.deckSize,
+      (path) => openNote(path, false),
+    );
+    this.registerView(
+      DECK_VIEW,
+      (leaf) =>
+        new DeckView(leaf, {
+          t,
+          lang: () => tableLang(this.options, getLanguage()),
+          source: deckStore,
+          random: cryptoRandom,
+        }),
+    );
+    // A deck note edited by hand (a card ticked or unticked) shows in the open tab.
+    this.registerEvent(
+      this.app.metadataCache.on('changed', (_file, _data, meta) => {
+        if (meta.frontmatter?.type !== 'deck') return;
+        for (const leaf of this.app.workspace.getLeavesOfType(DECK_VIEW)) {
+          if (leaf.view instanceof DeckView) void leaf.view.refresh();
+        }
+      }),
+    );
+    const openDeck = async () => {
+      const { workspace } = this.app;
+      const leaf = workspace.getLeavesOfType(DECK_VIEW)[0] ?? workspace.getLeaf('tab');
+      await leaf.setViewState({ type: DECK_VIEW, active: true });
+      await workspace.revealLeaf(leaf);
+    };
+    this.addCommand({
+      id: 'open-deck-of-many-things',
+      name: t('command.openDeck'),
+      callback: openDeck,
+    });
+    this.addRibbonIcon('layers', t('command.openDeck'), () => void openDeck());
 
     const openStatblocks = new Set<string>();
     this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {

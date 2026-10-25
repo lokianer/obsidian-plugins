@@ -1,6 +1,6 @@
 # Deck of Many Things — design
 
-Date: 2026-10-25. Status: **draft, waiting for the maintainer's review**. Module 4 of
+Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §8 accepted); D1 built**. Module 4 of
 `dnd5e-byLokianer`, after the spellbook.
 
 Asked for by the maintainer: "the Deck of Many Things, with the option to make one's own, otherwise
@@ -125,5 +125,5 @@ the tests replace.
 - Own decks use the example vault's task-list format; `returns`, `leaves` and `ends` as frontmatter.
 - The rules of the Fool, Jester, Idiot, The Void and Donjon are automated for the standard deck only;
   own decks know only "returns", "leaves" and "ends".
-- Skull's avatar of death: its stat block from the SRD is shown on the card (as a stat block like
-  the NPC builder's) — or left out for now, if the maintainer prefers.
+- Skull's avatar of death: shown as a stat block on the card if a source has it — none does (5e-bits,
+  Open5e), so it is left out rather than typed from memory.

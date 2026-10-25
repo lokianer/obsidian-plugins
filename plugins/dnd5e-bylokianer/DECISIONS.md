@@ -355,3 +355,29 @@ a German material exactly when the English has one; every numbered die of the En
 the German; no feet, miles, pounds or inches are left.
 
 Left out: S3 (links from stat blocks, own spells as notes).
+
+## 2026-10-25 · Deck of Many Things, phase D1
+
+Design: `docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`; the maintainer accepted
+every call in its §8.
+
+- Its own tab with a ribbon icon, like the faction world and the spellbook.
+- The standard deck has 22 cards; 13 as a setting. A deck note keeps the size it was made with
+  (`deck: standard-22` / `standard-13`).
+- State in a note: `Deck of Many Things.md` in the campaign folder, made on the first draw; a
+  ticked card is out; one line per card under `## Draws` (date · drawer · card), the drawer linked
+  when they have a note. Card names in the note are English (nomenclature rule); the plugin reads
+  German names too.
+- The rules are automated: the Fool and the Jester leave, the Fool's redraw is free, the Jester
+  offers two draws or the XP, the Idiot one draw, The Void and Donjon end. The one-hour rule and
+  "the remaining cards fly from the deck" are left to the GM.
+- Randomness from `crypto.getRandomValues`. Cards in the grid can be looked up between drawings,
+  not during one.
+- Source: the 5e-bits entry lacks six effects (Star, Sun, Talons, Throne, Vizier, The Void); the
+  complete SRD text comes from the Open5e SRD data. Skull's avatar of death is left out — no
+  source at hand has its stat block, and it is not typed from memory.
+- German names: Wesir, Sonne, Mond, Stern, Komet, Die Schicksalsfäden, Thron, Schlüssel, Ritter,
+  Juwel, Klauen, Die Leere, Flammen, Schädel, Idiot, Verlies, Ruin, Euryale, Schurke, Gleichgewicht,
+  Narr, Possenreißer; German playing-card ranks (A, K, D, B).
+
+Left out: own decks and the command New deck (phase D2).

@@ -32,7 +32,7 @@ the same principles, tooling, CI and example vault. Every plugin follows the sam
 
 | Plugin                                            | Id                 | Status                                 | Description                                                                                                                                      |
 | ------------------------------------------------- | ------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, a spellbook, later the Deck of Many Things, battles and dice. |
+| [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, a spellbook, the Deck of Many Things, later battles and dice. |
 
 More plugins will join the collection. Each plugin has its own `README.md`, `CHANGELOG.md` and
 `DECISIONS.md` in its folder; a plugin that is ready for Obsidian's directory gets its own release
@@ -48,7 +48,7 @@ plugin shows and suggests, the GM decides. It grows in modules, one after anothe
 | ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log     | ✅ Built and accepted in Obsidian                               |
 | 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | 🚧 Phases 1–4b built, awaiting the check in Obsidian            |
 | ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | 🚧 Built (tab and German texts), awaiting the check in Obsidian |
-| 🃏 **Deck of Many Things:** the standard deck or your own                                                           | 🗓️ Planned                                                      |
+| 🃏 **Deck of Many Things:** the standard deck or your own                                                           | 🚧 Standard deck built, awaiting the check; own decks next      |
 | 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                                      |
 | 🎲 **Dice**                                                                                                         | 🗓️ Planned                                                      |
 

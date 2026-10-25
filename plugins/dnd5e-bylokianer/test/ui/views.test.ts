@@ -28,6 +28,16 @@ import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
 import { NewNpcModal } from '../../src/obsidian/npc-dialog';
 import { SpellbookView, type SpellbookState } from '../../src/obsidian/spellbook-view';
+import { cardByName, type DeckCard, deckOf } from '../../src/deck/cards';
+import {
+  appendDraw,
+  drawEntry,
+  parseDeckNote,
+  standardDeckText,
+  tickCard,
+} from '../../src/deck/note';
+import type { DeckSource, Drawer } from '../../src/obsidian/deck-store';
+import { DeckView } from '../../src/obsidian/deck-view';
 import { archetypeKind, NewFromBaseModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
@@ -666,5 +676,144 @@ describe('spellbook', () => {
     en?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Magic Missile']);
     expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('three glowing darts');
+  });
+});
+
+describe('deck of many things', () => {
+  /** A deck note in memory, written like the store writes the real one. */
+  function memorySource(text: string | null = null) {
+    const note = { text };
+    const source: DeckSource = {
+      load: () => {
+        if (note.text === null)
+          return Promise.resolve({ path: null, size: 22, out: [], draws: [] });
+        const parsed = parseDeckNote(note.text);
+        return Promise.resolve({
+          path: 'Deck of Many Things.md',
+          size: 22,
+          out: parsed.cards.filter((c) => c.out).flatMap((c) => cardByName(c.name)?.index ?? []),
+          draws: parsed.draws,
+        });
+      },
+      party: () => Promise.resolve([{ name: 'Mira', path: 'Party/Mira.md' }]),
+      record: (card: DeckCard, who: Drawer | null) => {
+        let next = note.text ?? standardDeckText(22, deckOf(22));
+        const item = parseDeckNote(next).cards.find((c) => !c.out && c.name === card.name.en);
+        if (card.leaves && item !== undefined) next = tickCard(next, item.line);
+        note.text = appendDraw(
+          next,
+          drawEntry(
+            '2026-10-25',
+            who?.path != null ? `[[${who.name}]]` : (who?.name ?? ''),
+            card.name.en,
+          ),
+        );
+        return Promise.resolve();
+      },
+      open: vi.fn(),
+    };
+    return { source, note };
+  }
+
+  /** Random numbers that pick these positions in the pool, one per draw. */
+  const picks = (...positions: [number, number][]) => {
+    const queue = positions.map(([at, of]) => (at + 0.5) / of);
+    return () => queue.shift() ?? 0;
+  };
+
+  async function open(lang: 'en' | 'de', random: () => number, text: string | null = null) {
+    const { source, note } = memorySource(text);
+    const view = new DeckView({} as WorkspaceLeaf, {
+      t: createT(lang),
+      lang: () => lang,
+      source,
+      random,
+    });
+    root.appendChild(view.contentEl);
+    await view.onOpen();
+    const el = view.contentEl;
+    const click = async (selector: string, text?: string) => {
+      const button = [...el.querySelectorAll<HTMLElement>(selector)].find(
+        (b) => text === undefined || b.textContent === text,
+      );
+      button?.dispatchEvent(new MouseEvent('click'));
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    };
+    return { el, note, click };
+  }
+
+  it('draws the declared cards, writes the note and shows the history', async () => {
+    const { el, note, click } = await open('en', picks([1, 22], [6, 22]));
+    expect(el.querySelectorAll('.dnd5e-deck-tile')).toHaveLength(22);
+    expect(el.querySelector('.dnd5e-deck-empty')?.textContent).toBe('No card drawn yet.');
+    const input = el.querySelector<HTMLInputElement>('.dnd5e-deck-setup input');
+    if (input === null) throw new Error('no input');
+    input.value = 'Mira';
+    input.dispatchEvent(new Event('input'));
+    await click('.dnd5e-deck-stepper button[aria-label="+"]');
+    expect(el.querySelector('.dnd5e-deck-count')?.textContent).toBe('2');
+    await click('.dnd5e-deck-begin');
+    expect(el.querySelector('.dnd5e-deck-status')?.textContent).toBe('2 draws left');
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Sun']);
+    expect(texts(el, '.dnd5e-deck-card .dnd5e-deck-corner')).toEqual(['K♦', 'K♦']);
+    expect(el.querySelector('.dnd5e-deck-card-text')?.textContent).toContain('50,000 XP');
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Throne']);
+    expect(el.querySelector('.dnd5e-deck-status')?.textContent).toBe(
+      'Every declared card is drawn.',
+    );
+    expect(parseDeckNote(note.text ?? '').draws).toEqual([
+      '2026-10-25 · [[Mira]] · Sun',
+      '2026-10-25 · [[Mira]] · Throne',
+    ]);
+    expect(texts(el, '.dnd5e-deck-history-card')).toEqual(['K♥ Throne', 'K♦ Sun']);
+    expect(texts(el, '.dnd5e-deck-history-meta')).toEqual([
+      'Mira · 2026-10-25',
+      'Mira · 2026-10-25',
+    ]);
+  });
+
+  it('runs the Fool’s redraw and the Jester’s choice, and the leaving cards are out', async () => {
+    // The Fool (20 of 22), then the Jester (20 of 21, the Fool gone), then Key (7 of 20).
+    const { el, note, click } = await open('de', picks([20, 22], [20, 21], [7, 20]));
+    await click('.dnd5e-deck-begin');
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Narr']);
+    expect(texts(el, '.dnd5e-deck-badge')).toEqual(['Verlässt das Deck']);
+    expect(el.querySelector('.dnd5e-deck-status')?.textContent).toBe(
+      'Der Narr: zieh erneut — es zählt als derselbe Zug',
+    );
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Possenreißer']);
+    await click('.dnd5e-deck-actions button', 'Zwei weitere Karten ziehen');
+    expect(el.querySelector('.dnd5e-deck-status')?.textContent).toBe('Noch 2 Züge');
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Schlüssel']);
+    expect(texts(el, '.dnd5e-deck-card .dnd5e-deck-corner')).toEqual(['D♥', 'D♥']);
+    expect(texts(el, '.dnd5e-deck-tile.is-out .dnd5e-deck-tile-name')).toEqual([
+      'Narr',
+      'Possenreißer',
+    ]);
+    const out = parseDeckNote(note.text ?? '')
+      .cards.filter((c) => c.out)
+      .map((c) => c.name);
+    expect(out).toEqual(['Fool', 'Jester']);
+  });
+
+  it('ends on The Void and looks a card up from the grid between drawings', async () => {
+    const { el, click } = await open('en', picks([11, 22]));
+    await click('.dnd5e-deck-stepper button[aria-label="+"]');
+    await click('.dnd5e-deck-begin');
+    await click('.dnd5e-deck-tile[data-card="moon"]');
+    expect(el.querySelector('.dnd5e-deck-card-face')).toBeNull();
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['The Void']);
+    expect(el.querySelector('.dnd5e-deck-status')?.textContent).toBe('The drawing has ended.');
+    await click('.dnd5e-deck-tile[data-card="moon"]');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Moon']);
+    expect(el.querySelector('.dnd5e-deck-card-text')?.textContent).toContain('1d3 times');
+    await click('.dnd5e-deck-actions button', 'New drawing');
+    expect(el.querySelector('.dnd5e-deck-begin')).not.toBeNull();
   });
 });
