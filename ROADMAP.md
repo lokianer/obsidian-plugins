@@ -13,10 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder** — phases 2, 3 and 4a are built and wait for the maintainer's check
-in Obsidian (`HANDOFF.md`). Next: the phase 4b plan (live preview, roll everything with locks,
-tiles) and a **spellbook** the maintainer asked for (every regular 5e spell and cantrip to look up;
-only SRD 5.1 spells may ship) — both need a plan and a review stop. Nothing is published for now.
+**dnd5e-byLokianer · Spellbook** — the maintainer wants its own tab, with filters, in German and
+fancy. Spec `docs/superpowers/specs/2026-10-25-spellbook-design.md` and the S1 plan
+(`docs/superpowers/plans/2026-10-25-spellbook-s1.md`) **await approval** (one question: German units
+in feet or metres). NPC builder phases 2, 3 and 4a wait for the check in Obsidian; 4b (fancier
+dialog) comes after. Nothing is published for now.
 
 ---
 
@@ -105,12 +106,16 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
 - [ ] **Phase 4b — A fancier dialog**: live preview card, roll everything with locks, race and
       archetype tiles Plan `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
 
-### Spellbook (asked for 2026-10-25, not designed yet)
+### Spellbook
 
-A spellbook to look up every regular D&D 5e spell, cantrips included. Only the SRD 5.1's spells
-(about 320) are free to ship (CC-BY-4.0); the rest of the Player's Handbook is not. Questions for the
-maintainer before a spec: where it lives (its own tab, a sidebar, notes), filters, links from stat
-blocks' spellcasting, German names.
+Design: [`docs/superpowers/specs/2026-10-25-spellbook-design.md`](docs/superpowers/specs/2026-10-25-spellbook-design.md)
+(draft). Its own tab, filters, German, fancy; the 319 SRD 5.1 spells (others as own notes later).
+
+- [ ] **S1 — Spellbook tab** ← _plan written, awaiting approval_: data, German names and meta,
+      search, filters, list, spell card. Plan `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
+- [ ] **S2 — German texts** for all 319 spells
+- [ ] **S3 — Links and own spells** (proposed): spell names in stat blocks open the spellbook;
+      `type: spell` notes join the list
 
 ### Module 3 — Battle tracker
 
