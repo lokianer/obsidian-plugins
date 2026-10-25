@@ -63,6 +63,8 @@ All notable changes to this plugin are documented here. The format follows
 - The graph showed only arrows, no factions or frames: a node's two classes were passed as one
   token, which Obsidian's `classList` rejects, so drawing stopped at the first node. SVG classes are
   now always separate tokens.
+- In the faction view a short faction's name ran into its power ("The Drowned Choir" over "Power
+  5"): the frame, member chips and boxes now grow with their labels.
 
 ### Changed (after the first check in Obsidian)
 

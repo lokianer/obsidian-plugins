@@ -36,6 +36,14 @@ interface Rect {
   h: number;
 }
 
+/**
+ * A generous estimate of a label's width in pixels. Measuring needs a laid-out SVG, which a tab
+ * that is still hidden does not have; a little too much room is harmless.
+ */
+function textWidth(text: string, size: number, bold = false): number {
+  return text.length * size * (bold ? 0.62 : 0.56);
+}
+
 /** Where the line from a rectangle's centre towards `towards` leaves the rectangle. */
 function border(rect: Rect, towards: Point): Point {
   const dx = towards.x - rect.x;
@@ -97,10 +105,18 @@ export class FactionViewSvg {
     const places = new Map<string, Rect>();
     const columns = Math.max(1, Math.min(COLUMNS, view.members.length));
     const rows = Math.max(1, Math.ceil(view.members.length / columns));
+    // Chips and the frame grow with their names, so no text runs into its neighbour.
+    const chipW = Math.max(
+      CHIP_W,
+      ...view.members.map((m) => textWidth(m.name, 16, m.kind === 'faction') + 32),
+    );
+    const gridW = columns * (chipW + CHIP_GAP) + CHIP_GAP + 24;
+    const power =
+      view.power === null ? 0 : 24 + textWidth(`${this.t('card.power')} ${view.power}`, 16);
     const frame: Rect = {
       x: 0,
       y: 0,
-      w: columns * (CHIP_W + CHIP_GAP) + CHIP_GAP + 24,
+      w: Math.max(gridW, 40 + textWidth(view.name, 18, true) + power),
       h: FRAME_HEAD + rows * (CHIP_H + CHIP_GAP) + CHIP_GAP,
     };
     places.set(view.id, frame);
@@ -108,9 +124,9 @@ export class FactionViewSvg {
       const column = i % columns;
       const row = Math.floor(i / columns);
       places.set(member.id, {
-        x: -frame.w / 2 + 12 + CHIP_GAP + column * (CHIP_W + CHIP_GAP) + CHIP_W / 2,
+        x: -gridW / 2 + 12 + CHIP_GAP + column * (chipW + CHIP_GAP) + chipW / 2,
         y: -frame.h / 2 + FRAME_HEAD + row * (CHIP_H + CHIP_GAP) + CHIP_H / 2,
-        w: CHIP_W,
+        w: chipW,
         h: CHIP_H,
       });
     });
@@ -123,17 +139,23 @@ export class FactionViewSvg {
       // Known directions are kept; the rest spread evenly so nothing overlaps.
       const angle = angles.get(box.id) ?? (i / Math.max(1, ordered.length)) * 2 * Math.PI;
       const h = BOX_HEAD + box.characters.length * BOX_ROW + (box.characters.length > 0 ? 8 : 0);
+      const title = box.kind === 'group' ? '' : box.name;
+      const w = Math.max(
+        BOX_W,
+        textWidth(title, 16, true) + 32,
+        ...box.characters.map((c) => textWidth(c.name, 16) + 32),
+      );
       places.set(box.id, {
         x: Math.cos(angle) * radius * 1.3,
         y: Math.sin(angle) * radius,
-        w: BOX_W,
+        w,
         h,
       });
       box.characters.forEach((c, row) => {
         places.set(c.id, {
           x: Math.cos(angle) * radius * 1.3,
           y: Math.sin(angle) * radius - h / 2 + BOX_HEAD + row * BOX_ROW + BOX_ROW / 2,
-          w: BOX_W - 16,
+          w: w - 16,
           h: BOX_ROW,
         });
       });
