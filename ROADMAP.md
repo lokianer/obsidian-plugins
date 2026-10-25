@@ -14,7 +14,8 @@ plugin's `DECISIONS.md` once it exists.
 ## Next step
 
 **dnd5e-byLokianer · Monster Manual** (module 5, asked for 2026-10-25): built like the spellbook,
-before the battle tracker — a short design first. Built and waiting for the maintainer's check in
+before the battle tracker — design drafted
+(`docs/superpowers/specs/2026-10-25-monster-manual-design.md`), waiting for the maintainer's review. Built and waiting for the maintainer's check in
 Obsidian: spellbook S3 (links, own spells), the spell builder and the restyled deck builder. The
 faction world redesign also still waits for its check. Nothing is published for now.
 
@@ -145,7 +146,14 @@ Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs
 Asked for 2026-10-25: "a Monster Manual beside the spellbook, built like the spellbook, before the
 battle tracker". The SRD 5.1's monsters (about 330, CC-BY-4.0) in their own tab: search, filters
 (challenge rating, type, size, environment …), a list and the stat block as the card, English and
-German. Needs a short design first; the battle tracker will draw its monsters from here.
+German. The battle tracker will draw its monsters from here.
+Design: [`docs/superpowers/specs/2026-10-25-monster-manual-design.md`](docs/superpowers/specs/2026-10-25-monster-manual-design.md)
+(draft, waiting for review).
+
+- [ ] **M1 — Monster Manual tab**: the 334 monsters as data, German names and meta, search,
+      filters, list, stat block card, Insert into note, Make a note
+- [ ] **M2 — German texts** of all traits and actions
+- [ ] **M3 — Own monsters and a monster builder**
 
 ### Module 6 — Battle tracker
 

@@ -27,7 +27,7 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    Code: `src/spells/links.ts`, `src/spells/own.ts`, `src/spells/draft.ts`,
    `src/obsidian/spell-builder.ts`, `src/obsidian/deck-builder.ts`, `src/obsidian/new-note.ts`.
 3. Next: module 5, the **Monster Manual** (asked for 2026-10-25), built like the spellbook, before
-   the battle tracker. Short design first (spec), then the plan; the SRD monster data is in the
+   the battle tracker. Design drafted (`docs/superpowers/specs/2026-10-25-monster-manual-design.md`), waiting for review; then the M1 plan; the SRD monster data is in the
    5e-bits database (`src/2014/en/5e-SRD-Monsters.json`, 334 entries; `scripts/` has the spell
    generator to follow). Then module 6, the battle tracker. The maintainer also asked to make the
    Pages site fancier following the Vercel Web Interface Guidelines — done 2026-10-25 (skip link, focus rings, 24/44 px targets, theme-color, reduced motion, explicit image sizes, curly quotes; aurora hero, stats strip, module tiles, scroll-driven reveals).
