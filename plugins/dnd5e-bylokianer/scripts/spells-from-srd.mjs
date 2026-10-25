@@ -13,12 +13,18 @@ if (source === undefined) {
 	process.exit(1);
 }
 
-/** The database writes ability names in lower case ("dexterity saving throw"); the SRD does not. */
+/**
+ * The database writes ability names in lower case ("dexterity saving throw"), where the SRD does
+ * not, and has a few broken dice ("1dl0", "d 100", "10d 10").
+ */
 function abilities(text) {
-	return text.replace(
-		/\b(strength|dexterity|constitution|intelligence|wisdom|charisma)\b(?= (saving throw|check|modifier|score|\())/g,
-		(word) => word.charAt(0).toUpperCase() + word.slice(1),
-	);
+	return text
+		.replace(/(\d)dl0\b/g, '$1d10')
+		.replace(/\b(\d*)d (\d+)\b/g, '$1d$2')
+		.replace(
+			/\b(strength|dexterity|constitution|intelligence|wisdom|charisma)\b(?= (saving throw|check|modifier|score|\())/g,
+			(word) => word.charAt(0).toUpperCase() + word.slice(1),
+		);
 }
 
 /** Paragraphs as Markdown: table rows on consecutive lines, everything else apart. */

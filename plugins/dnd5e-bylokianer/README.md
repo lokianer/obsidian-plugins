@@ -131,8 +131,9 @@ marks; ↑ ↓ move through it, Enter opens the card. The card shows the spell's
 languages, its level line ("3rd-level evocation" / "Hervorrufung des 3. Grades"), casting time,
 range, components and duration, the material, damage and save badges, the description with "At
 Higher Levels" and the classes; EN / DE switches its language. Names and meta follow the dice-text
-language setting; German distances are in metres (5 ft. = 1.5 m). The descriptions are English
-for now — the German texts follow in the next phase. On a narrow tab the card replaces the list,
+language setting; German distances are in metres (5 ft. = 1.5 m). Every description, "At Higher
+Levels" and material is there in German too, with German dice (8W6) and the German rules terms. On
+a narrow tab the card replaces the list,
 with a back button. The filters and the picked spell are kept.
 
 ## Commands

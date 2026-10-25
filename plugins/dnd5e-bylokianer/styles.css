@@ -2192,15 +2192,8 @@ a.dnd5e-tensions-name:hover {
 }
 
 .dnd5e-spells-material,
-.dnd5e-spells-note,
 .dnd5e-spells-source {
   color: var(--text-muted);
-}
-
-.dnd5e-spells-note {
-  padding: var(--size-4-2) var(--size-4-3);
-  border-radius: var(--radius-m);
-  background: var(--background-modifier-hover);
 }
 
 .dnd5e-spells-badges,

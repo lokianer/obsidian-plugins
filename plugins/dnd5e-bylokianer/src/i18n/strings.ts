@@ -122,8 +122,6 @@ export const en = {
   'spells.saveBadge': '{ability} save',
   'spells.attack.melee': 'Melee spell attack',
   'spells.attack.ranged': 'Ranged spell attack',
-  'spells.englishText':
-    'The German description follows in a later version; this is the English text.',
   'spells.back': 'Back to the list',
   'spells.source': 'SRD 5.1 · CC-BY-4.0',
   'world.title': 'Faction world',
@@ -430,8 +428,6 @@ export const de: Record<StringKey, string> = {
   'spells.saveBadge': 'Rettungswurf: {ability}',
   'spells.attack.melee': 'Nahkampf-Zauberangriff',
   'spells.attack.ranged': 'Fernkampf-Zauberangriff',
-  'spells.englishText':
-    'Die deutsche Beschreibung folgt in einer späteren Version; hier der englische Text.',
   'spells.back': 'Zurück zur Liste',
   'spells.source': 'SRD 5.1 · CC-BY-4.0',
   'world.title': 'Fraktionswelt',

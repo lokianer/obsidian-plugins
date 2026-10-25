@@ -4,6 +4,7 @@
 
 import type { Lang } from '../npc/races';
 import { DE_NAMES } from './de';
+import { DE_TEXTS } from './de-texts';
 import type { Ability, School, SpellClass, SrdSpell } from './model';
 
 export const SCHOOLS: readonly School[] = [
@@ -235,4 +236,17 @@ export function duration(spell: SrdSpell, lang: Lang): string {
 /** `V, S, M` — German `V, G, M` (verbal, gestisch, materiell). */
 export function components(spell: SrdSpell, lang: Lang): string {
   return spell.components.map((c) => (lang === 'de' && c === 'S' ? 'G' : c)).join(', ');
+}
+
+/** The description, "At Higher Levels" and material in a language; English where German is missing. */
+export function spellText(
+  spell: SrdSpell,
+  lang: Lang,
+): { text: string; higher: string; material: string } {
+  const de = lang === 'de' ? DE_TEXTS[spell.index] : undefined;
+  return {
+    text: de?.text ?? spell.text,
+    higher: de?.higher ?? spell.higher,
+    material: de?.material ?? spell.material,
+  };
 }

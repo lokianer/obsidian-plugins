@@ -13,10 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Spellbook S2** — the German descriptions of the 319 spells, in batches by level.
-S1 (the tab) is built and waits for the maintainer's check in Obsidian, as do NPC builder phases
-2–4b and the faction world redesign. After the spellbook comes the **Deck of Many Things** (module
-4, asked for 2026-10-25). Nothing is published for now.
+**dnd5e-byLokianer · Deck of Many Things** (module 4) — needs a short design first: the standard SRD
+deck by default, own decks possible (asked for 2026-10-25). The spellbook (S1 tab, S2 German texts)
+is built and waits for the maintainer's check in Obsidian, as do NPC builder phases 2–4b and the
+faction world redesign; S3 (links, own spells) is proposed for later. Nothing is published for now.
 
 ---
 
@@ -116,7 +116,8 @@ the NPC builder is done; German distances in metres (5 ft = 1.5 m).
 - [ ] **S1 — Spellbook tab** ← _built 2026-10-25, awaiting the check in Obsidian_: data, German
       names and meta, search, filters, list, spell card, ribbon button. Plan
       `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
-- [ ] **S2 — German texts** for all 319 spells
+- [ ] **S2 — German texts** ← _built 2026-10-25, awaiting the check in Obsidian_: descriptions,
+      At Higher Levels and materials of all 319 spells
 - [ ] **S3 — Links and own spells** (proposed): spell names in stat blocks open the spellbook;
       `type: spell` notes join the list
 

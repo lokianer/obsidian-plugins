@@ -657,10 +657,14 @@ describe('spellbook', () => {
       'V, G',
       'Unmittelbar',
     ]);
+    expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain(
+      'Du erschaffst drei leuchtende Pfeile aus magischer Energie.',
+    );
     const en = [...el.querySelectorAll('.dnd5e-spells-card .dnd5e-world-segmented button')].find(
       (b) => b.textContent === 'EN',
     );
     en?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Magic Missile']);
+    expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('three glowing darts');
   });
 });

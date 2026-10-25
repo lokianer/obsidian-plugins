@@ -38,3 +38,10 @@ export interface SrdSpell {
   /** "At Higher Levels", Markdown; empty when the spell has none. */
   higher: string;
 }
+
+/** A spell's German text, by spell index: description, "At Higher Levels" and the material. */
+export interface DeText {
+  text: string;
+  higher?: string;
+  material?: string;
+}

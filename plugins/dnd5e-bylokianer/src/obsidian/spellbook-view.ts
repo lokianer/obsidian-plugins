@@ -36,6 +36,7 @@ import {
   SCHOOLS,
   SPELL_CLASSES,
   spellName,
+  spellText,
 } from '../spells/meta';
 import type { School, SrdSpell } from '../spells/model';
 import { SRD_SPELLS } from '../spells/srd-spells';
@@ -460,10 +461,11 @@ export class SpellbookView extends ItemView {
     cell('spells.range', range(spell, lang));
     cell('spells.components', components(spell, lang));
     cell('spells.duration', duration(spell, lang));
-    if (spell.material !== '') {
+    const words = spellText(spell, lang);
+    if (words.material !== '') {
       card.createDiv({
         cls: 'dnd5e-spells-material',
-        text: t('spells.material', { material: spell.material }),
+        text: t('spells.material', { material: words.material }),
       });
     }
 
@@ -484,16 +486,14 @@ export class SpellbookView extends ItemView {
     if (spell.ritual) badges.createSpan({ cls: 'dnd5e-spells-badge', text: t('spells.ritual') });
     if (badges.childElementCount === 0) badges.remove();
 
-    // S2 brings the German texts; until then the card says the text is English.
-    if (lang === 'de') card.createDiv({ cls: 'dnd5e-spells-note', text: t('spells.englishText') });
     this.cardText = new Component();
     this.cardText.load();
     const text = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
-    void MarkdownRenderer.render(this.app, spell.text, text, '', this.cardText);
-    if (spell.higher !== '') {
+    void MarkdownRenderer.render(this.app, words.text, text, '', this.cardText);
+    if (words.higher !== '') {
       card.createDiv({ cls: 'dnd5e-spells-section', text: t('spells.higher') });
       const higher = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
-      void MarkdownRenderer.render(this.app, spell.higher, higher, '', this.cardText);
+      void MarkdownRenderer.render(this.app, words.higher, higher, '', this.cardText);
     }
 
     card.createDiv({ cls: 'dnd5e-spells-section', text: t('spells.classes') });

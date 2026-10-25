@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { DE_NAMES } from '../src/spells/de';
+import { DE_TEXTS } from '../src/spells/de-texts';
 import { filterSpells, levelCounts, NO_FILTERS, readFilters } from '../src/spells/filter';
 import { castingTime, components, duration, levelLine, range } from '../src/spells/meta';
 import type { SrdSpell } from '../src/spells/model';
@@ -155,5 +156,43 @@ describe('filters', () => {
       ritual: true,
     });
     expect(readFilters(null)).toEqual(NO_FILTERS);
+  });
+});
+
+describe('German texts', () => {
+  /** Numbered dice (`8d6`, German `8W6`) as a sorted list, to compare a text with its translation. */
+  const dice = (text: string, die: 'd' | 'W') =>
+    [...text.matchAll(new RegExp(`\\b(\\d+)${die}(\\d+)\\b`, 'g'))]
+      .map((m) => `${m[1]}d${m[2]}`)
+      .sort();
+
+  it('translates every spell: description, At Higher Levels and material where the SRD has them', () => {
+    expect(Object.keys(DE_TEXTS).sort()).toEqual(SRD_SPELLS.map((s) => s.index).sort());
+    for (const spell of SRD_SPELLS) {
+      const de = DE_TEXTS[spell.index];
+      expect(de?.text, spell.index).toBeTruthy();
+      expect(Boolean(de?.higher), `${spell.index} higher`).toBe(spell.higher !== '');
+      expect(Boolean(de?.material), `${spell.index} material`).toBe(spell.material !== '');
+    }
+  });
+
+  it('keeps every numbered die of the English text, in German notation', () => {
+    for (const spell of SRD_SPELLS) {
+      const de = DE_TEXTS[spell.index];
+      expect(dice(`${de?.text ?? ''} ${de?.higher ?? ''}`, 'W'), spell.index).toEqual(
+        dice(`${spell.text} ${spell.higher}`, 'd'),
+      );
+    }
+  });
+
+  it('leaves no feet, miles or pounds in the German texts', () => {
+    const imperial =
+      /(?<!\p{L})(feet|foot|(?<!zu )Fuß|miles?|Meilen?|pounds?|Pfund|inch(es)?|Zoll)(?!\p{L})/u;
+    for (const spell of SRD_SPELLS) {
+      const de = DE_TEXTS[spell.index];
+      expect(`${de?.text} ${de?.higher ?? ''} ${de?.material ?? ''}`, spell.index).not.toMatch(
+        imperial,
+      );
+    }
   });
 });

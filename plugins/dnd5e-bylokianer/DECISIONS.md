@@ -333,3 +333,25 @@ Calls made while building:
   pink, evocation red, illusion purple, necromancy green, transmutation orange.
 
 Left out (S2, S3): German descriptions and materials; links from stat blocks; own spells as notes.
+
+## 2026-10-25 · Spellbook phase S2: German texts
+
+Asked for by the maintainer ("jetzt einmal alles mit deutschen Texten"). Calls made while translating:
+
+- Our own translation of the SRD 5.1 text (CC-BY-4.0), in `src/spells/de-texts/` by level.
+- Conventions of the German 5e books: dice as W (8W6, W20), "Grad" for spell levels and "Stufe" for
+  character levels, Rettungswurf, Zauberplatz, Zauberrettungswurf-SG, Trefferpunkte, RK, SL; the
+  conditions blind, taub, bezaubert, verängstigt, gepackt, kampfunfähig, gelähmt, versteinert,
+  vergiftet, liegend/hinfallen, festgesetzt, betäubt, bewusstlos.
+- Units converted as the books do: 5 ft. = 1.5 m, 1 mile = 1.5 km, 1 lb. = 0.5 kg, 1 gallon = 4 l,
+  1 inch = 2.5 cm; gold pieces as GM. A formula in feet (Etherealness: 2 damage per foot) becomes
+  3 per metre.
+- Where the 5e-bits text is garbled (Magic Mouth, Shatter's "At Higher Levels", Fire Shield, Hold
+  Monster), the German follows the SRD's meaning, not the broken English.
+- Spell names inside the texts are italic and German (_Magie bannen_).
+
+Tested: every spell has a German text, a German "At Higher Levels" exactly when the English has one,
+a German material exactly when the English has one; every numbered die of the English appears in
+the German; no feet, miles, pounds or inches are left.
+
+Left out: S3 (links from stat blocks, own spells as notes).

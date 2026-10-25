@@ -8,6 +8,10 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **German spell texts** (spellbook, phase S2): the descriptions, "At Higher Levels" and materials of
+  all 319 spells in German — German dice notation (8W6), distances in metres, weights in kilograms,
+  the German rules terms; tested for completeness and for keeping every numbered die of the
+  English text.
 - **Spellbook** (module 3, phase S1): its own tab (command and ribbon icon) with the 319 SRD 5.1
   spells — search in English and German, level and school chips with counts, filters for class,
   casting time, damage, saving throw, concentration and ritual; a list grouped by level in the
@@ -98,6 +102,8 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Fixed
 
+- Three broken dice in the SRD source data (Moonbeam's "1dl0", Reincarnate's "d 100", Symbol's
+  "10d 10") are repaired when the spell data is generated.
 - A stat block with an empty challenge rating counted as CR 0 (`crValue('')` read `Number('')`).
 - A link in another field of the card (`leader: "[[Isolde Ferrant]]"`) showed as plain text; it
   is now a link that opens the note (Ctrl/Cmd: new tab), and links in reasons open the same way.
