@@ -1290,12 +1290,17 @@ describe('monster manual', () => {
 describe('monster builder', () => {
   function builder(lang: 'en' | 'de' = 'en') {
     const created: Statblock[] = [];
+    const all: string[][] = [];
     const modal = new MonsterBuilderModal(app, {
       t: createT(lang),
       lang,
       monsters: SRD_MONSTERS,
       create: (b) => {
         created.push(structuredClone(b));
+        return Promise.resolve();
+      },
+      createAll: (blocks) => {
+        all.push(blocks.map((b) => b.name ?? ''));
         return Promise.resolve();
       },
     });
@@ -1314,7 +1319,7 @@ describe('monster builder', () => {
       select.value = value;
       select.dispatchEvent(new Event('change'));
     };
-    return { modal, el, created, type, choose };
+    return { modal, el, created, all, type, choose };
   }
 
   it('builds a monster by hand with a live stat block preview', async () => {
@@ -1378,5 +1383,33 @@ describe('monster builder', () => {
     expect(
       [...el.querySelectorAll<HTMLInputElement>('[data-list="actions"] input')].map((i) => i.value),
     ).toEqual(['Multiattack', 'Beak', 'Claws']);
+  });
+
+  it('imports one monster into the form, or several as tiles to pick or create at once', async () => {
+    const { modal, el, all } = builder();
+    modal.importFile('one.yaml', 'name: Ash Wight\ntype: undead\nac: 14\nhp: 45\ncr: 3');
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-monster-name')?.value).toBe('Ash Wight');
+    expect(el.querySelector('.dnd5e-monster-imported')).toBeNull();
+    modal.importFile(
+      'many.json',
+      JSON.stringify([
+        { name: 'A', cr: 1 },
+        { name: 'B', type: 'fiend' },
+      ]),
+    );
+    expect(texts(el, '.dnd5e-monster-imported .dnd5e-npc-tile-name')).toEqual(['A', 'B']);
+    el.querySelectorAll<HTMLElement>('.dnd5e-monster-imported .dnd5e-npc-tile')[1]?.dispatchEvent(
+      new MouseEvent('click'),
+    );
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-monster-name')?.value).toBe('B');
+    [...el.querySelectorAll<HTMLElement>('button')]
+      .find((b) => b.textContent === 'Create all 2')
+      ?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(all).toEqual([['A', 'B']]);
+    modal.importFile('bad.json', '{');
+    expect(notices[notices.length - 1]).toBe(
+      'The file could not be read as JSON, YAML or Markdown.',
+    );
   });
 });

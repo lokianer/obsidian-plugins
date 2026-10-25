@@ -8,6 +8,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Monster import**: the monster builder reads monsters from a file — Fantasy Statblocks YAML or
+  JSON, Markdown notes with stat blocks, 5e-bits and Open5e JSON, 5etools bestiaries (tags turned
+  into text). One fills the form; several become tiles, with **Create all** writing them as own
+  monsters.
+
 - **Own monsters and the monster builder** (Monster Manual, phase M3): `type: monster` notes with a
   stat block join the Monster Manual, marked "own", their card opening the note. **New monster**
   (command, or + in the Monster Manual) opens a builder in the New NPC dialog's style — start from

@@ -26,10 +26,11 @@ import {
   parseBonuses,
 } from '../monsters/draft';
 import { filterMonsters, NO_FILTERS } from '../monsters/filter';
+import { monstersFrom } from '../monsters/import';
 import { germanBlock, monsterName, SIZES, sizeLabel, TYPES, typeLabel } from '../monsters/meta';
 import type { SrdMonster } from '../monsters/model';
 import type { Lang } from '../npc/races';
-import { type Entry, parseStatblock, type Statblock } from '../npc/statblock';
+import { type Entry, findStatblocks, parseStatblock, type Statblock } from '../npc/statblock';
 import { renderStatblock } from './statblock-view';
 
 /** How many SRD monsters the start-from tiles show at once. */
@@ -71,10 +72,23 @@ export interface MonsterBuilderDeps {
   monsters: readonly SrdMonster[];
   /** Writes the monster; the dialog closes once it is written. */
   create: (block: Statblock) => Promise<void>;
+  /** Writes every imported monster as a note of its own; the dialog closes once they are written. */
+  createAll: (blocks: Statblock[]) => Promise<void>;
+}
+
+/** The monsters in an imported file's text: JSON, YAML, or Markdown with stat blocks. */
+export function monstersInFile(name: string, text: string): Statblock[] {
+  if (/\.json$/i.test(name)) return monstersFrom(JSON.parse(text));
+  if (/\.(md|markdown|txt)$/i.test(name)) {
+    return findStatblocks(text).flatMap((block) => monstersFrom(parseYaml(block.source)));
+  }
+  return monstersFrom(parseYaml(text));
 }
 
 export class MonsterBuilderModal extends Modal {
   private block: Statblock = emptyMonster();
+  /** The monsters of the last imported file, when it held more than one. */
+  private imported: Statblock[] = [];
   private query = '';
   private formEl!: HTMLElement;
   private previewEl!: HTMLElement;
@@ -91,6 +105,22 @@ export class MonsterBuilderModal extends Modal {
     this.setTitle(this.deps.t('monsterBuilder.title'));
     this.modalEl.addClass('dnd5e-npc-modal', 'dnd5e-npc-dialog');
     this.contentEl.addClass('dnd5e-monster-builder');
+    const { t } = this.deps;
+    const top = this.contentEl.createDiv({ cls: 'dnd5e-npc-top' });
+    const load = top.createEl('button', { cls: ['dnd5e-builder-import', 'dnd5e-monster-import'] });
+    setIcon(load.createSpan(), 'file-input');
+    load.createSpan({ text: t('monsterBuilder.import') });
+    const file = top.createEl('input', {
+      cls: 'dnd5e-builder-file',
+      attr: { type: 'file', accept: '.json,.yaml,.yml,.md,.markdown,.txt' },
+    });
+    load.addEventListener('click', () => file.click());
+    file.addEventListener('change', () => {
+      const chosen = file.files?.[0];
+      if (chosen !== undefined)
+        void chosen.text().then((text) => this.importFile(chosen.name, text));
+      file.value = '';
+    });
     const body = this.contentEl.createDiv({ cls: 'dnd5e-npc-body' });
     this.formEl = body.createDiv({ cls: 'dnd5e-npc-form' });
     this.previewEl = body.createDiv({ cls: 'dnd5e-npc-preview' });
@@ -108,6 +138,69 @@ export class MonsterBuilderModal extends Modal {
     this.renderForm();
   }
 
+  /** A file's monsters: one fills the form, several become tiles to pick from or create at once. */
+  importFile(name: string, text: string): void {
+    const { t } = this.deps;
+    let found: Statblock[];
+    try {
+      found = monstersInFile(name, text);
+    } catch {
+      new Notice(t('monsterBuilder.import.unreadable'));
+      return;
+    }
+    if (found.length === 0) {
+      new Notice(t('monsterBuilder.import.none'));
+      return;
+    }
+    if (found.length === 1 && found[0] !== undefined) {
+      this.imported = [];
+      this.block = found[0];
+    } else {
+      this.imported = found;
+      new Notice(t('monsterBuilder.import.found', { count: found.length }));
+    }
+    this.renderForm();
+  }
+
+  /** The imported monsters as tiles, and a button that writes them all. */
+  private renderImported(form: HTMLElement): void {
+    const { t } = this.deps;
+    if (this.imported.length === 0) return;
+    const heading = new Setting(form)
+      .setName(t('monsterBuilder.import.heading', { count: this.imported.length }))
+      .setHeading();
+    heading.addButton((button) =>
+      button
+        .setButtonText(t('monsterBuilder.import.all', { count: this.imported.length }))
+        .setCta()
+        .onClick(() => void this.createAll()),
+    );
+    const tiles = form.createDiv({ cls: ['dnd5e-npc-tiles', 'dnd5e-monster-imported'] });
+    for (const block of this.imported) {
+      const tile = tiles.createEl('button', {
+        cls: block === this.block ? ['dnd5e-npc-tile', 'is-selected'] : 'dnd5e-npc-tile',
+      });
+      setIcon(tile.createDiv({ cls: 'dnd5e-npc-tile-icon' }), 'file-input');
+      const text = tile.createDiv({ cls: 'dnd5e-npc-tile-text' });
+      text.createDiv({ cls: 'dnd5e-npc-tile-name', text: block.name ?? '' });
+      text.createDiv({
+        cls: 'dnd5e-npc-tile-line',
+        text: [block.cr === null ? '' : t('monsters.cr', { cr: block.cr }), block.type ?? '']
+          .filter(Boolean)
+          .join(' · '),
+      });
+      tile.addEventListener('click', () => {
+        this.block = block;
+        this.renderForm();
+      });
+    }
+  }
+
+  private async createAll(): Promise<void> {
+    await this.deps.createAll(this.imported);
+    this.close();
+  }
+
   // ── the form ───────────────────────────────────────────────────────────────────────────────
 
   private renderForm(): void {
@@ -115,6 +208,7 @@ export class MonsterBuilderModal extends Modal {
     const b = this.block;
     const form = this.formEl;
     form.empty();
+    this.renderImported(form);
 
     new Setting(form).setName(t('monsterBuilder.from')).setHeading();
     const picker = form.createDiv({ cls: 'dnd5e-npc-picker' });

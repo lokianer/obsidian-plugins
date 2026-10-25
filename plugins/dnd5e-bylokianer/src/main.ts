@@ -303,6 +303,21 @@ export default class Dnd5ePlugin extends Plugin {
         t,
         lang: tableLang(this.options, getLanguage()),
         monsters: SRD_MONSTERS,
+        createAll: async (blocks) => {
+          for (const block of blocks) {
+            const name = (block.name ?? '').trim();
+            const text = monsterNoteText(name, block.cr, statblockYaml(block), BLOCK);
+            await newNote(this.app, cache, this.options.monsterFolder, name, text);
+          }
+          new Notice(
+            t('monsterBuilder.import.done', {
+              count: blocks.length,
+              folder: this.options.monsterFolder,
+            }),
+          );
+          await ownMonsters.reload();
+          await openMonsters();
+        },
         create: async (block) => {
           const name = (block.name ?? '').trim();
           const text = monsterNoteText(name, block.cr, statblockYaml(block), BLOCK);

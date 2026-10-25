@@ -502,3 +502,26 @@ actions) stays the next phase.
 
 Left out: editing a note's monster in the builder (the rendered block is editable already), lair
 actions, spell lists as separate fields (Spellcasting stays a trait).
+
+## 2026-10-25 · No non-SRD monsters in the plugin; an import for the GM's own
+
+The maintainer asked for the named demon lords and beholders in the Monster Manual. They are not in
+the SRD 5.1 (CC-BY-4.0): the demon lords are not part of it, and beholders, mind flayers and similar
+creatures are Wizards of the Coast's product identity, kept out of it on purpose. Shipping their
+stat blocks — typed in or not — would distribute copyrighted text from a public repository, so the
+plugin keeps to the SRD. Decided with the maintainer instead: an import, so creatures from books
+the GM owns land in the GM's own vault as own monsters.
+
+- Formats: our and Fantasy Statblocks' keys (YAML, JSON, Markdown notes with `statblock` or
+  `dnd5e-statblock` blocks), the 5e-bits and Open5e SRD API shapes, 5etools bestiaries. Wrappers
+  `{ monster: [...] }`, `{ results: [...] }`, `{ monsters: [...] }` and plain lists are read.
+- 5etools tags become the SRD's words (`{@atk mw}` → "Melee Weapon Attack:", `{@hit 5}` → "+5",
+  `{@h}` → "Hit: ", `{@dc 15}` → "DC 15", `{@recharge 5}` → "(Recharge 5–6)", any other tag its
+  first part); spellcasting blocks become a Spellcasting trait with spell lines.
+- One monster fills the builder; several become tiles with Create all, writing each through the
+  same note helper. Monsters without a name are skipped. Read with the browser's file dialog, so it
+  works on phones; no network.
+- The example vault's import file holds two made-up monsters, no copyrighted ones.
+
+Left out: fetching from websites (no network), 5etools' `_copy` references between monsters (a
+copied monster comes in with only its own fields).

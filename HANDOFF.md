@@ -26,8 +26,8 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    **spell builder** and the **deck builder** in the New NPC dialog's style (points 34–38 below).
    Code: `src/spells/links.ts`, `src/spells/own.ts`, `src/spells/draft.ts`,
    `src/obsidian/spell-builder.ts`, `src/obsidian/deck-builder.ts`, `src/obsidian/new-note.ts`.
-3. **Monster Manual** (module 5): M1 and M3 (own monsters, the monster builder; pulled ahead on the
-   maintainer's request) built (points 39–45 below). Next: M2, the German texts of the
+3. **Monster Manual** (module 5): M1 and M3 (own monsters, the monster builder with a file import;
+   pulled ahead on the maintainer's request) built (points 39–46 below). Next: M2, the German texts of the
    traits, actions, reactions and legendary actions of all 334 (about 48,500 words), in batches by
    challenge rating like the spells' S2: a `src/monsters/de-texts/` per band, `germanBlock` taking
    the entries' German name and desc, tests that attack bonuses, dice and DCs survive. Data:
@@ -260,6 +260,14 @@ fields)
       modifier follows; add an action and a legendary action (the paragraph fills itself in).
 45. Create monster: the note lands in `Silverstadt/Monsters/` and the Monster Manual shows it.
 
+**Monster import**
+
+46. **New monster** → **Import from a file** → `Silverstadt/Monsters/Import example (5etools).json`:
+    two tiles (Tide Lantern Wisp, Bell Square Footpad); one loads into the form with its 5etools
+    tags turned into text; **Create all 2** writes both into `Silverstadt/Monsters/`. A Fantasy
+    Statblocks export or a note with stat blocks works the same. Non-SRD monsters (demon lords,
+    beholders) are not shipped — licence; see DECISIONS.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).
@@ -296,5 +304,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 350 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 355 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

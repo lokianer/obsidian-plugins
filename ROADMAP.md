@@ -14,7 +14,7 @@ plugin's `DECISIONS.md` once it exists.
 ## Next step
 
 **dnd5e-byLokianer · Monster Manual** (module 5): M1 (the tab, liked by the maintainer) and M3
-(own monsters, the monster builder — pulled ahead on request) are built and wait for the check in
+(own monsters, the monster builder with a file import for the GM's own non-SRD monsters — pulled ahead on request) are built and wait for the check in
 Obsidian; next M2, the German texts of all traits and actions. Also waiting for the check: spellbook
 S3, the spell builder (with casting time and duration dropdowns), the restyled deck builder, the
 faction world redesign. Then module 6, the battle tracker. Nothing is published for now.

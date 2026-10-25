@@ -271,6 +271,14 @@ language, the six abilities numbers, saves and skills one line each (`DEX +6, CO
 actions, reactions and legendary actions rows — the paragraph above legendary actions fills itself
 in. It writes the note in the monster folder and shows it in the Monster Manual.
 
+**Import from a file** in the builder reads monsters you already have: Fantasy Statblocks' keys (a
+YAML or JSON file, or a Markdown note with `statblock` / `dnd5e-statblock` blocks), the 5e-bits and
+Open5e JSON shapes, and 5etools bestiary files (their `{@…}` tags become plain text). One monster
+fills the form; several show as tiles — pick one to edit, or **Create all** to write them all as
+own monsters. The plugin itself ships only the SRD's monsters: creatures outside the SRD (named
+demon lords, beholders and other monsters Wizards of the Coast keeps out of it) are not free to
+include, so bring them from your own books this way.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
