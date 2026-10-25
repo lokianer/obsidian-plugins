@@ -192,3 +192,16 @@ session N+1. From `docs/superpowers/specs/2026-10-24-in-view-editing-history-des
   write from the subject's own card rows.
 
 Left out: logging reasons, names and power; a full history view (the "time machine" idea).
+
+## 2026-10-25 · Loot carries over into the next session
+
+Asked for by the maintainer after the first check in Obsidian: "only one session to keep an eye on".
+When the plugin creates session N+1 (the Log offer or the new command **Start next session**), the
+new note takes over every row of the tables and every list item under `## Loot` of session N, each
+with `(from <link to session N>)` appended to its first cell; a line that already names an origin
+keeps it, so an item says where it was found, not where it was last seen. The template's empty
+placeholder rows are dropped. The previous note is not changed. Pure, in `packages/session/loot.ts`.
+
+Left out: carrying loot into a session note made by hand or by Templater (the plugin only sees the
+notes it creates); removing used-up loot (the GM deletes the line in the newest note, and it stops
+travelling); other sections.

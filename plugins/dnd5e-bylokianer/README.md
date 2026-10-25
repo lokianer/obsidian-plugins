@@ -50,8 +50,11 @@ note.
 Session 14**; a click adds a line such as `- 20:31 Order of the Lantern → The Gutter Court: −2 → −3`
 under `## Log` of tonight's session note (the one with the highest `session:` number; secret changes
 go into a `[!gm]` callout). If that note is from an earlier day, the plugin asks once a day whether to
-start the next session from your session template. The views' tooltips show each relation's last
-changes, read back from those lines.
+start the next session from your session template; **Start next session** does the same on demand.
+The new note takes over the last session's `## Loot` — table rows and list items, each marked with
+where it came from (`(from [[Session 14 – Bell Square]])`, an earlier origin is kept) — so only the
+newest session needs watching. The views' tooltips show each relation's last changes, read back from
+those lines.
 
 **Faction view.** Click a faction (or the Party / Unaffiliated frame) to open it: the faction as a
 frame with its members, the factions it relates to around it, own values as solid arrows. Members

@@ -122,7 +122,9 @@ export const en = {
   'log.noSession':
     'No session note to log to (a note with “type: session” and a “session:” number)',
   'log.offerTitle': 'Start a new session?',
-  'log.offerText': 'Session {n} is dated {date}. Start Session {next} for today and log there?',
+  'log.offerText':
+    'Session {n} is dated {date}. Start Session {next} for today, with its loot, and log there?',
+  'command.nextSession': 'Start next session',
   'log.create': 'Create Session {next}',
   'log.keep': 'Keep Session {n}',
   'history.in': 'in S{session}',
@@ -275,7 +277,9 @@ export const de: Record<StringKey, string> = {
   'log.noSession':
     'Keine Sitzungsnotiz zum Loggen (eine Notiz mit „type: session“ und einer „session:“-Nummer)',
   'log.offerTitle': 'Neue Sitzung beginnen?',
-  'log.offerText': 'Session {n} ist vom {date}. Session {next} für heute anlegen und dort loggen?',
+  'log.offerText':
+    'Session {n} ist vom {date}. Session {next} für heute samt Loot anlegen und dort loggen?',
+  'command.nextSession': 'Nächste Sitzung beginnen',
   'log.create': 'Session {next} anlegen',
   'log.keep': 'Bei Session {n} bleiben',
   'history.in': 'in S{session}',

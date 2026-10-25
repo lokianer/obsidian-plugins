@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   appendToLog,
+  carriedLoot,
   findTonight,
   formatLogLine,
   needsNext,
@@ -10,6 +11,7 @@ import {
   nextSessionText,
   parseLog,
   sessionsOf,
+  withLoot,
 } from '../src/index';
 
 const vault = new URL('../../../examples/vault/', import.meta.url);
@@ -125,5 +127,59 @@ describe('tonight', () => {
     expect(text).toContain('date: "2026-10-25"');
     expect(text).toContain('# Session 15 – ');
     expect(nextSessionText(null, 15, '2026-10-25')).toContain('## Log');
+  });
+});
+
+describe('loot', () => {
+  const S14 = '[[Session 14 – Bell Square]]';
+  const next = nextSessionText(template, 15, '2026-10-25');
+
+  it('carries the last session’s loot into the new note, marked with its origin', () => {
+    const text = withLoot(next, carriedLoot(session14, S14));
+    expect(text).toContain(
+      [
+        '## Loot',
+        '',
+        '| Item | Who has it |',
+        '| --- | --- |',
+        `| Mira's calling card, silver edge (from ${S14}) | Orrin |`,
+      ].join('\n'),
+    );
+    // The template's empty placeholder row is gone.
+    expect(text).not.toMatch(/^\| \| \|$/m);
+  });
+
+  it('keeps an earlier origin and escapes an alias pipe in a table', () => {
+    const earlier = [
+      '## Loot',
+      '',
+      '| Item | Who |',
+      '| --- | --- |',
+      '| Jar (from [[S12]]) | Ilex |',
+      '| Rope | Dagny |',
+    ].join('\n');
+    expect(carriedLoot(earlier, '[[Session 13|S13]]').rows).toEqual([
+      '| Jar (from [[S12]]) | Ilex |',
+      '| Rope (from [[Session 13\\|S13]]) | Dagny |',
+    ]);
+  });
+
+  it('carries list items and starts a Loot section where the note has none', () => {
+    const loot = carriedLoot('# S\n\n## Loot\n\n- 30 gp\n- Jar (from [[S12]])\n', '[[S13]]');
+    expect(loot.items).toEqual(['- 30 gp (from [[S13]])', '- Jar (from [[S12]])']);
+    expect(withLoot('# S14\n\n## Log\n', loot)).toBe(
+      '# S14\n\n## Log\n\n## Loot\n\n- 30 gp (from [[S13]])\n- Jar (from [[S12]])\n',
+    );
+  });
+
+  it('starts a table from the previous header where the new Loot section has none', () => {
+    const loot = carriedLoot(session14, S14);
+    expect(withLoot('## Loot\r\n\r\n## Notes\r\n', loot)).toBe(
+      `## Loot\r\n\r\n| Item | Who has it |\r\n| --- | --- |\r\n| Mira's calling card, silver edge (from ${S14}) | Orrin |\r\n\r\n## Notes\r\n`,
+    );
+  });
+
+  it('leaves the note alone when there is nothing to carry', () => {
+    expect(withLoot(next, carriedLoot('# S\n', S14))).toBe(next);
   });
 });

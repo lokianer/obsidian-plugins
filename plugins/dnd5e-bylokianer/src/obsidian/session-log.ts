@@ -1,9 +1,10 @@
 // The history side of the plugin: after a relation change, a notice that offers to log it to
-// tonight's session note (asking once a day whether session N+1 is due), the write itself, and the
-// parsed log lines of all session notes for the views' tooltips.
+// tonight's session note (asking once a day whether session N+1 is due), the write itself, session
+// N+1 with the loot carried over, and the parsed log lines of all session notes for the tooltips.
 
 import {
   appendToLog,
+  carriedLoot,
   clockTime,
   findTonight,
   formatLogLine,
@@ -15,6 +16,7 @@ import {
   parseLog,
   type SessionNote,
   sessionsOf,
+  withLoot,
 } from '@obsidian-plugins/session';
 import { type App, Modal, normalizePath, Notice, type Plugin, TFile } from 'obsidian';
 
@@ -199,15 +201,34 @@ export class SessionLog {
     );
   }
 
-  /** Session N+1 from the template (or a minimal note); an existing file of that name is reused. */
+  /** The command: creates session N+1 after the newest one and returns its path. */
+  async startNext(): Promise<string | null> {
+    const tonight = this.tonight();
+    if (tonight === null) {
+      new Notice(this.t('log.noSession'));
+      return null;
+    }
+    return this.createNext(tonight, localDate(new Date()));
+  }
+
+  /**
+   * Session N+1 from the template (or a minimal note), with tonight's loot carried over and
+   * marked with where it came from; an existing file of that name is reused.
+   */
   private async createNext(tonight: SessionNote, today: string): Promise<string> {
-    const { vault } = this.plugin.app;
+    const { vault, fileManager } = this.plugin.app;
     const n = tonight.session + 1;
     const path = normalizePath(nextSessionPath(tonight, n));
     if (vault.getFileByPath(path) !== null) return path;
     const templateFile = vault.getFileByPath(normalizePath(this.settings().sessionTemplate));
     const template = templateFile === null ? null : await vault.cachedRead(templateFile);
-    await vault.create(path, nextSessionText(template, n, today));
+    let text = nextSessionText(template, n, today);
+    const previous = vault.getFileByPath(tonight.path);
+    if (previous !== null) {
+      const origin = fileManager.generateMarkdownLink(previous, path);
+      text = withLoot(text, carriedLoot(await vault.cachedRead(previous), origin));
+    }
+    await vault.create(path, text);
     return path;
   }
 

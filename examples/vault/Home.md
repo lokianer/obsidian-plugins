@@ -27,7 +27,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |
 | Decks | [[Omens of the River]] | Two of eight cards already drawn |
 | GM gate | Almost every note | `[!gm]` callouts with and without `revealed:`, `%%comments%%`, a link hidden in a comment |
-| Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md` |
+| Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md`; its Loot table starts with Mira's calling card `(from [[Session 14 – Bell Square]])` (also via **Start next session**) |
 
 Notes with broken frontmatter or broken values (warnings, Fix buttons, dangling targets) are not part of this vault: they live in `plugins/dnd5e-bylokianer/test/fixtures/vault/` with the same folder layout. To try the warnings in Obsidian, copy them in and remove them afterwards.
 

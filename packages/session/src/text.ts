@@ -28,16 +28,24 @@ export function bodyStart(lines: readonly string[]): number {
 const HEADING = /^#{1,6}\s/;
 const LOG_HEADING = /^##\s+log\s*$/i;
 
-/** The `## Log` section: its heading line and the line after its end (next heading or the end). */
-export function logSection(lines: readonly string[]): { heading: number; end: number } | null {
+/** A section by its heading: the heading line and the line after its end (next heading or end). */
+export function section(
+  lines: readonly string[],
+  heading: RegExp,
+): { heading: number; end: number } | null {
   for (let i = bodyStart(lines); i < lines.length; i++) {
-    if (LOG_HEADING.test(lines[i]?.trim() ?? '')) {
+    if (heading.test(lines[i]?.trim() ?? '')) {
       let end = i + 1;
       while (end < lines.length && !HEADING.test(lines[end] ?? '')) end++;
       return { heading: i, end };
     }
   }
   return null;
+}
+
+/** The `## Log` section. */
+export function logSection(lines: readonly string[]): { heading: number; end: number } | null {
+  return section(lines, LOG_HEADING);
 }
 
 /** Whether line `i` lies in a `> [!gm]` callout (it and the lines above it start with `>`). */

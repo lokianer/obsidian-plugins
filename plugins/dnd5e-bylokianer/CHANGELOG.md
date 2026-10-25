@@ -71,5 +71,7 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Changed (after the first check in Obsidian)
 
+- A new session note takes over the last session's loot, each row or item marked with the session
+  it came from (an earlier origin is kept); command **Start next session** creates it on demand.
 - The log notice shows the change and a full-width, accent-coloured **Log → Session …** button, and
   stays ten seconds instead of six.

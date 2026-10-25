@@ -121,6 +121,15 @@ export default class Dnd5ePlugin extends Plugin {
     this.addRibbonIcon('network', t('command.openWorld'), () => void openWorld());
 
     this.addCommand({
+      id: 'start-next-session',
+      name: t('command.nextSession'),
+      callback: async () => {
+        const path = await sessionLog.startNext();
+        if (path !== null) openNote(path, false);
+      },
+    });
+
+    this.addCommand({
       id: 'edit-faction-data',
       name: t('command.editCard'),
       callback: async () => {
