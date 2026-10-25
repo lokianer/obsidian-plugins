@@ -30,7 +30,7 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    the battle tracker. Short design first (spec), then the plan; the SRD monster data is in the
    5e-bits database (`src/2014/en/5e-SRD-Monsters.json`, 334 entries; `scripts/` has the spell
    generator to follow). Then module 6, the battle tracker. The maintainer also asked to make the
-   Pages site fancier following the Vercel Web Interface Guidelines.
+   Pages site fancier following the Vercel Web Interface Guidelines — done 2026-10-25 (skip link, focus rings, 24/44 px targets, theme-color, reduced motion, explicit image sizes, curly quotes; aurora hero, stats strip, module tiles, scroll-driven reveals).
 
 ## State of the working tree
 

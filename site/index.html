@@ -2,46 +2,55 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Obsidian Plugins by Lokianer</title>
     <meta
       name="description"
-      content="A collection of local-first Obsidian plugins by Lokianer: plain Markdown in, insight out. First up: dnd5e-byLokianer, game-master tools for D&amp;D 5e."
+      content="Local-first Obsidian plugins by Lokianer: plain Markdown in, insight out. First up: dnd5e-byLokianer, game-master tools for D&amp;D 5e — factions, NPCs, spellbook, Deck of Many Things."
     />
     <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0f0f13" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f6fb" media="(prefers-color-scheme: light)" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="preload" as="image" href="assets/graph.webp" fetchpriority="high" />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4 58 19v26L32 60 6 45V19z' fill='%237f6df2'/%3E%3Cpath d='M32 4v56M6 19l26 15 26-15' stroke='%23fff' stroke-opacity='.5' fill='none' stroke-width='3'/%3E%3C/svg%3E"
     />
   </head>
   <body>
+    <a class="skip" href="#content">Skip to content</a>
+
     <header class="nav">
-      <a class="brand" href="#top" aria-label="Home">
+      <a class="brand" href="#top" aria-label="Lokianer · Obsidian plugins, back to top">
         <svg viewBox="0 0 64 64" aria-hidden="true">
           <path d="M32 4 58 19v26L32 60 6 45V19z" />
           <path class="facet" d="M32 4v56M6 19l26 15 26-15" />
         </svg>
-        <span>Lokianer<span class="dim"> · Obsidian plugins</span></span>
+        <span translate="no">Lokianer<span class="dim"> · Obsidian plugins</span></span>
       </a>
-      <nav>
+      <nav aria-label="Sections">
         <a href="#plugins">Plugins</a>
-        <a href="#dnd5e">dnd5e-byLokianer</a>
-        <a href="#workshop">How it's built</a>
+        <a href="#modules">Modules</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#workshop">How it’s built</a>
         <a class="button small" href="https://github.com/lokianer/obsidian-plugins">GitHub</a>
       </nav>
     </header>
 
     <main id="top">
-      <section class="hero">
+      <section class="hero" id="content" tabindex="-1">
+        <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="hero-copy">
-          <p class="eyebrow">A collection of Obsidian plugins · local-first</p>
+          <p class="eyebrow">
+            <span class="pulse" aria-hidden="true"></span>A collection of Obsidian plugins ·
+            local-first
+          </p>
           <h1>Plain Markdown in.<br /><span class="grad">Insight out.</span></h1>
           <p class="lead">
-            Obsidian plugins I build for the things I keep in my vault. Each one reads the notes you
-            already write, shows what is in them at a glance and lets you change them in place —
-            without accounts, without a network, without locking your notes into a format only the
-            plugin understands.
+            Obsidian plugins for the things I keep in my vault. Each one reads the notes you already
+            write, shows what is in them at a glance and lets you change them in place — no
+            accounts, no network, no format only the plugin understands.
           </p>
           <div class="cta">
             <a class="button" href="#plugins">See the plugins</a>
@@ -49,7 +58,7 @@
               >Source on GitHub</a
             >
           </div>
-          <ul class="chips">
+          <ul class="chips" aria-label="Principles">
             <li>Plain Markdown</li>
             <li>No network, no accounts</li>
             <li>Desktop &amp; mobile</li>
@@ -59,16 +68,28 @@
         </div>
         <figure class="window hero-shot">
           <div class="window-bar">
-            <i></i><i></i><i></i><span>dnd5e-byLokianer · Faction world</span>
+            <i></i><i></i><i></i><span translate="no">dnd5e-byLokianer · Faction world</span>
           </div>
           <img
             src="assets/graph.webp"
+            width="1600"
+            height="1093"
+            fetchpriority="high"
+            decoding="async"
             alt="The faction world graph of the Silverstadt example campaign: factions as circles sized by power, coloured arrows for their relations, the Party and Unaffiliated as frames."
           />
         </figure>
       </section>
 
-      <section class="principles">
+      <section class="stats" aria-label="What ships with dnd5e-byLokianer">
+        <div><b>319</b><span>SRD spells, English &amp; German</span></div>
+        <div><b>21</b><span>SRD NPCs as stat blocks</span></div>
+        <div><b>22</b><span>cards in the Deck of Many Things</span></div>
+        <div><b>9 · 12</b><span>races · classes for New NPC</span></div>
+        <div><b>0</b><span>network calls</span></div>
+      </section>
+
+      <section class="principles" aria-label="Principles">
         <div>
           <strong>Files first.</strong> Your notes are the truth; everything a plugin shows is
           rebuilt from them.
@@ -82,7 +103,7 @@
           order stay.
         </div>
         <div>
-          <strong>Every theme.</strong> Obsidian's own CSS variables only, dark first, at least
+          <strong>Every theme.</strong> Obsidian’s own CSS variables only, dark first, at least
           16&nbsp;px text.
         </div>
       </section>
@@ -93,7 +114,7 @@
           <h2>One workshop, one plugin per folder.</h2>
           <p class="note">
             Every plugin lives in this repository and shares its principles, its tooling and one
-            example vault. A plugin that is ready gets its own release repository for Obsidian's
+            example vault. A plugin that is ready gets its own release repository for Obsidian’s
             directory.
           </p>
         </div>
@@ -102,27 +123,28 @@
             <div class="plugin-top">
               <span class="plugin-icon" aria-hidden="true">🐉</span>
               <div>
-                <h3>dnd5e-byLokianer</h3>
-                <code>dnd5e-bylokianer</code>
+                <h3 translate="no">dnd5e-byLokianer</h3>
+                <code translate="no">dnd5e-bylokianer</code>
               </div>
               <span class="badge dev">In development</span>
             </div>
             <p>
-              A game master's thinking tool for D&amp;D 5e campaigns: factions and how they stand
-              towards each other, NPCs with 5e stat blocks, a spellbook, the Deck of Many Things,
-              and next a battle tracker and dice. It shows and suggests; the GM decides.
+              A game master’s thinking tool for D&amp;D&nbsp;5e: factions and how they stand towards
+              each other, NPCs with 5e stat blocks, a spellbook with your own spells, the Deck of
+              Many Things — next a Monster Manual, a battle tracker and dice. It shows and suggests;
+              the GM decides.
             </p>
-            <ul class="modules">
+            <ul class="modules" aria-label="Modules">
               <li class="done"><b>Factions</b> accepted</li>
               <li class="done"><b>NPC builder</b> accepted</li>
               <li class="done"><b>Spellbook</b> accepted</li>
               <li class="done"><b>Deck of Many Things</b> accepted</li>
-              <li><b>Monster Manual</b> next</li>
+              <li class="now"><b>Monster Manual</b> next</li>
               <li><b>Battle tracker</b> planned</li>
               <li><b>Dice</b> planned</li>
             </ul>
             <div class="plugin-links">
-              <a class="button small" href="#dnd5e">Take the tour</a>
+              <a class="button small" href="#modules">Take the tour</a>
               <a
                 class="button small ghost"
                 href="https://github.com/lokianer/obsidian-plugins/tree/main/plugins/dnd5e-bylokianer"
@@ -144,8 +166,8 @@
               </div>
             </div>
             <p>
-              More plugins will join the collection — each built the same way: designed first, built
-              in small tested phases, checked inside Obsidian before a phase counts.
+              More plugins will join — each built the same way: designed first, built in small
+              tested phases, checked inside Obsidian before a phase counts.
             </p>
             <div class="plugin-links">
               <a
@@ -158,8 +180,8 @@
         </div>
       </section>
 
-      <section id="dnd5e" class="plugin-intro">
-        <p class="eyebrow">Plugin 01 · dnd5e-byLokianer</p>
+      <section id="modules" class="plugin-intro">
+        <p class="eyebrow">Plugin 01 · <span translate="no">dnd5e-byLokianer</span></p>
         <h2>
           Your campaign already knows who hates whom. <span class="grad">Now you see it.</span>
         </h2>
@@ -168,6 +190,23 @@
           the plugin turns those plain Markdown notes into a living world you can read at a glance
           and change in place.
         </p>
+        <nav class="module-tiles" aria-label="Modules of dnd5e-byLokianer">
+          <a href="#factions"
+            ><span aria-hidden="true">⚔️</span><b>Factions</b>folders, relations, a living map</a
+          >
+          <a href="#npcs"
+            ><span aria-hidden="true">📜</span><b>NPC builder</b>stat blocks, New NPC</a
+          >
+          <a href="#spells"
+            ><span aria-hidden="true">✨</span><b>Spellbook</b>319 spells, your own</a
+          >
+          <a href="#deck"
+            ><span aria-hidden="true">🃏</span><b>Deck of Many Things</b>and your own decks</a
+          >
+          <a href="#roadmap" class="soon"
+            ><span aria-hidden="true">🐉</span><b>Monster Manual</b>next</a
+          >
+        </nav>
       </section>
 
       <section id="factions" class="feature">
@@ -192,14 +231,14 @@
           <ul class="ticks">
             <li><b>Public and true.</b> Secrets never show in anything marked public.</li>
             <li>
-              <b>Inheritance.</b> Members take their faction's stance unless they state their own.
+              <b>Inheritance.</b> Members take their faction’s stance unless they state their own.
             </li>
             <li>
               <b>Never fatal.</b> Broken values become warnings with a one-click Fix, not a blank
               view.
             </li>
             <li>
-              <b>A living map.</b> Every faction in its own colour, on Obsidian's canvas dots; hover
+              <b>A living map.</b> Every faction in its own colour, on Obsidian’s canvas dots; hover
               one and its stances light up with their values.
             </li>
           </ul>
@@ -208,19 +247,25 @@
           <div class="window-bar"><i></i><i></i><i></i><span>The Drowned Choir</span></div>
           <img
             src="assets/card.webp"
-            alt="The faction card replacing Obsidian's Properties: power pips, relation sliders with step names, secret relations folded."
+            width="1520"
+            height="1136"
             loading="lazy"
+            decoding="async"
+            alt="The faction card replacing Obsidian’s Properties: power pips, relation sliders with step names, secret relations folded."
           />
         </figure>
       </section>
 
-      <section class="gallery">
+      <section class="gallery" aria-label="More of the factions module">
         <figure class="window">
           <div class="window-bar"><i></i><i></i><i></i><span>Matrix</span></div>
           <img
             src="assets/matrix.webp"
-            alt="Matrix of every faction towards every other, coloured cells with number and step name; inherited values dashed."
+            width="1600"
+            height="788"
             loading="lazy"
+            decoding="async"
+            alt="Matrix of every faction towards every other, coloured cells with number and step name; inherited values dashed."
           />
           <figcaption><b>Matrix.</b> Every value at a glance; inherited ones dashed.</figcaption>
         </figure>
@@ -228,20 +273,26 @@
           <div class="window-bar"><i></i><i></i><i></i><span>The Gutter Court</span></div>
           <img
             src="assets/faction.webp"
-            alt="Faction view of The Gutter Court: the faction as a frame with its members, arrows to the factions it relates to."
+            width="1600"
+            height="1013"
             loading="lazy"
+            decoding="async"
+            alt="Faction view of The Gutter Court: the faction as a frame with its members, arrows to the factions it relates to."
           />
           <figcaption>
             <b>Faction view.</b> Drill into a faction: its members, who is out of line, where each
-            arrow points — drag the cards where you like.
+            arrow points.
           </figcaption>
         </figure>
         <figure class="window">
           <div class="window-bar"><i></i><i></i><i></i><span>Popover</span></div>
           <img
             src="assets/popover.webp"
-            alt="Value popover on a matrix cell: slider, reason, the inherited fallback, Reset to inherited and Open card."
+            width="1800"
+            height="886"
             loading="lazy"
+            decoding="async"
+            alt="Value popover on a matrix cell: slider, reason, the inherited fallback, Reset to inherited and Open card."
           />
           <figcaption>
             <b>Edit in place.</b> Click a cell or arrow; the write lands in the right note.
@@ -251,8 +302,11 @@
           <div class="window-bar"><i></i><i></i><i></i><span>Tensions</span></div>
           <img
             src="assets/tensions.webp"
-            alt="Tension panel in True mode listing members out of line with their faction and public faces hiding a different truth."
+            width="840"
+            height="1800"
             loading="lazy"
+            decoding="async"
+            alt="Tension panel in True mode listing members out of line with their faction and public faces hiding a different truth."
           />
           <figcaption><b>Tensions.</b> Who is out of line, what the public face hides.</figcaption>
         </figure>
@@ -260,7 +314,7 @@
 
       <section id="npcs" class="feature reverse">
         <div class="feature-copy">
-          <p class="eyebrow">Module 2 · NPC builder</p>
+          <p class="eyebrow">Module 2 · NPC builder · accepted</p>
           <h2>Stat blocks where you need them.</h2>
           <p>
             A <code>dnd5e-statblock</code> block holds a 5e stat block in the YAML Fantasy
@@ -269,15 +323,12 @@
             note — modifiers, XP and proficiency bonus worked out.
           </p>
           <ul class="ticks">
-            <li><b>All 21 SRD 5.1 NPCs</b> built in, checked against the SRD in tests.</li>
-            <li>
-              <b>New NPC.</b> A dialog files the note into its faction: race, class, archetype,
-              name, looks, voice, secret and hook — rolled from dice tables in English or German.
-            </li>
+            <li><b>All 21 SRD&nbsp;5.1 NPCs</b> built in, checked against the SRD in tests.</li>
             <li>
               <b>Your own.</b> Archetypes, races and dice tables as plain notes; values edited right
               in the rendered block.
             </li>
+            <li><b>Linked spells.</b> Spell names in a Spellcasting trait open the spellbook.</li>
             <li><b>Compatible.</b> One command converts Fantasy Statblocks blocks and back.</li>
           </ul>
         </div>
@@ -286,16 +337,22 @@
             <div class="window-bar"><i></i><i></i><i></i><span>Mira Voss</span></div>
             <img
               src="assets/npc.webp"
-              alt="Character card of Mira Voss with short stats under the title: AC 16, HP 84, CR 5, speed 30 ft. and the six ability modifiers."
+              width="1520"
+              height="1199"
               loading="lazy"
+              decoding="async"
+              alt="Character card of Mira Voss with short stats under the title: AC 16, HP 84, CR 5, speed 30 ft. and the six ability modifiers."
             />
           </figure>
           <figure class="window offset">
             <div class="window-bar"><i></i><i></i><i></i><span>Stat block</span></div>
             <img
               src="assets/statblock.webp"
-              alt="A full 5e stat block rendered in Obsidian's look: abilities, saves, skills, challenge with XP, traits, actions and reactions."
+              width="1440"
+              height="1752"
               loading="lazy"
+              decoding="async"
+              alt="A full 5e stat block rendered in Obsidian’s look: abilities, saves, skills, challenge with XP, traits, actions and reactions."
             />
           </figure>
         </div>
@@ -306,15 +363,15 @@
           <p class="eyebrow">Module 2 · New NPC</p>
           <h2>Roll a whole person, keep what you like.</h2>
           <p>
-            Pick a race, a class and an archetype from tiles — the SRD's nine races, twelve classes
-            and twenty-one NPCs, plus your own as plain notes. <b>Roll everything</b> fills the
-            rest; lock what you want to keep and roll again. The preview card shows the NPC as it
-            will be written, stat block numbers included.
+            Pick a race, a class and an archetype from tiles — the SRD’s 9 races, 12 classes and 21
+            NPCs, plus your own as plain notes. <b>Roll everything</b> fills the rest; lock what you
+            want to keep and roll again. The preview card shows the NPC as it will be written, stat
+            block numbers included.
           </p>
           <ul class="ticks">
             <li><b>Your words win.</b> Typing into a field locks it.</li>
             <li>
-              <b>Bilingual dice.</b> Every table has at least fifty entries, in English and German;
+              <b>Bilingual dice.</b> Every table has at least 50 entries, in English and German;
               German distances in metres.
             </li>
             <li>
@@ -327,27 +384,30 @@
           <div class="window-bar"><i></i><i></i><i></i><span>Neuer NSC</span></div>
           <img
             src="assets/npc-dialog.webp"
-            alt="The New NPC dialog in German: race, class and archetype tiles on the left, a live preview card of a dwarf fighter with his veteran stat block numbers on the right."
+            width="1080"
+            height="1480"
             loading="lazy"
+            decoding="async"
+            alt="The New NPC dialog in German: race, class and archetype tiles on the left, a live preview card of a dwarf fighter with his veteran stat block numbers on the right."
           />
         </figure>
       </section>
 
       <section id="spells" class="feature reverse">
         <div class="feature-copy">
-          <p class="eyebrow">Module 3 · Spellbook</p>
+          <p class="eyebrow">Module 3 · Spellbook · accepted</p>
           <h2>Every SRD spell, one search away.</h2>
           <p>
-            The 319 spells of the SRD 5.1 in their own tab: search in English or German, narrow by
-            level and school chips, class, casting time, damage, save, concentration and ritual.
-            Each spell wears its school's colour; the card shows it in both languages.
+            The 319 spells of the SRD&nbsp;5.1 in their own tab: search in English or German, narrow
+            by level and school chips, class, casting time, damage, save, concentration and ritual.
+            Each spell wears its school’s colour; the card shows it in both languages.
           </p>
           <ul class="ticks">
-            <li><b>German too.</b> Every spell's full text in German, distances in metres.</li>
+            <li><b>German too.</b> Every spell’s full text in German, distances in metres.</li>
             <li><b>Keyboard first.</b> ↑ ↓ through the list, Enter to read.</li>
             <li>
-              <b>Linked.</b> Spell names in a stat block open their card; your own spells join the
-              list.
+              <b>Your own spells.</b> <code>type: spell</code> notes join the list — or let the
+              spell builder write one.
             </li>
             <li><b>Offline.</b> Everything ships with the plugin; no lookups on the web.</li>
           </ul>
@@ -356,18 +416,51 @@
           <div class="window-bar"><i></i><i></i><i></i><span>Zauberbuch</span></div>
           <img
             src="assets/spellbook.webp"
-            alt="The spellbook tab in German: level and school chips, filters, the list grouped by level in school colours, and the card of Lightning Bolt (Blitz) with its meta in metres."
+            width="1600"
+            height="1108"
             loading="lazy"
+            decoding="async"
+            alt="The spellbook tab in German: level and school chips, filters, the list grouped by level in school colours, and the card of Lightning Bolt (Blitz) with its meta in metres."
           />
         </figure>
       </section>
 
-      <section id="deck" class="feature">
+      <section class="feature">
         <div class="feature-copy">
-          <p class="eyebrow">Module 4 · Deck of Many Things</p>
+          <p class="eyebrow">Spellbook · New spell</p>
+          <h2>Start from any spell, make it yours.</h2>
+          <p>
+            The spell builder looks like New NPC: pick one of the 319 SRD spells from tiles and its
+            words arrive in your language, ready to change — or fill every field by hand, or load a
+            JSON file. The preview shows the card as the spellbook will.
+          </p>
+          <ul class="ticks">
+            <li>
+              <b>School colours.</b> Level and school as chips and tiles; the preview follows.
+            </li>
+            <li><b>JSON in.</b> Our own keys, or a spell in the 5e-bits or Open5e format.</li>
+            <li><b>A plain note out.</b> Readable without the plugin, editable any time.</li>
+          </ul>
+        </div>
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>Neuer Zauber</span></div>
+          <img
+            src="assets/spell-builder.webp"
+            width="1440"
+            height="1105"
+            loading="lazy"
+            decoding="async"
+            alt="The spell builder in German, started from Fireball (Feuerball): SRD spell tiles, level chips and school tiles on the left, a live preview card in the evocation colour on the right."
+          />
+        </figure>
+      </section>
+
+      <section id="deck" class="feature reverse">
+        <div class="feature-copy">
+          <p class="eyebrow">Module 4 · Deck of Many Things · accepted</p>
           <h2>Declare, draw, and let the rules run.</h2>
           <p>
-            The SRD's Deck of Many Things on the table: name who draws, declare the cards, turn them
+            The SRD’s Deck of Many Things on the table: name who draws, declare the cards, turn them
             one by one. The Fool and the Jester leave the deck, The Void and Donjon end the drawing,
             the Jester and the Idiot offer more draws — the tab keeps count.
           </p>
@@ -376,7 +469,7 @@
             <li><b>22 or 13 cards.</b> The full deck, or the one most parties find.</li>
             <li>
               <b>Your own decks.</b> Typed in, copied from the standard deck, pasted or imported
-              from JSON.
+              from JSON — then drawn in the same tab.
             </li>
             <li><b>German too.</b> Wesir, Thron, Die Leere — every effect in German.</li>
           </ul>
@@ -385,8 +478,11 @@
           <div class="window-bar"><i></i><i></i><i></i><span>Deck der vielen Dinge</span></div>
           <img
             src="assets/deck.webp"
-            alt="The Deck of Many Things tab in German: the Throne card (Thron, K♥) turned over with its effect, the drawing's cards, the 22 cards of the deck with the Fool struck through, and the history of draws."
+            width="1600"
+            height="960"
             loading="lazy"
+            decoding="async"
+            alt="The Deck of Many Things tab in German: the Throne card (Thron, K♥) turned over with its effect, the drawing’s cards, the 22 cards of the deck with the Fool struck through, and the history of draws."
           />
         </figure>
       </section>
@@ -397,10 +493,10 @@
           <h2>Change a stance, log it with one click.</h2>
           <p>
             After every change a notice offers <b>Log → Session 14</b>. One click writes a line
-            under <code>## Log</code> of tonight's session — secret changes inside a
-            <code>[!gm]</code> callout — and the views show each relation's history in their
+            under <code>## Log</code> of tonight’s session — secret changes inside a
+            <code>[!gm]</code> callout — and the views show each relation’s history in their
             tooltips. Starting the next session carries the loot over, each item marked with where
-            it was found, so there is only ever one note to watch.
+            it was found.
           </p>
         </div>
         <pre class="log"><code><span class="h">## Log</span>
@@ -416,7 +512,8 @@
       </section>
 
       <section id="roadmap" class="roadmap">
-        <h2>Where dnd5e-byLokianer stands</h2>
+        <p class="eyebrow">Roadmap</p>
+        <h2>Where <span translate="no">dnd5e-byLokianer</span> stands</h2>
         <ol>
           <li class="done">
             <span>Factions</span>data model, card, world graph &amp; matrix, faction view, tensions,
@@ -424,21 +521,21 @@
           </li>
           <li class="done">
             <span>NPC builder</span>stat blocks, New NPC with races, archetypes and dice tables,
-            editing in the block, a dialog with live preview and locks — accepted in Obsidian
+            editing in the block, live preview and locks — accepted in Obsidian
           </li>
           <li class="done">
-            <span>Spellbook</span>the SRD's 319 spells in their own tab, with filters, in English
-            and German — accepted in Obsidian
+            <span>Spellbook</span>319 SRD spells in English and German, filters, links from stat
+            blocks, own spells and a spell builder
           </li>
           <li class="done">
             <span>Deck of Many Things</span>the SRD deck drawn by its rules, own decks with a
-            builder and import, in English and German — accepted in Obsidian
+            builder and import — accepted in Obsidian
           </li>
-          <li>
-            <span>Monster Manual</span>the SRD's monsters in their own tab, built like the spellbook
+          <li class="now">
+            <span>Monster Manual</span>the SRD’s monsters in their own tab, built like the spellbook
           </li>
           <li><span>Battle tracker</span>rounds, damage and outcomes into the session log</li>
-          <li><span>Dice</span>rolls and rollable tables logged to tonight's session</li>
+          <li><span>Dice</span>rolls and rollable tables logged to tonight’s session</li>
         </ol>
         <p class="note">
           In development, not released yet. Built in small, tested phases; every phase is checked
@@ -450,8 +547,8 @@
         <h2>Try it on Silverstadt</h2>
         <p>
           The repository ships an example campaign — a city of tides, bells and records with five
-          factions, secret stances, stat blocks and session notes. Build the plugin into it and open
-          the folder as a vault.
+          factions, secret stances, stat blocks, own spells and decks, and session notes. Build the
+          plugin into it and open the folder as a vault.
         </p>
         <pre><code>git clone https://github.com/lokianer/obsidian-plugins
 cd obsidian-plugins
@@ -486,13 +583,13 @@ pnpm --filter dnd5e-bylokianer install-example
     <footer>
       <p>
         © 2026 Lokianer · MIT licence ·
-        <a href="https://github.com/lokianer/obsidian-plugins"
+        <a href="https://github.com/lokianer/obsidian-plugins" translate="no"
           >github.com/lokianer/obsidian-plugins</a
         >
       </p>
       <p class="small">
-        dnd5e-byLokianer includes material from the System Reference Document 5.1 by Wizards of the
-        Coast LLC, licensed under
+        <span translate="no">dnd5e-byLokianer</span> includes material from the System Reference
+        Document 5.1 by Wizards of the Coast LLC, licensed under
         <a href="https://creativecommons.org/licenses/by/4.0/legalcode">CC-BY-4.0</a>. Not
         affiliated with or endorsed by Wizards of the Coast or Obsidian.
       </p>
