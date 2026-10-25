@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Status:** approved by the maintainer ("mach weiter", 2026-10-24) with the revision to a card that
-replaces Properties and is the only editor.
+replaces Properties and is the only editor. **Accepted in Obsidian on 2026-10-25.**
 
 **Goal:** Faction and character notes show a faction card instead of Obsidian's Properties, in
 Reading view and Live Preview; every value in it is editable and written back as a line edit; the

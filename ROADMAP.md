@@ -13,15 +13,14 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Factions · phases 2 to 5 — built, waiting for the maintainer's check in
-Obsidian.** The factions module is complete as designed: card (2), faction world (3), faction view
-and tensions (4), popover editing and session history (5). All is tested in Node and rendered in a
-browser against a stub of the Obsidian API; none has run inside Obsidian. The checklist is in
-`HANDOFF.md` → "Half-finished". Fix what it turns up. How to go on after that is proposed in
-[`docs/2026-10-25-concept-next-steps.md`](docs/2026-10-25-concept-next-steps.md): prove and fix
-(with UI smoke tests in CI) → release 0.1.0 as a BRAT beta → decide integration with Dice Roller /
-Fantasy Statblocks / Initiative Tracker → NPC builder → the rest by play feedback. Its §5 lists the
-decisions the maintainer still has to make.
+**dnd5e-byLokianer · decide how to go on.** The factions module (phases 1–5) is **accepted**: the
+maintainer ran the whole `HANDOFF.md` checklist in Obsidian on 2026-10-25 and every point passed,
+after the fixes that first check turned up (see below). Next is
+[`docs/2026-10-25-concept-next-steps.md`](docs/2026-10-25-concept-next-steps.md) from Step B on —
+release 0.1.0 as a BRAT beta → decide integration with Dice Roller / Fantasy Statblocks /
+Initiative Tracker → NPC builder → the rest by play feedback. Its §5 lists the decisions to get from
+the maintainer first (order; integrate vs own code; `happy-dom` for UI smoke tests; release path and
+name).
 
 ---
 
@@ -52,36 +51,40 @@ Design: [`docs/superpowers/specs/2026-10-24-factions-design.md`](docs/superpower
 - [x] **Minor review findings of phase 1** (2026-10-24, `4f55b5d`): strict decimal numbers, en dash
       as minus, symmetric rounding, `broken-frontmatter`, `Factions.md` in any case, other-typed
       `factions.md` not a faction, case-only and folder-name clashes, singular counts
-- [ ] **Phase 2 — Faction card** ← _built 2026-10-24, awaiting acceptance in Obsidian_: a card
+- [x] **Phase 2 — Faction card** (built 2026-10-24, accepted 2026-10-25): a card
       replacing Properties on faction and character notes, everything editable in place as line
       edits (design §5.6), Fix buttons in the warnings modal, command Edit faction data.
       Spec `docs/superpowers/specs/2026-10-24-faction-editor-design.md`, plan
       `docs/superpowers/plans/2026-10-24-factions-phase-2-editor.md`
   - [x] Line editor `src/yaml/` (`2712fb1`), steps and targets (`fc3c807`), card model
         (`e3b446d`, `2263924`), card in Obsidian with Fix and settings (`61984a4`)
-  - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 3 — World view** ← _built 2026-10-24, awaiting acceptance in Obsidian_: own tab;
+  - [x] Maintainer's check in Obsidian (2026-10-25)
+- [x] **Phase 3 — World view** (built 2026-10-24, accepted 2026-10-25): own tab;
       graph with bloc layout (d3-force, chosen by the maintainer) and matrix, switchable; step-name
       settings; Public/True toggle (Public on open); warnings badge; clicks lead into the faction card.
       Spec `docs/superpowers/specs/2026-10-24-world-view-design.md`, plan
       `docs/superpowers/plans/2026-10-24-factions-phase-3-world-view.md`
   - [x] Graph and matrix models (`9448cdb`), layout (`7fd45df`), step names (`60e6956`), the view
         (`8b86a8f`)
-  - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 4 — Faction view and tension panel** ← _built 2026-10-24, awaiting acceptance in
-      Obsidian_: drill-down inside the faction world tab with breadcrumb, own vs inherited arrows,
+  - [x] Maintainer's check in Obsidian (2026-10-25)
+- [x] **Phase 4 — Faction view and tension panel** (built 2026-10-24, accepted 2026-10-25): drill-down inside the faction world tab with breadcrumb, own vs inherited arrows,
       rings on deviating members; tension panel in the right sidebar following the Public/True toggle.
       Spec `docs/superpowers/specs/2026-10-24-faction-view-design.md`, plan
       `docs/superpowers/plans/2026-10-24-factions-phase-4-faction-view.md`
   - [x] Tension rules and faction view model (`846ec98`), drawing, drill-down and panel (`1ff2dfd`)
-  - [ ] Maintainer's check in Obsidian
-- [ ] **Phase 5 — In-view editing and history** ← _built 2026-10-24, awaiting acceptance in
-      Obsidian_: value popover on cells and arrows writing the subject's own note; "Log" notice and
+  - [x] Maintainer's check in Obsidian (2026-10-25)
+- [x] **Phase 5 — In-view editing and history** (built 2026-10-24, accepted 2026-10-25): value popover on cells and arrows writing the subject's own note; "Log" notice and
       session log with the once-a-day N+1 offer; history in tooltips; shared `packages/session/`.
       Spec `docs/superpowers/specs/2026-10-24-in-view-editing-history-design.md`, plan
       `docs/superpowers/plans/2026-10-24-factions-phase-5-editing-history.md`
   - [x] Package and history resolution (`86331b8`), popover, logging and tooltips (`951a54a`)
-  - [ ] Maintainer's check in Obsidian
+  - [x] Maintainer's check in Obsidian (2026-10-25)
+
+- [x] **Fixes and additions from the check in Obsidian** (2026-10-25): graph fitted once the tab
+      has a size (`4112e8c`) and its nodes drawn (one class token per entry, `8712c40`); bigger Log
+      button; faction view sized by its labels (`65c3e9f`), linked members parted (`7419811`), frame
+      and boxes draggable (`389a3af`); loot carried into the next session with its origin and the
+      command Start next session (`681a70e`)
 
 Later ideas for factions, not designed yet: time machine (replay the graph per session), domino
 preview of knock-on changes, faction turn between sessions, the party as a node, what the players

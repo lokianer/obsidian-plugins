@@ -5,7 +5,7 @@ factions are folders holding a `factions.md`, relations are frontmatter values f
 (sworn), and members inherit their faction's stance unless they state their own. Later modules: an
 NPC builder with 5e stat blocks, a battle tracker and dice.
 
-Status: the factions module is built (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
+Status: the factions module is built and accepted in Obsidian (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
 design in `docs/superpowers/specs/2026-10-24-faction-editor-design.md`.
 

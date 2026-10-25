@@ -9,9 +9,9 @@ built in full (phases 1–5) on 2026-10-24, none of it yet run inside Obsidian b
   faction card that replaces Properties (2), the faction world with graph and matrix (3), faction
   view and tension panel (4), popover editing and the session log with history (5); the shared
   package `packages/session`. 164 tests, CI on three systems, Prettier enforced.
-- **Not proven:** phases 2–5 have only been rendered in a browser against a stub of the Obsidian
-  API. The riskiest parts are exactly the ones a stub cannot judge: where the card mounts in
-  Obsidian's view DOM, pointer handling on desktop and touch, the sidebar, theme compatibility.
+- **Proven (update 2026-10-25):** the maintainer ran the whole checklist in Obsidian; after the
+  fixes it turned up (graph nodes, faction view sizing, dragging, loot carry-over) every point
+  passed, so Step A's "prove and fix" is done — only its UI smoke tests in CI remain open.
 - **Open from the plan:** modules 2 (NPC builder), 3 (battle tracker) and 4 (dice); the GM gate;
   the factions "later ideas"; release preparation.
 

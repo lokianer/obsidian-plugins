@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Status:** approved ("passt", 2026-10-24) and built; tasks 1–5 done, task 6 awaits the maintainer's check in Obsidian.
+**Status:** approved ("passt", 2026-10-24) and built; tasks 1–5 done, task 6 awaits the maintainer's check in Obsidian. **Accepted in Obsidian on 2026-10-25.**
 
 **Goal:** Drill down from the faction world into one faction (members, own vs inherited arrows,
 rings on deviating members) and a sidebar listing the campaign's tensions.

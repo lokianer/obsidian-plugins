@@ -4,7 +4,7 @@
 
 **Status:** approved ("passt, weiter", 2026-10-24) and built; tasks 1–8 done, task 9 awaits the
 maintainer's check in Obsidian. Deviation: click targets name note, field and target id instead of a
-raw key (the card rows know their target id).
+raw key (the card rows know their target id). **Accepted in Obsidian on 2026-10-25.**
 
 **Goal:** A "Faction world" tab with a graph (bloc layout, d3-force) and a matrix of all factions,
 a Public/True toggle (Public on open), a warnings badge, clicks that lead into the faction card, and
