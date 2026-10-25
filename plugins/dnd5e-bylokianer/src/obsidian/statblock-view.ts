@@ -1,10 +1,14 @@
 // Rendering a `dnd5e-statblock` block as a 5e stat block in Obsidian's own look: name and type,
 // AC / HP / speed, the six abilities with modifiers, the property lines, then traits, actions,
 // bonus actions, reactions and legendary actions. Descriptions go through Obsidian's Markdown
-// renderer, so italics and spell lists show as in the note. Read-only in this phase.
+// renderer, so italics and spell lists show as in the note. In the note the block is folded behind
+// one line; the short stats (AC, HP, CR, speed, modifiers) sit on the faction card under the title.
+// Read-only in this phase.
+
+import { setIcon } from 'obsidian';
 
 import type { Bonus, Entry, Statblock } from '../npc/statblock';
-import { experience, formatBonus, modifier, proficiencyBonus } from '../npc/statblock';
+import { experience, formatBonus, modifier, proficiencyBonus, summary } from '../npc/statblock';
 import type { StringKey, T } from '../i18n/strings';
 
 export interface StatblockContext {
@@ -23,7 +27,7 @@ export function renderStatblock(
   parent: HTMLElement,
   block: Statblock,
   ctx: StatblockContext,
-): void {
+): HTMLElement {
   const { t } = ctx;
   const el = parent.createDiv({ cls: 'dnd5e-statblock' });
 
@@ -115,6 +119,73 @@ export function renderStatblock(
     el.createDiv({
       cls: 'dnd5e-sb-warning',
       text: t('statblock.unreadable', { keys: block.unreadable.join(', ') }),
+    });
+  }
+  return el;
+}
+
+/**
+ * The block as it stands in the note: one line (`Stat block · name · AC 18 · HP 52 · CR 3`) that
+ * opens the full block below it. `open` is how it starts; `toggle` hears every change.
+ */
+export function renderFolded(
+  parent: HTMLElement,
+  block: Statblock,
+  ctx: StatblockContext & { open: boolean; toggle: (open: boolean) => void },
+): void {
+  const fold = parent.createDiv({ cls: 'dnd5e-sb-fold' });
+  const head = fold.createEl('button', { cls: 'dnd5e-sb-fold-head' });
+  const icon = head.createSpan({ cls: 'dnd5e-card-icon' });
+  head.createSpan({ cls: 'dnd5e-sb-fold-title', text: ctx.t('statblock.fold') });
+  const parts = [block.name, summary(block)].filter((p) => p !== null && p !== '');
+  if (parts.length > 0) head.createSpan({ cls: 'dnd5e-sb-fold-detail', text: parts.join(' · ') });
+
+  let body: HTMLElement | null = null;
+  let open = ctx.open;
+  const show = () => {
+    head.setAttr('aria-expanded', String(open));
+    setIcon(icon, open ? 'chevron-down' : 'chevron-right');
+    if (open) body ??= renderStatblock(fold, block, ctx);
+    body?.toggleClass('dnd5e-hidden', !open);
+  };
+  // Clicks must not move the editor's cursor into the block in Live Preview.
+  head.addEventListener('mousedown', (event) => event.stopPropagation());
+  head.addEventListener('click', (event) => {
+    event.preventDefault();
+    open = !open;
+    show();
+    ctx.toggle(open);
+  });
+  show();
+}
+
+/**
+ * The short stats for the faction card, under the title: AC, HP, CR and speed as small pills, then
+ * the six ability modifiers.
+ */
+export function renderShortStats(parent: HTMLElement, block: Statblock, t: T): void {
+  const el = parent.createDiv({ cls: 'dnd5e-sb-short' });
+  const [ac, hp, cr, speed] = t('statblock.short').split(',');
+  const pills = el.createDiv({ cls: 'dnd5e-sb-pills' });
+  const values: [string | undefined, string | null][] = [
+    [ac, block.ac === null ? null : String(block.ac)],
+    [hp, block.hp === null ? null : String(block.hp)],
+    [cr, block.cr],
+    [speed, block.speed],
+  ];
+  for (const [label, value] of values) {
+    if (value === null) continue;
+    const pill = pills.createDiv({ cls: 'dnd5e-sb-pill' });
+    pill.createSpan({ cls: 'dnd5e-sb-label', text: label ?? '' });
+    pill.createSpan({ text: value });
+  }
+  if (block.stats !== null) {
+    const labels = t('statblock.abilities').split(',');
+    const grid = el.createDiv({ cls: 'dnd5e-sb-short-abilities' });
+    block.stats.forEach((score, i) => {
+      const cell = grid.createDiv({ attr: { 'aria-label': `${labels[i] ?? ''} ${score}` } });
+      cell.createDiv({ cls: 'dnd5e-sb-ability-label', text: labels[i] ?? '' });
+      cell.createDiv({ text: formatBonus(modifier(score)) });
     });
   }
 }

@@ -19,6 +19,8 @@ import { signed, stepColour, stepName } from '../factions/steps';
 import { targetsFor } from '../factions/targets';
 import type { T } from '../i18n/strings';
 import type { EditOp } from '../yaml/edit';
+import type { Statblock } from '../npc/statblock';
+import { renderShortStats } from './statblock-view';
 import { TargetSuggest } from './target-suggest';
 import type { ValueChange } from './session-log';
 import { editInSource, undoableWrite, writeOp } from './write';
@@ -41,8 +43,8 @@ interface CardContext {
   stepNames: readonly string[];
   /** Offer to log a change of a relation value. */
   offerLog: (change: ValueChange) => void;
-  /** A character's `AC · HP · CR` from its stat block, or null. */
-  stats: string | null;
+  /** A character's stat block, shown as short stats under the title, or null. */
+  statblock: Statblock | null;
   /** Asks for a rebuild from fresh data (after a refused edit). */
   refresh: () => void;
 }
@@ -166,7 +168,7 @@ export class CardRenderer extends Component {
     if (card.power !== null) {
       this.renderPower(title, head, card.power);
     }
-    if (this.ctx.stats !== null) head.createDiv({ cls: 'dnd5e-card-stats', text: this.ctx.stats });
+    if (this.ctx.statblock !== null) renderShortStats(head, this.ctx.statblock, this.t);
   }
 
   private placeName(p: { id: string; name: string }): string {

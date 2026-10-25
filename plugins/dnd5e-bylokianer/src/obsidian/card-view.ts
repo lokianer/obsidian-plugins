@@ -8,9 +8,9 @@ import { buildCard, type CardModel } from '../factions/card';
 import type { FactionWorld } from '../factions/model';
 import type { T } from '../i18n/strings';
 import { CardRenderer, type CardUiState, type FocusTarget } from './card-render';
+import type { NoteStatblocks } from './note-statblocks';
 import type { ValueChange } from './session-log';
 import type { Settings } from './settings';
-import type { StatSummaries } from './stat-summaries';
 import type { WorldCache } from './world-cache';
 
 const VIEW_CLASS = 'dnd5e-entity-view';
@@ -65,7 +65,7 @@ export class CardManager {
     private readonly t: T,
     private readonly settings: () => Settings,
     private readonly offerLog: (change: ValueChange) => void,
-    private readonly stats: StatSummaries,
+    private readonly statblocks: NoteStatblocks,
   ) {}
 
   start(): void {
@@ -75,7 +75,7 @@ export class CardManager {
     this.plugin.registerEvent(workspace.on('layout-change', refresh));
     this.plugin.registerEvent(workspace.on('active-leaf-change', refresh));
     this.plugin.register(this.cache.onChange(refresh));
-    this.plugin.register(this.stats.onChange(refresh));
+    this.plugin.register(this.statblocks.onChange(refresh));
     // Reading view re-renders its sections; put the card back once it has.
     this.plugin.registerMarkdownPostProcessor((_el, ctx) => {
       for (const view of this.views()) {
@@ -131,8 +131,8 @@ export class CardManager {
     view.containerEl.toggleClass(SHOW_PROPERTIES_CLASS, this.settings().showProperties);
 
     const { stepNames } = this.settings();
-    const stats = card.kind === 'character' ? this.stats.get(file.path) : null;
-    const signature = JSON.stringify([card, stepNames, stats]);
+    const statblock = card.kind === 'character' ? this.statblocks.get(file.path) : null;
+    const signature = JSON.stringify([card, stepNames, statblock]);
     const old = this.mounts.get(view);
     const same = old !== undefined && old.path === file.path && old.mode === mode;
     if (same && old.el.isConnected) {
@@ -163,7 +163,7 @@ export class CardManager {
         ui,
         stepNames,
         offerLog: this.offerLog,
-        stats,
+        statblock,
         refresh: () => {
           const mount = this.mounts.get(view);
           if (mount !== undefined) mount.signature = '';

@@ -245,3 +245,13 @@ contents), once per note and again when it changes; the 21 SRD NPCs were transcr
 Fanatic's hit points).
 
 Left out of phase 1: editing in the block, the builder modal, archetype notes, random tables.
+
+## 2026-10-25 · Short stats under the title, the full block folded
+
+After a first look the maintainer wanted the stats higher up, right under the title with the
+description after them, and chose layout B of four mock-ups: the faction card shows AC, HP, CR and
+speed as pills and the six ability modifiers under the character's name; the full stat block stays
+where it is in the note, folded behind one line (`Stat block · name · AC · HP · CR`) that opens it.
+Open or folded is remembered per note while Obsidian runs.
+
+Left out: A (full block under the card), C (full block as a card section), D (two columns).

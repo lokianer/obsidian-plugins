@@ -17,8 +17,8 @@ import { DEFAULT_SETTINGS, type Settings, SettingsTab } from './obsidian/setting
 import { WarningsModal } from './obsidian/warnings-modal';
 import { ModeStore } from './obsidian/mode-store';
 import { SessionLog } from './obsidian/session-log';
-import { StatSummaries } from './obsidian/stat-summaries';
-import { renderInvalid, renderStatblock } from './obsidian/statblock-view';
+import { NoteStatblocks } from './obsidian/note-statblocks';
+import { renderFolded, renderInvalid } from './obsidian/statblock-view';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
 import { WorldCache } from './obsidian/world-cache';
 import { WORLD_VIEW, WorldView } from './obsidian/world-view';
@@ -33,14 +33,14 @@ export default class Dnd5ePlugin extends Plugin {
       ...((await this.loadData()) as Partial<Settings> | null),
     };
     const cache = new WorldCache(this);
-    const stats = new StatSummaries(this);
+    const statblocks = new NoteStatblocks(this);
     const cards = new CardManager(
       this,
       cache,
       t,
       () => this.options,
       (change) => sessionLog.offer(change),
-      stats,
+      statblocks,
     );
     cards.start();
 
@@ -116,7 +116,7 @@ export default class Dnd5ePlugin extends Plugin {
           openNote,
           editValue,
           sessionLog,
-          stats,
+          statblocks,
           showWarnings,
           showTensions: () => void showTensions(),
         }),
@@ -134,6 +134,7 @@ export default class Dnd5ePlugin extends Plugin {
     });
     this.addRibbonIcon('network', t('command.openWorld'), () => void openWorld());
 
+    const openStatblocks = new Set<string>();
     this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {
       let data: unknown;
       try {
@@ -144,10 +145,16 @@ export default class Dnd5ePlugin extends Plugin {
       }
       const child = new MarkdownRenderChild(el);
       ctx.addChild(child);
-      renderStatblock(el, parseStatblock(data), {
+      renderFolded(el, parseStatblock(data), {
         t,
         markdown: (markdown, target) =>
           void MarkdownRenderer.render(this.app, markdown, target, ctx.sourcePath, child),
+        // Open or folded per note, for as long as Obsidian runs.
+        open: openStatblocks.has(ctx.sourcePath),
+        toggle: (open) => {
+          if (open) openStatblocks.add(ctx.sourcePath);
+          else openStatblocks.delete(ctx.sourcePath);
+        },
       });
     });
     this.addCommand({

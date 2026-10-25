@@ -73,13 +73,15 @@ From the maintainer's check in Obsidian, in order:
 Rebuild and install: `pnpm --filter dnd5e-bylokianer build`, then
 `pnpm --filter dnd5e-bylokianer install-example`, reload Obsidian in `examples/vault`.
 
-1. **Stat block**: Aldric Thane, Isolde Ferrant, Mira Voss in Reading view and Live Preview — a 5e
-   stat block in Obsidian's look (name, type line, AC/HP/speed, six abilities with modifiers,
+1. **Stat block**: Aldric Thane, Isolde Ferrant, Mira Voss in Reading view and Live Preview — one
+   folded line `Stat block · name · AC · HP · CR`; a click opens a 5e stat block in Obsidian's look
+   (and does not move the cursor in Live Preview); it stays open when switching notes and back (name, type line, AC/HP/speed, six abilities with modifiers,
    saves, skills, senses, languages, Challenge with XP, Proficiency Bonus, traits, actions,
    reactions); Ondine's spell list as a list. Source mode shows the YAML.
 2. **Phone width** (`app.emulateMobile(true)`): the abilities wrap to three columns.
-3. **Card line**: the cards of Aldric (`AC 18 · HP 52 · CR 3`) and Ondine (her block is still
-   `statblock`) show the line; after changing `hp:` in the block the card updates.
+3. **Short stats** (layout B): under the name on the cards of Aldric (AC 18, HP 52, CR 3, 30 ft.,
+   modifiers +3 +0 +2 +0 +1 +2) and Ondine (her block is still `statblock`); after changing `hp:`
+   in the block the card updates.
 4. **Faction view**: hovering Mira Voss's chip in The Gutter Court's view shows her line.
 5. **Convert stat block** on Ondine Vale: the fence becomes `dnd5e-statblock` and renders; running it
    again turns it back; `git diff` shows only the fence line. Revert afterwards.

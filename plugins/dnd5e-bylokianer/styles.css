@@ -1205,8 +1205,63 @@ a.dnd5e-tensions-name:hover {
   white-space: pre-wrap;
 }
 
-.dnd5e-card-stats {
+.dnd5e-sb-fold-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+  width: 100%;
+  height: auto;
+  padding: var(--size-4-2) var(--size-4-3);
+  font-size: 16px;
+  text-align: left;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.dnd5e-sb-fold-head:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-sb-fold-title {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-fold-detail {
   color: var(--text-muted);
+}
+
+.dnd5e-sb-fold .dnd5e-statblock {
+  margin-top: var(--size-4-2);
+}
+
+/* Short stats on the faction card, under the title. */
+.dnd5e-sb-short {
+  margin-top: var(--size-4-2);
+}
+
+.dnd5e-sb-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-sb-pill {
+  padding: 2px var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-short-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  max-width: 420px;
+  margin-top: var(--size-4-2);
+  text-align: center;
 }
 
 @media (max-width: 480px) {

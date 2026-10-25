@@ -11,11 +11,12 @@ import { buildMatrix } from '../factions/matrix';
 import type { FactionWorld, Mode } from '../factions/model';
 import type { EditTarget } from '../factions/model';
 import type { T } from '../i18n/strings';
+import { summary } from '../npc/statblock';
 import { FactionViewSvg } from './faction-view-svg';
 import type { ModeStore } from './mode-store';
 import { type PopoverTarget, ValuePopover } from './popover';
+import type { NoteStatblocks } from './note-statblocks';
 import type { SessionLog } from './session-log';
-import type { StatSummaries } from './stat-summaries';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 import { WorldGraphSvg } from './world-graph-svg';
@@ -33,8 +34,8 @@ export interface WorldViewDeps {
   /** Open a note with the faction card on an entry (the popover's "Open card"). */
   editValue: (edit: EditTarget, newLeaf: boolean) => void;
   sessionLog: SessionLog;
-  /** Characters' `AC · HP · CR` for the faction view's tooltips. */
-  stats: StatSummaries;
+  /** Characters' stat blocks, for `AC · HP · CR` in the faction view's tooltips. */
+  statblocks: NoteStatblocks;
   showWarnings: (world: FactionWorld) => void;
   showTensions: () => void;
 }
@@ -94,7 +95,7 @@ export class WorldView extends ItemView {
     this.header = this.contentEl.createDiv({ cls: 'dnd5e-world-header' });
     this.body = this.contentEl.createDiv({ cls: 'dnd5e-world-body' });
     this.register(this.deps.cache.onChange(() => this.render()));
-    this.register(this.deps.stats.onChange(() => this.render()));
+    this.register(this.deps.statblocks.onChange(() => this.render()));
     await this.deps.cache.get();
     this.render();
   }
@@ -156,7 +157,10 @@ export class WorldView extends ItemView {
         openNote: this.deps.openNote,
         openFaction: (id) => this.openFaction(id),
         ...values,
-        stats: (path) => this.deps.stats.get(path),
+        stats: (path) => {
+          const block = this.deps.statblocks.get(path);
+          return block === null ? null : summary(block) || null;
+        },
         moves: (id) => this.deps.settings().viewMoves[id] ?? {},
         saveMoves: (id, moves) => void this.saveMoves(id, moves),
       });

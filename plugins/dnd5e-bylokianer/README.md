@@ -70,10 +70,12 @@ over a third faction. It follows the world's Public / True toggle; thresholds ar
 **Stat blocks.** A ` ```dnd5e-statblock ` block holds a 5e stat block in YAML — the keys Fantasy
 Statblocks uses (`name`, `size`, `type`, `ac`, `ac_class`, `hp`, `hit_dice`, `speed`, `stats`,
 `saves`, `skillsaves`, `senses`, `languages`, `cr`, `traits`, `actions`, `reactions`, …) — and
-renders as a stat block with ability modifiers, XP and proficiency bonus worked out. Its own block
-name keeps it apart from Fantasy Statblocks; **Convert stat block** switches a note's blocks
-between the two names. A character's faction card shows `AC · HP · CR` from its first stat block
-(either name). The 21 NPC stat blocks of the SRD 5.1 come with the plugin for the NPC builder.
+renders as a stat block with ability modifiers, XP and proficiency bonus worked out — folded behind
+one line (`Stat block · name · AC 18 · HP 52 · CR 3`) where it stands in the note, opened with a
+click. The numbers you need at the table sit higher up: a character's faction card shows AC, HP,
+CR and speed and the six ability modifiers right under the title, from the note's first stat block
+(either name). Its own block name keeps it apart from Fantasy Statblocks; **Convert stat block**
+switches a note's blocks between the two names. The 21 NPC stat blocks of the SRD 5.1 come with the plugin for the NPC builder.
 
 ## Commands
 

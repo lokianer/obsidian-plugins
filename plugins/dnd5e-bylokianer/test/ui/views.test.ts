@@ -19,12 +19,12 @@ import { buildGraph } from '../../src/factions/world-graph';
 import { buildWorld } from '../../src/factions/world';
 import { createT } from '../../src/i18n/strings';
 import { SRD_NPCS } from '../../src/npc/srd';
-import { findStatblocks, parseStatblock } from '../../src/npc/statblock';
+import { findStatblocks, parseStatblock, type Statblock } from '../../src/npc/statblock';
 import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
 import { ValuePopover } from '../../src/obsidian/popover';
-import { renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
+import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
 import type { WorldCache } from '../../src/obsidian/world-cache';
 import { WorldGraphSvg } from '../../src/obsidian/world-graph-svg';
@@ -60,7 +60,7 @@ beforeEach(() => {
 });
 
 describe('faction card', () => {
-  const render = (path: string, stats: string | null = null) => {
+  const render = (path: string, statblock: Statblock | null = null) => {
     const card = buildCard(path, notes.find((n) => n.path === path)?.frontmatter, world);
     if (card === null) throw new Error(`no card for ${path}`);
     const renderer: CardRenderer = new CardRenderer(
@@ -74,7 +74,7 @@ describe('faction card', () => {
         ui: { secretOpen: false, fieldsOpen: false },
         stepNames: [],
         offerLog: () => {},
-        stats,
+        statblock,
         refresh: () => {
           renderer.render();
         },
@@ -90,9 +90,19 @@ describe('faction card', () => {
     expect(root.querySelectorAll('.dnd5e-card-row').length).toBeGreaterThan(0);
   });
 
-  it('shows a character’s AC, HP and CR from its stat block', () => {
-    render(`${F}/Order of the Lantern/Aldric Thane.md`, 'AC 18 · HP 52 · CR 3');
-    expect(texts(root, '.dnd5e-card-stats')).toEqual(['AC 18 · HP 52 · CR 3']);
+  it('shows a character’s short stats under the title', () => {
+    const path = `${F}/Order of the Lantern/Aldric Thane.md`;
+    const source = findStatblocks(readFileSync(join(vault, path), 'utf8'))[0]?.source ?? '';
+    render(path, parseStatblock(parse(source)));
+    expect(texts(root, '.dnd5e-sb-pill')).toEqual(['AC18', 'HP52', 'CR3', 'Speed30 ft.']);
+    expect(texts(root, '.dnd5e-sb-short-abilities > div')).toEqual([
+      'STR+3',
+      'DEX+0',
+      'CON+2',
+      'INT+0',
+      'WIS+1',
+      'CHA+2',
+    ]);
   });
 
   it('keeps a character’s secret section closed', () => {
@@ -209,6 +219,17 @@ describe('stat block', () => {
     expect(texts(root, '.dnd5e-sb-line')).toContain('Proficiency Bonus+3');
     expect(texts(root, '.dnd5e-sb-section-title')).toEqual(['Actions', 'Reactions']);
     expect(texts(root, '.dnd5e-sb-entry')[0]).toMatch(/^\*\*\*Cunning Action\.\*\*\* On each/);
+  });
+
+  it('stands folded in the note behind one line and opens on a click', () => {
+    const guard = SRD_NPCS.find((a) => a.name === 'Guard')?.yaml ?? '';
+    const toggle = vi.fn();
+    renderFolded(root, parseStatblock(parse(guard)), { t, markdown, open: false, toggle });
+    expect(texts(root, '.dnd5e-sb-fold-detail')).toEqual(['Guard · AC 16 · HP 11 · CR 1/8']);
+    expect(root.querySelector('.dnd5e-statblock')).toBeNull();
+    root.querySelector('.dnd5e-sb-fold-head')?.dispatchEvent(new MouseEvent('click'));
+    expect(root.querySelector('.dnd5e-statblock')).not.toBeNull();
+    expect(toggle).toHaveBeenCalledWith(true);
   });
 
   it('renders every SRD NPC in German without unreadable values', () => {
