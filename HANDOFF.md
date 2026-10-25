@@ -24,8 +24,9 @@ PC.
    likeliest places: card mounting (`src/obsidian/card-view.ts`), pointer handling in the drawings
    (`pan-zoom.ts`, `world-graph-svg.ts`, `faction-view-svg.ts`), the popover (`popover.ts`) and the
    session log (`session-log.ts`).
-2. Then the next module: brainstorm **Module 2 — NPC builder** with the maintainer (ROADMAP), or one
-   of the factions' "later ideas" if they prefer.
+2. Then follow `docs/2026-10-25-concept-next-steps.md` (written 2026-10-25 at the maintainer's
+   request): its §5 lists four decisions to get from the maintainer first — order, integrate vs own
+   code for modules 2–4, `happy-dom` for UI smoke tests, release path and name.
 
 ## State of the working tree
 

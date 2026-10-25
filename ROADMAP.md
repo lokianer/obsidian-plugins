@@ -17,8 +17,11 @@ plugin's `DECISIONS.md` once it exists.
 Obsidian.** The factions module is complete as designed: card (2), faction world (3), faction view
 and tensions (4), popover editing and session history (5). All is tested in Node and rendered in a
 browser against a stub of the Obsidian API; none has run inside Obsidian. The checklist is in
-`HANDOFF.md` → "Half-finished". Fix what it turns up. After that, the next module: **Module 2 — NPC
-builder** needs a brainstorm with the maintainer (see below), or one of the factions "later ideas".
+`HANDOFF.md` → "Half-finished". Fix what it turns up. How to go on after that is proposed in
+[`docs/2026-10-25-concept-next-steps.md`](docs/2026-10-25-concept-next-steps.md): prove and fix
+(with UI smoke tests in CI) → release 0.1.0 as a BRAT beta → decide integration with Dice Roller /
+Fantasy Statblocks / Initiative Tracker → NPC builder → the rest by play feedback. Its §5 lists the
+decisions the maintainer still has to make.
 
 ---
 
