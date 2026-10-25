@@ -167,8 +167,44 @@ deck: standard-22
 ```
 
 A ticked card is out of the deck; tick or untick one by hand and the tab follows. Each draw adds a
-line under `## Draws`, the drawer linked. Own decks are the next phase. Skull's avatar of death has
-no stat block here (the SRD data at hand has none).
+line under `## Draws`, the drawer linked. The reset button (↺) asks whether to clear only the
+history or also put every card back. Skull's avatar of death has no stat block here (the SRD data
+at hand has none).
+
+### Own decks and the deck builder
+
+Every `type: deck` note in the campaign shows in the tab's deck list. Its first task list is the
+deck, one card per item, `Name — effect`, with indented lines continuing the effect:
+
+```markdown
+---
+type: deck
+returns: true # drawn cards go back in; without it each card drawn stays out
+leaves: ['The Cracked Bell'] # in a returning deck: these leave once drawn
+ends: ['Midnight'] # these end the drawing
+---
+
+- [ ] The Lantern — Someone you trust keeps a light burning for you.
+- [ ] Midnight — No more fortunes tonight.
+```
+
+**New deck** (command, or + in the tab) opens the deck builder: a name, whether drawn cards return,
+and the cards as rows — name, effect, "leaves the deck", "ends the drawing" — typed in one by one or
+filled from **the standard deck** (all 22 cards in your language, to edit), **pasted text** (one card
+per line: `Name — effect`, `Name: effect`, `**Name.** effect`, list items or Markdown table rows) or
+a **JSON file**:
+
+```json
+{
+  "name": "Omens of the Road",
+  "returns": false,
+  "cards": [{ "name": "Crow", "effect": "An ill omen.", "ends": false }]
+}
+```
+
+(an array of cards, or just of names, works too; `text` or `description` count as the effect). The
+deck is written as a note in the campaign's deck folder (setting, `Decks` by default) and opens in
+the tab; edit it there afterwards.
 
 ## Commands
 
@@ -178,7 +214,8 @@ no stat block here (the SRD data at hand has none).
 - **Open faction world** — the graph and matrix of all factions.
 - **Show faction tensions** — the tension panel in the right sidebar.
 - **Open spellbook** — the SRD spells to look up.
-- **Open Deck of Many Things** — draw from the SRD deck.
+- **Open Deck of Many Things** — draw from the SRD deck or an own one.
+- **New deck** — the deck builder.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

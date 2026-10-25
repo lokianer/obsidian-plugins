@@ -1,9 +1,15 @@
 // A drawing from the Deck of Many Things by the SRD's rules, as pure state: the drawer declares a
 // number of cards and draws them one by one. The Fool and the Jester leave the deck, every other
 // card returns; the Fool's redraw counts as the same declared draw; the Jester offers 10,000 XP or
-// two more draws, the Idiot one more; The Void and Donjon end the drawing.
+// two more draws, the Idiot one more; The Void and Donjon end the drawing. An own deck knows only
+// cards that leave and cards that end the drawing.
 
-import type { DeckCard } from './cards';
+/** What the rules need to know of a card. */
+export interface Drawable {
+  index: string;
+  leaves: boolean;
+  ends: boolean;
+}
 
 export type Choice = 'jester' | 'idiot';
 
@@ -23,9 +29,11 @@ export interface Drawing {
   redraw: boolean;
   /** The Void or Donjon was drawn. */
   ended: boolean;
+  /** The standard deck, whose Fool, Jester and Idiot have rules of their own. */
+  standard: boolean;
 }
 
-export function startDrawing(declared: number, out: readonly string[]): Drawing {
+export function startDrawing(declared: number, out: readonly string[], standard = true): Drawing {
   return {
     declared,
     used: 0,
@@ -35,6 +43,7 @@ export function startDrawing(declared: number, out: readonly string[]): Drawing 
     pending: null,
     redraw: false,
     ended: false,
+    standard,
   };
 }
 
@@ -45,22 +54,23 @@ export const canDraw = (d: Drawing): boolean =>
   !d.ended && d.pending === null && (d.redraw || left(d) > 0);
 
 /** The cards that can come up next. */
-export const pool = (d: Drawing, deck: readonly DeckCard[]): DeckCard[] =>
+export const pool = <C extends Drawable>(d: Drawing, deck: readonly C[]): C[] =>
   deck.filter((c) => !d.out.includes(c.index));
 
 /** One card from the pool, picked by a random number in [0, 1). */
-export function pickCard(cards: readonly DeckCard[], random: () => number): DeckCard | undefined {
+export function pickCard<C>(cards: readonly C[], random: () => number): C | undefined {
   return cards[Math.min(cards.length - 1, Math.floor(random() * cards.length))];
 }
 
-export function draw(d: Drawing, card: DeckCard): Drawing {
-  const fool = card.index === 'fool';
+export function draw(d: Drawing, card: Drawable): Drawing {
+  const special = d.standard ? card.index : '';
+  const fool = special === 'fool';
   return {
     ...d,
     used: d.redraw ? d.used : d.used + 1,
     drawn: [...d.drawn, card.index],
     out: card.leaves ? [...d.out, card.index] : d.out,
-    pending: card.index === 'jester' ? 'jester' : card.index === 'idiot' ? 'idiot' : null,
+    pending: special === 'jester' ? 'jester' : special === 'idiot' ? 'idiot' : null,
     redraw: fool,
     ended: card.ends,
   };

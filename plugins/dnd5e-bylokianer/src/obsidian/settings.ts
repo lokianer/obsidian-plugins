@@ -47,6 +47,10 @@ export interface Settings {
   spellbook: unknown;
   /** The size of a new standard Deck of Many Things. */
   deckSize: 13 | 22;
+  /** The folder in the campaign new own decks go to. */
+  deckFolder: string;
+  /** The deck the Deck tab showed last: `standard` or an own deck's path. */
+  deckSelected: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -66,6 +70,8 @@ export const DEFAULT_SETTINGS: Settings = {
   tableLanguage: 'auto',
   spellbook: null,
   deckSize: 22,
+  deckFolder: 'Decks',
+  deckSelected: 'standard',
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */
@@ -75,7 +81,8 @@ type PathKey =
   | 'archetypeFolder'
   | 'racesFolder'
   | 'tablesFolder'
-  | 'npcFolder';
+  | 'npcFolder'
+  | 'deckFolder';
 const PATHS: readonly PathKey[] = [
   'sessionTemplate',
   'npcTemplate',
@@ -83,6 +90,7 @@ const PATHS: readonly PathKey[] = [
   'racesFolder',
   'tablesFolder',
   'npcFolder',
+  'deckFolder',
 ];
 const LANGS = ['auto', 'en', 'de'] as const;
 const DECK_SIZES = ['22', '13'] as const;

@@ -1,6 +1,6 @@
 # NPC builder — design
 
-Date: 2026-10-25. Status: **approved ("passt", 2026-10-25)**; phase 1 built. Module 2 of `dnd5e-byLokianer`.
+Date: 2026-10-25. Status: **approved ("passt", 2026-10-25)**; phases 1–4b built and accepted in Obsidian on 2026-10-25. Module 2 of `dnd5e-byLokianer`.
 Build only after this spec and the phase 1 plan are approved.
 
 Decided with the maintainer on 2026-10-25:

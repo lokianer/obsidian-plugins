@@ -8,6 +8,13 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Own decks, deck builder and reset** (Deck of Many Things, phase D2): every `type: deck` note of
+  the campaign can be drawn from in the Deck tab (picked in a list, remembered); returning decks
+  with `leaves` and `ends`, or decks whose drawn cards stay out. **New deck** opens a builder —
+  cards typed in, copied from the standard deck, pasted (`Name — effect`, lists, table rows) or
+  imported from a JSON file — and writes the deck as a note in the deck folder (new setting). A
+  reset button clears the draw history, or the history and every ticked card.
+
 - **Deck of Many Things** (module 4, phase D1): a tab drawing from the SRD deck (22 cards, 13 as a
   setting) by its rules — declared draws, the Fool's redraw, the Jester's and the Idiot's extra
   draws, The Void and Donjon ending the drawing, the Fool and the Jester leaving the deck. Cards

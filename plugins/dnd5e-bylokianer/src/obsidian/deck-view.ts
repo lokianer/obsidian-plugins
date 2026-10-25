@@ -1,11 +1,13 @@
-// The Deck tab: the SRD's Deck of Many Things on the table. The GM names who draws and how many
-// cards are declared, then turns them one by one; the rules (the Fool, the Jester, the Idiot, The
-// Void, Donjon) run themselves. Beside it the deck at a glance — a tap shows a card's effect — and
-// the history of draws, both read from the deck note the store keeps.
+// The Deck tab: a deck on the table — the SRD's Deck of Many Things or one of the GM's own. The GM
+// names who draws and how many cards are declared, then turns them one by one; the rules (the Fool,
+// the Jester, the Idiot, The Void, Donjon in the standard deck; leaving and ending cards in any)
+// run themselves. Beside it the deck at a glance — a tap shows a card's effect — and the history of
+// draws, both read from the deck note the store keeps. New deck opens the builder, Reset clears
+// the history.
 
 import { Component, ItemView, MarkdownRenderer, setIcon, type WorkspaceLeaf } from 'obsidian';
 
-import { cardByName, corner, type DeckCard, deckOf, isRed } from '../deck/cards';
+import { cardByName, corner, deckOf, isRed } from '../deck/cards';
 import { splitEntry } from '../deck/note';
 import {
   canDraw,
@@ -20,7 +22,13 @@ import {
 } from '../deck/rules';
 import type { T } from '../i18n/strings';
 import type { Lang } from '../npc/races';
-import type { DeckSource, DeckState, Drawer } from './deck-store';
+import {
+  type DeckInfo,
+  type DeckSource,
+  type DeckState,
+  type Drawer,
+  STANDARD,
+} from './deck-store';
 
 export const DECK_VIEW = 'dnd5e-deck';
 
@@ -33,6 +41,28 @@ export interface DeckDeps {
   source: DeckSource;
   /** A random number in [0, 1); the tests replace it. */
   random: () => number;
+  /** The deck shown last, and where a new pick is kept. */
+  selected: () => string;
+  select: (key: string) => void;
+  /** Opens the deck builder. */
+  newDeck: () => void;
+  /** Asks how far to reset: the history only, or every card back too; null to cancel. */
+  confirmReset: () => Promise<'log' | 'all' | null>;
+}
+
+/** A card as the table shows it, from the standard deck or an own one. */
+interface PlayCard {
+  index: string;
+  name: string;
+  /** The name in the other language; empty for an own card. */
+  other: string;
+  text: string;
+  corner: string;
+  red: boolean;
+  leaves: boolean;
+  ends: boolean;
+  /** The name the note's draw line takes. */
+  noteName: string;
 }
 
 /** A random number in [0, 1) from the platform's cryptographic source. */
@@ -45,7 +75,8 @@ const shownName = (who: string): string =>
   who.replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, '$1').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1');
 
 export class DeckView extends ItemView {
-  private state: DeckState = { path: null, size: 22, out: [], draws: [] };
+  private decks: DeckInfo[] = [];
+  private state: DeckState = { key: STANDARD, path: null, size: 22, own: [], out: [], draws: [] };
   private party: Drawer[] = [];
   private drawing: Drawing | null = null;
   private who = '';
@@ -85,25 +116,66 @@ export class DeckView extends ItemView {
     return Promise.resolve();
   }
 
-  /** Reads the deck note again (after an edit by hand, say) and draws the tab anew. */
+  /** Reads the decks again (after an edit by hand, say) and draws the tab anew if anything changed. */
   async refresh(): Promise<void> {
     if (this.busy) return;
-    const [state, party] = await Promise.all([this.deps.source.load(), this.deps.source.party()]);
+    const { source } = this.deps;
+    const [decks, party] = await Promise.all([source.decks(), source.party()]);
+    const wanted = this.deps.selected();
+    const key = decks.some((d) => d.key === wanted) ? wanted : STANDARD;
+    const state = await source.load(key);
     // The tab's own draw already read the note; its echo must not redraw over the turning card.
     const same =
-      JSON.stringify([state, party]) === JSON.stringify([this.state, this.party]) &&
-      this.contentEl.hasChildNodes();
+      JSON.stringify([decks, state, party]) ===
+        JSON.stringify([this.decks, this.state, this.party]) && this.contentEl.hasChildNodes();
+    this.decks = decks;
     this.state = state;
     this.party = party;
     if (!same) this.render();
+  }
+
+  /** Shows this deck (one just built, say). */
+  async show(key: string): Promise<void> {
+    this.deps.select(key);
+    this.drawing = null;
+    this.shown = null;
+    await this.refresh();
   }
 
   private get lang(): Lang {
     return this.deps.lang();
   }
 
-  private get cards(): DeckCard[] {
-    return deckOf(this.state.size);
+  private get standard(): boolean {
+    return this.state.size !== null;
+  }
+
+  private get cards(): PlayCard[] {
+    const lang = this.lang;
+    if (this.state.size !== null) {
+      return deckOf(this.state.size).map((c) => ({
+        index: c.index,
+        name: c.name[lang],
+        other: c.name[lang === 'de' ? 'en' : 'de'],
+        text: c.text[lang],
+        corner: corner(c, lang),
+        red: isRed(c),
+        leaves: c.leaves,
+        ends: c.ends,
+        noteName: c.name.en,
+      }));
+    }
+    return this.state.own.map((c, i) => ({
+      index: c.index,
+      name: c.name,
+      other: '',
+      text: c.effect,
+      corner: String(i + 1),
+      red: false,
+      leaves: c.leaves,
+      ends: c.ends,
+      noteName: c.name,
+    }));
   }
 
   private drawer(): Drawer | null {
@@ -121,18 +193,34 @@ export class DeckView extends ItemView {
     try {
       this.drawing = draw(this.drawing, card);
       this.shown = card.index;
-      await this.deps.source.record(card, this.drawer());
-      this.state = await this.deps.source.load();
+      const { source } = this.deps;
+      await source.record(
+        this.state.key,
+        { index: card.index, name: card.noteName, leaves: card.leaves },
+        this.drawer(),
+      );
+      this.state = await source.load(this.state.key);
+      // The standard deck's note may have just been made.
+      this.decks = await source.decks();
     } finally {
       this.busy = false;
     }
     this.render(true);
   }
 
+  private async reset(): Promise<void> {
+    const answer = await this.deps.confirmReset();
+    if (answer === null) return;
+    await this.deps.source.reset(this.state.key, answer === 'all');
+    this.drawing = null;
+    this.shown = null;
+    this.state = await this.deps.source.load(this.state.key);
+    this.render();
+  }
+
   // ── rendering ──────────────────────────────────────────────────────────────────────────────
 
   private render(turn = false): void {
-    const { t } = this.deps;
     this.text?.unload();
     this.text = new Component();
     this.text.load();
@@ -140,24 +228,7 @@ export class DeckView extends ItemView {
     root.empty();
     // For hyphenation of the long card names.
     root.setAttr('lang', this.lang);
-
-    const header = root.createDiv({ cls: 'dnd5e-deck-header' });
-    const titles = header.createDiv({ cls: 'dnd5e-deck-titles' });
-    titles.createDiv({ cls: 'dnd5e-deck-title', text: t('deck.title') });
-    titles.createDiv({ cls: 'dnd5e-deck-rules', text: t('deck.rules') });
-    header.createSpan({
-      cls: 'dnd5e-deck-size',
-      text: t('deck.cards', { count: this.state.size }),
-    });
-    const path = this.state.path;
-    if (path !== null) {
-      const open = header.createEl('button', {
-        cls: 'clickable-icon',
-        attr: { 'aria-label': t('deck.openNote') },
-      });
-      setIcon(open, 'file-text');
-      open.addEventListener('click', () => this.deps.source.open(path));
-    }
+    this.renderHeader(root);
 
     const body = root.createDiv({ cls: 'dnd5e-deck-body' });
     const stage = body.createDiv({ cls: 'dnd5e-deck-stage' });
@@ -173,34 +244,96 @@ export class DeckView extends ItemView {
     const side = body.createDiv({ cls: 'dnd5e-deck-side' });
     this.renderGrid(side);
     this.renderHistory(side);
-    root.createDiv({ cls: 'dnd5e-deck-source', text: t('deck.source') });
+    if (this.standard) {
+      root.createDiv({ cls: 'dnd5e-deck-source', text: this.deps.t('deck.source') });
+    }
   }
 
-  private renderCard(parent: HTMLElement, card: DeckCard | null): HTMLElement {
+  private renderHeader(root: HTMLElement): void {
     const { t } = this.deps;
-    const lang = this.lang;
+    const header = root.createDiv({ cls: 'dnd5e-deck-header' });
+    const titles = header.createDiv({ cls: 'dnd5e-deck-titles' });
+    const own = this.decks.find((d) => d.key === this.state.key && d.key !== STANDARD);
+    titles.createDiv({ cls: 'dnd5e-deck-title', text: own?.title ?? t('deck.title') });
+    const returns = this.cards.some((c) => !c.leaves);
+    titles.createDiv({
+      cls: 'dnd5e-deck-rules',
+      text: this.standard
+        ? t('deck.rules')
+        : t(returns ? 'deck.rules.returns' : 'deck.rules.stays'),
+    });
+
+    const tools = header.createDiv({ cls: 'dnd5e-deck-tools' });
+    if (this.decks.length > 1) {
+      const select = tools.createEl('select', {
+        cls: ['dropdown', 'dnd5e-deck-picker'],
+        attr: { 'aria-label': t('deck.pick') },
+      });
+      for (const d of this.decks) {
+        select.createEl('option', {
+          text: d.key === STANDARD ? t('deck.standard') : d.title,
+          attr: { value: d.key },
+        });
+      }
+      select.value = this.state.key;
+      select.addEventListener('change', () => void this.show(select.value));
+    }
+    tools.createSpan({
+      cls: 'dnd5e-deck-size',
+      text:
+        this.cards.length === 1
+          ? t('deck.cards.one')
+          : t('deck.cards', { count: this.cards.length }),
+    });
+    const button = (icon: string, label: string, action: () => void, cls: string) => {
+      const b = tools.createEl('button', {
+        cls: ['clickable-icon', cls],
+        attr: { 'aria-label': label },
+      });
+      setIcon(b, icon);
+      b.addEventListener('click', action);
+    };
+    button('plus', t('deck.new'), () => this.deps.newDeck(), 'dnd5e-deck-new');
+    const path = this.state.path;
+    if (path !== null) {
+      button('rotate-ccw', t('deck.reset'), () => void this.reset(), 'dnd5e-deck-reset');
+      button('file-text', t('deck.openNote'), () => this.deps.source.open(path), 'dnd5e-deck-note');
+    }
+  }
+
+  private renderCard(parent: HTMLElement, card: PlayCard | null): HTMLElement {
+    const { t } = this.deps;
     const el = parent.createDiv({ cls: 'dnd5e-deck-card' });
     const inner = el.createDiv({ cls: 'dnd5e-deck-card-inner' });
     const back = inner.createDiv({ cls: 'dnd5e-deck-card-back' });
     setIcon(back.createDiv({ cls: 'dnd5e-deck-card-sigil' }), 'sparkles');
     if (card === null) return el;
     el.addClass('is-turned');
-    el.toggleClass('is-red', isRed(card));
+    el.toggleClass('is-red', card.red);
     el.dataset.card = card.index;
     const face = inner.createDiv({ cls: 'dnd5e-deck-card-face' });
-    face.createDiv({ cls: 'dnd5e-deck-corner', text: corner(card, lang) });
-    face.createDiv({ cls: 'dnd5e-deck-card-name', text: card.name[lang] });
-    const other = card.name[lang === 'de' ? 'en' : 'de'];
-    if (other !== card.name[lang]) face.createDiv({ cls: 'dnd5e-deck-card-other', text: other });
-    if (card.leaves || card.ends) {
+    face.createDiv({ cls: 'dnd5e-deck-corner', text: card.corner });
+    face.createDiv({ cls: 'dnd5e-deck-card-name', text: card.name });
+    if (card.other !== '' && card.other !== card.name) {
+      face.createDiv({ cls: 'dnd5e-deck-card-other', text: card.other });
+    }
+    // In a deck where every card stays out, "leaves the deck" would say nothing.
+    const allLeave = this.cards.every((c) => c.leaves);
+    if ((card.leaves && !allLeave) || card.ends) {
       face.createSpan({
         cls: 'dnd5e-deck-badge',
-        text: t(card.leaves ? 'deck.leaves' : 'deck.ends'),
+        text: t(card.ends ? 'deck.ends' : 'deck.leaves'),
       });
     }
     const text = face.createDiv({ cls: ['dnd5e-deck-card-text', 'markdown-rendered'] });
-    void MarkdownRenderer.render(this.app, card.text[lang], text, '', this.text ?? this);
-    face.createDiv({ cls: ['dnd5e-deck-corner', 'is-bottom'], text: corner(card, lang) });
+    void MarkdownRenderer.render(
+      this.app,
+      card.text,
+      text,
+      this.state.path ?? '',
+      this.text ?? this,
+    );
+    face.createDiv({ cls: ['dnd5e-deck-corner', 'is-bottom'], text: card.corner });
     return el;
   }
 
@@ -218,8 +351,8 @@ export class DeckView extends ItemView {
         const c = this.cards.find((x) => x.index === index);
         if (c === undefined) continue;
         const chip = row.createEl('button', {
-          cls: isRed(c) ? ['dnd5e-deck-chip', 'is-red'] : 'dnd5e-deck-chip',
-          text: `${corner(c, this.lang)} ${c.name[this.lang]}`,
+          cls: c.red ? ['dnd5e-deck-chip', 'is-red'] : 'dnd5e-deck-chip',
+          text: `${c.corner} ${c.name}`,
         });
         chip.addEventListener('click', () => {
           this.shown = c.index;
@@ -228,7 +361,7 @@ export class DeckView extends ItemView {
       }
     }
     const status = el.createDiv({ cls: 'dnd5e-deck-status' });
-    if (d.pending === 'jester' || d.pending === 'idiot') {
+    if (d.pending !== null) {
       const jester = d.pending === 'jester';
       const choices = el.createDiv({ cls: 'dnd5e-deck-actions' });
       const more = choices.createEl('button', {
@@ -242,8 +375,9 @@ export class DeckView extends ItemView {
       no.addEventListener('click', () => this.answer(false));
       return;
     }
-    if (isDone(d)) {
-      status.setText(t(d.ended ? 'deck.ended' : 'deck.done'));
+    const emptied = !isDone(d) && pool(d, this.cards).length === 0;
+    if (isDone(d) || emptied) {
+      status.setText(t(emptied ? 'deck.emptied' : d.ended ? 'deck.ended' : 'deck.done'));
       const again = el.createDiv({ cls: 'dnd5e-deck-actions' }).createEl('button', {
         cls: 'mod-cta',
         text: t('deck.again'),
@@ -308,8 +442,10 @@ export class DeckView extends ItemView {
       cls: ['mod-cta', 'dnd5e-deck-begin'],
       text: t('deck.begin'),
     });
+    // A deck whose cards are all out has nothing to draw until it is reset.
+    begin.disabled = this.cards.every((c) => this.state.out.includes(c.index));
     begin.addEventListener('click', () => {
-      this.drawing = startDrawing(this.declared, this.state.out);
+      this.drawing = startDrawing(this.declared, this.state.out, this.standard);
       this.shown = null;
       this.render();
     });
@@ -323,15 +459,15 @@ export class DeckView extends ItemView {
       const out = this.state.out.includes(c.index);
       const cls = ['dnd5e-deck-tile'];
       if (out) cls.push('is-out');
-      if (isRed(c)) cls.push('is-red');
+      if (c.red) cls.push('is-red');
       if (c.index === this.shown) cls.push('is-shown');
       const tile = grid.createEl('button', {
         cls,
-        attr: { 'aria-label': out ? `${c.name[this.lang]} — ${t('deck.out')}` : c.name[this.lang] },
+        attr: { 'aria-label': out ? `${c.name} — ${t('deck.out')}` : c.name },
       });
       tile.dataset.card = c.index;
-      tile.createSpan({ cls: 'dnd5e-deck-tile-corner', text: corner(c, this.lang) });
-      tile.createSpan({ cls: 'dnd5e-deck-tile-name', text: c.name[this.lang] });
+      tile.createSpan({ cls: 'dnd5e-deck-tile-corner', text: c.corner });
+      tile.createSpan({ cls: 'dnd5e-deck-tile-name', text: c.name });
       // Looking a card up is for between drawings, not to peek during one.
       tile.addEventListener('click', () => {
         if (this.drawing !== null && !isDone(this.drawing)) return;
@@ -352,14 +488,12 @@ export class DeckView extends ItemView {
     const list = side.createDiv({ cls: 'dnd5e-deck-history' });
     for (const entry of draws) {
       const { date, who, card } = splitEntry(entry);
-      const c = cardByName(card);
+      const srd = this.standard ? cardByName(card) : undefined;
+      const red = srd !== undefined && isRed(srd);
       const row = list.createDiv({ cls: 'dnd5e-deck-history-row' });
       row.createSpan({
-        cls:
-          c !== undefined && isRed(c)
-            ? ['dnd5e-deck-history-card', 'is-red']
-            : 'dnd5e-deck-history-card',
-        text: c === undefined ? card : `${corner(c, this.lang)} ${c.name[this.lang]}`,
+        cls: red ? ['dnd5e-deck-history-card', 'is-red'] : 'dnd5e-deck-history-card',
+        text: srd === undefined ? card : `${corner(srd, this.lang)} ${srd.name[this.lang]}`,
       });
       row.createSpan({
         cls: 'dnd5e-deck-history-meta',

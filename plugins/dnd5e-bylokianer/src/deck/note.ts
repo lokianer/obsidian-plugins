@@ -1,10 +1,13 @@
-// The deck note: its first task list is the deck — an open item is in it, a ticked one has left —
-// and the list under "## Draws" is its history, one line per card drawn. Edits change single lines.
+// The deck note: its first task list is the deck — an open item is in it, a ticked one has left;
+// an item reads `Name — effect`, indented lines below it continue the effect — and the list under
+// "## Draws" is its history, one line per card drawn. Edits change single lines.
 
 import type { DeckCard } from './cards';
 
 export interface NoteCard {
   name: string;
+  /** The text after ` — ` and any indented lines below the item. */
+  effect: string;
   /** Zero-based line of the item. */
   line: number;
   out: boolean;
@@ -20,6 +23,8 @@ const ITEM = /^\s*[-*+] \[([ xX])\] (.+?)\s*$/;
 const DRAWS = /^##\s+Draws\s*$/i;
 const HEADING = /^#{1,6}\s/;
 const BULLET = /^\s*[-*+] (.+?)\s*$/;
+const CONTINUED = /^\s{2,}\S/;
+const EFFECT = ' — ';
 
 /** The body after the frontmatter starts at this line. */
 function bodyStart(lines: readonly string[]): number {
@@ -37,9 +42,22 @@ export function parseDeckNote(text: string): DeckNote {
   let i = bodyStart(lines);
   while (i < lines.length && !ITEM.test(lines[i] ?? '')) i++;
   for (; i < lines.length; i++) {
-    const match = ITEM.exec(lines[i] ?? '');
-    if (match === null) break;
-    cards.push({ name: match[2] ?? '', line: i, out: match[1] !== ' ' });
+    const line = lines[i] ?? '';
+    const match = ITEM.exec(line);
+    const last = cards[cards.length - 1];
+    if (match === null) {
+      if (last === undefined || !CONTINUED.test(line)) break;
+      last.effect = [last.effect, line.trim()].filter((t) => t !== '').join('\n');
+      continue;
+    }
+    const text = match[2] ?? '';
+    const at = text.indexOf(EFFECT);
+    cards.push({
+      name: at === -1 ? text : text.slice(0, at).trim(),
+      effect: at === -1 ? '' : text.slice(at + EFFECT.length).trim(),
+      line: i,
+      out: match[1] !== ' ',
+    });
   }
   const draws: string[] = [];
   const at = drawsAt(lines);
@@ -116,4 +134,23 @@ export function splitEntry(entry: string): { date: string; who: string; card: st
   const card = parts.length > 1 ? (parts[parts.length - 1] ?? '') : '';
   const who = parts.length > 2 ? parts.slice(1, -1).join(' · ') : '';
   return { date, who, card };
+}
+
+/** The note with an empty Draws list and, with `returnCards`, every card of the deck back in. */
+export function resetDeck(text: string, returnCards: boolean): string {
+  const lines = text.split('\n');
+  if (returnCards) {
+    for (const card of parseDeckNote(text).cards) {
+      lines[card.line] = (lines[card.line] ?? '').replace(/\[[xX]\]/, '[ ]');
+    }
+  }
+  const at = drawsAt(lines);
+  if (at !== -1) {
+    let end = at + 1;
+    while (end < lines.length && !HEADING.test(lines[end] ?? '')) end++;
+    const kept = lines.slice(at + 1, end).filter((l) => !BULLET.test(l) && l.trim() !== '');
+    // Text under the heading that is not a draw stays; the list goes, a blank line around it.
+    lines.splice(at + 1, end - at - 1, '', ...kept, ...(kept.length > 0 ? [''] : []), '');
+  }
+  return lines.join('\n');
 }

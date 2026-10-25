@@ -1,6 +1,6 @@
 # Deck of Many Things — design
 
-Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §8 accepted); D1 built**. Module 4 of
+Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §8 accepted); D1 and D2 built**. Module 4 of
 `dnd5e-byLokianer`, after the spellbook.
 
 Asked for by the maintainer: "the Deck of Many Things, with the option to make one's own, otherwise
@@ -84,11 +84,21 @@ The format the example vault already uses (`Silverstadt/Decks/Omens of the River
   drawn card is ticked and stays out (like Omens of the River).
 - `leaves:` and `ends:` (lists of card names) mark cards that leave the deck or end the drawing in a
   returning deck.
-- Command **New deck**: asks for a name and creates a deck note in the campaign — empty, or as a copy
-  of the standard deck with all 22 cards and their effects written out in the current language, so
-  every card can be edited or replaced.
-- The tab lists the standard deck first, then every `type: deck` note of the campaign; a setting picks
-  which one opens by default (the standard deck unless changed).
+- **Deck builder** (asked for 2026-10-25: "a deck builder, typed in by hand or with an import"):
+  command **New deck** and a button in the tab open a dialog — the deck's name, whether drawn cards
+  return, and the cards as rows (name, effect, "leaves" / "ends"), added one by one, or filled from:
+  - **the standard deck** — all 22 cards with their effects in the current language, to edit;
+  - **pasted text** — one card per line, `Name — effect` (also `Name: effect`, `**Name.** effect`,
+    list items, task items and Markdown table rows; header and separator rows skipped);
+  - **a JSON file** — `{ "name", "returns", "cards": [{ "name", "effect", "leaves", "ends" }] }`, or
+    just the array of cards, or of names (picked with the platform's file dialog, read in the
+    browser — works on phones).
+    It writes a new note in the campaign's deck folder (setting, `Decks` by default) and opens it in
+    the tab. A deck is edited in its note afterwards: the builder makes notes, it does not rewrite them.
+- The tab lists the standard deck first, then every `type: deck` note of the campaign, and remembers
+  the one last picked.
+- **Reset** (asked for 2026-10-25): a button in the tab asks "clear the draw history" or "clear it and
+  put every card back" (unticks the list); only the Draws lines and the ticks are edited.
 
 ## 5. Non-goals and anti-goals
 
@@ -101,8 +111,8 @@ The format the example vault already uses (`Silverstadt/Decks/Omens of the River
 1. **D1 — Standard deck:** card data (English and German, the six missing effects from the SRD
    document), the tab with deck picker, who draws, declared count, drawing with all the rules above,
    the deck note with draws, the 13/22 setting.
-2. **D2 — Own decks:** reading `type: deck` notes (both kinds), drawing from them in the tab, command
-   New deck, default-deck setting, an example vault note for a returning own deck.
+2. **D2 — Own decks:** reading `type: deck` notes (both kinds), drawing from them in the tab, the
+   deck builder with the standard-deck copy, text and JSON import, the reset, example vault notes.
 
 ## 7. Architecture
 

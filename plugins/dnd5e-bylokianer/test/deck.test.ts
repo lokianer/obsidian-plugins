@@ -5,10 +5,18 @@ import {
   appendDraw,
   drawEntry,
   parseDeckNote,
+  resetDeck,
   splitEntry,
   standardDeckText,
   tickCard,
 } from '../src/deck/note';
+import {
+  ownCards,
+  ownDeckText,
+  parseCardText,
+  parseDeckJson,
+  standardDrafts,
+} from '../src/deck/own';
 import {
   canDraw,
   choose,
@@ -186,5 +194,112 @@ describe('the deck note', () => {
       card: 'Throne',
     });
     expect(splitEntry('2026-10-25 · Sun')).toEqual({ date: '2026-10-25', who: '', card: 'Sun' });
+  });
+});
+
+describe('own decks', () => {
+  it('reads pasted lines in every common shape', () => {
+    const cards = parseCardText(
+      [
+        'Crow — bad luck',
+        '- Moth: light in the dark',
+        '* [ ] Owl - wisdom',
+        '1. ***Hare.*** A swift escape.',
+        '**Fox**: a trick',
+        'Nothing more',
+        '',
+        '| Card | Effect |',
+        '| --- | --- |',
+        '| Stag | A guide | through the woods |',
+      ].join('\n'),
+    );
+    expect(cards.map((c) => [c.name, c.effect])).toEqual([
+      ['Crow', 'bad luck'],
+      ['Moth', 'light in the dark'],
+      ['Owl', 'wisdom'],
+      ['Hare', 'A swift escape.'],
+      ['Fox', 'a trick'],
+      ['Nothing more', ''],
+      ['Stag', 'A guide — through the woods'],
+    ]);
+  });
+
+  it('reads a JSON deck, an array of cards or of names, and refuses the rest', () => {
+    const full = parseDeckJson(
+      '{"name":"Road","returns":false,"cards":[{"name":"Crow","effect":"luck","ends":true},{"title":"Moth","description":"light"},{"effect":"no name"}]}',
+    );
+    expect(full).toEqual({
+      ok: true,
+      deck: {
+        name: 'Road',
+        returns: false,
+        cards: [
+          { name: 'Crow', effect: 'luck', leaves: false, ends: true },
+          { name: 'Moth', effect: 'light', leaves: false, ends: false },
+        ],
+      },
+    });
+    const names = parseDeckJson('["A", "B", ""]');
+    expect(names.ok && names.deck.cards.map((c) => c.name)).toEqual(['A', 'B']);
+    expect(parseDeckJson('{oops')).toEqual({ ok: false, reason: 'syntax' });
+    expect(parseDeckJson('{"cards": 3}')).toEqual({ ok: false, reason: 'shape' });
+    expect(parseDeckJson('[{"effect": "x"}]')).toEqual({ ok: false, reason: 'empty' });
+  });
+
+  it('writes a deck note the parser reads back, effects with their lines', () => {
+    const text = ownDeckText({
+      name: 'Road',
+      returns: true,
+      cards: [
+        { name: 'Crow', effect: 'bad luck\nfor a day', leaves: true, ends: false },
+        { name: 'Moth', effect: '', leaves: false, ends: true },
+        { name: '  ', effect: 'dropped', leaves: false, ends: false },
+      ],
+    });
+    expect(text).toContain('returns: true\nleaves:\n  - "Crow"\nends:\n  - "Moth"\n---');
+    expect(text).toContain('- [ ] Crow — bad luck\n  for a day\n- [ ] Moth\n');
+    const note = parseDeckNote(text);
+    expect(note.cards.map((c) => [c.name, c.effect])).toEqual([
+      ['Crow', 'bad luck\nfor a day'],
+      ['Moth', ''],
+    ]);
+    const own = ownCards(note.cards, { returns: true, leaves: ['Crow'], ends: 'moth' });
+    expect(own.map((c) => [c.index, c.leaves, c.ends])).toEqual([
+      ['crow', true, false],
+      ['moth', false, true],
+    ]);
+  });
+
+  it('lets every card of a deck that does not return leave, and numbers repeated names', () => {
+    const own = ownCards(parseDeckNote('- [ ] A\n- [x] A\n- [ ] B\n').cards, undefined);
+    expect(own.map((c) => [c.index, c.leaves])).toEqual([
+      ['a', true],
+      ['a#2', true],
+      ['b', true],
+    ]);
+  });
+
+  it('copies the standard deck in one language', () => {
+    const drafts = standardDrafts(deckOf(13), 'de');
+    expect(drafts).toHaveLength(13);
+    expect(drafts.find((d) => d.name === 'Possenreißer')?.leaves).toBe(true);
+  });
+});
+
+describe('resetting a deck note', () => {
+  const used =
+    '# D\n\n- [x] Fool\n- [ ] Sun\n\n## Draws\n\nKept words.\n- 2026-10-25 · Fool\n\n## After\n';
+
+  it('clears the draws and keeps the ticks', () => {
+    const text = resetDeck(used, false);
+    expect(parseDeckNote(text).draws).toEqual([]);
+    expect(parseDeckNote(text).cards[0]?.out).toBe(true);
+    expect(text).toContain('Kept words.');
+    expect(text).toContain('## After');
+  });
+
+  it('clears the draws and puts every card back', () => {
+    const text = resetDeck(used, true);
+    expect(parseDeckNote(text).cards.every((c) => !c.out)).toBe(true);
   });
 });

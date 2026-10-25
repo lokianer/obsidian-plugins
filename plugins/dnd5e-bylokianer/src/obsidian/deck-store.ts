@@ -1,18 +1,29 @@
-// The Deck tab's adapter to the vault: finds the campaign's standard deck note, makes it on the
-// first draw, and writes each draw as line edits through vault.process — a leaving card ticked,
-// a draw line appended with the drawer linked.
+// The Deck tab's adapter to the vault: lists the campaign's decks — the standard deck (its note made
+// on the first draw) and every own `type: deck` note — and writes each draw and each reset as line
+// edits through vault.process: a leaving card ticked, a draw line appended with the drawer linked.
 
 import { localDate } from '@obsidian-plugins/session';
 import { normalizePath, Notice, type Plugin, TFile } from 'obsidian';
 
 import { inCampaign, typeOf } from '../campaign/scope';
-import { cardByName, type DeckCard, deckOf } from '../deck/cards';
-import { appendDraw, drawEntry, parseDeckNote, standardDeckText, tickCard } from '../deck/note';
+import { cardByName, deckOf } from '../deck/cards';
+import {
+  appendDraw,
+  drawEntry,
+  parseDeckNote,
+  resetDeck,
+  standardDeckText,
+  tickCard,
+} from '../deck/note';
+import { type DraftDeck, type OwnCard, ownCards, ownDeckText } from '../deck/own';
 import { PARTY } from '../factions/discover';
 import type { T } from '../i18n/strings';
 import type { WorldCache } from './world-cache';
 
 const DECK_NOTE = 'Deck of Many Things.md';
+
+/** The standard deck's key; an own deck's key is its note's path. */
+export const STANDARD = 'standard';
 
 export interface Drawer {
   name: string;
@@ -20,61 +31,116 @@ export interface Drawer {
   path: string | null;
 }
 
+export interface DeckInfo {
+  key: string;
+  /** The own deck's note name; empty for the standard deck, which the tab names itself. */
+  title: string;
+}
+
 export interface DeckState {
-  /** The deck note, or null before the first draw. */
+  key: string;
+  /** The deck note, or null before the standard deck's first draw. */
   path: string | null;
-  size: 13 | 22;
+  /** The standard deck's size; null for an own deck. */
+  size: 13 | 22 | null;
+  /** An own deck's cards; empty for the standard deck. */
+  own: OwnCard[];
   /** Cards out of the deck, by index. */
   out: string[];
   /** The Draws lines, oldest first. */
   draws: string[];
 }
 
+/** A drawn card as the note writes it. */
+export interface DrawnCard {
+  index: string;
+  /** The name written in the draw line. */
+  name: string;
+  leaves: boolean;
+}
+
 /** What the Deck tab needs from the vault. */
 export interface DeckSource {
-  load(): Promise<DeckState>;
+  decks(): Promise<DeckInfo[]>;
+  load(key: string): Promise<DeckState>;
   party(): Promise<Drawer[]>;
-  record(card: DeckCard, who: Drawer | null): Promise<void>;
+  record(key: string, card: DrawnCard, who: Drawer | null): Promise<void>;
+  reset(key: string, returnCards: boolean): Promise<void>;
   open(path: string): void;
 }
 
 const sizeOf = (value: unknown): 13 | 22 | null =>
   value === 'standard-13' ? 13 : value === 'standard-22' ? 22 : null;
 
+interface Found {
+  file: TFile;
+  frontmatter: Record<string, unknown> | undefined;
+  size: 13 | 22 | null;
+}
+
 export class DeckStore implements DeckSource {
   constructor(
     private readonly plugin: Plugin,
     private readonly cache: WorldCache,
     private readonly t: T,
-    private readonly size: () => 13 | 22,
+    private readonly settings: () => { deckSize: 13 | 22; deckFolder: string },
     readonly open: (path: string) => void,
   ) {}
 
-  /** The campaign's standard deck note: the first by path with `type: deck` and `deck: standard-…`. */
-  private async find(): Promise<{ file: TFile; size: 13 | 22 } | null> {
+  /** Every deck note in the campaign, by path. */
+  private async notes(): Promise<Found[]> {
     const { vault, metadataCache } = this.plugin.app;
     const { campaign } = await this.cache.get();
-    const found = vault
+    return vault
       .getMarkdownFiles()
       .filter((file) => campaign === null || inCampaign(campaign, file.path))
-      .map((file) => {
-        const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
-        const size = typeOf(frontmatter) === 'deck' ? sizeOf(frontmatter?.deck) : null;
-        return size === null ? null : { file, size };
-      })
-      .filter((x) => x !== null)
+      .map((file) => ({ file, frontmatter: metadataCache.getFileCache(file)?.frontmatter }))
+      .filter(({ frontmatter }) => typeOf(frontmatter) === 'deck')
+      .map((x) => ({ ...x, size: sizeOf(x.frontmatter?.deck) }))
       .sort((a, b) => (a.file.path < b.file.path ? -1 : 1));
-    return found[0] ?? null;
   }
 
-  async load(): Promise<DeckState> {
-    const found = await this.find();
-    if (found === null) return { path: null, size: this.size(), out: [], draws: [] };
+  private async find(key: string): Promise<Found | null> {
+    const notes = await this.notes();
+    return (
+      (key === STANDARD
+        ? notes.find((n) => n.size !== null)
+        : notes.find((n) => n.size === null && n.file.path === key)) ?? null
+    );
+  }
+
+  async decks(): Promise<DeckInfo[]> {
+    const own = (await this.notes()).filter((n) => n.size === null);
+    return [
+      { key: STANDARD, title: '' },
+      ...own.map((n) => ({ key: n.file.path, title: n.file.basename })),
+    ];
+  }
+
+  async load(key: string): Promise<DeckState> {
+    const found = await this.find(key);
+    if (found === null) {
+      return {
+        key: STANDARD,
+        path: null,
+        size: this.settings().deckSize,
+        own: [],
+        out: [],
+        draws: [],
+      };
+    }
     const note = parseDeckNote(await this.plugin.app.vault.cachedRead(found.file));
+    const own = found.size === null ? ownCards(note.cards, found.frontmatter) : [];
+    const out =
+      found.size === null
+        ? own.filter((_, i) => note.cards[i]?.out === true).map((c) => c.index)
+        : note.cards.filter((c) => c.out).flatMap((c) => cardByName(c.name)?.index ?? []);
     return {
+      key: found.size === null ? found.file.path : STANDARD,
       path: found.file.path,
       size: found.size,
-      out: note.cards.filter((c) => c.out).flatMap((c) => cardByName(c.name)?.index ?? []),
+      own,
+      out,
       draws: note.draws,
     };
   }
@@ -87,35 +153,69 @@ export class DeckStore implements DeckSource {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  async record(card: DeckCard, who: Drawer | null): Promise<void> {
+  async record(key: string, card: DrawnCard, who: Drawer | null): Promise<void> {
     const { vault, fileManager } = this.plugin.app;
-    const file = (await this.find())?.file ?? (await this.create());
+    const found = await this.find(key);
+    const file = found?.file ?? (key === STANDARD ? await this.createStandard() : null);
+    if (file === null) return;
     const drawer = who?.path == null ? null : vault.getFileByPath(who.path);
     const name =
       drawer instanceof TFile
         ? fileManager.generateMarkdownLink(drawer, file.path)
         : (who?.name.trim() ?? '');
-    const entry = drawEntry(localDate(new Date()), name, card.name.en);
+    const entry = drawEntry(localDate(new Date()), name, card.name);
     await vault.process(file, (text) => {
       let next = text;
       if (card.leaves) {
-        const item = parseDeckNote(text).cards.find(
-          (c) => !c.out && cardByName(c.name)?.index === card.index,
-        );
+        const cards = parseDeckNote(text).cards;
+        const indexes =
+          key === STANDARD
+            ? cards.map((c) => cardByName(c.name)?.index)
+            : ownCards(cards, found?.frontmatter).map((c) => c.index);
+        const item = cards.find((c, i) => !c.out && indexes[i] === card.index);
         if (item !== undefined) next = tickCard(next, item.line);
       }
       return appendDraw(next, entry);
     });
   }
 
-  private async create(): Promise<TFile> {
+  async reset(key: string, returnCards: boolean): Promise<void> {
+    const found = await this.find(key);
+    if (found === null) return;
+    await this.plugin.app.vault.process(found.file, (text) => resetDeck(text, returnCards));
+  }
+
+  /** Writes a new own deck in the campaign's deck folder; returns its path. */
+  async create(deck: DraftDeck): Promise<string> {
     const { vault } = this.plugin.app;
+    const dir = await this.folder(this.settings().deckFolder);
+    const base = deck.name.trim().replace(/[\\/:*?"<>|#^[\]]/g, '') || 'Deck';
+    let path = normalizePath(dir === '' ? `${base}.md` : `${dir}/${base}.md`);
+    for (let n = 2; vault.getAbstractFileByPath(path) !== null; n++) {
+      path = normalizePath(dir === '' ? `${base} ${n}.md` : `${dir}/${base} ${n}.md`);
+    }
+    if (dir !== '' && vault.getAbstractFileByPath(dir) === null) await vault.createFolder(dir);
+    await vault.create(path, ownDeckText(deck));
+    new Notice(this.t('deck.created', { path }));
+    return path;
+  }
+
+  /** A folder inside the campaign (the vault root without one). */
+  private async folder(name: string): Promise<string> {
     const { campaign } = await this.cache.get();
-    const folder = campaign?.folder ?? '';
-    const path = normalizePath(folder === '' ? DECK_NOTE : `${folder}/${DECK_NOTE}`);
+    const root = campaign?.folder ?? '';
+    const inner = name.trim();
+    const joined = [root, inner].filter((p) => p !== '').join('/');
+    return joined === '' ? '' : normalizePath(joined);
+  }
+
+  private async createStandard(): Promise<TFile> {
+    const { vault } = this.plugin.app;
+    const dir = await this.folder('');
+    const path = normalizePath(dir === '' ? DECK_NOTE : `${dir}/${DECK_NOTE}`);
     const existing = vault.getFileByPath(path);
     if (existing !== null) return existing;
-    const size = this.size();
+    const size = this.settings().deckSize;
     const file = await vault.create(path, standardDeckText(size, deckOf(size)));
     new Notice(this.t('deck.created', { path }));
     return file;

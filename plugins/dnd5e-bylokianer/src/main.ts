@@ -13,6 +13,7 @@ import type { EditTarget, FactionWorld } from './factions/model';
 import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
+import { askReset, DeckBuilderModal } from './obsidian/deck-builder';
 import { DeckStore } from './obsidian/deck-store';
 import { cryptoRandom, DECK_VIEW, DeckView } from './obsidian/deck-view';
 import { DEFAULT_SETTINGS, type Settings, SettingsTab } from './obsidian/settings';
@@ -168,9 +169,24 @@ export default class Dnd5ePlugin extends Plugin {
       this,
       cache,
       t,
-      () => this.options.deckSize,
+      () => this.options,
       (path) => openNote(path, false),
     );
+    const deckViews = () =>
+      this.app.workspace
+        .getLeavesOfType(DECK_VIEW)
+        .map((leaf) => leaf.view)
+        .filter((view) => view instanceof DeckView);
+    const newDeck = () =>
+      new DeckBuilderModal(this.app, {
+        t,
+        lang: tableLang(this.options, getLanguage()),
+        create: async (deck) => {
+          const path = await deckStore.create(deck);
+          await openDeck();
+          for (const view of deckViews()) await view.show(path);
+        },
+      }).open();
     this.registerView(
       DECK_VIEW,
       (leaf) =>
@@ -179,15 +195,17 @@ export default class Dnd5ePlugin extends Plugin {
           lang: () => tableLang(this.options, getLanguage()),
           source: deckStore,
           random: cryptoRandom,
+          selected: () => this.options.deckSelected,
+          select: (deckSelected) => void save({ ...this.options, deckSelected }),
+          newDeck,
+          confirmReset: () => askReset(this.app, t),
         }),
     );
     // A deck note edited by hand (a card ticked or unticked) shows in the open tab.
     this.registerEvent(
       this.app.metadataCache.on('changed', (_file, _data, meta) => {
         if (meta.frontmatter?.type !== 'deck') return;
-        for (const leaf of this.app.workspace.getLeavesOfType(DECK_VIEW)) {
-          if (leaf.view instanceof DeckView) void leaf.view.refresh();
-        }
+        for (const view of deckViews()) void view.refresh();
       }),
     );
     const openDeck = async () => {
@@ -202,6 +220,7 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openDeck,
     });
     this.addRibbonIcon('layers', t('command.openDeck'), () => void openDeck());
+    this.addCommand({ id: 'new-deck', name: t('command.newDeck'), callback: newDeck });
 
     const openStatblocks = new Set<string>();
     this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {

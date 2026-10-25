@@ -28,15 +28,18 @@ import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
 import { NewNpcModal } from '../../src/obsidian/npc-dialog';
 import { SpellbookView, type SpellbookState } from '../../src/obsidian/spellbook-view';
-import { cardByName, type DeckCard, deckOf } from '../../src/deck/cards';
+import { cardByName, deckOf } from '../../src/deck/cards';
 import {
   appendDraw,
   drawEntry,
   parseDeckNote,
+  resetDeck,
   standardDeckText,
   tickCard,
 } from '../../src/deck/note';
-import type { DeckSource, Drawer } from '../../src/obsidian/deck-store';
+import { type DraftDeck, ownCards, ownDeckText } from '../../src/deck/own';
+import { DeckBuilderModal } from '../../src/obsidian/deck-builder';
+import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
 import { archetypeKind, NewFromBaseModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
@@ -680,39 +683,70 @@ describe('spellbook', () => {
 });
 
 describe('deck of many things', () => {
-  /** A deck note in memory, written like the store writes the real one. */
-  function memorySource(text: string | null = null) {
-    const note = { text };
+  const OMENS = 'Decks/Omens.md';
+  const omens = ownDeckText({
+    name: 'Omens',
+    returns: false,
+    cards: [
+      { name: 'Heron', effect: 'A heron on the third lantern.', leaves: false, ends: false },
+      { name: 'Bells', effect: 'Bells under the water.', leaves: false, ends: true },
+    ],
+  });
+  const frontmatter = (text: string) =>
+    parse(/^---\n([\s\S]*?)\n---/.exec(text)?.[1] ?? '') as Record<string, unknown>;
+
+  /** Deck notes in memory, read and written as the store does. */
+  function memorySource(standard: string | null = null) {
+    const notes = new Map<string, string>([[OMENS, omens]]);
+    if (standard !== null) notes.set('Deck of Many Things.md', standard);
+    const pathOf = (key: string) => (key === STANDARD ? 'Deck of Many Things.md' : key);
+    const indexes = (key: string, text: string) => {
+      const cards = parseDeckNote(text).cards;
+      return key === STANDARD
+        ? cards.map((c) => cardByName(c.name)?.index ?? '')
+        : ownCards(cards, frontmatter(text)).map((c) => c.index);
+    };
     const source: DeckSource = {
-      load: () => {
-        if (note.text === null)
-          return Promise.resolve({ path: null, size: 22, out: [], draws: [] });
-        const parsed = parseDeckNote(note.text);
+      decks: () =>
+        Promise.resolve([
+          { key: STANDARD, title: '' },
+          { key: OMENS, title: 'Omens' },
+        ]),
+      load: (key) => {
+        const text = notes.get(pathOf(key));
+        if (text === undefined) {
+          return Promise.resolve({ key, path: null, size: 22, own: [], out: [], draws: [] });
+        }
+        const note = parseDeckNote(text);
+        const ids = indexes(key, text);
         return Promise.resolve({
-          path: 'Deck of Many Things.md',
-          size: 22,
-          out: parsed.cards.filter((c) => c.out).flatMap((c) => cardByName(c.name)?.index ?? []),
-          draws: parsed.draws,
+          key,
+          path: pathOf(key),
+          size: key === STANDARD ? 22 : null,
+          own: key === STANDARD ? [] : ownCards(note.cards, frontmatter(text)),
+          out: note.cards.flatMap((c, i) => (c.out ? [ids[i] ?? ''] : [])),
+          draws: note.draws,
         });
       },
       party: () => Promise.resolve([{ name: 'Mira', path: 'Party/Mira.md' }]),
-      record: (card: DeckCard, who: Drawer | null) => {
-        let next = note.text ?? standardDeckText(22, deckOf(22));
-        const item = parseDeckNote(next).cards.find((c) => !c.out && c.name === card.name.en);
+      record: (key, card, who) => {
+        const path = pathOf(key);
+        let next = notes.get(path) ?? standardDeckText(22, deckOf(22));
+        const ids = indexes(key, next);
+        const item = parseDeckNote(next).cards.find((c, i) => !c.out && ids[i] === card.index);
         if (card.leaves && item !== undefined) next = tickCard(next, item.line);
-        note.text = appendDraw(
-          next,
-          drawEntry(
-            '2026-10-25',
-            who?.path != null ? `[[${who.name}]]` : (who?.name ?? ''),
-            card.name.en,
-          ),
-        );
+        const name = who?.path != null ? `[[${who.name}]]` : (who?.name ?? '');
+        notes.set(path, appendDraw(next, drawEntry('2026-10-25', name, card.name)));
+        return Promise.resolve();
+      },
+      reset: (key, all) => {
+        const path = pathOf(key);
+        notes.set(path, resetDeck(notes.get(path) ?? '', all));
         return Promise.resolve();
       },
       open: vi.fn(),
     };
-    return { source, note };
+    return { source, notes };
   }
 
   /** Random numbers that pick these positions in the pool, one per draw. */
@@ -721,29 +755,41 @@ describe('deck of many things', () => {
     return () => queue.shift() ?? 0;
   };
 
-  async function open(lang: 'en' | 'de', random: () => number, text: string | null = null) {
-    const { source, note } = memorySource(text);
+  async function open(
+    lang: 'en' | 'de',
+    random: () => number,
+    options: { standard?: string | null; selected?: string; reset?: 'log' | 'all' | null } = {},
+  ) {
+    const { source, notes } = memorySource(options.standard ?? null);
+    let selected = options.selected ?? STANDARD;
+    const newDeck = vi.fn();
     const view = new DeckView({} as WorkspaceLeaf, {
       t: createT(lang),
       lang: () => lang,
       source,
       random,
+      selected: () => selected,
+      select: (key) => (selected = key),
+      newDeck,
+      confirmReset: () => Promise.resolve(options.reset ?? null),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
     const el = view.contentEl;
+    const settle = () => new Promise((resolve) => window.setTimeout(resolve, 0));
     const click = async (selector: string, text?: string) => {
       const button = [...el.querySelectorAll<HTMLElement>(selector)].find(
         (b) => text === undefined || b.textContent === text,
       );
       button?.dispatchEvent(new MouseEvent('click'));
-      await new Promise((resolve) => window.setTimeout(resolve, 0));
+      await settle();
+      await settle();
     };
-    return { el, note, click };
+    return { el, notes, click, newDeck, view, settle };
   }
 
   it('draws the declared cards, writes the note and shows the history', async () => {
-    const { el, note, click } = await open('en', picks([1, 22], [6, 22]));
+    const { el, notes, click } = await open('en', picks([1, 22], [6, 22]));
     expect(el.querySelectorAll('.dnd5e-deck-tile')).toHaveLength(22);
     expect(el.querySelector('.dnd5e-deck-empty')?.textContent).toBe('No card drawn yet.');
     const input = el.querySelector<HTMLInputElement>('.dnd5e-deck-setup input');
@@ -763,7 +809,7 @@ describe('deck of many things', () => {
     expect(el.querySelector('.dnd5e-deck-status')?.textContent).toBe(
       'Every declared card is drawn.',
     );
-    expect(parseDeckNote(note.text ?? '').draws).toEqual([
+    expect(parseDeckNote(notes.get('Deck of Many Things.md') ?? '').draws).toEqual([
       '2026-10-25 · [[Mira]] · Sun',
       '2026-10-25 · [[Mira]] · Throne',
     ]);
@@ -776,7 +822,7 @@ describe('deck of many things', () => {
 
   it('runs the Fool’s redraw and the Jester’s choice, and the leaving cards are out', async () => {
     // The Fool (20 of 22), then the Jester (20 of 21, the Fool gone), then Key (7 of 20).
-    const { el, note, click } = await open('de', picks([20, 22], [20, 21], [7, 20]));
+    const { el, notes, click } = await open('de', picks([20, 22], [20, 21], [7, 20]));
     await click('.dnd5e-deck-begin');
     await click('.dnd5e-deck-draw');
     expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Narr']);
@@ -795,10 +841,8 @@ describe('deck of many things', () => {
       'Narr',
       'Possenreißer',
     ]);
-    const out = parseDeckNote(note.text ?? '')
-      .cards.filter((c) => c.out)
-      .map((c) => c.name);
-    expect(out).toEqual(['Fool', 'Jester']);
+    const note = parseDeckNote(notes.get('Deck of Many Things.md') ?? '');
+    expect(note.cards.filter((c) => c.out).map((c) => c.name)).toEqual(['Fool', 'Jester']);
   });
 
   it('ends on The Void and looks a card up from the grid between drawings', async () => {
@@ -815,5 +859,131 @@ describe('deck of many things', () => {
     expect(el.querySelector('.dnd5e-deck-card-text')?.textContent).toContain('1d3 times');
     await click('.dnd5e-deck-actions button', 'New drawing');
     expect(el.querySelector('.dnd5e-deck-begin')).not.toBeNull();
+  });
+
+  it('draws from an own deck picked in the list: drawn cards stay out, an ending card ends', async () => {
+    const { el, notes, click, settle } = await open('en', picks([0, 2], [0, 1]));
+    const picker = el.querySelector<HTMLSelectElement>('.dnd5e-deck-picker');
+    expect([...(picker?.options ?? [])].map((o) => o.text)).toEqual([
+      'Deck of Many Things (SRD)',
+      'Omens',
+    ]);
+    if (picker === null) throw new Error('no picker');
+    picker.value = OMENS;
+    picker.dispatchEvent(new Event('change'));
+    await settle();
+    await settle();
+    expect(texts(el, '.dnd5e-deck-title')).toEqual(['Omens']);
+    expect(texts(el, '.dnd5e-deck-rules')).toEqual([
+      'Each card drawn stays out until the deck is reset.',
+    ]);
+    expect(texts(el, '.dnd5e-deck-tile-name')).toEqual(['Heron', 'Bells']);
+    await click('.dnd5e-deck-stepper button[aria-label="+"]');
+    await click('.dnd5e-deck-begin');
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Heron']);
+    expect(el.querySelector('.dnd5e-deck-badge')).toBeNull();
+    expect(el.querySelector('.dnd5e-deck-card-text')?.textContent).toContain('third lantern');
+    await click('.dnd5e-deck-draw');
+    expect(texts(el, '.dnd5e-deck-card-name')).toEqual(['Bells']);
+    expect(texts(el, '.dnd5e-deck-badge')).toEqual(['Ends the drawing']);
+    expect(el.querySelector('.dnd5e-deck-begin')).toBeNull();
+    await click('.dnd5e-deck-actions button', 'New drawing');
+    expect(el.querySelector<HTMLButtonElement>('.dnd5e-deck-begin')?.disabled).toBe(true);
+    expect(parseDeckNote(notes.get(OMENS) ?? '').cards.every((c) => c.out)).toBe(true);
+  });
+
+  it('resets the history, or the history and every card', async () => {
+    const used = appendDraw(tickCard(standardDeckText(22, deckOf(22)), 27), '2026-10-25 · Fool');
+    expect(parseDeckNote(used).cards.find((c) => c.out)?.name).toBe('Fool');
+    const log = await open('en', picks(), { standard: used, reset: 'log' });
+    await log.click('.dnd5e-deck-reset');
+    expect(log.el.querySelector('.dnd5e-deck-empty')?.textContent).toBe('No card drawn yet.');
+    expect(texts(log.el, '.dnd5e-deck-tile.is-out .dnd5e-deck-tile-name')).toEqual(['Fool']);
+    root.empty();
+    const all = await open('en', picks(), { standard: used, reset: 'all' });
+    await all.click('.dnd5e-deck-reset');
+    expect(all.el.querySelectorAll('.dnd5e-deck-tile.is-out')).toHaveLength(0);
+    expect(all.notes.get('Deck of Many Things.md')).toBe(standardDeckText(22, deckOf(22)));
+  });
+
+  it('opens the builder from the tab', async () => {
+    const { click, newDeck } = await open('en', picks());
+    await click('.dnd5e-deck-new');
+    expect(newDeck).toHaveBeenCalledOnce();
+  });
+});
+
+describe('deck builder', () => {
+  function builder(lang: 'en' | 'de' = 'en') {
+    const created: DraftDeck[] = [];
+    const modal = new DeckBuilderModal(app, {
+      t: createT(lang),
+      lang,
+      create: (deck) => {
+        created.push(deck);
+        return Promise.resolve();
+      },
+    });
+    root.appendChild(modal.contentEl);
+    modal.onOpen();
+    const el = modal.contentEl;
+    const names = () =>
+      [...el.querySelectorAll<HTMLInputElement>('.dnd5e-builder-row input')].map((i) => i.value);
+    const press = (text: string) =>
+      [...el.querySelectorAll<HTMLElement>('button')]
+        .find((b) => b.textContent === text)
+        ?.dispatchEvent(new MouseEvent('click'));
+    return { modal, el, created, names, press };
+  }
+
+  it('builds a deck typed in by hand', async () => {
+    const { el, created, names, press } = builder();
+    const name = el.querySelector<HTMLInputElement>('.dnd5e-builder-name');
+    if (name === null) throw new Error('no name');
+    name.value = 'Road omens';
+    name.dispatchEvent(new Event('input'));
+    const card = el.querySelector<HTMLInputElement>('.dnd5e-builder-row input');
+    if (card === null) throw new Error('no row');
+    card.value = 'Crow';
+    card.dispatchEvent(new Event('input'));
+    press('Add a card');
+    expect(names()).toEqual(['Crow', '']);
+    const box = el.querySelector<HTMLInputElement>('.dnd5e-builder-check input');
+    if (box === null) throw new Error('no box');
+    box.checked = false;
+    box.dispatchEvent(new Event('change'));
+    expect(el.querySelectorAll('.dnd5e-builder-flag')).toHaveLength(2);
+    el.querySelector<HTMLElement>('.dnd5e-builder-flag')?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector('.dnd5e-builder-count')?.textContent).toBe('1 card');
+    press('Create deck');
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(created).toEqual([
+      {
+        name: 'Road omens',
+        returns: false,
+        cards: [{ name: 'Crow', effect: '', leaves: false, ends: true }],
+      },
+    ]);
+  });
+
+  it('fills from pasted text, a JSON file and the standard deck', () => {
+    const { modal, el, names, press } = builder('de');
+    expect(
+      modal.importText('| Card | Effect |\n| --- | --- |\n| Crow | Bad luck |\n- **Moth.** Light'),
+    ).toBe(true);
+    expect(names()).toEqual(['Crow', 'Moth']);
+    modal.importJson(
+      '{"name": "Imported", "returns": false, "cards": [{"name": "Owl", "text": "Wisdom"}]}',
+    );
+    expect(names()).toEqual(['Crow', 'Moth', 'Owl']);
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-builder-name')?.value).toBe('Imported');
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-builder-check input')?.checked).toBe(false);
+    modal.importJson('not json');
+    expect(notices[notices.length - 1]).toBe('Die Datei ist kein gültiges JSON.');
+    press('Alle Karten entfernen');
+    press('Dem Standarddeck');
+    expect(names()).toHaveLength(22);
+    expect(names()[0]).toBe('Wesir');
   });
 });

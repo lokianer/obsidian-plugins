@@ -2589,6 +2589,149 @@ a.dnd5e-tensions-name:hover {
   font-weight: var(--font-semibold);
 }
 
+.dnd5e-deck-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+}
+
+/* ── Deck builder ── */
+
+.dnd5e-builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-4);
+  font-size: 16px;
+}
+
+.dnd5e-builder-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-2);
+}
+
+.dnd5e-builder-label {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-builder-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--size-4-2);
+  cursor: pointer;
+}
+
+.dnd5e-builder-check input {
+  margin-top: 4px;
+}
+
+.dnd5e-builder-hint {
+  color: var(--text-muted);
+}
+
+.dnd5e-builder-fill,
+.dnd5e-builder-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-builder-file {
+  display: none;
+}
+
+.dnd5e-builder-pastebox {
+  display: none;
+  flex-direction: column;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-builder-pastebox.is-open {
+  display: flex;
+}
+
+.dnd5e-builder-pastebox textarea,
+.dnd5e-builder-fields textarea {
+  width: 100%;
+  resize: vertical;
+  font-size: 16px;
+}
+
+.dnd5e-builder-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.dnd5e-builder-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+}
+
+.dnd5e-builder-number {
+  min-width: 2ch;
+  padding-top: 6px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.dnd5e-builder-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-3);
+  min-width: 0;
+}
+
+.dnd5e-builder-fields input {
+  width: 100%;
+}
+
+.dnd5e-builder-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-2-3);
+}
+
+.dnd5e-builder-flag {
+  border-radius: var(--radius-l);
+  box-shadow: none;
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+}
+
+.dnd5e-builder-flag.is-active {
+  background: rgba(var(--color-orange-rgb), 0.18);
+  color: var(--color-orange);
+}
+
+.dnd5e-builder-icon {
+  display: inline-flex;
+  margin-right: var(--size-2-2);
+}
+
+.dnd5e-builder-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-builder-count {
+  color: var(--text-muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dnd5e-deck-card-inner {
     transition: none;

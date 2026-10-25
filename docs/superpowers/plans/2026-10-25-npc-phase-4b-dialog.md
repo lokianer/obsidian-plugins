@@ -1,6 +1,6 @@
 # NPC builder phase 4b — A fancier dialog — Implementation Plan
 
-**Status:** built 2026-10-25; awaiting the maintainer's check in Obsidian.
+**Status:** built 2026-10-25; accepted in Obsidian on 2026-10-25.
 
 **Goal:** The New NPC dialog of spec §10, last bullet: a live preview card beside the fields that
 updates as you roll; **Roll everything** with a lock per field; race and archetype chosen from tiles

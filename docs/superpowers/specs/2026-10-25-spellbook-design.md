@@ -1,6 +1,6 @@
 # Spellbook — design
 
-Date: 2026-10-25. Status: **reviewed; built as module 3, after the NPC builder (module 2)**. Part
+Date: 2026-10-25. Status: **reviewed; S1 and S2 built and accepted in Obsidian on 2026-10-25**. Part
 of `dnd5e-byLokianer`.
 
 Asked for by the maintainer: "a complete spellbook to look up, all regular D&D 5e spells and

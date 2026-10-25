@@ -381,3 +381,27 @@ every call in its §8.
   Narr, Possenreißer; German playing-card ranks (A, K, D, B).
 
 Left out: own decks and the command New deck (phase D2).
+
+## 2026-10-25 · Deck of Many Things, phase D2: own decks, builder, reset
+
+Asked for by the maintainer: "a reset of the log and a deck builder, typed in by hand or with an
+import". Decided with them: import from **pasted text** and from a **JSON file**; the reset offers
+**both** "history only" and "history and every card back".
+
+- Own decks use the example vault's task-list format; `Name — effect` per item, indented lines
+  continue the effect. `returns: true` makes drawn cards return (`leaves` names those that do
+  not); otherwise every card drawn is ticked. `ends` stops the drawing in either kind. The Fool,
+  Jester and Idiot rules stay with the standard deck.
+- The builder writes a new note and never rewrites one: a deck is edited in its note afterwards
+  (files first; line edits only).
+- Pasted text: one card per line; `—`, `–`, `-` or `: ` separates name and effect; bold
+  names (`**Name.**`), list and task markers, Markdown table rows (header and separator skipped).
+- JSON: `{ name, returns, cards: [{ name, effect, leaves, ends }] }`, an array of cards or of
+  names; `title`, `text`, `description`, `desc` accepted as synonyms. Read with the browser's file
+  dialog (`File.text()`), so it works on phones; no Node `fs`.
+- New decks go to a deck folder inside the campaign (setting `Decks`); a taken name gets a number.
+- The tab remembers the deck picked last (plugin data).
+- Reset edits only the Draws lines (text under the heading that is not a draw stays) and, if asked,
+  the ticks.
+
+Left out: editing a deck in the builder (the note is the editor), exporting decks as JSON.

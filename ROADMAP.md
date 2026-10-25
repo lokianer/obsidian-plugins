@@ -13,11 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Deck of Many Things** (module 4) — D1 (the standard deck) is built and waits
-for the maintainer's check in Obsidian; next D2, own decks
-(`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md` §4). The spellbook (S1 tab, S2 German texts)
-is built and waits for the maintainer's check in Obsidian, as do NPC builder phases 2–4b and the
-faction world redesign; S3 (links, own spells) is proposed for later. Nothing is published for now.
+**dnd5e-byLokianer · Deck of Many Things** (module 4) — D1 (the standard deck) and D2 (own decks,
+deck builder with text and JSON import, reset) are built and wait for the maintainer's check in
+Obsidian. The NPC builder (phases 1–4b) and the spellbook (S1, S2) were accepted on 2026-10-25; the
+faction world redesign still waits for its check. Then: spellbook S3 (proposed) or module 5, the
+battle tracker (not brainstormed yet). Nothing is published for now.
 
 ---
 
@@ -95,16 +95,15 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
 - [x] **Phase 1 — Stat block model and view** (built and accepted 2026-10-25): parser and
       derived values, the 21 SRD NPCs as data, rendering of `dnd5e-statblock`, AC · HP · CR on the
       card, Convert command. Plan `docs/superpowers/plans/2026-10-25-npc-phase-1-statblock.md`
-- [ ] **Phase 2 — Builder** ← _built 2026-10-25, awaiting the check in Obsidian_: archetypes (SRD + own notes), New
+- [x] **Phase 2 — Builder** (built and accepted 2026-10-25): archetypes (SRD + own notes), New
       NPC modal into the faction's folder, Add stat block, random tables with overrides. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`
-- [ ] **Phase 3 — Editing and template builder** ← _built 2026-10-25, awaiting the check in
-      Obsidian_: editing in the rendered block, New archetype. Plan
+- [x] **Phase 3 — Editing and template builder** (built and accepted 2026-10-25): editing in the rendered block, New archetype. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
-- [ ] **Phase 4a — Races and richer tables** ← _built 2026-10-25, awaiting the check in Obsidian_: SRD races and own
+- [x] **Phase 4a — Races and richer tables** (built and accepted 2026-10-25): SRD races and own
       `type: race` notes into the stat block and the dice; English and German tables (≥ 50 each);
       occupation, age, build, voice, ideal, bond, flaw, secret, hook
-- [ ] **Phase 4b — A fancier dialog** ← _built 2026-10-25, awaiting the check in Obsidian_: live
+- [x] **Phase 4b — A fancier dialog** (built and accepted 2026-10-25): live
       preview card, roll everything with locks, race and archetype tiles. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-4b-dialog.md`
 
@@ -114,10 +113,10 @@ Design: [`docs/superpowers/specs/2026-10-25-spellbook-design.md`](docs/superpowe
 Its own tab, filters, German, fancy; the 319 SRD 5.1 spells (others as own notes later). Starts when
 the NPC builder is done; German distances in metres (5 ft = 1.5 m).
 
-- [ ] **S1 — Spellbook tab** ← _built 2026-10-25, awaiting the check in Obsidian_: data, German
+- [x] **S1 — Spellbook tab** (built and accepted 2026-10-25): data, German
       names and meta, search, filters, list, spell card, ribbon button. Plan
       `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
-- [ ] **S2 — German texts** ← _built 2026-10-25, awaiting the check in Obsidian_: descriptions,
+- [x] **S2 — German texts** (built and accepted 2026-10-25): descriptions,
       At Higher Levels and materials of all 319 spells
 - [ ] **S3 — Links and own spells** (proposed): spell names in stat blocks open the spellbook;
       `type: spell` notes join the list
@@ -132,7 +131,10 @@ Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs
 - [ ] **D1 — Standard deck** ← _built 2026-10-25, awaiting the check in Obsidian_: card data in
       both languages, the tab, drawing by the rules, the deck note with its draw history. Plan
       `docs/superpowers/plans/2026-10-25-deck-d1.md`
-- [ ] **D2 — Own decks**: `type: deck` task-list notes, command New deck
+- [ ] **D2 — Own decks, builder, reset** ← _built 2026-10-25, awaiting the check in Obsidian_:
+      own `type: deck` notes in the tab, the deck builder (by hand, from the standard deck, pasted
+      text, a JSON file), reset of the history (and the cards). Plan
+      `docs/superpowers/plans/2026-10-25-deck-d2.md`
 
 ### Module 5 — Battle tracker
 

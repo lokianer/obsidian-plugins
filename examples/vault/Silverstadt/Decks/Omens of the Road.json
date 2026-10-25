@@ -1,0 +1,10 @@
+{
+  "name": "Omens of the Road",
+  "returns": false,
+  "cards": [
+    { "name": "Crow", "effect": "An ill omen: the next roll is made with disadvantage." },
+    { "name": "Moth", "effect": "A light in the dark leads the way." },
+    { "name": "Hare", "effect": "A swift escape from the next fight." },
+    { "name": "Broken wheel", "effect": "The cart breaks down a day from town.", "ends": true }
+  ]
+}
