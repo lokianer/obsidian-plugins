@@ -2,8 +2,8 @@
 
 Game-master tools for D&D 5e in Obsidian. The first module covers **factions and their relations**:
 factions are folders holding a `factions.md`, relations are frontmatter values from −5 (war) to +5
-(sworn), and members inherit their faction's stance unless they state their own. Later modules: an
-NPC builder with 5e stat blocks, a battle tracker and dice.
+(sworn), and members inherit their faction's stance unless they state their own. The second, the NPC
+builder, brings 5e stat blocks and a New NPC dialog; a spellbook, a battle tracker and dice follow.
 
 Status: the factions module is built and accepted in Obsidian (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
 `ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's

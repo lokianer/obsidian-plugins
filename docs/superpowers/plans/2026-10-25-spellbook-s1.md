@@ -1,6 +1,6 @@
 # Spellbook S1 — The Spellbook Tab — Implementation Plan
 
-**Status:** draft, awaiting the maintainer's approval.
+**Status:** reviewed; starts after the NPC builder (module 2) is done.
 
 **Goal:** A Spellbook tab with the 319 SRD spells: search, filters (level chips, school, class,
 ritual, concentration, casting time, damage type, saving throw), a list grouped by level and a
@@ -21,10 +21,10 @@ least 16 px, keyboard usable, works at phone width. Clean up before every commit
    search finds English and German names, ignoring case and accents — Task 3.
 3. **Card:** "3rd-level evocation" / "Hervorrufung des 3. Grades", cantrips "Evocation cantrip" /
    "Zaubertrick der Hervorrufung"; German meta for units ("1 action" → "1 Aktion", "60 feet" →
-   "18 m"? — see the question below) — Task 4.
+   "18 m") — Task 4.
 
-**Question for the review:** German units — keep feet ("60 Fuß", as the German rulebooks of 5e do)
-or metres ("18 m")? Proposed: feet, as the German 5e books do.
+**Decided in the review:** German distances in metres, 5 ft = 1.5 m with a decimal comma ("60 feet"
+→ "18 m", "15-foot cone" → "4,5-m-Kegel", "1 mile" → "1,5 km").
 
 ---
 
@@ -44,7 +44,7 @@ tests.
 - [ ] German names for all 319; schools, classes, damage types, abilities; casting time, range,
       duration and components phrases translated by pattern ("1 bonus action", "Self (15-foot
       cone)", "Concentration, up to 1 minute", "Until dispelled"), with a test that every spell's
-      phrases translate (no English left).
+      phrases translate (no English left); feet and miles converted to metres and kilometres.
 
 ### Task 3: Filters and search
 

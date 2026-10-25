@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>dnd5e-byLokianer · Obsidian plugins for game masters</title>
+    <title>Obsidian Plugins by Lokianer</title>
     <meta
       name="description"
-      content="Local-first Obsidian plugins for D&amp;D 5e game masters: factions as folders, relations as numbers, a living faction world, 5e stat blocks — all plain Markdown."
+      content="A collection of local-first Obsidian plugins by Lokianer: plain Markdown in, insight out. First up: dnd5e-byLokianer, game-master tools for D&amp;D 5e."
     />
     <meta name="color-scheme" content="dark light" />
     <link rel="stylesheet" href="style.css" />
@@ -22,13 +22,12 @@
           <path d="M32 4 58 19v26L32 60 6 45V19z" />
           <path class="facet" d="M32 4v56M6 19l26 15 26-15" />
         </svg>
-        <span>dnd5e<span class="dim">-byLokianer</span></span>
+        <span>Lokianer<span class="dim"> · Obsidian plugins</span></span>
       </a>
       <nav>
-        <a href="#factions">Factions</a>
-        <a href="#npcs">NPCs</a>
-        <a href="#sessions">Sessions</a>
-        <a href="#roadmap">Roadmap</a>
+        <a href="#plugins">Plugins</a>
+        <a href="#dnd5e">dnd5e-byLokianer</a>
+        <a href="#workshop">How it's built</a>
         <a class="button small" href="https://github.com/lokianer/obsidian-plugins">GitHub</a>
       </nav>
     </header>
@@ -36,20 +35,16 @@
     <main id="top">
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Obsidian plugin · D&amp;D 5e · local-first</p>
-          <h1>
-            Your campaign already knows who hates whom.<br /><span class="grad"
-              >Now you can see it.</span
-            >
-          </h1>
+          <p class="eyebrow">A collection of Obsidian plugins · local-first</p>
+          <h1>Plain Markdown in.<br /><span class="grad">Insight out.</span></h1>
           <p class="lead">
-            A game master's thinking tool for campaigns kept in Obsidian. Factions are folders,
-            relations are numbers you type, NPCs carry their stat blocks — and the plugin turns
-            those plain Markdown notes into a living world you can read at a glance and change in
-            place.
+            Obsidian plugins I build for the things I keep in my vault. Each one reads the notes you
+            already write, shows what is in them at a glance and lets you change them in place —
+            without accounts, without a network, without locking your notes into a format only the
+            plugin understands.
           </p>
           <div class="cta">
-            <a class="button" href="#try">Try the example vault</a>
+            <a class="button" href="#plugins">See the plugins</a>
             <a class="button ghost" href="https://github.com/lokianer/obsidian-plugins"
               >Source on GitHub</a
             >
@@ -63,7 +58,9 @@
           </ul>
         </div>
         <figure class="window hero-shot">
-          <div class="window-bar"><i></i><i></i><i></i><span>Faction world</span></div>
+          <div class="window-bar">
+            <i></i><i></i><i></i><span>dnd5e-byLokianer · Faction world</span>
+          </div>
           <img
             src="assets/graph.webp"
             alt="The faction world graph of the Silverstadt example campaign: factions as circles sized by power, coloured arrows for their relations, the Party and Unaffiliated as frames."
@@ -73,12 +70,12 @@
 
       <section class="principles">
         <div>
-          <strong>Files first.</strong> Your notes are the truth; everything the plugin shows is
+          <strong>Files first.</strong> Your notes are the truth; everything a plugin shows is
           rebuilt from them.
         </div>
         <div>
-          <strong>Readable without it.</strong> Every convention is hand-writable YAML any editor
-          shows sensibly.
+          <strong>Readable without it.</strong> Every convention is plain Markdown any editor shows
+          sensibly.
         </div>
         <div>
           <strong>Edits, not rewrites.</strong> Changes are single-line edits — comments, quotes and
@@ -88,6 +85,87 @@
           <strong>Every theme.</strong> Obsidian's own CSS variables only, dark first, at least
           16&nbsp;px text.
         </div>
+      </section>
+
+      <section id="plugins" class="plugins">
+        <div class="section-head">
+          <p class="eyebrow">The plugins</p>
+          <h2>One workshop, one plugin per folder.</h2>
+          <p class="note">
+            Every plugin lives in this repository and shares its principles, its tooling and one
+            example vault. A plugin that is ready gets its own release repository for Obsidian's
+            directory.
+          </p>
+        </div>
+        <div class="plugin-grid">
+          <article class="plugin-card">
+            <div class="plugin-top">
+              <span class="plugin-icon" aria-hidden="true">🐉</span>
+              <div>
+                <h3>dnd5e-byLokianer</h3>
+                <code>dnd5e-bylokianer</code>
+              </div>
+              <span class="badge dev">In development</span>
+            </div>
+            <p>
+              A game master's thinking tool for D&amp;D 5e campaigns: factions and how they stand
+              towards each other, NPCs with 5e stat blocks, and next a spellbook, a battle tracker
+              and dice. It shows and suggests; the GM decides.
+            </p>
+            <ul class="modules">
+              <li class="done"><b>Factions</b> accepted</li>
+              <li class="now"><b>NPC builder</b> in progress</li>
+              <li><b>Spellbook</b> designed</li>
+              <li><b>Battle tracker</b> planned</li>
+              <li><b>Dice</b> planned</li>
+            </ul>
+            <div class="plugin-links">
+              <a class="button small" href="#dnd5e">Take the tour</a>
+              <a
+                class="button small ghost"
+                href="https://github.com/lokianer/obsidian-plugins/tree/main/plugins/dnd5e-bylokianer"
+                >README</a
+              >
+              <a
+                class="button small ghost"
+                href="https://github.com/lokianer/obsidian-plugins/blob/main/plugins/dnd5e-bylokianer/CHANGELOG.md"
+                >Changelog</a
+              >
+            </div>
+          </article>
+          <article class="plugin-card soon">
+            <div class="plugin-top">
+              <span class="plugin-icon" aria-hidden="true">✦</span>
+              <div>
+                <h3>Next plugin</h3>
+                <code>in the workshop</code>
+              </div>
+            </div>
+            <p>
+              More plugins will join the collection — each built the same way: designed first, built
+              in small tested phases, checked inside Obsidian before a phase counts.
+            </p>
+            <div class="plugin-links">
+              <a
+                class="button small ghost"
+                href="https://github.com/lokianer/obsidian-plugins/blob/main/ROADMAP.md"
+                >Roadmap</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="dnd5e" class="plugin-intro">
+        <p class="eyebrow">Plugin 01 · dnd5e-byLokianer</p>
+        <h2>
+          Your campaign already knows who hates whom. <span class="grad">Now you see it.</span>
+        </h2>
+        <p class="lead">
+          Factions are folders, relations are numbers you type, NPCs carry their stat blocks — and
+          the plugin turns those plain Markdown notes into a living world you can read at a glance
+          and change in place.
+        </p>
       </section>
 
       <section id="factions" class="feature">
@@ -175,7 +253,7 @@
 
       <section id="npcs" class="feature reverse">
         <div class="feature-copy">
-          <p class="eyebrow">Module 2 · NPC builder · phase 1</p>
+          <p class="eyebrow">Module 2 · NPC builder · in progress</p>
           <h2>Stat blocks where you need them.</h2>
           <p>
             A <code>dnd5e-statblock</code> block holds a 5e stat block in the YAML Fantasy
@@ -185,11 +263,15 @@
           </p>
           <ul class="ticks">
             <li><b>All 21 SRD 5.1 NPCs</b> built in, checked against the SRD in tests.</li>
-            <li><b>Compatible.</b> One command converts Fantasy Statblocks blocks and back.</li>
             <li>
-              <b>Coming next:</b> a New NPC dialog that files the note into its faction, your own
-              archetypes, dice tables.
+              <b>New NPC.</b> A dialog files the note into its faction: race, archetype, name,
+              looks, voice, secret and hook — rolled from dice tables in English or German.
             </li>
+            <li>
+              <b>Your own.</b> Archetypes, races and dice tables as plain notes; values edited right
+              in the rendered block.
+            </li>
+            <li><b>Compatible.</b> One command converts Fantasy Statblocks blocks and back.</li>
           </ul>
         </div>
         <div class="stack">
@@ -237,15 +319,19 @@
       </section>
 
       <section id="roadmap" class="roadmap">
-        <h2>Where it stands</h2>
+        <h2>Where dnd5e-byLokianer stands</h2>
         <ol>
           <li class="done">
             <span>Factions</span>data model, card, world graph &amp; matrix, faction view, tensions,
             popover, session log — accepted in Obsidian
           </li>
           <li class="now">
-            <span>NPC builder</span>stat blocks and short stats (built) → New NPC dialog,
-            archetypes, dice tables → editing in the block
+            <span>NPC builder</span>stat blocks, New NPC with races, archetypes and dice tables,
+            editing in the block → a fancier dialog
+          </li>
+          <li>
+            <span>Spellbook</span>the SRD's 319 spells in their own tab, with filters, in English
+            and German
           </li>
           <li><span>Battle tracker</span>rounds, damage and outcomes into the session log</li>
           <li><span>Dice</span>rolls and rollable tables logged to tonight's session</li>
@@ -270,6 +356,27 @@ pnpm --filter dnd5e-bylokianer build
 pnpm --filter dnd5e-bylokianer install-example
 <span class="c"># open examples/vault in Obsidian, enable dnd5e-byLokianer</span></code></pre>
       </section>
+
+      <section id="workshop" class="band workshop">
+        <div>
+          <p class="eyebrow">How the collection is built</p>
+          <h2>Designed first, built in phases, checked in Obsidian.</h2>
+          <p>
+            Each plugin starts as a short design, then grows in phases with a plan and a review
+            stop. Pure logic sits in tested TypeScript, the Obsidian API behind thin adapters, the
+            views tested in a headless DOM. CI runs format, lint, strict typecheck, tests and build
+            on Linux, macOS and Windows for every push.
+          </p>
+        </div>
+        <pre><code>obsidian-plugins/
+├── plugins/
+│   └── dnd5e-bylokianer/  <span class="c"># one plugin per folder</span>
+├── packages/
+│   └── session/           <span class="c"># shared, pure TypeScript</span>
+├── examples/vault/        <span class="c"># one test vault for all</span>
+├── docs/superpowers/      <span class="c"># designs and plans</span>
+└── site/                  <span class="c"># this page</span></code></pre>
+      </section>
     </main>
 
     <footer>
@@ -280,8 +387,8 @@ pnpm --filter dnd5e-bylokianer install-example
         >
       </p>
       <p class="small">
-        Includes material from the System Reference Document 5.1 by Wizards of the Coast LLC,
-        licensed under
+        dnd5e-byLokianer includes material from the System Reference Document 5.1 by Wizards of the
+        Coast LLC, licensed under
         <a href="https://creativecommons.org/licenses/by/4.0/legalcode">CC-BY-4.0</a>. Not
         affiliated with or endorsed by Wizards of the Coast or Obsidian.
       </p>

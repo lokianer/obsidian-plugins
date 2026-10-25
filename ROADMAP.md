@@ -13,11 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Spellbook** — the maintainer wants its own tab, with filters, in German and
-fancy. Spec `docs/superpowers/specs/2026-10-25-spellbook-design.md` and the S1 plan
-(`docs/superpowers/plans/2026-10-25-spellbook-s1.md`) **await approval** (one question: German units
-in feet or metres). NPC builder phases 2, 3 and 4a wait for the check in Obsidian; 4b (fancier
-dialog) comes after. Nothing is published for now.
+**dnd5e-byLokianer · NPC builder** — phases 2, 3 and 4a wait for the maintainer's check in
+Obsidian; then the phase 4b plan (fancier dialog). The **spellbook** follows as module 3, after the
+NPC builder (the maintainer's call, 2026-10-25); its spec and S1 plan are written, German distances
+in metres. Nothing is published for now.
 
 ---
 
@@ -99,30 +98,32 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
       NPC modal into the faction's folder, Add stat block, random tables with overrides. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`
 - [ ] **Phase 3 — Editing and template builder** ← _built 2026-10-25, awaiting the check in
-      Obsidian_: editing in the rendered block, New archetype.
+      Obsidian_: editing in the rendered block, New archetype. Plan
+      `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
 - [ ] **Phase 4a — Races and richer tables** ← _built 2026-10-25, awaiting the check in Obsidian_: SRD races and own
       `type: race` notes into the stat block and the dice; English and German tables (≥ 50 each);
       occupation, age, build, voice, ideal, bond, flaw, secret, hook
 - [ ] **Phase 4b — A fancier dialog**: live preview card, roll everything with locks, race and
-      archetype tiles Plan `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
+      archetype tiles
 
-### Spellbook
+### Module 3 — Spellbook (after module 2)
 
-Design: [`docs/superpowers/specs/2026-10-25-spellbook-design.md`](docs/superpowers/specs/2026-10-25-spellbook-design.md)
-(draft). Its own tab, filters, German, fancy; the 319 SRD 5.1 spells (others as own notes later).
+Design: [`docs/superpowers/specs/2026-10-25-spellbook-design.md`](docs/superpowers/specs/2026-10-25-spellbook-design.md).
+Its own tab, filters, German, fancy; the 319 SRD 5.1 spells (others as own notes later). Starts when
+the NPC builder is done; German distances in metres (5 ft = 1.5 m).
 
-- [ ] **S1 — Spellbook tab** ← _plan written, awaiting approval_: data, German names and meta,
+- [ ] **S1 — Spellbook tab** ← _plan written_: data, German names and meta,
       search, filters, list, spell card. Plan `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
 - [ ] **S2 — German texts** for all 319 spells
 - [ ] **S3 — Links and own spells** (proposed): spell names in stat blocks open the spellbook;
       `type: spell` notes join the list
 
-### Module 3 — Battle tracker
+### Module 4 — Battle tracker
 
 Not brainstormed yet. Starting point: `examples/vault/Silverstadt/Encounters/Ambush under the second
 arch.md` (provisional format), party notes with `ac`, `hp`, `initiative`.
 
-### Module 4 — Dice
+### Module 5 — Dice
 
 Not brainstormed yet. Starting points: Rhizom's dice grammar and rollable-table rules (handoff §4),
 `examples/vault/Silverstadt/Tables/Street Rumours.md`, `Decks/Omens of the River.md`, roll lines in
@@ -138,7 +139,8 @@ whole vault.
 
 ### Decisions so far (carry into `plugins/dnd5e-bylokianer/DECISIONS.md` in phase 1)
 
-- Scope: factions, NPC builder, battle tracker, dice — all our own code (2026-10-24).
+- Scope: factions, NPC builder, battle tracker, dice — all our own code (2026-10-24); a spellbook
+  joins as module 3, after the NPC builder (2026-10-25).
 - Factions are folders holding `factions.md` (or a note named like the folder); members are the
   character notes in that folder; a faction folder inside another is a sub-faction.
 - Relations −5 … +5, one-directional, red–yellow–green; `relations` = public face,

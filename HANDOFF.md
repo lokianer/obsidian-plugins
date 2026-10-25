@@ -24,8 +24,8 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 2. Phase 4a (races, own races, German and larger dice tables, new fields) is built and waits for
    the check (points 11–14 below). Then the phase 4b plan (live preview, roll everything with locks,
    tiles).
-3. **Spellbook**: the maintainer chose its own tab, filters, German, fancy. Spec and S1 plan are
-   written and await approval (units question: feet or metres). Data source checked: the 5e-bits
+3. **Spellbook** (module 3, **after** the NPC builder): its own tab, filters, German, fancy. Spec
+   and S1 plan reviewed; German distances in metres (5 ft = 1.5 m). Data source checked: the 5e-bits
    SRD database has all 319 SRD spells (`src/2014/en/5e-SRD-Spells.json`, about 48,000 words of
    text); no German there — S2 translates.
 

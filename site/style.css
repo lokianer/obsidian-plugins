@@ -1,4 +1,4 @@
-/* dnd5e-byLokianer — project page. Self-contained: system fonts, no external requests. */
+/* Obsidian Plugins by Lokianer — project page. Self-contained: system fonts, no external requests. */
 
 :root {
   --bg: #121214;
@@ -479,6 +479,163 @@ pre .h {
   max-height: 480px;
 }
 
+/* ── plugin collection ───────────────────────────────────────────────────────────────────────── */
+
+.plugins {
+  padding: 48px 0 24px;
+}
+
+.section-head {
+  max-width: 720px;
+}
+
+.plugin-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.plugin-grid > * {
+  min-width: 0;
+}
+
+.plugin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  border-radius: 20px;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
+    var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.plugin-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+}
+
+.plugin-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.plugin-card.soon {
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.plugin-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.plugin-top h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.plugin-top code {
+  font-size: 15px;
+}
+
+.plugin-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 26px;
+}
+
+.soon .plugin-icon {
+  background: var(--bg-2);
+  border: 1px dashed var(--border);
+  color: var(--muted);
+}
+
+.badge {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.badge.dev {
+  background: color-mix(in srgb, var(--mid) 18%, transparent);
+  color: var(--mid);
+}
+
+.modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modules li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.modules li::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.modules li.done::before {
+  background: var(--pos);
+}
+
+.modules li.now::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.modules b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.plugin-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.plugin-intro {
+  margin-top: 64px;
+  padding: 56px 0 0;
+  border-top: 1px solid var(--border);
+  max-width: 860px;
+}
+
 /* ── session band ────────────────────────────────────────────────────────────────────────────── */
 
 .band {
@@ -511,7 +668,7 @@ pre .h {
 
 .roadmap ol {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   margin: 24px 0 0;
   padding: 0;
@@ -617,6 +774,10 @@ footer .small {
     grid-template-columns: 1fr 1fr;
   }
 
+  .plugin-grid {
+    grid-template-columns: 1fr;
+  }
+
   .gallery {
     grid-template-columns: 1fr;
   }
@@ -646,6 +807,14 @@ footer .small {
     grid-template-columns: 1fr;
   }
 
+  .plugin-card {
+    padding: 22px 18px;
+  }
+
+  .badge {
+    margin-left: 0;
+  }
+
   .stack .offset {
     width: 100%;
     margin-top: 16px;
@@ -658,7 +827,12 @@ footer .small {
   }
 
   .hero-shot,
-  .button {
+  .button,
+  .plugin-card {
     transition: none;
   }
+}
+
+.hero h1 {
+  font-size: clamp(36px, 4.4vw, 52px);
 }

@@ -1,6 +1,7 @@
 # Spellbook — design
 
-Date: 2026-10-25. Status: **draft for the maintainer's review**. Part of `dnd5e-byLokianer`.
+Date: 2026-10-25. Status: **reviewed; built as module 3, after the NPC builder (module 2)**. Part
+of `dnd5e-byLokianer`.
 
 Asked for by the maintainer: "a complete spellbook to look up, all regular D&D 5e spells and
 cantrips". Decided with them: **its own tab**, **with filters**, **in German too**, **made fancy**.
@@ -28,7 +29,8 @@ licence with attribution.
   colour from the theme's palette.
 - **Language**: names, schools, units ("1 action", "60 feet") and descriptions follow the dice-text
   setting of the NPC builder (Obsidian's language, or pinned); a toggle on the card shows the other
-  language.
+  language. **German distances are in metres** (the maintainer's call): 5 ft = 1.5 m, so "60 feet"
+  → "18 m", "1 mile" → "1,5 km", "15-foot cone" → "4,5-m-Kegel" — in meta and descriptions alike.
 - **Fancy, still Obsidian**: theme variables only, school colours from Obsidian's colour palette,
   smooth filter chips, keyboard navigation (↑ ↓ through the list, Enter to open), no small text.
 
@@ -68,7 +70,12 @@ src/obsidian/spellbook-view.ts   the tab: filters, list, card
 Size: the English data is about 350 KB, the German as much again; the plugin's `main.js` grows by
 that (fine for a desktop and phone plugin; no network).
 
-## 7. Calls I made without the maintainer (check these)
+## 7. Calls made in the review
+
+- The spellbook is module 3 and starts after the NPC builder.
+- German distances in metres (5 ft = 1.5 m).
+
+## 8. Calls I made without the maintainer (check these)
 
 - Only SRD spells; others as own notes in S3.
 - The spellbook follows the NPC builder's dice-text language setting, with a toggle on the card.
