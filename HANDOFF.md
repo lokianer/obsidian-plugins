@@ -28,7 +28,9 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    checked against a Markdown conversion of the SRD and its examples; the note text),
    `addMonsterEntry`, `encounter-builder.ts` (dialog and picker), the setting `encounterFolder`,
    **Add to encounter** in the Monster Manual. Waiting for the check (points 47–60 below). Then
-   module 7 (dice, not brainstormed) or M2.
+   module 7 (dice, not brainstormed). M2 (German monster texts) built after B3 at the
+   maintainer's choice: `src/monsters/de-texts/` (by CR band), `germanTexts` in `meta.ts`; check
+   points 61–63.
 2. Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
    restyled deck builder, the Monster Manual (M1, M3 with the file import). Open for later: the
    Monster Manual's German traits and actions (M2: about 48,500 words, in batches by challenge
@@ -246,7 +248,7 @@ fields)
 40. Pick Adult Red Dragon: the full stat block, legendary actions with their paragraph; Lich: the
     spell names link to the spellbook.
 41. German Obsidian: "Eulenbär", "Große Monstrosität, gesinnungslos", 12 m, Dunkelsicht 18 m,
-    passive Wahrnehmung, Str/Ges … saves; traits and actions still English (M2). EN / DE switches.
+    passive Wahrnehmung, Str/Ges … saves; traits and actions German since M2. EN / DE switches.
 42. **Insert into note**: the block appears below the cursor of the last note; **Make a note**:
     `Silverstadt/Monsters/<name>.md` with `type: monster`, opened with the block unfolded.
 
@@ -304,6 +306,17 @@ fields)
     running → "No fight is running …". Close and reopen the tab: the added monsters keep their stat
     blocks.
 
+**Monster Manual M2 — German texts**
+
+61. German Obsidian, Monster Manual → Eulenbär: "Scharfe Sicht und scharfer Geruchssinn", Aktionen
+    "Mehrfachangriff", "Schnabel: Nahkampf-Waffenangriff: +7 auf Treffer, Reichweite 1,5 m, eine
+    Kreatur. Treffer: 10 (1W10 + 5) Stichschaden." EN / DE switches the texts too. Spot-read a
+    few more for wording (a dragon's Furchterregende Präsenz and Odem, the Lich's Zauberwirken,
+    the Vampir); corrections go into `src/monsters/de-texts/`.
+62. Lich, Erzmagier: the German spell names in Zauberwirken are links that open the spellbook.
+63. Battle tab with German Obsidian: a Bridge rat's card shows "Scharfer Geruchssinn". New monster
+    → pick Eulenbär: name and action rows in German, size still "Groß" (stored "Large").
+
 **Battle tracker B3**
 
 57. **New encounter** (command, or + in the Battle tab header): chips Dagny · 6, Ilex · 6, Orrin
@@ -326,8 +339,8 @@ fields)
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session", "No non-SRD
 monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
-builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default" (all
-2026-10-25).
+builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
+hand" (all 2026-10-25).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -361,5 +374,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 380 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 385 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

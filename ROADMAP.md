@@ -16,10 +16,11 @@ plugin's `DECISIONS.md` once it exists.
 **dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
 built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for
 the check in Obsidian (HANDOFF points 47–60; the maintainer tests later). After it: module 7, dice
-(not brainstormed yet), or M2 (German monster texts).
+(not brainstormed yet). M2 (German monster texts) built 2026-10-25 too, awaiting the check
+(HANDOFF points 61–63).
 Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
 restyled deck builder, the Monster Manual (M1, M3 with the import). Open for later: the Monster
-Manual's German traits and actions (M2); the faction world redesign's check. Nothing is published.
+Manual's German traits and actions (M2, now built); the faction world redesign's check. Nothing is published.
 
 ---
 
@@ -155,7 +156,8 @@ Design: [`docs/superpowers/specs/2026-10-25-monster-manual-design.md`](docs/supe
 - [x] **M1 — Monster Manual tab** (built and accepted 2026-10-25): the 334
       monsters as data, German names and meta, search, filters, list, stat block card, Insert into
       note, Make a note. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m1.md`
-- [ ] **M2 — German texts** of all traits and actions (open, for later)
+- [ ] **M2 — German texts** of all traits and actions (built 2026-10-25, awaiting the check).
+      Plan `docs/superpowers/plans/2026-10-25-monster-manual-m2.md`
 - [x] **M3 — Own monsters, a monster builder and a file import** (built ahead of M2 on request,
       accepted 2026-10-25). Plan `docs/superpowers/plans/2026-10-25-monster-manual-m3.md`
 

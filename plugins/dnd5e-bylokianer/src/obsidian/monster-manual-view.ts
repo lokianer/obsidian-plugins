@@ -29,6 +29,7 @@ import {
 } from '../monsters/filter';
 import {
   germanBlock,
+  germanTexts,
   monsterName,
   MOVES,
   SIZES,
@@ -491,7 +492,8 @@ export class MonsterManualView extends ItemView {
     }
 
     const raw = parseStatblock(parseYaml(m.yaml));
-    const block = lang === 'de' ? germanBlock(raw, monsterName(m, 'de')) : raw;
+    const block =
+      lang === 'de' ? germanBlock(germanTexts(raw, m.index), monsterName(m, 'de')) : raw;
     this.cardText = new Component();
     this.cardText.load();
     const text = this.cardText;

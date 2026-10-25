@@ -1,12 +1,13 @@
 // What the Monster Manual shows about a monster, in English or German: names, sizes and types, and a
 // stat block's header and lines in German — sizes and types declined as the German books write them
 // ("Großer Drache"), alignments, armour, speeds and senses in metres (5 ft. = 1.5 m), languages,
-// damage types, conditions, saves and skills. Traits and actions stay as written (phase M2). Pure.
+// damage types, conditions, saves and skills; and an SRD monster's traits and actions in German. Pure.
 
 import type { Lang } from '../npc/races';
-import type { Bonus, Statblock } from '../npc/statblock';
+import type { Bonus, Entry, Statblock } from '../npc/statblock';
 import { DE_NAMES } from './de';
-import type { Movement, SrdMonster } from './model';
+import { DE_TEXTS } from './de-texts';
+import type { DeEntry, Movement, SrdMonster } from './model';
 
 export const SIZES = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'] as const;
 
@@ -315,6 +316,31 @@ const renamed = (list: Bonus[], table: Record<string, string>): Bonus[] =>
 
 const or = (value: string | null, map: (v: string) => string): string | null =>
   value === null ? null : map(value);
+
+/**
+ * An SRD monster's traits, actions, reactions and legendary actions in German; a list whose German
+ * entries do not match it one for one (an own monster, an edited block) stays as it is.
+ */
+export function germanTexts(block: Statblock, index: string): Statblock {
+  const de = DE_TEXTS[index];
+  if (de === undefined) return block;
+  const swap = (list: Entry[], rows: readonly DeEntry[] | undefined): Entry[] =>
+    rows !== undefined && rows.length === list.length
+      ? rows.map(([name, desc]) => ({ name, desc }))
+      : list;
+  return {
+    ...block,
+    traits: swap(block.traits, de.traits),
+    actions: swap(block.actions, de.actions),
+    bonusActions: swap(block.bonusActions, de.bonusActions),
+    reactions: swap(block.reactions, de.reactions),
+    legendaryDescription:
+      block.legendaryDescription !== null && de.legendary !== undefined
+        ? de.legendary
+        : block.legendaryDescription,
+    legendaryActions: swap(block.legendaryActions, de.legendaryActions),
+  };
+}
 
 /** A stat block's header and lines in German; its name, traits and actions as they are. */
 export function germanBlock(block: Statblock, name: string): Statblock {

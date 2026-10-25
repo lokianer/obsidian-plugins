@@ -1275,10 +1275,16 @@ describe('monster manual', () => {
       'Große Monstrosität, gesinnungslos',
     );
     expect(el.querySelector('.dnd5e-sb-lines')?.textContent).toContain('12 m');
+    // Traits and actions in German too (M2).
+    expect(el.querySelector('.dnd5e-statblock')?.textContent).toContain('Mehrfachangriff');
+    expect(el.querySelector('.dnd5e-statblock')?.textContent).toContain(
+      'Nahkampf-Waffenangriff: +7 auf Treffer, Reichweite 1,5 m, eine Kreatur.',
+    );
     [...el.querySelectorAll<HTMLElement>('.dnd5e-world-segmented button')]
       .find((b) => b.textContent === 'EN')
       ?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear']);
+    expect(el.querySelector('.dnd5e-statblock')?.textContent).toContain('Multiattack');
   });
 
   it('lists own monsters marked "own", opens their note and the builder', async () => {
@@ -1377,7 +1383,7 @@ describe('monster builder', () => {
     expect(created[0]?.stats?.[0]).toBe(16);
   });
 
-  it('starts from an SRD monster picked in the tiles; German labels, the SRD’s words', () => {
+  it('starts from an SRD monster picked in the tiles; German name and texts, the SRD’s header words', () => {
     const { el } = builder('de');
     const search = el.querySelector<HTMLInputElement>('.dnd5e-npc-search');
     if (search === null) throw new Error('no search');
@@ -1387,7 +1393,7 @@ describe('monster builder', () => {
     el.querySelector<HTMLElement>('.dnd5e-monster-tiles .dnd5e-npc-tile')?.dispatchEvent(
       new MouseEvent('click'),
     );
-    expect(el.querySelector<HTMLInputElement>('.dnd5e-monster-name')?.value).toBe('Owlbear');
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-monster-name')?.value).toBe('Eulenbär');
     const size = el.querySelector<HTMLSelectElement>('.dnd5e-monster-size');
     expect(size?.value).toBe('Large');
     expect(size?.selectedOptions[0]?.textContent).toBe('Groß');
@@ -1396,7 +1402,7 @@ describe('monster builder', () => {
     );
     expect(
       [...el.querySelectorAll<HTMLInputElement>('[data-list="actions"] input')].map((i) => i.value),
-    ).toEqual(['Multiattack', 'Beak', 'Claws']);
+    ).toEqual(['Mehrfachangriff', 'Schnabel', 'Klauen']);
   });
 
   it('imports one monster into the form, or several as tiles to pick or create at once', async () => {

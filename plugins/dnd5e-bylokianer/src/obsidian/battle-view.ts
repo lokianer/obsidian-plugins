@@ -42,7 +42,7 @@ import {
 } from '../battle/fight';
 import { baseName, restore, type Table } from '../battle/table';
 import type { StringKey, T } from '../i18n/strings';
-import { germanBlock } from '../monsters/meta';
+import { germanBlock, germanTexts } from '../monsters/meta';
 import type { Lang } from '../npc/races';
 import type { BattleSource, EncounterInfo } from './battle-store';
 import { renderStatblock } from './statblock-view';
@@ -634,7 +634,9 @@ export class BattleView extends ItemView {
     void this.deps.source.statblock(c).then((sb) => {
       if (sb === null || component === null) return;
       const shown =
-        this.lang === 'de' && c.monster !== null ? germanBlock(sb, c.id) : { ...sb, name: c.id };
+        this.lang === 'de' && c.monster !== null
+          ? germanBlock(germanTexts(sb, c.monster), c.id)
+          : { ...sb, name: c.id };
       renderStatblock(block, shown, {
         t,
         markdown: (md, el) => MarkdownRenderer.render(this.app, md, el, c.path ?? '', component),

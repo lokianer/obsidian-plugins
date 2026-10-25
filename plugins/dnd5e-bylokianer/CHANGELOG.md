@@ -8,6 +8,13 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **German monster texts** (Monster Manual, phase M2): the traits, actions, bonus actions,
+  reactions, legendary actions and the legendary paragraph of all 334 SRD monsters in German, with
+  W-dice, metres and the spells of Spellcasting entries under their German names (linked to the
+  spellbook). Shown on the Monster Manual's and the Battle tab's cards with German Obsidian; the
+  monster builder starts from them. Every entry is checked against the English: same dice, attack
+  bonuses and DCs, no feet.
+
 - **Experience points are optional** (setting **Experience points**, off by default): off, the
   encounter builder shows no XP — the difficulty tiles describe the danger, the preview fills the
   budget as a percentage and still rates the encounter — and the battle log's end line carries no

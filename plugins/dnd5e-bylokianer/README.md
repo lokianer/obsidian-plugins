@@ -255,8 +255,9 @@ grouped by challenge rating with type, size, AC and HP and marks for legendary (
 spellcasting (✦). The card is the full stat block in the plugin's own view — the same as in a
 note — with the spell names of a Spellcasting trait linked to the spellbook. With German Obsidian
 (or the dice-text setting) names, sizes and types ("Großer Drache"), alignments, armour, speeds and
-senses in metres, languages, damage types, conditions, saves and skills are German; the traits'
-and actions' texts follow in the next phase. EN / DE switches the card.
+senses in metres, languages, damage types, conditions, saves and skills are German, and so are the
+traits, actions, reactions and legendary actions, with W-dice, metres and the spells under their
+German names. EN / DE switches the card.
 
 **Insert into note** puts the stat block as a `dnd5e-statblock` block below the cursor of the last
 note you were in; **Make a note** writes a `type: monster` note with the block in the campaign's

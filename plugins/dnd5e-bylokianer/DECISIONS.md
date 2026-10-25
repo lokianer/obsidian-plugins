@@ -605,3 +605,24 @@ share and the difficulties by their danger instead of XP; the battle log's end l
 
 Left out: anything about levelling up (the plugin does not track character advancement); the XP
 in a stat block's challenge line stays, as it is part of the SRD stat block.
+
+## 2026-10-25 · German monster texts by rule, template and hand
+
+Phase M2 (plan `docs/superpowers/plans/2026-10-25-monster-manual-m2.md`), chosen by the maintainer
+after B3. The 1,503 entries of the 334 SRD monsters are mostly formulas: attack lines, recharges,
+spell lists and lengths were translated by rule; the remaining texts were reduced to 569 templates
+(the monster, numbers, dice and lengths as placeholders) and translated by hand once each, the
+monster's German noun put in with its gender and case; the 335 entry names by hand. The data files
+in `src/monsters/de-texts/` are the contract; the scripts stayed in the scratchpad.
+
+- Terms as in the German spell texts (Konstitutionsrettungswurf mit SG 13, im Vorteil, zu Boden
+  geworfen, gepackt (Entkommen-SG 13), Schallschaden, Energieschaden, gleißender Schaden).
+- Tests check every entry against the English: the same dice, attack bonuses and DCs, no feet or
+  English words, spell names the spellbook links.
+- `germanTexts` swaps a list only where it matches the English one for one, so own monsters and
+  edited blocks keep their own words.
+- The monster builder now starts from an SRD monster's German name and texts with German Obsidian
+  (like the spell builder); its dropdowns still store the SRD's English header words. Insert into
+  note and Make a note keep writing the SRD's English block.
+
+Left out: German texts inside notes the GM already made, and translating own monsters.

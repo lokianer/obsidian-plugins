@@ -21,3 +21,17 @@ export interface SrdMonster {
   /** An own monster's note; absent for the SRD's monsters. */
   path?: string;
 }
+
+/** One entry of a stat block in German: its name and its text. */
+export type DeEntry = readonly [name: string, desc: string];
+
+/** A monster's traits and actions in German, list by list in the order of the English block. */
+export interface DeMonsterText {
+  traits?: readonly DeEntry[];
+  actions?: readonly DeEntry[];
+  bonusActions?: readonly DeEntry[];
+  reactions?: readonly DeEntry[];
+  /** The paragraph above the legendary actions. */
+  legendary?: string;
+  legendaryActions?: readonly DeEntry[];
+}

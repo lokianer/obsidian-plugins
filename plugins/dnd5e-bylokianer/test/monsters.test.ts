@@ -19,7 +19,10 @@ import {
   NO_FILTERS,
   readFilters,
 } from '../src/monsters/filter';
-import { germanBlock, monsterName } from '../src/monsters/meta';
+import { DE_TEXTS } from '../src/monsters/de-texts';
+import { germanBlock, germanTexts, monsterName } from '../src/monsters/meta';
+import { spellFinder } from '../src/spells/links';
+import { SRD_SPELLS } from '../src/spells/srd-spells';
 import type { SrdMonster } from '../src/monsters/model';
 import { SRD_MONSTERS } from '../src/monsters/srd-monsters';
 import { SRD_NPCS } from '../src/npc/srd';
@@ -200,6 +203,98 @@ describe('German monster names and meta', () => {
         if (value !== null) expect(value, m.index).not.toMatch(english);
       }
     }
+  });
+});
+
+describe('German monster texts (M2)', () => {
+  const LISTS = ['traits', 'actions', 'bonusActions', 'reactions', 'legendaryActions'] as const;
+  const pairs = (m: SrdMonster) => {
+    const en = block(m.index);
+    const de = germanTexts(en, m.index);
+    return LISTS.flatMap((k) => en[k].map((e, i) => ({ k, en: e, de: de[k][i] ?? e })));
+  };
+  const all = (pattern: RegExp, text: string) =>
+    [...text.matchAll(pattern)].map((x) => x[1]).sort();
+
+  it('translates every trait, action, reaction and legendary action of all 334, one for one', () => {
+    expect(Object.keys(DE_TEXTS).sort()).toEqual(SRD_MONSTERS.map((m) => m.index).sort());
+    for (const m of SRD_MONSTERS) {
+      const en = block(m.index);
+      const de = DE_TEXTS[m.index] ?? {};
+      for (const k of LISTS) {
+        expect(de[k]?.length ?? 0, `${m.index} ${k}`).toBe(en[k].length);
+      }
+      expect(de.legendary !== undefined, `${m.index} legendary`).toBe(
+        en.legendaryDescription !== null,
+      );
+      for (const p of pairs(m)) {
+        expect(p.de.name, `${m.index} ${p.en.name}`).not.toBe('');
+        expect(p.de.desc, `${m.index} ${p.en.name}`).not.toBe(p.en.desc);
+      }
+    }
+  });
+
+  it('keeps every die, attack bonus and DC of the English text', () => {
+    for (const m of SRD_MONSTERS) {
+      for (const { en, de } of pairs(m)) {
+        const where = `${m.index}: ${en.name}`;
+        expect(all(/(\d+)W(\d+)/g, de.desc).join(), where).toBe(
+          all(/(\d+)d(\d+)/g, en.desc).join(),
+        );
+        expect(all(/\+(\d+) auf Treffer/g, de.desc).join(), where).toBe(
+          all(/\+(\d+) to hit/g, en.desc).join(),
+        );
+        expect(all(/SG (\d+)/g, de.desc).join(), where).toBe(
+          all(/DC (?:of )?(\d+)/g, en.desc).join(),
+        );
+      }
+    }
+  });
+
+  it('leaves no feet, miles, pounds, inches or English rules words', () => {
+    const imperial =
+      /(?<!\p{L})(feet|foot|ft\.|miles?|pounds?|inch(es)?|Fuß|Meilen?|Pfund|Zoll)(?!\p{L})/u;
+    const english = /\b(the|and|with|creature|target|damage|saving throw|its|hit points)\b/;
+    for (const m of SRD_MONSTERS) {
+      for (const { de } of pairs(m)) {
+        expect(`${de.name} ${de.desc}`, m.index).not.toMatch(imperial);
+        expect(`${de.name} ${de.desc}`, m.index).not.toMatch(english);
+      }
+    }
+  });
+
+  it('names the spells of every Spellcasting entry so the spellbook links them', () => {
+    const find = spellFinder(SRD_SPELLS);
+    for (const m of SRD_MONSTERS) {
+      for (const { en, de } of pairs(m)) {
+        if (!/spellcasting/i.test(en.name)) continue;
+        const names = (text: string) =>
+          find(text)
+            .map((x) => x.index)
+            .sort();
+        expect(names(de.desc), m.index).toEqual(names(en.desc));
+      }
+    }
+  });
+
+  it('reads an owlbear and a dragon in German and leaves own monsters as they are', () => {
+    const owl = germanTexts(block('owlbear'), 'owlbear');
+    expect(owl.traits).toEqual([
+      {
+        name: 'Scharfe Sicht und scharfer Geruchssinn',
+        desc: 'Der Eulenbär ist bei Weisheitswürfen (Wahrnehmung), die auf der Sicht oder dem Geruchssinn beruhen, im Vorteil.',
+      },
+    ]);
+    expect(owl.actions.map((a) => a.name)).toEqual(['Mehrfachangriff', 'Schnabel', 'Klauen']);
+    expect(owl.actions[1]?.desc).toBe(
+      'Nahkampf-Waffenangriff: +7 auf Treffer, Reichweite 1,5 m, eine Kreatur. Treffer: 10 (1W10 + 5) Stichschaden.',
+    );
+    const red = germanTexts(block('adult-red-dragon'), 'adult-red-dragon');
+    expect(red.legendaryDescription).toMatch(/^Der Drache kann 3 legendäre Aktionen ausführen/);
+    expect(red.actions.find((a) => a.name.startsWith('Feuerodem'))?.desc).toContain('18-m-Kegel');
+    const own = { ...block('owlbear'), traits: [] };
+    expect(germanTexts(own, 'owlbear').traits).toEqual([]);
+    expect(germanTexts(block('owlbear'), 'bell-tower-gargoyle')).toEqual(block('owlbear'));
   });
 });
 

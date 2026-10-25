@@ -27,7 +27,15 @@ import {
 } from '../monsters/draft';
 import { filterMonsters, NO_FILTERS } from '../monsters/filter';
 import { monstersFrom } from '../monsters/import';
-import { germanBlock, monsterName, SIZES, sizeLabel, TYPES, typeLabel } from '../monsters/meta';
+import {
+  germanBlock,
+  germanTexts,
+  monsterName,
+  SIZES,
+  sizeLabel,
+  TYPES,
+  typeLabel,
+} from '../monsters/meta';
 import type { SrdMonster } from '../monsters/model';
 import type { Lang } from '../npc/races';
 import { type Entry, findStatblocks, parseStatblock, type Statblock } from '../npc/statblock';
@@ -133,8 +141,14 @@ export class MonsterBuilderModal extends Modal {
   }
 
   /** Fills the form from an SRD monster, in the SRD's words. */
+  /** A monster to start from; with German its name and texts in German, its header in English. */
   copy(monster: SrdMonster): void {
-    this.block = parseStatblock(parseYaml(monster.yaml));
+    const block = parseStatblock(parseYaml(monster.yaml));
+    const { lang } = this.deps;
+    this.block =
+      lang === 'de'
+        ? { ...germanTexts(block, monster.index), name: monsterName(monster, 'de') }
+        : block;
     this.renderForm();
   }
 
