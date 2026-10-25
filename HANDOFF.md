@@ -28,7 +28,7 @@ nodes: `drawNode` passed `['dnd5e-world-node is-faction']` as one class token, O
 `createSvg` hands array entries to `classList.add`, which throws on a space, so drawing stopped at
 the first node (the faction view's root and boxes passed spaced strings to SVG too). All SVG classes
 are now separate tokens; the preview harness's DOM shim now uses `classList.add` for arrays as well,
-which reproduced the error before the fix. **Confirmed in Obsidian by the maintainer.** Next screenshot: in The Drowned Choir's view (one member) the frame was too narrow, title over power; the frame, chips and boxes are now sized from an estimate of their labels' width (`textWidth` in `faction-view-svg.ts`; measuring needs a laid-out SVG). Checked in the preview, to be confirmed in Obsidian. (2) The Log button in the notice was
+which reproduced the error before the fix. **Confirmed in Obsidian by the maintainer.** Next screenshot: in The Drowned Choir's view (one member) the frame was too narrow, title over power; the frame, chips and boxes are now sized from an estimate of their labels' width (`textWidth` in `faction-view-svg.ts`; measuring needs a laid-out SVG). Checked in the preview, to be confirmed in Obsidian. Then: members with an arrow between them (Mira Voss ↔ Sable) stood edge to edge; `memberRows` (pure, tested) now orders linked members side by side and marks them, the drawing leaves a wider gap there, and arrows in both directions run side by side. (2) The Log button in the notice was
 too small — now a full-width accent button, notice ten seconds. The maintainer also cleaned the
 example vault (broken notes moved to `test/fixtures/vault`, a fifth faction The Muddled Psalter).
 

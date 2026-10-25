@@ -65,6 +65,9 @@ All notable changes to this plugin are documented here. The format follows
   now always separate tokens.
 - In the faction view a short faction's name ran into its power ("The Drowned Choir" over "Power
   5"): the frame, member chips and boxes now grow with their labels.
+- In the faction view members with an arrow between them stood edge to edge, so only an arrowhead
+  showed: they are now placed side by side with a wider gap, and an arrow with a reverse one runs
+  beside it instead of on top.
 
 ### Changed (after the first check in Obsidian)
 

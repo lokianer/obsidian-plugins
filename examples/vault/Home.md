@@ -17,7 +17,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Character → character | Aldric → Mira, Sable → Mira, Orrin → Mira | Relations between people, not factions |
 | Faction world: graph | Open faction world | Blocs (the Order and the Court far apart), Bench tied to the Court, Ilex's and Elder Wren's arrows leaving their frames; True mode: The Bench → Order dashed (+4 instead of the Court's −4) |
 | Faction world: matrix | Open faction world → Matrix | The Bench's row inherits −4 from the Court (dashed); empty cells offer Add relation; Orrin Quill has no row (no faction relation) |
-| Faction view | Faction world → click The Gutter Court | Mira Voss and The Bench ringed (out of line), Sable not; click Mira: her inherited −4 towards the Order dashed; click The Bench to go deeper |
+| Faction view | Faction world → click The Gutter Court | Mira Voss and The Bench ringed (out of line), Sable not; click Mira: her inherited −4 towards the Order dashed; click The Bench to go deeper; Mira and Sable stand apart, with Mira's +1 and Sable's −2 as two arrows between them |
 | Tension panel | Faction world → lightning button | Public: Ondine Vale, Mira Voss, Aldric Thane, Corvin Marsh out of line; True adds The Bench and Sable, and public vs. true for The Bench, Mira, Sable and the Order |
 | Faction card | [[Corvin Marsh]], [[Sable]], [[The Bench/factions\|The Bench]] | Corvin: a reason rendered as a link; Sable: secret relations closed until opened; Bench: place shown as The Gutter Court |
 | Relation history | [[Session 14 – Bell Square]] | A log line `Order of the Lantern → The Gutter Court: −2 → −3`; it shows in the tooltip of that arrow and matrix cell as `−2 → −3 in S14` |

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { PARTY } from '../src/factions/discover';
-import { buildFactionView } from '../src/factions/faction-view';
+import { buildFactionView, type FactionView, memberRows } from '../src/factions/faction-view';
 import { buildWorld } from '../src/factions/world';
 import { loadExampleVault, withoutSecrets } from './fixture';
 
@@ -74,5 +74,37 @@ describe('buildFactionView', () => {
       value: 4,
       differs: true,
     });
+  });
+});
+
+describe('memberRows', () => {
+  const names = (view: FactionView | null, columns: number) =>
+    view === null
+      ? []
+      : memberRows(view, columns).map((row) => row.map((s) => [s.member.name, s.linked]));
+
+  it('marks members with an arrow between them, so the drawing parts them', () => {
+    // Mira Voss → Sable +1 and Sable → Mira Voss −2.
+    expect(names(buildFactionView(world, COURT, 'public'), 4)).toEqual([
+      [
+        ['Mira Voss', false],
+        ['Sable', true],
+        ['The Bench', false],
+      ],
+    ]);
+  });
+
+  it('places linked members side by side and wraps at the column count', () => {
+    const court = buildFactionView(world, COURT, 'public');
+    if (court === null) throw new Error('no court');
+    // Reversed order: Sable would sit apart from Mira without the chain.
+    const view = { ...court, members: [court.members[0]!, court.members[2]!, court.members[1]!] };
+    expect(names(view, 2)).toEqual([
+      [
+        ['Mira Voss', false],
+        ['Sable', true],
+      ],
+      [['The Bench', false]],
+    ]);
   });
 });

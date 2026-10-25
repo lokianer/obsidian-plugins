@@ -158,3 +158,44 @@ export function buildFactionView(world: FactionWorld, id: string, mode: Mode): F
     arrows,
   };
 }
+
+/** A member chip in its row; `linked` when it shares an arrow with its left neighbour. */
+export interface ChipSlot {
+  member: ViewMember;
+  linked: boolean;
+}
+
+/**
+ * The members in rows of at most `columns`. Members with an arrow between them (own values) are
+ * placed side by side where the order allows, and marked, so the drawing leaves room for the arrow.
+ */
+export function memberRows(view: FactionView, columns: number): ChipSlot[][] {
+  const ids = new Set(view.members.map((m) => m.id));
+  const links = new Set<string>();
+  for (const a of view.arrows) {
+    if (a.inherited || !ids.has(a.from) || !ids.has(a.to)) continue;
+    links.add(`${a.from}→${a.to}`);
+    links.add(`${a.to}→${a.from}`);
+  }
+  const ordered: ViewMember[] = [];
+  const placed = new Set<string>();
+  for (const first of view.members) {
+    // Follow a chain of linked members from each one not yet placed.
+    for (let m: ViewMember | undefined = first; m !== undefined && !placed.has(m.id);) {
+      ordered.push(m);
+      placed.add(m.id);
+      const from: ViewMember = m;
+      m = view.members.find((n) => !placed.has(n.id) && links.has(`${from.id}→${n.id}`));
+    }
+  }
+  const rows: ChipSlot[][] = [];
+  ordered.forEach((member, i) => {
+    if (i % columns === 0) rows.push([]);
+    const previous = i % columns === 0 ? undefined : ordered[i - 1];
+    rows[rows.length - 1]?.push({
+      member,
+      linked: previous !== undefined && links.has(`${previous.id}→${member.id}`),
+    });
+  });
+  return rows;
+}

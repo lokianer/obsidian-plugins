@@ -3,7 +3,13 @@
 // own values solid; a selected member's inherited ones dashed. Clicks lead into notes, deeper
 // faction views and the faction card.
 
-import { type FactionView, type ViewArrow, type ViewBox } from '../factions/faction-view';
+import {
+  type ChipSlot,
+  type FactionView,
+  memberRows,
+  type ViewArrow,
+  type ViewBox,
+} from '../factions/faction-view';
 import type { Point } from '../factions/layout';
 import { signed, stepColour, stepName } from '../factions/steps';
 import type { T } from '../i18n/strings';
@@ -13,6 +19,8 @@ import type { PopoverTarget } from './popover';
 const CHIP_W = 170;
 const CHIP_H = 36;
 const CHIP_GAP = 12;
+const LINK_GAP = 96;
+const PAIR_OFFSET = 7;
 const COLUMNS = 4;
 const FRAME_HEAD = 56;
 const BOX_W = 190;
@@ -104,30 +112,36 @@ export class FactionViewSvg {
   private place(view: FactionView, angles: ReadonlyMap<string, number>): Map<string, Rect> {
     const places = new Map<string, Rect>();
     const columns = Math.max(1, Math.min(COLUMNS, view.members.length));
-    const rows = Math.max(1, Math.ceil(view.members.length / columns));
+    const rows = memberRows(view, columns);
     // Chips and the frame grow with their names, so no text runs into its neighbour.
     const chipW = Math.max(
       CHIP_W,
       ...view.members.map((m) => textWidth(m.name, 16, m.kind === 'faction') + 32),
     );
-    const gridW = columns * (chipW + CHIP_GAP) + CHIP_GAP + 24;
+    // Members with an arrow between them stand further apart, so the arrow shows.
+    const rowW = (row: readonly ChipSlot[]) =>
+      row.reduce((w, slot, i) => w + chipW + (i === 0 ? 0 : slot.linked ? LINK_GAP : CHIP_GAP), 48);
+    const gridW = Math.max(...rows.map(rowW), 48 + chipW);
     const power =
       view.power === null ? 0 : 24 + textWidth(`${this.t('card.power')} ${view.power}`, 16);
     const frame: Rect = {
       x: 0,
       y: 0,
       w: Math.max(gridW, 40 + textWidth(view.name, 18, true) + power),
-      h: FRAME_HEAD + rows * (CHIP_H + CHIP_GAP) + CHIP_GAP,
+      h: FRAME_HEAD + Math.max(1, rows.length) * (CHIP_H + CHIP_GAP) + CHIP_GAP,
     };
     places.set(view.id, frame);
-    view.members.forEach((member, i) => {
-      const column = i % columns;
-      const row = Math.floor(i / columns);
-      places.set(member.id, {
-        x: -gridW / 2 + 12 + CHIP_GAP + column * (chipW + CHIP_GAP) + chipW / 2,
-        y: -frame.h / 2 + FRAME_HEAD + row * (CHIP_H + CHIP_GAP) + CHIP_H / 2,
-        w: chipW,
-        h: CHIP_H,
+    rows.forEach((row, r) => {
+      let x = -rowW(row) / 2 + 24;
+      row.forEach((slot, i) => {
+        if (i > 0) x += slot.linked ? LINK_GAP : CHIP_GAP;
+        places.set(slot.member.id, {
+          x: x + chipW / 2,
+          y: -frame.h / 2 + FRAME_HEAD + r * (CHIP_H + CHIP_GAP) + CHIP_H / 2,
+          w: chipW,
+          h: CHIP_H,
+        });
+        x += chipW;
       });
     });
 
@@ -239,7 +253,11 @@ export class FactionViewSvg {
     }
 
     for (const box of view.boxes) this.drawBox(shapes, box, places);
-    for (const arrow of arrows) this.drawArrow(edgeLayer, view, arrow, places);
+    const drawn = new Set(arrows.map((a) => `${a.from}→${a.to}`));
+    for (const arrow of arrows) {
+      const paired = drawn.has(`${arrow.to}→${arrow.from}`);
+      this.drawArrow(edgeLayer, view, arrow, places, paired);
+    }
   }
 
   private drawBox(layer: SVGGElement, box: ViewBox, places: Map<string, Rect>): void {
@@ -286,16 +304,23 @@ export class FactionViewSvg {
     view: FactionView,
     arrow: ViewArrow,
     places: Map<string, Rect>,
+    paired: boolean,
   ): void {
     const from = places.get(arrow.from);
     const to = places.get(arrow.to);
     if (from === undefined || to === undefined) return;
-    const start = border(from, to);
-    const tip = border(to, from);
+    let start = border(from, to);
+    let tip = border(to, from);
     const dx = tip.x - start.x;
     const dy = tip.y - start.y;
     const length = Math.hypot(dx, dy) || 1;
     const [ux, uy] = [dx / length, dy / length];
+    if (paired) {
+      // An arrow with a reverse one runs beside it, each on its own left.
+      const [ox, oy] = [uy * PAIR_OFFSET, -ux * PAIR_OFFSET];
+      start = { x: start.x + ox, y: start.y + oy };
+      tip = { x: tip.x + ox, y: tip.y + oy };
+    }
     const base = { x: tip.x - ux * ARROW, y: tip.y - uy * ARROW };
 
     const cls = ['dnd5e-world-edge'];
