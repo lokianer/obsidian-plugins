@@ -205,3 +205,15 @@ placeholder rows are dropped. The previous note is not changed. Pure, in `packag
 Left out: carrying loot into a session note made by hand or by Templater (the plugin only sees the
 notes it creates); removing used-up loot (the GM deletes the line in the newest note, and it stops
 travelling); other sections.
+
+## 2026-10-25 · UI smoke tests in happy-dom
+
+Approved by the maintainer. The views (card, graph, matrix, faction view, popover, tension panel)
+render the example vault in `test/ui/` under happy-dom (dev dependency `happy-dom` 20.14.6), with a
+small stand-in for the `obsidian` module and Obsidian's DOM helpers on the prototypes. The helpers
+are as strict as a browser where it matters: a class token with a space throws, which happy-dom
+alone lets pass. With that, reintroducing the bug that hid the graph's nodes fails two tests. They
+replace the manual browser preview of earlier sessions as the check before a push.
+
+Left out: pixel screenshots (layout is not computed by happy-dom); tests of the Obsidian glue in
+`main.ts`, `card-view.ts` and `world-view.ts`, which need a real workspace.

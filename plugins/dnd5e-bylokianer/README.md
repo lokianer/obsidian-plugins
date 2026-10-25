@@ -102,7 +102,7 @@ Requires Node 24 and pnpm 12.
 ```bash
 pnpm install
 pnpm build                 # main.js
-pnpm test                  # Vitest
+pnpm test                  # Vitest: pure modules in Node, the views in happy-dom (test/ui)
 pnpm lint && pnpm typecheck
 pnpm install-example       # copies the build into examples/vault/.obsidian/plugins/
 ```

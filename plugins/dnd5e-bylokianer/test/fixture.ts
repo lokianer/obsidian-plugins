@@ -4,15 +4,15 @@
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 
 import { frontmatterBody, hasFrontmatterContent } from '../src/frontmatter';
 import type { FactionWorld } from '../src/factions/model';
 import type { NoteInput } from '../src/types';
 
-const vaultRoot = fileURLToPath(new URL('../../../examples/vault', import.meta.url));
-const fixtureRoot = fileURLToPath(new URL('./fixtures/vault', import.meta.url));
+// Paths, not URLs: in the happy-dom tests the global URL is happy-dom's own.
+const vaultRoot = join(import.meta.dirname, '../../../examples/vault');
+const fixtureRoot = join(import.meta.dirname, 'fixtures/vault');
 
 function markdownFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {

@@ -47,4 +47,13 @@ export default defineConfig(
       'obsidianmd/hardcoded-config-path': 'off',
     },
   },
+  {
+    // The UI tests' stand-in for Obsidian builds createEl and friends itself on happy-dom, and hands
+    // the renderers plain objects where Obsidian would pass a TFile.
+    files: ['test/ui/**/*.ts'],
+    rules: {
+      'obsidianmd/prefer-create-el': 'off',
+      'obsidianmd/no-tfile-tfolder-cast': 'off',
+    },
+  },
 );
