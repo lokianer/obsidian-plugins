@@ -88,6 +88,8 @@ export interface MonsterManualDeps {
   newMonster: () => void;
   /** Puts the monster into the battle tracker's running fight. */
   addToCombat: (monster: SrdMonster) => void;
+  /** Puts the monster into an encounter note. */
+  addToEncounter: (monster: SrdMonster) => void;
 }
 
 function hue(el: HTMLElement, type: string): void {
@@ -474,6 +476,12 @@ export class MonsterManualView extends ItemView {
       'monsters.addToCombat',
       () => this.deps.addToCombat(m),
       'dnd5e-monsters-fight',
+    );
+    action(
+      'list-plus',
+      'monsters.addToEncounter',
+      () => this.deps.addToEncounter(m),
+      'dnd5e-monsters-encounter',
     );
     const path = m.path;
     if (path === undefined) {

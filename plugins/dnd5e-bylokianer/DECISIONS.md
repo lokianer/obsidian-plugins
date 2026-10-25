@@ -570,3 +570,28 @@ Phase B2 (plan `docs/superpowers/plans/2026-10-25-battle-b2.md`), built after th
 
 Left out: logging every round or damage, splitting XP per character, choosing the side of a
 newcomer (the GM can write `side:` into the encounter instead), Add to encounter (B3).
+
+## 2026-10-25 · The encounter builder uses the SRD 5.2.1's XP budget
+
+Phase B3 (plan `docs/superpowers/plans/2026-10-25-battle-b3.md`), built after the maintainer's
+"Weiter". The SRD 5.1 has no encounter-building rules; the SRD 5.2.1 (CC-BY-4.0 too) has the XP
+Budget per Character table (Low, Moderate, High for levels 1–20), checked on 2026-10-25 against a
+Markdown conversion of the SRD 5.2.1 and its own examples (four level 1 characters, low: 200 XP;
+five level 3, moderate: 1,125 XP). It spends the budget as a plain sum of XP, without the 2014
+rules' group multipliers, so the builder does the same.
+
+- A party of mixed levels: each character's budget by their level, summed (the SRD gives the equal
+  case only, where this is the same).
+- Levels come from the characters' `level` frontmatter; one without counts as level 1, and the
+  builder says so. Without a party folder the GM enters a number of characters and a level.
+- The party chips shape the budget only. The note joins the whole party (`party: true`) unless
+  every chip is off (`party: false`).
+- The rating says how hard the XP is (within Low, Moderate, High, or beyond High), whatever
+  difficulty was picked; the picked difficulty is the budget the bar fills and is written as
+  `difficulty:`.
+- The builder writes `monster:` entries only; **Add to encounter** raises the count of an entry of
+  the same monster without a name of its own, else appends one, through `processFrontMatter`.
+- Attribution for the SRD 5.2.1 table in the README.
+
+Left out: notes and written combatants in the builder (added in the note by hand), editing an
+existing encounter in the builder, the difficulty of a running fight in the Battle tab.

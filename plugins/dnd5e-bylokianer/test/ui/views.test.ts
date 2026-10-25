@@ -49,6 +49,8 @@ import type { Fight, Fighter } from '../../src/battle/fight';
 import { combatLines, readCombat } from '../../src/battle/table';
 import type { BattleEvent } from '../../src/battle/log';
 import { MonsterBuilderModal } from '../../src/obsidian/monster-builder';
+import { EncounterBuilderModal } from '../../src/obsidian/encounter-builder';
+import type { EncounterDraft } from '../../src/battle/budget';
 import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/monster-manual-view';
 import type { SrdMonster } from '../../src/monsters/model';
 import { ownMonster } from '../../src/monsters/own';
@@ -1209,6 +1211,7 @@ describe('monster manual', () => {
       openNote: (path) => opened.push(path),
       newMonster: () => builders.push(1),
       addToCombat: (m) => fights.push(m.index),
+      addToEncounter: (m) => fights.push(`encounter:${m.index}`),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1236,7 +1239,8 @@ describe('monster manual', () => {
     el.querySelector('.dnd5e-monsters-note')?.dispatchEvent(new MouseEvent('click'));
     expect(inserted).toEqual(['adult-red-dragon']);
     el.querySelector('.dnd5e-monsters-fight')?.dispatchEvent(new MouseEvent('click'));
-    expect(fights).toEqual(['adult-red-dragon']);
+    el.querySelector('.dnd5e-monsters-encounter')?.dispatchEvent(new MouseEvent('click'));
+    expect(fights).toEqual(['adult-red-dragon', 'encounter:adult-red-dragon']);
     expect(notes).toEqual(['adult-red-dragon']);
   });
 
@@ -1476,6 +1480,7 @@ describe('battle tab', () => {
       select: (path) => (selected = path),
       openNote: () => undefined,
       log: (_path, events) => logged.push(...events),
+      newEncounter: () => undefined,
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1643,5 +1648,126 @@ describe('battle tab', () => {
     again.dispatchEvent(new Event('input'));
     await click('.dnd5e-battle-heal');
     expect(texts(el, '.is-turn .dnd5e-battle-meta span')[0]).toBe('TP 5/71');
+  });
+});
+
+describe('encounter builder', () => {
+  function builder(
+    lang: 'en' | 'de',
+    party = [
+      { name: 'Dagny', level: 6 },
+      { name: 'Ilex', level: 6 },
+      { name: 'Orrin Quill', level: null },
+    ],
+  ) {
+    const created: EncounterDraft[] = [];
+    const modal = new EncounterBuilderModal(app, {
+      t: createT(lang),
+      lang,
+      monsters: SRD_MONSTERS,
+      party,
+      create: (draft) => {
+        created.push(structuredClone(draft));
+        return Promise.resolve();
+      },
+    });
+    root.appendChild(modal.modalEl);
+    modal.onOpen();
+    const el = modal.contentEl;
+    const type = (selector: string, value: string) => {
+      const input = el.querySelector<HTMLInputElement>(selector);
+      if (input === null) throw new Error(selector);
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    };
+    const tile = (name: string) =>
+      [...el.querySelectorAll<HTMLElement>('.dnd5e-monster-tiles .dnd5e-npc-tile')].find(
+        (t) => t.querySelector('.dnd5e-npc-tile-name')?.textContent === name,
+      );
+    const click = (target: Element | null | undefined) => {
+      if (target == null) throw new Error('nothing to click');
+      target.dispatchEvent(new MouseEvent('click'));
+    };
+    return { el, created, type, tile, click };
+  }
+
+  it('fills the budget of the party with monsters and writes the draft', async () => {
+    const { el, created, type, tile, click } = builder('en');
+    // Two level 6 and one without a level (counted as 1): moderate 1,000 + 1,000 + 75.
+    expect(texts(el, '.dnd5e-encounter-difficulty .dnd5e-npc-tile-line')).toEqual([
+      '1,250 XP',
+      '2,075 XP',
+      '2,900 XP',
+    ]);
+    expect(
+      el.querySelector('.dnd5e-encounter-difficulty .is-selected')?.getAttribute('data-difficulty'),
+    ).toBe('moderate');
+    expect(texts(el, '.dnd5e-builder-hint')).toContain(
+      'A character without a level in their note counts as level 1.',
+    );
+    type('.dnd5e-npc-search', 'owlbe');
+    click(tile('Owlbear'));
+    click(tile('Owlbear'));
+    expect(texts(el, '.dnd5e-encounter-count')).toEqual(['2']);
+    expect(el.querySelector('.dnd5e-encounter-spent')?.textContent).toBe(
+      '1,400 XP of 2,075 XP (Moderate)',
+    );
+    expect(el.querySelector('.dnd5e-encounter-left')?.textContent).toBe('675 XP left');
+    expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Moderate difficulty');
+    // Leaving Orrin out lowers the budget; High raises it.
+    click(
+      [...el.querySelectorAll('.dnd5e-encounter-party button')].find(
+        (b) => b.textContent === 'Orrin Quill · ?',
+      ),
+    );
+    expect(el.querySelector('.dnd5e-encounter-spent')?.textContent).toBe(
+      '1,400 XP of 2,000 XP (Moderate)',
+    );
+    click(el.querySelector('.dnd5e-encounter-difficulty [data-difficulty="high"]'));
+    expect(el.querySelector('.dnd5e-encounter-spent')?.textContent).toBe(
+      '1,400 XP of 2,800 XP (High)',
+    );
+    // One fewer, then a name and create.
+    click(el.querySelector('.dnd5e-encounter-stepper button[aria-label="One fewer"]'));
+    expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Low difficulty');
+    click(el.querySelector('.mod-cta'));
+    expect(notices[notices.length - 1]).toBe('Give the encounter a name first.');
+    type('.dnd5e-encounter-name', 'Owls at the mill');
+    type('.dnd5e-encounter-location', '[[Old Mill]]');
+    click(el.querySelector('.mod-cta'));
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(created).toEqual([
+      {
+        name: 'Owls at the mill',
+        location: '[[Old Mill]]',
+        difficulty: 'high',
+        party: true,
+        monsters: [{ name: 'Owlbear', count: 1 }],
+      },
+    ]);
+  });
+
+  it('counts a party it is told about when the campaign has none, in German', () => {
+    const { el, type, tile, click } = builder('de', []);
+    expect(texts(el, '.dnd5e-encounter-difficulty .dnd5e-npc-tile-line')).toEqual([
+      '200 EP',
+      '300 EP',
+      '400 EP',
+    ]);
+    const level = [...el.querySelectorAll<HTMLInputElement>('.setting-item input')].filter(
+      (i) => i.type === 'number',
+    )[1];
+    if (level === undefined) throw new Error('no level');
+    level.value = '5';
+    level.dispatchEvent(new Event('input'));
+    expect(el.querySelector('.dnd5e-encounter-partyline')?.textContent).toBe(
+      '4 Charaktere · Stufen 5, 5, 5, 5',
+    );
+    type('.dnd5e-npc-search', 'eulenb');
+    click(tile('Eulenbär'));
+    expect(el.querySelector('.dnd5e-encounter-spent')?.textContent).toBe(
+      '700 EP von 3.000 EP (Mittel)',
+    );
+    expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Niedrige Schwierigkeit');
   });
 });

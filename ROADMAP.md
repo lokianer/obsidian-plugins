@@ -13,9 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1 and B2 built**
-(plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-battle-b2.md`), waiting for the check in
-Obsidian (HANDOFF points 47–56; the maintainer tests later); then B3 (encounter builder).
+**dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
+built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for
+the check in Obsidian (HANDOFF points 47–60; the maintainer tests later). After it: module 7, dice
+(not brainstormed yet), or M2 (German monster texts).
 Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
 restyled deck builder, the Monster Manual (M1, M3 with the import). Open for later: the Monster
 Manual's German traits and actions (M2); the faction world redesign's check. Nothing is published.
@@ -170,7 +171,8 @@ Design: [`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`](docs/supe
       rounds, HP, conditions, `## Combat` state. Plan `docs/superpowers/plans/2026-10-25-battle-b1.md`
 - [ ] **B2 — Log and Monster Manual** (built 2026-10-25, awaiting the check): session log lines,
       Add to combat, adding and removing mid-fight. Plan `docs/superpowers/plans/2026-10-25-battle-b2.md`
-- [ ] **B3 — Encounter builder**: New encounter with an XP budget
+- [ ] **B3 — Encounter builder** (built 2026-10-25, awaiting the check): New encounter with the
+      SRD 5.2.1 XP budget, Add to encounter. Plan `docs/superpowers/plans/2026-10-25-battle-b3.md`
 
 ### Module 7 — Dice
 

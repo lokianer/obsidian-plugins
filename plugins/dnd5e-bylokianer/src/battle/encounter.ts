@@ -94,3 +94,22 @@ export function readEncounter(frontmatter: Record<string, unknown> | undefined):
     party: frontmatter?.party !== false,
   };
 }
+
+/**
+ * An encounter's `combatants` with one more of a monster: the count of its entry raised (an entry
+ * of it without a name of its own), or a new `monster:` entry at the end.
+ */
+export function addMonsterEntry(list: unknown, monster: string): unknown[] {
+  const entries: unknown[] = Array.isArray(list) ? [...(list as unknown[])] : [];
+  const at = entries.findIndex(
+    (e) =>
+      typeof e === 'object' &&
+      e !== null &&
+      (e as Record<string, unknown>).monster === monster &&
+      (e as Record<string, unknown>).name === undefined,
+  );
+  if (at === -1) return [...entries, { monster }];
+  const entry = entries[at] as Record<string, unknown>;
+  entries[at] = { ...entry, count: count(entry.count) + 1 };
+  return entries;
+}

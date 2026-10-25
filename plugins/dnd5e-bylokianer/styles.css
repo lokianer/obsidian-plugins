@@ -3251,3 +3251,108 @@ a.dnd5e-tensions-name:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ── Encounter builder ──────────────────────────────────────────────────────────────────────── */
+
+.dnd5e-encounter-difficulty {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dnd5e-encounter-pick {
+  align-items: center;
+}
+
+.dnd5e-encounter-pick-name {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-encounter-pick-line,
+.dnd5e-encounter-partyline,
+.dnd5e-encounter-left {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-encounter-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+}
+
+.dnd5e-encounter-count {
+  min-width: 2ch;
+  font-weight: var(--font-bold);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.dnd5e-encounter-meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-1);
+  margin: var(--size-4-3) 0;
+}
+
+.dnd5e-encounter-spent {
+  font-size: var(--font-ui-large);
+  font-weight: var(--font-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-encounter-bar {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--background-modifier-border);
+}
+
+.dnd5e-encounter-fill {
+  width: var(--dnd5e-fill);
+  height: 100%;
+  background: var(--interactive-accent);
+  transition: width 200ms ease;
+}
+
+.dnd5e-encounter-fill.is-over {
+  background: var(--color-red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dnd5e-encounter-fill {
+    transition: none;
+  }
+}
+
+.dnd5e-encounter-rating {
+  display: inline-block;
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.dnd5e-encounter-rating.is-low {
+  background: rgba(var(--color-green-rgb), 0.2);
+}
+
+.dnd5e-encounter-rating.is-moderate {
+  background: rgba(var(--color-yellow-rgb), 0.2);
+}
+
+.dnd5e-encounter-rating.is-high {
+  background: rgba(var(--color-orange-rgb), 0.25);
+}
+
+.dnd5e-encounter-rating.is-beyond {
+  background: rgba(var(--color-red-rgb), 0.3);
+}
+
+.dnd5e-encounter-lines {
+  margin: var(--size-4-3) 0 0;
+  padding-left: var(--size-4-5);
+}
+
+.dnd5e-builder-hint {
+  padding: var(--size-4-1) 0;
+  color: var(--text-muted);
+}

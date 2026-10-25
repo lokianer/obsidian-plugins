@@ -13,7 +13,9 @@ import type { EditTarget, FactionWorld } from './factions/model';
 import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
+import { encounterNoteText } from './battle/budget';
 import { battleLine } from './battle/log';
+import { EncounterBuilderModal, EncounterPicker } from './obsidian/encounter-builder';
 import { BattleStore, fromMonster } from './obsidian/battle-store';
 import { BATTLE_VIEW, BattleView } from './obsidian/battle-view';
 import { askReset, DeckBuilderModal } from './obsidian/deck-builder';
@@ -283,6 +285,23 @@ export default class Dnd5ePlugin extends Plugin {
               );
             if (!running) new Notice(t('battle.noFight'));
           },
+          addToEncounter: (monster) =>
+            void battleStore.encounters().then((encounters) => {
+              if (encounters.length === 0) {
+                new Notice(t('encounterBuilder.noEncounters'));
+                return;
+              }
+              new EncounterPicker(this.app, t, encounters, (encounter) => {
+                void battleStore.addToEncounter(encounter.path, monster.name).then(() => {
+                  new Notice(
+                    t('encounterBuilder.addedTo', {
+                      name: monster.name,
+                      encounter: encounter.title,
+                    }),
+                  );
+                });
+              }).open();
+            }),
           makeNote: (monster) =>
             void (async () => {
               const text = monsterNoteText(monster.name, monster.cr, monster.yaml, BLOCK);
@@ -416,6 +435,7 @@ export default class Dnd5ePlugin extends Plugin {
           select: (battleSelected) => void save({ ...this.options, battleSelected }),
           openNote: (path) => openNote(path, false),
           spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
+          newEncounter: () => void newEncounter(),
           log: (path, events) => {
             const file = this.app.vault.getFileByPath(path);
             if (file === null) return;
@@ -436,6 +456,33 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openBattle,
     });
     this.addRibbonIcon('swords', t('command.openBattle'), () => void openBattle());
+    const newEncounter = async () =>
+      new EncounterBuilderModal(this.app, {
+        t,
+        lang: tableLang(this.options, getLanguage()),
+        monsters: [...SRD_MONSTERS, ...ownMonsters.list],
+        party: await battleStore.party(),
+        create: async (draft) => {
+          const path = await newNote(
+            this.app,
+            cache,
+            this.options.encounterFolder,
+            draft.name,
+            encounterNoteText(draft),
+          );
+          new Notice(t('encounterBuilder.created', { path }));
+          await indexed(path);
+          await openBattle();
+          for (const leaf of this.app.workspace.getLeavesOfType(BATTLE_VIEW)) {
+            if (leaf.view instanceof BattleView) await leaf.view.show(path);
+          }
+        },
+      }).open();
+    this.addCommand({
+      id: 'new-encounter',
+      name: t('command.newEncounter'),
+      callback: () => void newEncounter(),
+    });
 
     const openStatblocks = new Set<string>();
     this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {

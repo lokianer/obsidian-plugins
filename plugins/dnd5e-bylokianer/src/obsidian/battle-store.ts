@@ -5,7 +5,7 @@
 
 import { parseYaml, type Plugin, TFile } from 'obsidian';
 
-import { type CombatantSpec, readEncounter, type Side } from '../battle/encounter';
+import { addMonsterEntry, type CombatantSpec, readEncounter, type Side } from '../battle/encounter';
 import type { Fight, Fighter } from '../battle/fight';
 import { combatLines, readCombat, type Table, withCombat } from '../battle/table';
 import { inCampaign, typeOf } from '../campaign/scope';
@@ -24,6 +24,12 @@ import type { WorldCache } from './world-cache';
 export interface EncounterInfo {
   path: string;
   title: string;
+}
+
+/** A character of the campaign's party, for the encounter builder; level null when unwritten. */
+export interface PartyMember {
+  name: string;
+  level: number | null;
 }
 
 /** What the Battle tab needs from the vault. */
@@ -62,6 +68,30 @@ export class BattleStore implements BattleSource {
       .filter((f) => typeOf(metadataCache.getFileCache(f)?.frontmatter) === 'encounter')
       .map((f) => ({ path: f.path, title: f.basename }))
       .sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  /** The campaign's party with the `level` of each character's note. */
+  async party(): Promise<PartyMember[]> {
+    const { vault, metadataCache } = this.plugin.app;
+    const world = await this.cache.get();
+    const members: PartyMember[] = [];
+    for (const e of world.entities.values()) {
+      if (e.kind !== 'character' || e.parent !== PARTY || e.notePath === null) continue;
+      const file = vault.getFileByPath(e.notePath);
+      if (file === null) continue;
+      const level = num(metadataCache.getFileCache(file)?.frontmatter?.level);
+      members.push({ name: file.basename, level });
+    }
+    return members.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  /** One more of a monster in an encounter note's `combatants`. */
+  async addToEncounter(path: string, monster: string): Promise<void> {
+    const file = this.plugin.app.vault.getFileByPath(path);
+    if (file === null) return;
+    await this.plugin.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
+      fm.combatants = addMonsterEntry(fm.combatants, monster);
+    });
   }
 
   async load(path: string): Promise<{ fighters: Fighter[]; table: Table | null }> {

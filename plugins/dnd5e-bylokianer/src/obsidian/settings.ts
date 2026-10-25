@@ -51,6 +51,8 @@ export interface Settings {
   deckFolder: string;
   /** The folder in the campaign monster notes go to. */
   monsterFolder: string;
+  /** The folder in the campaign the encounter builder writes to. */
+  encounterFolder: string;
   /** The Monster Manual's filters and picked monster, read back with care (readFilters). */
   monsterManual: unknown;
   /** The folder in the campaign new own spells go to. */
@@ -86,6 +88,7 @@ export const DEFAULT_SETTINGS: Settings = {
   deckFolder: 'Decks',
   spellFolder: 'Spells',
   monsterFolder: 'Monsters',
+  encounterFolder: 'Encounters',
   monsterManual: null,
   deckSelected: 'standard',
   battleSelected: null,
@@ -102,7 +105,8 @@ type PathKey =
   | 'npcFolder'
   | 'deckFolder'
   | 'spellFolder'
-  | 'monsterFolder';
+  | 'monsterFolder'
+  | 'encounterFolder';
 const PATHS: readonly PathKey[] = [
   'sessionTemplate',
   'npcTemplate',
@@ -113,6 +117,7 @@ const PATHS: readonly PathKey[] = [
   'deckFolder',
   'spellFolder',
   'monsterFolder',
+  'encounterFolder',
 ];
 const LANGS = ['auto', 'en', 'de'] as const;
 const DECK_SIZES = ['22', '13'] as const;

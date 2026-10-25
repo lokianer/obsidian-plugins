@@ -325,6 +325,16 @@ The fight's moments go to tonight's session note, under `## Log`, like the facti
 - 21:58 Combat ends after 5 rounds — 1,400 XP
 ```
 
+**New encounter** (command, or + in the Battle tab) builds an encounter note, laid out like the New
+NPC dialog: a name and an optional place, the campaign's party as chips with their levels (from each
+character's `level`; without a party folder, a number of characters and a level), the difficulty —
+Low, Moderate or High, each with its XP budget from the SRD 5.2.1's table (each character's budget
+by level, summed) — and the Monster Manual's monsters as tiles: each click adds one, the rows below
+count them. Beside it the XP spent fills the budget, with what is left or over and how hard the
+encounter is. **Create encounter** writes the note into the encounter folder (setting, `Encounters`)
+and opens it in the Battle tab. **Add to encounter** on a Monster Manual card adds the monster to an
+encounter note you pick.
+
 The XP is the sum of the defeated enemies' XP by challenge rating. The setting **Battle log** offers
 each line in a notice with **Log → Session N** (the default), writes them automatically, or keeps
 them out.
@@ -358,6 +368,7 @@ Round 3 · Turn: Court thug 2
 - **Open Monster Manual** — the SRD monsters to look up and drop into notes.
 - **New monster** — the monster builder.
 - **Open battle tracker** — run a fight from an encounter note.
+- **New encounter** — the encounter builder.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).
@@ -406,3 +417,8 @@ licensed under the Creative Commons Attribution 4.0 International License, avail
 https://creativecommons.org/licenses/by/4.0/legalcode. See `src/npc/NOTICE.md` (NPCs, races) and
 `src/spells/NOTICE.md` (spells; the German names are this plugin's own translation, under the same
 licence).
+
+The encounter builder's XP Budget per Character table is taken from the System Reference Document
+5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at
+https://www.dndbeyond.com/srd, licensed under the Creative Commons Attribution 4.0 International
+License, available at https://creativecommons.org/licenses/by/4.0/legalcode.

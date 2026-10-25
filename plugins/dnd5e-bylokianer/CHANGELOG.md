@@ -8,6 +8,14 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Encounter builder** (battle tracker, phase B3): **New encounter** (command, or + in the Battle
+  tab) opens a builder in the New NPC dialog's style — the campaign's party with their levels as
+  chips, Low / Moderate / High with the XP budget of the SRD 5.2.1, the Monster Manual's monsters
+  (SRD and own) as tiles with counts, and the XP spent against the budget live beside it, with how
+  hard the encounter is. It writes a `type: encounter` note into the encounter folder (setting,
+  `Encounters`) and shows it in the Battle tab. **Add to encounter** on a Monster Manual card puts
+  the monster into an encounter note (the same monster again raises its count).
+
 - **Battle tracker: log and Monster Manual** (phase B2): the fight's moments — it begins, a
   combatant is defeated, goes down or dies, it ends with the defeated enemies' XP — as lines under
   `## Log` of tonight's session (setting **Battle log**: offered in a notice, written

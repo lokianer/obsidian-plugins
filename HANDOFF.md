@@ -24,8 +24,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    (vault adapter), `battle-view.ts` (the tab). B2 built after "Mach weiter, ich teste später":
    `src/battle/log.ts` (moments → log lines), `addFighter` / `removeCombatant`, restore of rows
    added mid-fight, `SessionLog.offerLine` with the setting `battleLog`, **Add to combat** in the
-   Monster Manual. Waiting for the check (points 47–56 below). Next: B3 (encounter builder; verify
-   the SRD 5.2 XP budget table before using it, and Add to encounter from the Monster Manual).
+   Monster Manual. B3 built after "Weiter": `src/battle/budget.ts` (the SRD 5.2.1 XP budget,
+   checked against a Markdown conversion of the SRD and its examples; the note text),
+   `addMonsterEntry`, `encounter-builder.ts` (dialog and picker), the setting `encounterFolder`,
+   **Add to encounter** in the Monster Manual. Waiting for the check (points 47–60 below). Then
+   module 7 (dice, not brainstormed) or M2.
 2. Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
    restyled deck builder, the Monster Manual (M1, M3 with the file import). Open for later: the
    Monster Manual's German traits and actions (M2: about 48,500 words, in batches by challenge
@@ -301,12 +304,26 @@ fields)
     running → "No fight is running …". Close and reopen the tab: the added monsters keep their stat
     blocks.
 
+**Battle tracker B3**
+
+57. **New encounter** (command, or + in the Battle tab header): chips Dagny · 6, Ilex · 6, Orrin
+    Quill · 6, Tessaly Vane · 6, all on; tiles Low 2,400 XP, Moderate 4,000 XP (chosen), High
+    5,600 XP. German Obsidian: "EP", "Niedrig / Mittel / Hoch".
+58. Search "owl" → Owlbear twice: the row counts 2, the preview "1,400 XP of 4,000 XP (Moderate)",
+    "2,600 XP left", "Low difficulty". Chips off lower the budget; − and + change the count; a
+    count of 0 removes the row. No name → a notice.
+59. Create encounter: `Silverstadt/Encounters/<name>.md` with `type: encounter`, `difficulty`,
+    `location` (if given), `combatants: - monster: Owlbear / count: 2`; the Battle tab opens on it
+    and Start runs it.
+60. Monster Manual → a monster → **Add to encounter** → pick the ambush: `- monster: <name>` at the
+    end of its `combatants`; again → `count: 2`. Revert the example vault afterwards.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session", "No non-SRD
 monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
-encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight"
-(all 2026-10-25).
+encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
+builder uses the SRD 5.2.1's XP budget" (all 2026-10-25).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -340,5 +357,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 373 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 379 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

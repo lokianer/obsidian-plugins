@@ -63,6 +63,8 @@ export interface BattleDeps {
   spells?: (el: HTMLElement) => void;
   /** The fight's moments, for the session log. */
   log?: (path: string, events: BattleEvent[]) => void;
+  /** Opens the encounter builder. */
+  newEncounter: () => void;
 }
 
 export class BattleView extends ItemView {
@@ -116,6 +118,9 @@ export class BattleView extends ItemView {
 
   /** Reads an encounter: its fighters, and the fight its note holds. */
   async show(path: string): Promise<void> {
+    if (!this.encounters.some((e) => e.path === path)) {
+      this.encounters = await this.deps.source.encounters();
+    }
     this.path = path;
     this.deps.select(path);
     const { fighters, table } = await this.deps.source.load(path);
@@ -223,6 +228,12 @@ export class BattleView extends ItemView {
       setIcon(open, 'file-text');
       open.addEventListener('click', () => this.deps.openNote(path));
     }
+    const add = header.createEl('button', {
+      cls: ['clickable-icon', 'dnd5e-battle-new'],
+      attr: { 'aria-label': t('battle.newEncounter') },
+    });
+    setIcon(add, 'plus');
+    add.addEventListener('click', () => this.deps.newEncounter());
     header.createDiv({ cls: 'dnd5e-battle-spacer' });
     const f = this.fight;
     const button = (text: StringKey, cls: string, run: () => void, cta = false, icon = '') => {
