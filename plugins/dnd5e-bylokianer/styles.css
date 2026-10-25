@@ -705,6 +705,35 @@
   touch-action: none;
   user-select: none;
   cursor: grab;
+  /* Obsidian's canvas dots, moved and scaled with the stage (PanZoom sets the variables). */
+  background-color: var(--canvas-background, var(--background-primary));
+  background-image: radial-gradient(
+    circle,
+    var(--canvas-dot-pattern, var(--background-modifier-border)) 1.2px,
+    transparent 1.4px
+  );
+  background-size: var(--dnd5e-grid-size, 24px) var(--dnd5e-grid-size, 24px);
+  background-position: var(--dnd5e-grid-x, 0) var(--dnd5e-grid-y, 0);
+}
+
+/* Hovering a node lights it, its arrows and its neighbours; everything else steps back. */
+.dnd5e-world-graph .dnd5e-world-node,
+.dnd5e-world-graph .dnd5e-world-edge,
+.dnd5e-world-graph .dnd5e-world-tie {
+  transition: opacity 0.15s ease;
+}
+
+.dnd5e-world-graph.is-focusing .dnd5e-world-node:not(.is-lit),
+.dnd5e-world-graph.is-focusing .dnd5e-world-edge:not(.is-lit) {
+  opacity: 0.18;
+}
+
+.dnd5e-world-graph.is-focusing .dnd5e-world-tie {
+  opacity: 0.3;
+}
+
+.dnd5e-world-graph.is-focusing .dnd5e-world-edge.is-lit .dnd5e-world-edge-line {
+  stroke-width: 3;
 }
 
 .dnd5e-world-graph:active {
@@ -751,6 +780,31 @@
   stroke-width: 14;
 }
 
+/* The value badge in the middle of an arrow: shown when it is lit or hovered. */
+.dnd5e-world-edge-value {
+  display: none;
+  pointer-events: none;
+}
+
+.dnd5e-world-edge.is-lit .dnd5e-world-edge-value,
+.dnd5e-world-edge:hover .dnd5e-world-edge-value {
+  display: inline;
+}
+
+.dnd5e-world-edge-value rect {
+  fill: var(--background-primary);
+  stroke: var(--dnd5e-value-colour, var(--color-yellow));
+  stroke-width: 1.5;
+}
+
+.dnd5e-world-edge-value text {
+  fill: var(--text-normal);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+  font-variant-numeric: tabular-nums;
+  text-anchor: middle;
+}
+
 .dnd5e-world-node {
   cursor: pointer;
 }
@@ -758,10 +812,29 @@
 .dnd5e-world-circle {
   fill: var(--background-secondary);
   stroke: var(--background-modifier-border-hover, var(--text-faint));
-  stroke-width: 1.5;
+  stroke-width: 2;
+  transition: stroke-width 0.15s ease;
+}
+
+/* A faction in its colour: a tinted disc, a solid rim and a soft glow around it. */
+.dnd5e-world-node.has-hue .dnd5e-world-circle {
+  fill: color-mix(in srgb, var(--dnd5e-hue) 22%, var(--background-primary));
+  stroke: var(--dnd5e-hue);
+}
+
+.dnd5e-world-glow {
+  fill: transparent;
+}
+
+.dnd5e-world-node.has-hue .dnd5e-world-glow {
+  fill: rgba(var(--dnd5e-hue-rgb), 0.12);
 }
 
 .dnd5e-world-node:hover .dnd5e-world-circle,
+.dnd5e-world-node.is-lit .dnd5e-world-circle {
+  stroke-width: 3;
+}
+
 .dnd5e-world-node:hover .dnd5e-world-frame {
   stroke: var(--interactive-accent);
 }
@@ -769,6 +842,30 @@
 .dnd5e-world-node.is-ghost .dnd5e-world-circle {
   fill: transparent;
   stroke-dasharray: 4 4;
+}
+
+.dnd5e-world-initials {
+  fill: var(--text-muted);
+  font-size: var(--dnd5e-initials-size, 16px);
+  font-weight: var(--font-bold);
+  letter-spacing: 0.04em;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.dnd5e-world-node.has-hue .dnd5e-world-initials {
+  fill: var(--dnd5e-hue);
+}
+
+/* The name on a pill below the node, like a tag. */
+.dnd5e-world-pill {
+  fill: var(--background-primary);
+  stroke: var(--background-modifier-border);
+  stroke-width: 1;
+}
+
+.dnd5e-world-node.has-hue .dnd5e-world-pill {
+  stroke: rgba(var(--dnd5e-hue-rgb), 0.45);
 }
 
 .dnd5e-world-label,
@@ -782,13 +879,8 @@
   text-anchor: middle;
 }
 
-/* A halo in the background colour keeps names readable over arrows. */
 .dnd5e-world-label {
   font-weight: var(--font-semibold);
-  paint-order: stroke;
-  stroke: var(--background-primary);
-  stroke-width: 4px;
-  stroke-linejoin: round;
 }
 
 .dnd5e-world-node.is-ghost .dnd5e-world-label {
@@ -796,20 +888,45 @@
   font-weight: var(--font-normal);
 }
 
-.dnd5e-world-frame,
 .dnd5e-fv-box rect {
   fill: var(--background-secondary);
   stroke: var(--background-modifier-border);
   stroke-width: 1.5;
 }
 
-.dnd5e-world-frame,
+/* Party and Unaffiliated: a card with a header, like a group on the canvas. */
+.dnd5e-world-frame {
+  fill: var(--background-primary);
+  stroke: var(--background-modifier-border-hover, var(--background-modifier-border));
+  stroke-width: 1.5;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.18));
+}
+
+.dnd5e-world-frame-rule {
+  stroke: var(--background-modifier-border);
+  stroke-width: 1;
+}
+
+.dnd5e-world-frame-title,
+.dnd5e-world-frame-row {
+  text-anchor: start;
+}
+
+.dnd5e-world-frame-count {
+  fill: var(--text-faint);
+  font-size: 16px;
+  text-anchor: end;
+}
+
+.dnd5e-world-frame-dot {
+  fill: var(--text-faint);
+}
+
 .dnd5e-fv-box.is-group rect,
 .dnd5e-fv-box.is-ghost rect {
   stroke-dasharray: 5 4;
 }
 
-.dnd5e-world-frame-title,
 .dnd5e-fv-box.is-ghost .dnd5e-fv-box-title {
   fill: var(--text-muted);
 }
@@ -880,17 +997,72 @@
   opacity: 0.4;
 }
 
-/* Matrix */
+/* Floating over the canvas: zoom buttons on the right, the colour scale at the bottom. */
+
+.dnd5e-world-controls {
+  position: absolute;
+  top: var(--size-4-3);
+  right: var(--size-4-3);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--size-4-1);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+  box-shadow: var(--shadow-s);
+}
+
+.dnd5e-world-legend {
+  position: absolute;
+  bottom: var(--size-4-3);
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  max-width: calc(100% - 2 * var(--size-4-3));
+  padding: var(--size-4-1) var(--size-4-3);
+  transform: translateX(-50%);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 999px;
+  background: var(--background-primary);
+  box-shadow: var(--shadow-s);
+  color: var(--text-muted);
+  font-size: 16px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.dnd5e-world-legend-bar {
+  flex: 0 1 160px;
+  min-width: 60px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--dnd5e-legend);
+}
+
+/* Matrix: an Obsidian table on a card, values as tinted cells. */
 
 .dnd5e-world-matrix {
   height: 100%;
   overflow: auto;
+  padding: var(--size-4-4) var(--size-4-4) 72px;
+}
+
+.dnd5e-world-matrix-card {
+  display: inline-block;
+  border: 1px solid var(--table-border-color, var(--background-modifier-border));
+  border-radius: var(--radius-l);
+  background: var(--background-primary);
+  box-shadow: var(--shadow-s);
+  overflow: clip;
 }
 
 .dnd5e-world-matrix table {
-  margin: var(--size-4-3) var(--size-4-4);
   border-collapse: separate;
-  border-spacing: 3px;
+  border-spacing: 4px;
 }
 
 .dnd5e-world-matrix th {
@@ -899,13 +1071,15 @@
   background: var(--background-primary);
   font-weight: var(--font-semibold);
   text-align: left;
+  transition: color 0.12s ease;
 }
 
 .dnd5e-world-matrix thead th {
   top: 0;
   z-index: 2;
-  max-width: 7.5em;
-  padding: var(--size-4-1) var(--size-4-2);
+  max-width: 8em;
+  padding: var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
   vertical-align: bottom;
 }
 
@@ -913,6 +1087,22 @@
 .dnd5e-world-matrix thead th.is-sub {
   color: var(--text-muted);
   font-weight: var(--font-normal);
+}
+
+.dnd5e-world-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: var(--size-4-2);
+  border-radius: 50%;
+  border: 1.5px dashed var(--text-faint);
+  vertical-align: middle;
+}
+
+.has-hue > .dnd5e-world-dot {
+  border: none;
+  background: var(--dnd5e-hue);
+  box-shadow: 0 0 0 3px rgba(var(--dnd5e-hue-rgb), 0.2);
 }
 
 .dnd5e-world-matrix .dnd5e-world-corner {
@@ -925,8 +1115,28 @@
 .dnd5e-world-row {
   left: 0;
   padding: var(--size-4-1) var(--size-4-3) var(--size-4-1)
-    calc(var(--size-4-2) + var(--dnd5e-depth, 0) * var(--size-4-4));
+    calc(var(--size-4-2) + var(--dnd5e-depth, 0) * var(--size-4-5));
   white-space: nowrap;
+}
+
+.dnd5e-world-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: var(--size-4-2);
+  border-radius: 50%;
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: var(--font-bold);
+  vertical-align: middle;
+}
+
+.dnd5e-world-row.has-hue .dnd5e-world-avatar {
+  background: rgba(var(--dnd5e-hue-rgb), 0.2);
+  color: var(--dnd5e-hue);
 }
 
 .dnd5e-world-row a {
@@ -934,30 +1144,43 @@
   text-decoration: none;
 }
 
-.dnd5e-world-row a:hover {
+.dnd5e-world-row a:hover,
+.dnd5e-world-matrix th.is-cross,
+.dnd5e-world-matrix th.is-cross a {
   color: var(--text-accent);
 }
 
 .dnd5e-world-matrix tr.is-group th {
-  padding-top: var(--size-4-4);
+  padding: var(--size-4-4) var(--size-4-2) var(--size-4-1);
   color: var(--text-muted);
 }
 
 .dnd5e-world-matrix td {
   min-width: 5.5em;
-  height: 3.2em;
+  height: 3.4em;
   padding: var(--size-4-1);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
   text-align: center;
   cursor: pointer;
+  transition:
+    box-shadow 0.12s ease,
+    transform 0.12s ease;
 }
 
 .dnd5e-world-matrix td.is-none {
   cursor: default;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 6px,
+    var(--background-modifier-border) 6px 7px
+  );
+  opacity: 0.6;
 }
 
 .dnd5e-world-matrix td.is-empty:hover {
   background: var(--background-modifier-hover);
+  box-shadow: inset 0 0 0 1px
+    var(--background-modifier-border-hover, var(--background-modifier-border));
 }
 
 .dnd5e-world-matrix td.has-value {
@@ -965,7 +1188,8 @@
 }
 
 .dnd5e-world-matrix td.has-value:hover {
-  box-shadow: inset 0 0 0 1.5px var(--dnd5e-value-colour);
+  box-shadow: inset 0 0 0 2px var(--dnd5e-value-colour);
+  transform: scale(1.04);
 }
 
 .dnd5e-world-matrix td.is-inherited {
@@ -980,7 +1204,8 @@
 }
 
 .dnd5e-world-number {
-  font-weight: var(--font-semibold);
+  font-size: 18px;
+  font-weight: var(--font-bold);
   font-variant-numeric: tabular-nums;
 }
 

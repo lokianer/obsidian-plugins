@@ -5,6 +5,8 @@ import type { Point } from '../factions/layout';
 
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 3;
+/** Spacing of the canvas dots at zoom 1, in pixels. */
+const GRID = 24;
 
 export class PanZoom {
   private view = { x: 0, y: 0, k: 1 };
@@ -55,9 +57,21 @@ export class PanZoom {
     this.apply();
   }
 
+  /** Zooms by `factor` around the middle of the view (the zoom buttons). */
+  zoomBy(factor: number): void {
+    const box = this.svg.getBoundingClientRect();
+    this.zoomAt(factor, box.width / 2, box.height / 2);
+  }
+
   private apply(): void {
     const { x, y, k } = this.view;
     this.stage.setAttribute('transform', `translate(${x} ${y}) scale(${k})`);
+    // The canvas dots move and scale with the stage, like Obsidian's canvas.
+    this.svg.setCssProps({
+      '--dnd5e-grid-size': `${GRID * k}px`,
+      '--dnd5e-grid-x': `${x}px`,
+      '--dnd5e-grid-y': `${y}px`,
+    });
   }
 
   private zoomAt(factor: number, cx: number, cy: number): void {

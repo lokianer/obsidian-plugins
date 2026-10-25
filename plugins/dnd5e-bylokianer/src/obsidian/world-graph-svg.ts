@@ -2,6 +2,7 @@
 // with pan, zoom, selection and the clicks that lead into notes and the faction card. The layout
 // is computed from the public graph only, so the True toggle never moves a node.
 
+import { factionHues, type Hue, initials } from '../factions/hues';
 import type { FactionWorld, Mode } from '../factions/model';
 import { type CachedPoint, layout, nodeRadius, type Point } from '../factions/layout';
 import { signed, stepColour, stepName } from '../factions/steps';
@@ -9,6 +10,7 @@ import { buildGraph, type GraphEdge, type GraphNode } from '../factions/world-gr
 import type { T } from '../i18n/strings';
 import { PanZoom } from './pan-zoom';
 import type { PopoverTarget } from './popover';
+import { textWidth } from './svg-text';
 
 const FRAME_WIDTH = 200;
 const FRAME_HEAD = 40;
@@ -17,6 +19,7 @@ const BOW = 22;
 /** How far an arrow from a frame runs straight out before it bends. */
 const STUB = 24;
 const ARROW = 10;
+const PILL = 26;
 
 export interface GraphActions {
   /** Open a note; `newLeaf` for Ctrl/Cmd. */
@@ -49,6 +52,10 @@ export class WorldGraphSvg {
   private pinned = new Set<string>();
   private key = '';
   private fitted = false;
+  private hues = new Map<string, Hue>();
+  /** What a hovered node lights up: its own arrows and the nodes at their other ends. */
+  private nodeEls = new Map<string, SVGGElement>();
+  private edgeEls: { el: SVGGElement; ends: [string, string] }[] = [];
   /** Set by the view: draw again with the current world and mode. */
   redraw: (() => void) | null = null;
 
@@ -84,8 +91,13 @@ export class WorldGraphSvg {
         if (!this.positions.has(id)) this.positions.set(id, p);
       }
     }
+    this.hues = factionHues(world);
     this.draw(graph);
     if (!this.fitted) this.fit();
+  }
+
+  zoomBy(factor: number): void {
+    this.panZoom.zoomBy(factor);
   }
 
   /** Forgets every position and pin and lays the graph out afresh. */
@@ -110,6 +122,8 @@ export class WorldGraphSvg {
 
   private draw(graph: ReturnType<typeof buildGraph>): void {
     this.stage.empty();
+    this.nodeEls.clear();
+    this.edgeEls = [];
 
     const ties = this.stage.createSvg('g', { cls: 'dnd5e-world-ties' });
     for (const { child, parent } of graph.ties) {
@@ -191,6 +205,7 @@ export class WorldGraphSvg {
     const cls = ['dnd5e-world-edge'];
     if (edge.differs) cls.push('is-differs');
     const group = layer.createSvg('g', { cls });
+    this.edgeEls.push({ el: group, ends: [edge.sourceNode, edge.target] });
     group.setCssProps({ '--dnd5e-value-colour': stepColour(edge.value) });
     group.createSvg('path', {
       cls: 'dnd5e-world-edge-line',
@@ -209,6 +224,17 @@ export class WorldGraphSvg {
       cls: 'dnd5e-world-edge-hit',
       attr: { d: `M ${start.x} ${start.y} Q ${control.x} ${control.y} ${tip.x} ${tip.y}` },
     });
+    // The value on a badge in the middle of the curve, shown when the arrow is lit or hovered.
+    const mid = {
+      x: 0.25 * start.x + 0.5 * control.x + 0.25 * base.x,
+      y: 0.25 * start.y + 0.5 * control.y + 0.25 * base.y,
+    };
+    const badge = group.createSvg('g', {
+      cls: 'dnd5e-world-edge-value',
+      attr: { transform: `translate(${mid.x} ${mid.y})` },
+    });
+    badge.createSvg('rect', { attr: { x: -19, y: -13, width: 38, height: PILL, rx: 13 } });
+    badge.createSvg('text', { attr: { y: 6 } }).textContent = signed(edge.value);
     const source = nodes.get(edge.sourceNode);
     const sourceName =
       source?.kind === 'frame'
@@ -238,36 +264,31 @@ export class WorldGraphSvg {
       cls: ['dnd5e-world-node', `is-${node.kind}`],
       attr: { transform: `translate(${p.x} ${p.y})` },
     });
+    this.nodeEls.set(node.id, group);
+    const hue = this.hues.get(node.id);
+    if (hue !== undefined) {
+      group.addClass('has-hue');
+      group.setCssProps({
+        '--dnd5e-hue': `var(--color-${hue})`,
+        '--dnd5e-hue-rgb': `var(--color-${hue}-rgb)`,
+      });
+    }
 
     if (node.kind === 'frame') {
-      const height = frameHeight(node.rows.length);
-      group.createSvg('rect', {
-        cls: 'dnd5e-world-frame',
-        attr: { x: -FRAME_WIDTH / 2, y: -height / 2, width: FRAME_WIDTH, height, rx: 8 },
-      });
-      const title = group.createSvg('text', {
-        cls: 'dnd5e-world-frame-title',
-        attr: { x: 0, y: -height / 2 + 26 },
-      });
-      title.textContent = this.t(node.id === '@party' ? 'pseudo.party' : 'pseudo.unaffiliated');
-      node.rows.forEach((row, i) => {
-        const text = group.createSvg('text', {
-          cls: 'dnd5e-world-frame-row',
-          attr: { x: 0, y: -height / 2 + FRAME_HEAD + FRAME_ROW * i + 19 },
-        });
-        text.textContent = row.name;
-        const path = row.notePath;
-        if (path !== null) {
-          text.addEventListener('click', (event) => {
-            event.stopPropagation();
-            this.actions.openNote(path, event.ctrlKey || event.metaKey);
-          });
-        }
-      });
+      this.drawFrame(group, node);
     } else {
       const r = nodeRadius(node);
+      group.createSvg('circle', { cls: 'dnd5e-world-glow', attr: { r: r + 8 } });
       group.createSvg('circle', { cls: 'dnd5e-world-circle', attr: { r } });
-      const label = group.createSvg('text', { cls: 'dnd5e-world-label', attr: { y: r + 20 } });
+      const mark = group.createSvg('text', { cls: 'dnd5e-world-initials', attr: { dy: '0.35em' } });
+      mark.setCssProps({ '--dnd5e-initials-size': `${Math.max(16, Math.round(r * 0.72))}px` });
+      mark.textContent = node.kind === 'ghost' ? '?' : initials(node.name);
+      const width = textWidth(node.name, 16, true) + 24;
+      group.createSvg('rect', {
+        cls: 'dnd5e-world-pill',
+        attr: { x: -width / 2, y: r + 10, width, height: PILL, rx: PILL / 2 },
+      });
+      const label = group.createSvg('text', { cls: 'dnd5e-world-label', attr: { y: r + 29 } });
       label.textContent = node.name;
     }
     // Power shows as the node's size; the tooltip says it in words.
@@ -276,10 +297,69 @@ export class WorldGraphSvg {
     this.bindNode(group, node);
   }
 
+  /** Party and Unaffiliated as a card with a header, like a group on Obsidian's canvas. */
+  private drawFrame(group: SVGGElement, node: Extract<GraphNode, { kind: 'frame' }>): void {
+    const height = frameHeight(node.rows.length);
+    const [left, top] = [-FRAME_WIDTH / 2, -height / 2];
+    group.createSvg('rect', {
+      cls: 'dnd5e-world-frame',
+      attr: { x: left, y: top, width: FRAME_WIDTH, height, rx: 12 },
+    });
+    group.createSvg('line', {
+      cls: 'dnd5e-world-frame-rule',
+      attr: { x1: left, y1: top + FRAME_HEAD - 4, x2: -left, y2: top + FRAME_HEAD - 4 },
+    });
+    const title = group.createSvg('text', {
+      cls: 'dnd5e-world-frame-title',
+      attr: { x: left + 16, y: top + 25 },
+    });
+    title.textContent = this.t(node.id === '@party' ? 'pseudo.party' : 'pseudo.unaffiliated');
+    const count = group.createSvg('text', {
+      cls: 'dnd5e-world-frame-count',
+      attr: { x: -left - 16, y: top + 25 },
+    });
+    count.textContent = String(node.rows.length);
+    node.rows.forEach((row, i) => {
+      const y = top + FRAME_HEAD + FRAME_ROW * i + FRAME_ROW / 2;
+      group.createSvg('circle', {
+        cls: 'dnd5e-world-frame-dot',
+        attr: { cx: left + 20, cy: y, r: 3 },
+      });
+      const text = group.createSvg('text', {
+        cls: 'dnd5e-world-frame-row',
+        attr: { x: left + 32, y: y + 5.5 },
+      });
+      text.textContent = row.name;
+      const path = row.notePath;
+      if (path !== null) {
+        text.addEventListener('click', (event) => {
+          event.stopPropagation();
+          this.actions.openNote(path, event.ctrlKey || event.metaKey);
+        });
+      }
+    });
+  }
+
+  /** Lights up a node, its arrows and its neighbours, and dims the rest; null ends it. */
+  private focusOn(id: string | null): void {
+    this.svg.toggleClass('is-focusing', id !== null);
+    for (const el of this.nodeEls.values()) el.removeClass('is-lit');
+    for (const { el } of this.edgeEls) el.removeClass('is-lit');
+    if (id === null) return;
+    this.nodeEls.get(id)?.addClass('is-lit');
+    for (const { el, ends } of this.edgeEls) {
+      if (!ends.includes(id)) continue;
+      el.addClass('is-lit');
+      for (const end of ends) this.nodeEls.get(end)?.addClass('is-lit');
+    }
+  }
+
   // ── interaction ────────────────────────────────────────────────────────────────────────────
 
   private bindNode(group: SVGGElement, node: GraphNode): void {
     let dragged = false;
+    group.addEventListener('pointerenter', () => this.focusOn(node.id));
+    group.addEventListener('pointerleave', () => this.focusOn(null));
     group.addEventListener('pointerdown', (event) => {
       if (event.button !== 0) return;
       event.stopPropagation();

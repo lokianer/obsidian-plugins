@@ -65,6 +65,14 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Changed
 
+- **Faction world, redesigned** closer to Obsidian's graph and canvas: each faction in a colour of
+  Obsidian's palette (shared by its sub-factions and members; red, yellow and green stay with the
+  values) with its initials in the disc and its name on a pill; the canvas dot grid moving with pan
+  and zoom; hovering a faction lights its arrows and neighbours, dims the rest and shows the values
+  on the arrows; Party and Unaffiliated as cards with a header and a count; floating zoom and fit
+  buttons and a −5 … +5 colour scale. The matrix sits on a card like an Obsidian table, with colour
+  dots and initials on rows and columns, a crosshair on the hovered cell's row and column and
+  hatched self cells.
 - A cleaner look closer to Obsidian across card, faction world, faction view, tension panel and
   warnings modal: no nested boxes or coloured side bars, headings in normal case, values as a soft
   tint of their colour behind normal text, icon buttons that appear on hover (always on phones),

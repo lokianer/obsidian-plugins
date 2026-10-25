@@ -7,8 +7,10 @@ import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
 
 import { buildFactionView, type FactionView } from '../factions/faction-view';
 import type { CachedPoint, Point } from '../factions/layout';
+import { factionHues } from '../factions/hues';
 import { buildMatrix } from '../factions/matrix';
 import type { FactionWorld, Mode } from '../factions/model';
+import { signed, stepColour, stepName } from '../factions/steps';
 import type { EditTarget } from '../factions/model';
 import type { T } from '../i18n/strings';
 import { summary } from '../npc/statblock';
@@ -127,7 +129,45 @@ export class WorldView extends ItemView {
       (kind === 'faction' && this.factionView !== null);
     if (kind !== 'graph') this.graph = null;
     if (kind !== 'faction') this.factionView = null;
-    if (!keep) this.body.empty();
+    if (keep) return;
+    this.body.empty();
+    if (kind !== 'other') {
+      this.controls();
+      this.legend();
+    }
+  }
+
+  /** Zoom and fit buttons floating over the canvas, like Obsidian's canvas controls. */
+  private controls(): void {
+    const { t } = this.deps;
+    const canvas = () => this.graph ?? this.factionView;
+    const bar = this.body.createDiv({ cls: 'dnd5e-world-controls' });
+    const buttons: [string, string, () => void][] = [
+      ['plus', t('world.zoomIn'), () => canvas()?.zoomBy(1.25)],
+      ['minus', t('world.zoomOut'), () => canvas()?.zoomBy(0.8)],
+      ['maximize', t('world.fit'), () => canvas()?.fit()],
+    ];
+    for (const [icon, label, act] of buttons) {
+      const button = bar.createEl('button', {
+        cls: 'clickable-icon',
+        attr: { 'aria-label': label },
+      });
+      setIcon(button, icon);
+      button.addEventListener('click', act);
+    }
+  }
+
+  /** The colour scale from −5 to +5 with the steps' names at its ends. */
+  private legend(): void {
+    const { t } = this.deps;
+    const names = this.deps.settings().stepNames;
+    const legend = this.body.createDiv({ cls: 'dnd5e-world-legend' });
+    legend.createSpan({ text: `${signed(-5)} ${stepName(-5, t, names)}` });
+    const stops = Array.from({ length: 11 }, (_, i) => stepColour(i - 5)).join(', ');
+    legend
+      .createDiv({ cls: 'dnd5e-world-legend-bar' })
+      .setCssProps({ '--dnd5e-legend': `linear-gradient(90deg, ${stops})` });
+    legend.createSpan({ text: `${signed(5)} ${stepName(5, t, names)}` });
   }
 
   private render(): void {
@@ -169,10 +209,11 @@ export class WorldView extends ItemView {
     }
     if (this.deps.settings().worldMode === 'matrix') {
       this.show('other');
-      renderMatrix(this.body, buildMatrix(world, this.mode), t, stepNames(), {
+      renderMatrix(this.body, buildMatrix(world, this.mode), factionHues(world), t, stepNames(), {
         openNote: this.deps.openNote,
         ...values,
       });
+      this.legend();
       return;
     }
     this.show('graph');

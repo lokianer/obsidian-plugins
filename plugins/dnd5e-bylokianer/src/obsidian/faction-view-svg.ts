@@ -15,6 +15,7 @@ import { signed, stepColour, stepName } from '../factions/steps';
 import type { T } from '../i18n/strings';
 import { PanZoom } from './pan-zoom';
 import type { PopoverTarget } from './popover';
+import { textWidth } from './svg-text';
 
 const CHIP_W = 170;
 const CHIP_H = 36;
@@ -49,14 +50,6 @@ interface Rect {
   h: number;
 }
 
-/**
- * A generous estimate of a label's width in pixels. Measuring needs a laid-out SVG, which a tab
- * that is still hidden does not have; a little too much room is harmless.
- */
-function textWidth(text: string, size: number, bold = false): number {
-  return text.length * size * (bold ? 0.62 : 0.56);
-}
-
 /** Where the line from a rectangle's centre towards `towards` leaves the rectangle. */
 function border(rect: Rect, towards: Point): Point {
   const dx = towards.x - rect.x;
@@ -70,6 +63,8 @@ export class FactionViewSvg {
   private readonly svg: SVGSVGElement;
   private readonly stage: SVGGElement;
   private readonly panZoom: PanZoom;
+  /** The corners of everything drawn, for a fit. */
+  private corners: Point[] = [];
   private selected: string | null = null;
   private fittedFor: string | null = null;
   private last: { view: FactionView; angles: ReadonlyMap<string, number> } | null = null;
@@ -105,14 +100,23 @@ export class FactionViewSvg {
     this.last = { view, angles };
     const places = this.place(view, angles);
     this.draw(view, places);
+    this.corners = [...places.values()].flatMap((r) => [
+      { x: r.x - r.w / 2, y: r.y - r.h / 2 },
+      { x: r.x + r.w / 2, y: r.y + r.h / 2 },
+    ]);
     if (this.fittedFor !== view.id) {
-      const corners = [...places.values()].flatMap((r) => [
-        { x: r.x - r.w / 2, y: r.y - r.h / 2 },
-        { x: r.x + r.w / 2, y: r.y + r.h / 2 },
-      ]);
-      this.panZoom.fit(corners, 60);
+      this.fit();
       this.fittedFor = view.id;
     }
+  }
+
+  /** Zooms and pans so the whole view is in sight. */
+  fit(): void {
+    this.panZoom.fit(this.corners, 60);
+  }
+
+  zoomBy(factor: number): void {
+    this.panZoom.zoomBy(factor);
   }
 
   /** Forgets what was dragged in the current view. */

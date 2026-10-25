@@ -162,6 +162,15 @@ fields)
     its lock closes and it survives the next Roll everything; a lock clicked by hand keeps an empty
     field empty; the single dice still roll locked fields.
 
+**Faction world redesign** (asked for 2026-10-25)
+
+20. Graph: coloured discs with initials, names on pills, dot grid that moves with pan/zoom; hover
+    The Gutter Court → its arrows and neighbours stay, the rest fades, values show on the arrows;
+    zoom +/−/fit buttons top right, colour scale at the bottom; Party and Unaffiliated as cards.
+    Check a light theme and one community theme too.
+21. Matrix: card with colour dots and initials, hovering a cell colours its row and column names;
+    self cells hatched; the faction view (drill-down) keeps working with the dot grid.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).

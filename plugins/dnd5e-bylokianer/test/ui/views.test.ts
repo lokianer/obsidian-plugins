@@ -34,6 +34,7 @@ import { TensionView } from '../../src/obsidian/tension-view';
 import type { WorldCache } from '../../src/obsidian/world-cache';
 import { WorldGraphSvg } from '../../src/obsidian/world-graph-svg';
 import { renderMatrix } from '../../src/obsidian/world-matrix';
+import { factionHues } from '../../src/factions/hues';
 import { loadExampleVault } from '../fixture';
 import { notices } from './obsidian';
 
@@ -160,24 +161,48 @@ describe('world graph', () => {
 
   it('opens a faction’s view on a click', () => {
     new WorldGraphSvg(root, t, () => [], actions).update(world, 'public', {});
-    const court = [...root.querySelectorAll('.dnd5e-world-node')].find((n) =>
-      n.textContent?.startsWith('The Gutter Court'),
+    const court = [...root.querySelectorAll('.dnd5e-world-node')].find(
+      (n) => n.querySelector('.dnd5e-world-label')?.textContent === 'The Gutter Court',
     );
+    expect(court?.querySelector('.dnd5e-world-initials')?.textContent).toBe('GC');
+    expect(court?.classList.contains('has-hue')).toBe(true);
     court?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(actions.openFaction).toHaveBeenCalledWith(COURT);
+  });
+
+  it('lights a hovered faction’s arrows and neighbours and dims the rest', () => {
+    new WorldGraphSvg(root, t, () => [], actions).update(world, 'public', {});
+    const nodes = [...root.querySelectorAll('.dnd5e-world-node')];
+    const court = nodes.find(
+      (n) => n.querySelector('.dnd5e-world-label')?.textContent === 'The Gutter Court',
+    );
+    court?.dispatchEvent(new Event('pointerenter'));
+    expect(root.querySelector('svg')?.classList.contains('is-focusing')).toBe(true);
+    const lit = nodes.filter((n) => n.classList.contains('is-lit'));
+    expect(lit.length).toBeGreaterThan(1);
+    expect(lit.length).toBeLessThan(nodes.length);
+    expect(root.querySelectorAll('.dnd5e-world-edge.is-lit').length).toBeGreaterThan(0);
+    court?.dispatchEvent(new Event('pointerleave'));
+    expect(root.querySelectorAll('.is-lit').length).toBe(0);
   });
 });
 
 describe('matrix', () => {
   it('shows inherited values dashed and opens the popover on a cell', () => {
     const openValue = vi.fn();
-    renderMatrix(root, buildMatrix(world, 'public'), t, [], {
+    renderMatrix(root, buildMatrix(world, 'public'), factionHues(world), t, [], {
       openNote: () => {},
       openValue,
       history: () => [],
     });
     expect(root.querySelectorAll('td.has-value').length).toBeGreaterThan(0);
     expect(root.querySelectorAll('td.is-inherited').length).toBeGreaterThan(0);
+    expect(
+      root.querySelectorAll('.dnd5e-world-row.has-hue .dnd5e-world-avatar').length,
+    ).toBeGreaterThan(0);
+    const cell = root.querySelector('td.has-value');
+    cell?.dispatchEvent(new MouseEvent('mouseenter'));
+    expect(root.querySelectorAll('th.is-cross').length).toBe(2);
     root.querySelector('td.has-value')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(openValue).toHaveBeenCalledOnce();
   });
