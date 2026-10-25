@@ -68,9 +68,22 @@ export const Keymap = {
   isModEvent: (event: MouseEvent) => event.ctrlKey || event.metaKey,
 };
 
+/** Renders text as one paragraph, with `[[links]]` as Obsidian's internal links. */
 export const MarkdownRenderer = {
   render(_app: unknown, markdown: string, el: HTMLElement): Promise<void> {
-    el.createEl('p', { text: markdown });
+    const p = el.createEl('p');
+    for (const part of markdown.split(/(\[\[[^\]]+\]\])/)) {
+      const link = /^\[\[([^\]|]+)(?:\|([^\]]+))?\]\]$/.exec(part);
+      if (link === null) p.appendText(part);
+      else {
+        const target = link[1] ?? '';
+        p.createEl('a', {
+          cls: 'internal-link',
+          text: link[2] ?? target,
+          attr: { 'data-href': target },
+        });
+      }
+    }
     return Promise.resolve();
   },
 };

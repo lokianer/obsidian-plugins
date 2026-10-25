@@ -72,6 +72,8 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Fixed
 
+- A link in another field of the card (`leader: "[[Isolde Ferrant]]"`) showed as plain text; it
+  is now a link that opens the note (Ctrl/Cmd: new tab), and links in reasons open the same way.
 - The faction world's graph and faction view were drawn off-screen when the tab had no size yet at
   its first render (usual in Obsidian): the fit to the content now waits until the view is laid out.
 - The graph showed only arrows, no factions or frames: a node's two classes were passed as one

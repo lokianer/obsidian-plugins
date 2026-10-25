@@ -82,6 +82,16 @@ export class CardRenderer extends Component {
     readonly el: HTMLElement,
   ) {
     super();
+    // Links rendered from Markdown (a reason, a field like `leader: "[[Isolde Ferrant]]"`) open
+    // their note, Ctrl/Cmd in a new tab, as they do in a note.
+    el.addEventListener('click', (event) => {
+      const link = event.target instanceof Element ? event.target.closest('a.internal-link') : null;
+      const href = link?.getAttribute('data-href');
+      if (href === null || href === undefined) return;
+      event.preventDefault();
+      event.stopPropagation();
+      void ctx.app.workspace.openLinkText(href, ctx.file.path, Keymap.isModEvent(event));
+    });
   }
 
   private get t(): T {
@@ -487,12 +497,17 @@ export class CardRenderer extends Component {
             text: typeof item === 'string' || typeof item === 'number' ? String(item) : '…',
           });
         }
+      } else if (typeof field.value === 'string' && /\[\[|\]\(/.test(field.value)) {
+        // A link (or text with one) renders as in the note, so it can be clicked.
+        void MarkdownRenderer.render(this.ctx.app, field.value, value, this.ctx.file.path, this);
       } else {
         value.setText(this.shortValue(field));
       }
       if (field.editable && typeof field.value !== 'boolean') {
         value.addClass('is-editable');
-        value.addEventListener('click', () =>
+        value.addEventListener('click', (event) => {
+          // A click on a link opens it (handled above); anywhere else in the value edits it.
+          if (event.target instanceof Element && event.target.closest('a') !== null) return;
           this.inlineEdit(
             value,
             scalarText(field.value),
@@ -511,8 +526,8 @@ export class CardRenderer extends Component {
                 value: number ?? text,
               };
             },
-          ),
-        );
+          );
+        });
       } else {
         this.sourceButton(row, field.key);
       }

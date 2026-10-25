@@ -45,8 +45,10 @@ const COURT = `${F}/The Gutter Court`;
 const BENCH = `${COURT}/The Bench`;
 
 /** Just the vault and metadata cache the popover reads, backed by the example vault. */
+const openLinkText = vi.fn();
 const app = {
   vault: { getFileByPath: (path: string) => ({ path }) },
+  workspace: { openLinkText },
   metadataCache: {
     getFileCache: (file: { path: string }) => ({
       frontmatter: notes.find((n) => n.path === file.path)?.frontmatter,
@@ -76,7 +78,7 @@ describe('faction card', () => {
         card,
         world,
         t,
-        ui: { secretOpen: false, fieldsOpen: false },
+        ui: { secretOpen: false, fieldsOpen: true },
         stepNames: [],
         offerLog: () => {},
         statblock,
@@ -94,6 +96,15 @@ describe('faction card', () => {
     render(`${F}/The Drowned Choir/factions.md`);
     expect(texts(root, '.dnd5e-card-name')).toEqual(['The Drowned Choir']);
     expect(root.querySelectorAll('.dnd5e-card-row').length).toBeGreaterThan(0);
+  });
+
+  it('shows a link in another field as a link that opens its note', () => {
+    render(`${ORDER}/factions.md`);
+    const leader = root.querySelector('.dnd5e-card-field[data-key="leader"] a.internal-link');
+    expect(leader?.textContent).toBe('Isolde Ferrant');
+    leader?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(openLinkText).toHaveBeenCalledWith('Isolde Ferrant', `${ORDER}/factions.md`, false);
+    expect(root.querySelector('.dnd5e-card-field[data-key="leader"] input')).toBeNull();
   });
 
   it('offers a New NPC button on a faction’s card, not on a character’s', () => {
