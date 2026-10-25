@@ -59,7 +59,12 @@ export interface Settings {
   deckSelected: string;
   /** The encounter note the Battle tab showed last. */
   battleSelected: string | null;
+  /** The battle tracker's lines in tonight's session: offered in a notice, written, or none. */
+  battleLog: BattleLog;
 }
+
+export type BattleLog = 'ask' | 'auto' | 'off';
+const BATTLE_LOGS: readonly BattleLog[] = ['ask', 'auto', 'off'];
 
 export const DEFAULT_SETTINGS: Settings = {
   showProperties: false,
@@ -84,6 +89,7 @@ export const DEFAULT_SETTINGS: Settings = {
   monsterManual: null,
   deckSelected: 'standard',
   battleSelected: null,
+  battleLog: 'ask',
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */
@@ -164,6 +170,17 @@ export class SettingsTab extends PluginSettingTab {
           options: Object.fromEntries(DECK_SIZES.map((n) => [n, this.t(`settings.deckSize.${n}`)])),
         },
       },
+      {
+        name: this.t('settings.battleLog'),
+        desc: this.t('settings.battleLog.desc'),
+        control: {
+          type: 'dropdown',
+          key: 'battleLog',
+          options: Object.fromEntries(
+            BATTLE_LOGS.map((m) => [m, this.t(`settings.battleLog.${m}`)]),
+          ),
+        },
+      },
       ...PATHS.map((key) => ({
         name: this.t(`settings.${key}`),
         desc: this.t(`settings.${key}.desc`),
@@ -204,6 +221,7 @@ export class SettingsTab extends PluginSettingTab {
     if (isPath(key)) return this.settings()[key];
     if (key === 'tableLanguage') return this.settings().tableLanguage;
     if (key === 'deckSize') return String(this.settings().deckSize);
+    if (key === 'battleLog') return this.settings().battleLog;
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
 
@@ -214,6 +232,7 @@ export class SettingsTab extends PluginSettingTab {
     if (isPath(key) && typeof value === 'string') await this.setPath(key, value);
     if (key === 'tableLanguage') await this.setLanguage(value);
     if (key === 'deckSize') await this.setDeckSize(value);
+    if (key === 'battleLog') await this.setBattleLog(value);
     if (key.startsWith(STEP_KEY) && typeof value === 'string') {
       await this.setStepName(Number(key.slice(STEP_KEY.length)), value);
     }
@@ -231,6 +250,11 @@ export class SettingsTab extends PluginSettingTab {
     if (value === '13' || value === '22') {
       await this.save({ ...this.settings(), deckSize: value === '13' ? 13 : 22 });
     }
+  }
+
+  private async setBattleLog(value: unknown): Promise<void> {
+    const mode = BATTLE_LOGS.find((m) => m === value);
+    if (mode !== undefined) await this.save({ ...this.settings(), battleLog: mode });
   }
 
   private async setPath(key: PathKey, value: string): Promise<void> {
@@ -279,6 +303,13 @@ export class SettingsTab extends PluginSettingTab {
         dropdown
           .setValue(String(this.settings().deckSize))
           .onChange((value) => this.setDeckSize(value));
+      });
+    new Setting(containerEl)
+      .setName(t('settings.battleLog'))
+      .setDesc(t('settings.battleLog.desc'))
+      .addDropdown((dropdown) => {
+        for (const m of BATTLE_LOGS) dropdown.addOption(m, t(`settings.battleLog.${m}`));
+        dropdown.setValue(this.settings().battleLog).onChange((value) => this.setBattleLog(value));
       });
     for (const key of PATHS) {
       new Setting(containerEl)

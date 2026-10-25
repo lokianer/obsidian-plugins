@@ -548,3 +548,25 @@ in the encounter note — nothing kept only in the plugin.
 Left out for B1: adding or removing combatants mid-fight and the session log (B2), the encounter
 builder (B3), drag-and-drop in the order (the arrows nudge instead), asking before Start again
 replaces an ended fight's table.
+
+## 2026-10-25 · The battle tracker logs moments, not blows; the line-up can change mid-fight
+
+Phase B2 (plan `docs/superpowers/plans/2026-10-25-battle-b2.md`), built after the maintainer's
+"Mach weiter, ich teste später".
+
+- Session log lines for the moments a session report keeps: the fight begins, a combatant is
+  defeated, goes down or dies, the fight ends — with the defeated enemies' XP by challenge rating,
+  unsplit. Not every round or every hit.
+- The lines are English in every language, like the `## Combat` table: the files' conventions are
+  English, German is the UI's.
+- The setting **Battle log**: ask (a notice per line, the default, like the factions' changes),
+  automatic, or off. The same "start session N+1?" question applies.
+- A newcomer rolls and goes where its initiative puts it without re-sorting the rest (the GM's
+  nudges stay); a member of a group already fighting shares the group's initiative, takes the next
+  number and goes after the group. From the Monster Manual a monster joins the enemies.
+- A combatant added mid-fight lives only in the `## Combat` table (the encounter's frontmatter
+  stays what the GM planned); when the tab reads the table back, it is matched to a monster or a
+  note by its name without the member number.
+
+Left out: logging every round or damage, splitting XP per character, choosing the side of a
+newcomer (the GM can write `side:` into the encounter instead), Add to encounter (B3).

@@ -310,6 +310,25 @@ end of the combatant's turn, concentration — damage to a concentrating combata
 Constitution save's DC (10 or half the damage) — and the stat block. **End combat** closes the
 fight.
 
+The line-up can change while the fight runs: under the order, type a monster (English or German
+name), a note or any name with hit points and AC and press **Add**; **Add to combat** on a Monster
+Manual card does the same for that monster. A newcomer rolls its initiative and goes where it puts
+it — a member of a group already fighting shares the group's number and takes the next member
+number ("Owlbear 3"). **Remove from fight** on a card takes a combatant out, passing on its turn.
+
+The fight's moments go to tonight's session note, under `## Log`, like the factions' changes:
+
+```markdown
+- 21:40 Combat begins: [[Ambush under the second arch]]
+- 21:52 Round 3: Owlbear 1 defeated
+- 21:55 Round 4: Dagny is down
+- 21:58 Combat ends after 5 rounds — 1,400 XP
+```
+
+The XP is the sum of the defeated enemies' XP by challenge rating. The setting **Battle log** offers
+each line in a notice with **Log → Session N** (the default), writes them automatically, or keeps
+them out.
+
 Every change is written to the note's `## Combat` section, a plain table that reads without the
 plugin and is read back when the tab opens:
 

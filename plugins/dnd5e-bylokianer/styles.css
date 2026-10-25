@@ -3195,6 +3195,42 @@ a.dnd5e-tensions-name:hover {
   margin-top: var(--size-4-2);
 }
 
+.dnd5e-battle-add {
+  margin-top: var(--size-4-3);
+  padding-top: var(--size-4-2);
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.dnd5e-battle-add-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  padding: 0 var(--size-4-2);
+}
+
+.dnd5e-battle-add-fields input {
+  font-size: 16px;
+}
+
+.dnd5e-battle-add-name {
+  flex: 1 1 12em;
+}
+
+.dnd5e-battle-add-hp,
+.dnd5e-battle-add-ac {
+  width: 5em;
+}
+
+.dnd5e-battle-add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+}
+
+.dnd5e-battle-remove {
+  margin-left: auto;
+}
+
 @media (max-width: 700px) {
   .dnd5e-battle-body {
     grid-template-columns: minmax(0, 1fr);

@@ -21,9 +21,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
    `encounter.ts`, `fight.ts`, `table.ts`, tested in `test/battle.test.ts`), `battle-store.ts`
-   (vault adapter), `battle-view.ts` (the tab). Waiting for the check (points 47–52 below). Next:
-   B2 (session log lines, Add to combat from the Monster Manual, add/remove mid-fight), then B3
-   (encounter builder; verify the SRD 5.2 XP budget table before using it).
+   (vault adapter), `battle-view.ts` (the tab). B2 built after "Mach weiter, ich teste später":
+   `src/battle/log.ts` (moments → log lines), `addFighter` / `removeCombatant`, restore of rows
+   added mid-fight, `SessionLog.offerLine` with the setting `battleLog`, **Add to combat** in the
+   Monster Manual. Waiting for the check (points 47–56 below). Next: B3 (encounter builder; verify
+   the SRD 5.2 XP budget table before using it, and Add to encounter from the Monster Manual).
 2. Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
    restyled deck builder, the Monster Manual (M1, M3 with the file import). Open for later: the
    Monster Manual's German traits and actions (M2: about 48,500 words, in batches by challenge
@@ -282,11 +284,29 @@ fields)
     `## Combat` section (and Sable's line). **End combat** → "Ended after N rounds"; **Start again**
     replaces it. Revert the example vault afterwards (`git checkout examples/vault`).
 
+**Battle tracker B2**
+
+53. With a session note for tonight (`Silverstadt/Sessions/`): **Begin round 1** → a notice "Combat
+    begins: [[Ambush under the second arch]]" with **Log → Session 14/15**; click → the line under
+    `## Log`. Defeat a thug → "Round N: Court thug 1 defeated"; a character to 0 → "… is down";
+    three failed saves → "… dies"; **End combat** → "Combat ends after N rounds — 75 XP" with the
+    three Bridge rats defeated (CR 1/8, 25 XP each; inline thugs carry no XP).
+54. Settings → **Battle log**: Write them automatically → the lines appear without a notice; Off →
+    nothing.
+55. While the fight runs: type "Owlbear" (or "Eulenbär") under the order, **Add** → "Owlbear joins
+    the fight", its card opens with the stat block; again → "Owlbear 2" with the same initiative.
+    "Bell ringer" without HP → a notice; with HP 9 and AC 10 → it joins. **Remove from fight** on
+    its card → gone, its turn passes on.
+56. Monster Manual → a monster → **Add to combat**: it joins the open tab's fight; with no fight
+    running → "No fight is running …". Close and reopen the tab: the added monsters keep their stat
+    blocks.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session", "No non-SRD
 monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
-encounter note" (all 2026-10-25).
+encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight"
+(all 2026-10-25).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -320,5 +340,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 367 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 373 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

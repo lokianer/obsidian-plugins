@@ -1,8 +1,9 @@
 // The Battle tab: a fight from an encounter note, laid out like the Monster Manual — the initiative
 // order on the left, the picked combatant's card on the right (hit points, conditions, death saves,
 // its stat block). Start sets the order (monsters rolled, characters typed in), Begin starts round
-// 1, Next and Previous move the turn, End closes the fight. Every change is written to the note's
-// `## Combat` section, and read back from it when the tab opens.
+// 1, Next and Previous move the turn, End closes the fight; combatants join and leave mid-fight.
+// Every change is written to the note's `## Combat` section, and read back from it when the tab
+// opens; its moments (begins, defeated, ends) go to the session log.
 
 import {
   Component,
@@ -13,8 +14,10 @@ import {
   type WorkspaceLeaf,
 } from 'obsidian';
 
+import { type BattleEvent, battleEvents } from '../battle/log';
 import {
   addCondition,
+  addFighter,
   begin,
   type Combatant,
   CONDITIONS,
@@ -29,6 +32,7 @@ import {
   nextTurn,
   nudge,
   previousTurn,
+  removeCombatant,
   removeCondition,
   rollFor,
   setConcentration,
@@ -36,7 +40,7 @@ import {
   setTemp,
   setUp,
 } from '../battle/fight';
-import { restore, type Table } from '../battle/table';
+import { baseName, restore, type Table } from '../battle/table';
 import type { StringKey, T } from '../i18n/strings';
 import { germanBlock } from '../monsters/meta';
 import type { Lang } from '../npc/races';
@@ -57,6 +61,8 @@ export interface BattleDeps {
   openNote: (path: string) => void;
   /** Links the spell names in a stat block to the spellbook. */
   spells?: (el: HTMLElement) => void;
+  /** The fight's moments, for the session log. */
+  log?: (path: string, events: BattleEvent[]) => void;
 }
 
 export class BattleView extends ItemView {
@@ -69,6 +75,7 @@ export class BattleView extends ItemView {
   private picked: string | null = null;
   private amount = '';
   private rounds = '';
+  private adding = { name: '', hp: '', ac: '' };
   private text: Component | null = null;
 
   constructor(
@@ -113,14 +120,38 @@ export class BattleView extends ItemView {
     this.deps.select(path);
     const { fighters, table } = await this.deps.source.load(path);
     this.fighters = fighters;
-    this.setTable(table);
+    await this.setTable(path, table);
     this.render();
   }
 
-  private setTable(table: Table | null): void {
-    this.fight = table === null ? null : restore(table, setUp(this.fighters, this.deps.random));
-    this.ended = table?.ended ?? false;
+  /** The fight a table holds; rows the note does not list are looked up by name. */
+  private async setTable(path: string, table: Table | null): Promise<void> {
     this.picked = null;
+    this.ended = table?.ended ?? false;
+    if (table === null) {
+      this.fight = null;
+      return;
+    }
+    const fresh = setUp(this.fighters, this.deps.random);
+    const known = new Set(fresh.combatants.map((c) => c.id));
+    const extras = new Map<string, Fighter>();
+    for (const row of table.rows) {
+      if (known.has(row.id)) continue;
+      const found = await this.deps.source.fighter(baseName(row.id), path);
+      if (found !== null) extras.set(row.id, found);
+    }
+    this.fight = restore(table, fresh, extras);
+  }
+
+  /** A combatant joins the running fight (from the Monster Manual); false when none runs. */
+  add(fighter: Fighter): boolean {
+    const f = this.fight;
+    if (f === null || this.ended) return false;
+    const { fight, id } = addFighter(f, fighter, this.deps.random);
+    this.picked = id;
+    this.apply(fight);
+    new Notice(this.deps.t('battle.added', { name: id }));
+    return true;
   }
 
   private get lang(): Lang {
@@ -129,6 +160,8 @@ export class BattleView extends ItemView {
 
   /** A change to the fight: shown at once, written to the note. */
   private apply(next: Fight, ended = false): void {
+    const events = battleEvents(this.fight, next, ended, this.ended);
+    if (this.path !== null && events.length > 0) this.deps.log?.(this.path, events);
     this.fight = next;
     this.ended = ended;
     this.render();
@@ -162,6 +195,7 @@ export class BattleView extends ItemView {
       return;
     }
     for (const c of this.fight.combatants) this.renderRow(list, c);
+    if (!this.ended) this.renderAdd(list);
     const shown = this.fight.combatants.find((c) => c.id === (this.picked ?? this.fight?.turn));
     if (shown !== undefined) this.renderCard(card, shown);
     else card.createDiv({ cls: 'dnd5e-battle-hint', text: this.deps.t('battle.pickHint') });
@@ -361,6 +395,75 @@ export class BattleView extends ItemView {
     });
   }
 
+  /** Under the order: a monster, a note or a written combatant joins. */
+  private renderAdd(list: HTMLElement): void {
+    const { t } = this.deps;
+    const form = list.createEl('form', { cls: 'dnd5e-battle-add' });
+    form.createDiv({ cls: 'dnd5e-battle-section', text: t('battle.addSection') });
+    const fields = form.createDiv({ cls: 'dnd5e-battle-add-fields' });
+    const field = (key: 'name' | 'hp' | 'ac', label: StringKey, numeric: boolean) => {
+      const input = fields.createEl('input', {
+        cls: `dnd5e-battle-add-${key}`,
+        attr: {
+          type: numeric ? 'number' : 'text',
+          ...(numeric ? { inputmode: 'numeric', min: '0' } : {}),
+          placeholder: t(label),
+          'aria-label': t(label),
+        },
+      });
+      input.value = this.adding[key];
+      input.addEventListener('input', () => (this.adding[key] = input.value));
+    };
+    field('name', 'battle.addName', false);
+    field('hp', 'battle.addHp', true);
+    field('ac', 'battle.addAc', true);
+    const submit = fields.createEl('button', {
+      cls: 'dnd5e-battle-add-button',
+      attr: { type: 'submit' },
+    });
+    setIcon(submit.createSpan(), 'plus');
+    submit.createSpan({ text: t('battle.add') });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      void this.addTyped();
+    });
+  }
+
+  private async addTyped(): Promise<void> {
+    const name = this.adding.name.trim();
+    if (name === '' || this.path === null) return;
+    const number = (text: string) => {
+      const n = Math.floor(Number(text));
+      return text.trim() !== '' && Number.isFinite(n) && n >= 0 ? n : null;
+    };
+    const hp = number(this.adding.hp);
+    const ac = number(this.adding.ac);
+    const found = await this.deps.source.fighter(name, this.path);
+    if (found === null && hp === null) {
+      new Notice(this.deps.t('battle.unknown', { name }));
+      return;
+    }
+    const fighter: Fighter = found ?? {
+      name,
+      side: 'enemy',
+      pc: false,
+      ac: null,
+      maxHp: 1,
+      initBonus: 0,
+      dex: 10,
+      path: null,
+      monster: null,
+      xp: null,
+      group: name,
+    };
+    this.adding = { name: '', hp: '', ac: '' };
+    this.add({
+      ...fighter,
+      maxHp: hp === null ? fighter.maxHp : Math.max(1, hp),
+      ac: ac ?? fighter.ac,
+    });
+  }
+
   private conditionText(name: string, rounds: number | null): string {
     const { t } = this.deps;
     const known = (CONDITIONS as readonly string[]).includes(name);
@@ -385,6 +488,15 @@ export class BattleView extends ItemView {
       setIcon(open, 'file-text');
       open.addEventListener('click', () => this.deps.openNote(path));
     }
+    const remove = head.createEl('button', {
+      cls: ['clickable-icon', 'dnd5e-battle-remove'],
+      attr: { 'aria-label': t('battle.remove') },
+    });
+    setIcon(remove, 'user-minus');
+    remove.addEventListener('click', () => {
+      this.picked = null;
+      this.apply(removeCombatant(f, c.id));
+    });
 
     const numbers = card.createDiv({ cls: 'dnd5e-battle-numbers' });
     const big = (label: StringKey, value: string) => {

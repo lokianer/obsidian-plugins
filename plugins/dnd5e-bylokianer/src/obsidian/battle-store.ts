@@ -12,7 +12,13 @@ import { inCampaign, typeOf } from '../campaign/scope';
 import { PARTY } from '../factions/discover';
 import { monsterName } from '../monsters/meta';
 import type { SrdMonster } from '../monsters/model';
-import { findStatblocks, modifier, parseStatblock, type Statblock } from '../npc/statblock';
+import {
+  experience,
+  findStatblocks,
+  modifier,
+  parseStatblock,
+  type Statblock,
+} from '../npc/statblock';
 import type { WorldCache } from './world-cache';
 
 export interface EncounterInfo {
@@ -28,6 +34,11 @@ export interface BattleSource {
   save(path: string, fight: Fight, ended: boolean): Promise<void>;
   /** The stat block shown on a combatant's card: its monster's, or its note's first. */
   statblock(fighter: Fighter): Promise<Statblock | null>;
+  /**
+   * A combatant by name, joining mid-fight: a monster of the Monster Manual (English or German
+   * name), else a note linked from the encounter; null when the name is neither.
+   */
+  fighter(name: string, encounter: string): Promise<Fighter | null>;
 }
 
 const num = (v: unknown): number | null => {
@@ -101,6 +112,23 @@ export class BattleStore implements BattleSource {
     }
   }
 
+  async fighter(name: string, encounter: string): Promise<Fighter | null> {
+    const m = this.monster(name);
+    if (m !== undefined) return fromMonster(m, null, 'enemy');
+    const file = this.plugin.app.metadataCache.getFirstLinkpathDest(name.trim(), encounter);
+    if (!(file instanceof TFile) || file.extension !== 'md') return null;
+    const tags: unknown = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter?.tags;
+    const pc = Array.isArray(tags) && tags.map(String).includes('pc');
+    return this.fromNote(file, pc ? 'party' : 'enemy');
+  }
+
+  private monster(name: string): SrdMonster | undefined {
+    const key = name.trim().toLowerCase();
+    return this.monsters().find(
+      (x) => x.name.toLowerCase() === key || monsterName(x, 'de').toLowerCase() === key,
+    );
+  }
+
   /** One encounter entry as fighters, `count` of them in a group. */
   private async resolve(s: CombatantSpec, from: TFile, party: Set<string>): Promise<Fighter[]> {
     const { metadataCache } = this.plugin.app;
@@ -115,10 +143,7 @@ export class BattleStore implements BattleSource {
         one = plain(s.link, s.side ?? 'enemy');
       }
     } else if (s.kind === 'monster') {
-      const key = s.monster.toLowerCase();
-      const m = this.monsters().find(
-        (x) => x.name.toLowerCase() === key || monsterName(x, 'de').toLowerCase() === key,
-      );
+      const m = this.monster(s.monster);
       one =
         m === undefined
           ? plain(s.name ?? s.monster, s.side ?? 'enemy')
@@ -131,7 +156,7 @@ export class BattleStore implements BattleSource {
         initBonus: s.initiative ?? 0,
       };
     }
-    const group = s.count > 1 ? one.name : null;
+    const group = s.count > 1 ? one.name : one.group;
     return Array.from({ length: s.count }, () => ({ ...one, group }));
   }
 
@@ -151,6 +176,7 @@ export class BattleStore implements BattleSource {
       dex,
       path: file.path,
       monster: null,
+      xp: block?.cr == null ? null : experience(block.cr),
       group: null,
     };
   }
@@ -166,10 +192,12 @@ const plain = (name: string, side: Side): Fighter => ({
   dex: 10,
   path: null,
   monster: null,
+  xp: null,
   group: null,
 });
 
-function fromMonster(m: SrdMonster, name: string | null, side: Side): Fighter {
+/** A monster of the Monster Manual as a fighter; its name groups the ones added one by one. */
+export function fromMonster(m: SrdMonster, name: string | null, side: Side): Fighter {
   const block = parseStatblock(parseYaml(m.yaml));
   const dex = block.stats?.[1] ?? 10;
   return {
@@ -182,6 +210,7 @@ function fromMonster(m: SrdMonster, name: string | null, side: Side): Fighter {
     dex,
     path: m.path ?? null,
     monster: m.index,
-    group: null,
+    xp: experience(m.cr),
+    group: name ?? m.name,
   };
 }

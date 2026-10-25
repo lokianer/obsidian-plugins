@@ -8,6 +8,15 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Battle tracker: log and Monster Manual** (phase B2): the fight's moments — it begins, a
+  combatant is defeated, goes down or dies, it ends with the defeated enemies' XP — as lines under
+  `## Log` of tonight's session (setting **Battle log**: offered in a notice, written
+  automatically, or off). **Add to combat** on a Monster Manual card puts the monster into the
+  running fight; in the tab, a monster, a note or a written combatant (with HP and AC) joins under
+  the order, and **Remove from fight** on the card takes one out. A member of a group already
+  fighting shares its initiative and gets the next number; combatants added mid-fight come back
+  with their stat block after a restart.
+
 - **Battle tracker** (module 6, phase B1): **Open battle tracker** (command, or the swords in the
   ribbon) opens a tab that runs a fight from a `type: encounter` note. The campaign's party joins
   by itself; combatants come from note links (frontmatter `ac` / `hp` / `initiative`, else their

@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { readEncounter } from '../src/battle/encounter';
+import { battleEvents, battleLine } from '../src/battle/log';
 import {
   addCondition,
+  addFighter,
   begin,
   damage,
   deathSave,
@@ -15,6 +17,7 @@ import {
   nextTurn,
   nudge,
   previousTurn,
+  removeCombatant,
   removeCondition,
   rollFor,
   setConcentration,
@@ -22,7 +25,7 @@ import {
   setTemp,
   setUp,
 } from '../src/battle/fight';
-import { combatLines, readCombat, restore, withCombat } from '../src/battle/table';
+import { baseName, combatLines, readCombat, restore, withCombat } from '../src/battle/table';
 import { loadExampleVault } from './fixture';
 
 const fighter = (name: string, more: Partial<Fighter> = {}): Fighter => ({
@@ -35,6 +38,7 @@ const fighter = (name: string, more: Partial<Fighter> = {}): Fighter => ({
   dex: 10,
   path: null,
   monster: null,
+  xp: null,
   group: null,
   ...more,
 });
@@ -258,6 +262,115 @@ describe('the combat table', () => {
         { name: 'frightened', rounds: 2 },
         { name: 'custom thing', rounds: null },
       ],
+    });
+  });
+});
+
+describe('a fight changing mid-way (B2)', () => {
+  const fighters = [
+    fighter('Owlbear', { group: 'Owlbear', initBonus: 1, xp: 700 }),
+    fighter('Owlbear', { group: 'Owlbear', initBonus: 1, xp: 700 }),
+    fighter('Sable', { initBonus: 4, dex: 18 }),
+    fighter('Dagny', { pc: true, side: 'party', maxHp: 71 }),
+  ];
+
+  it('adds a group member with its number and roll, and others where their roll puts them', () => {
+    let f = begin(setInit(setUp(fighters, rolls(10, 2)), 'Dagny', 15));
+    expect(f.combatants.map((c) => c.id)).toEqual(['Dagny', 'Owlbear 1', 'Owlbear 2', 'Sable']);
+    // The GM nudged Sable above the owlbears; adding must not undo it.
+    f = nudge(nudge(f, 'Sable', -1), 'Sable', -1);
+    const third = addFighter(f, fighter('Owlbear', { group: 'Owlbear', initBonus: 1 }), rolls(20));
+    expect(third.id).toBe('Owlbear 3');
+    expect(byId(third.fight, 'Owlbear 3').init).toBe(11);
+    expect(third.fight.combatants.map((c) => c.id)).toEqual([
+      'Dagny',
+      'Sable',
+      'Owlbear 1',
+      'Owlbear 2',
+      'Owlbear 3',
+    ]);
+    const rat = addFighter(third.fight, fighter('Rat', { group: 'Rat' }), rolls(13));
+    expect(rat.id).toBe('Rat');
+    expect(rat.fight.combatants.map((c) => c.id).indexOf('Rat')).toBe(1);
+    expect(addFighter(rat.fight, fighter('Rat', { group: 'Rat' }), rolls(1)).id).toBe('Rat 2');
+    expect(addFighter(rat.fight, fighter('Sable'), rolls(1)).id).toBe('Sable (2)');
+    // A character waits for a number at the end.
+    const pc = addFighter(f, fighter('Ilex', { pc: true }), rolls(20));
+    expect(byId(pc.fight, 'Ilex').init).toBeNull();
+    expect(pc.fight.combatants[pc.fight.combatants.length - 1]?.id).toBe('Ilex');
+  });
+
+  it('removes a combatant and passes its turn on', () => {
+    const f = begin(setInit(setUp(fighters, rolls(10, 2)), 'Dagny', 15));
+    const atEnd = { ...f, turn: 'Sable' };
+    expect(removeCombatant(atEnd, 'Sable')).toMatchObject({ round: 2, turn: 'Dagny' });
+    expect(removeCombatant(f, 'Dagny')).toMatchObject({ round: 1, turn: 'Owlbear 1' });
+    expect(removeCombatant(f, 'Owlbear 2').combatants).toHaveLength(3);
+    expect(removeCombatant(f, 'Nobody')).toBe(f);
+  });
+
+  it('logs begin, defeated, down, dead and the end with the XP of defeated enemies', () => {
+    const start = setInit(setUp(fighters, rolls(10, 2)), 'Dagny', 15);
+    expect(battleEvents(null, start, false, false)).toEqual([]);
+    const one = begin(start);
+    expect(battleEvents(start, one, false, false)).toEqual([{ kind: 'begin' }]);
+    const owl = damage(one, 'Owlbear 1', 99).fight;
+    const down = damage(owl, 'Dagny', 71).fight;
+    expect(battleEvents(one, down, false, false)).toEqual([
+      { kind: 'down', id: 'Dagny', round: 1 },
+      { kind: 'defeated', id: 'Owlbear 1', round: 1 },
+    ]);
+    const dead = deathSave(
+      deathSave(deathSave(down, 'Dagny', false), 'Dagny', false),
+      'Dagny',
+      false,
+    );
+    expect(battleEvents(down, dead, false, false)).toEqual([
+      { kind: 'dead', id: 'Dagny', round: 1 },
+    ]);
+    const end = battleEvents(dead, dead, true, false);
+    expect(end).toEqual([{ kind: 'end', rounds: 1, xp: 700 }]);
+    expect(battleEvents(dead, dead, true, true)).toEqual([]);
+    const link = '[[Ambush]]';
+    expect(battleLine({ kind: 'begin' }, link)).toBe('Combat begins: [[Ambush]]');
+    expect(battleLine({ kind: 'defeated', id: 'Owlbear 1', round: 3 }, link)).toBe(
+      'Round 3: Owlbear 1 defeated',
+    );
+    expect(battleLine({ kind: 'down', id: 'Dagny', round: 3 }, link)).toBe(
+      'Round 3: Dagny is down',
+    );
+    expect(battleLine({ kind: 'dead', id: 'Dagny', round: 4 }, link)).toBe('Round 4: Dagny dies');
+    expect(battleLine({ kind: 'end', rounds: 5, xp: 1400 }, link)).toBe(
+      'Combat ends after 5 rounds — 1,400 XP',
+    );
+    expect(battleLine({ kind: 'end', rounds: 1, xp: 0 }, link)).toBe('Combat ends after 1 round');
+  });
+
+  it('restores combatants added mid-fight from the extras, by their base name', () => {
+    expect(baseName('Owlbear 3')).toBe('Owlbear');
+    expect(baseName('Sable (2)')).toBe('Sable');
+    expect(baseName('Thug')).toBe('Thug');
+    const f = begin(setInit(setUp(fighters, rolls(10, 2)), 'Dagny', 15));
+    const added = addFighter(
+      f,
+      fighter('Owlbear', { group: 'Owlbear', monster: 'owlbear', xp: 700 }),
+      rolls(5),
+    ).fight;
+    const table = readCombat(withCombat('', combatLines(removeCombatant(added, 'Sable'))))!;
+    const extras = new Map([
+      ['Owlbear 3', fighter('Owlbear', { group: 'Owlbear', monster: 'owlbear', xp: 700 })],
+    ]);
+    const back = restore(table, setUp(fighters, rolls(10, 2)), extras);
+    expect(back.combatants.map((c) => c.id)).toEqual([
+      'Dagny',
+      'Owlbear 1',
+      'Owlbear 2',
+      'Owlbear 3',
+    ]);
+    expect(byId(back, 'Owlbear 3')).toMatchObject({
+      monster: 'owlbear',
+      xp: 700,
+      group: 'Owlbear',
     });
   });
 });

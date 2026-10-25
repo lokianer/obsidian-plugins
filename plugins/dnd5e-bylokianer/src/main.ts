@@ -13,7 +13,8 @@ import type { EditTarget, FactionWorld } from './factions/model';
 import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
-import { BattleStore } from './obsidian/battle-store';
+import { battleLine } from './battle/log';
+import { BattleStore, fromMonster } from './obsidian/battle-store';
 import { BATTLE_VIEW, BattleView } from './obsidian/battle-view';
 import { askReset, DeckBuilderModal } from './obsidian/deck-builder';
 import { DeckStore } from './obsidian/deck-store';
@@ -272,6 +273,16 @@ export default class Dnd5ePlugin extends Plugin {
           onOwnChange: (listener) => ownMonsters.onChange(listener),
           openNote: (path) => openNote(path, false),
           newMonster: () => newMonster(),
+          addToCombat: (monster) => {
+            const running = this.app.workspace
+              .getLeavesOfType(BATTLE_VIEW)
+              .map((leaf) => leaf.view)
+              .some(
+                (view) =>
+                  view instanceof BattleView && view.add(fromMonster(monster, null, 'enemy')),
+              );
+            if (!running) new Notice(t('battle.noFight'));
+          },
           makeNote: (monster) =>
             void (async () => {
               const text = monsterNoteText(monster.name, monster.cr, monster.yaml, BLOCK);
@@ -405,6 +416,12 @@ export default class Dnd5ePlugin extends Plugin {
           select: (battleSelected) => void save({ ...this.options, battleSelected }),
           openNote: (path) => openNote(path, false),
           spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
+          log: (path, events) => {
+            const file = this.app.vault.getFileByPath(path);
+            if (file === null) return;
+            const link = this.app.fileManager.generateMarkdownLink(file, '');
+            for (const event of events) sessionLog.offerLine(battleLine(event, link));
+          },
         }),
     );
     const openBattle = async () => {

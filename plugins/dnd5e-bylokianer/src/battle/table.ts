@@ -151,26 +151,42 @@ export function readCombat(text: string): Table | null {
   return { round, turn: turn === '—' ? null : turn, ended: status.startsWith('Ended'), rows };
 }
 
+/** A combatant's name without its member number: `Owlbear 3` → `Owlbear`, `Sable (2)` → `Sable`. */
+export function baseName(id: string): string {
+  return id.replace(/\s+(?:\d+|\(\d+\))$/, '');
+}
+
 /**
  * The fight a table holds, its combatants matched to the fighters the note lists now (by id);
- * a row no fighter matches still fights, as a plain combatant.
+ * a row the note does not list (added mid-fight) takes its fighter from `extras`, by id, and
+ * otherwise still fights as a plain combatant.
  */
-export function restore(table: Table, fresh: Fight): Fight {
+export function restore(
+  table: Table,
+  fresh: Fight,
+  extras: ReadonlyMap<string, Fighter> = new Map(),
+): Fight {
   const byId = new Map(fresh.combatants.map((c) => [c.id, c]));
+  const extra = (id: string): (Fighter & { id: string }) | undefined => {
+    const f = extras.get(id);
+    return f === undefined ? undefined : { ...f, id, group: id === f.name ? f.group : f.name };
+  };
   const combatants = table.rows.map((row): Combatant => {
-    const base: Fighter & { id: string } = byId.get(row.id) ?? {
-      id: row.id,
-      name: row.id,
-      side: 'enemy',
-      pc: false,
-      ac: row.ac,
-      maxHp: row.maxHp,
-      initBonus: 0,
-      dex: 10,
-      path: null,
-      monster: null,
-      group: null,
-    };
+    const base: Fighter & { id: string } = byId.get(row.id) ??
+      extra(row.id) ?? {
+        id: row.id,
+        name: row.id,
+        side: 'enemy',
+        pc: false,
+        ac: row.ac,
+        maxHp: row.maxHp,
+        initBonus: 0,
+        dex: 10,
+        path: null,
+        monster: null,
+        xp: null,
+        group: null,
+      };
     return {
       ...base,
       ac: row.ac ?? base.ac,

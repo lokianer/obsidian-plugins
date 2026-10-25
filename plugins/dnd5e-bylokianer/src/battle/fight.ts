@@ -20,6 +20,8 @@ export interface Fighter {
   path: string | null;
   /** The monster in the Monster Manual it is, if any. */
   monster: string | null;
+  /** Experience points for defeating it, from its challenge rating; null when it has none. */
+  xp: number | null;
   /** Fighters of one group share one initiative roll. */
   group: string | null;
 }
@@ -79,13 +81,13 @@ export const isDead = (c: Combatant): boolean => c.pc && c.saves.fail >= 3;
 const d20 = (random: () => number) => Math.min(20, Math.floor(random() * 20) + 1);
 
 /** Initiative order: the higher roll first, then the higher Dexterity, then by name. */
+const compare = (a: Combatant, b: Combatant): number =>
+  (b.init ?? -99) - (a.init ?? -99) ||
+  b.dex - a.dex ||
+  a.id.localeCompare(b.id, undefined, { numeric: true });
+
 export function order(list: readonly Combatant[]): Combatant[] {
-  return [...list].sort(
-    (a, b) =>
-      (b.init ?? -99) - (a.init ?? -99) ||
-      b.dex - a.dex ||
-      a.id.localeCompare(b.id, undefined, { numeric: true }),
-  );
+  return [...list].sort(compare);
 }
 
 /**
@@ -165,6 +167,62 @@ export function nudge(f: Fight, id: string, by: -1 | 1): Fight {
 }
 
 const acting = (c: Combatant) => !isDefeated(c) && !isDead(c);
+
+/**
+ * A combatant joining the fight: a member of a group already fighting takes the group's
+ * initiative and the next member number and goes after it; anyone else rolls (a player
+ * character waits for a number) and goes where its initiative puts it. The rest keeps the order
+ * the GM may have nudged.
+ */
+export function addFighter(
+  f: Fight,
+  fighter: Fighter,
+  random: () => number,
+): { fight: Fight; id: string } {
+  const members =
+    fighter.group === null ? [] : f.combatants.filter((c) => c.group === fighter.group);
+  let id = fighter.name;
+  let init: number | null = fighter.pc ? null : d20(random) + fighter.initBonus;
+  if (members.length > 0) {
+    const numbers = members.map((c) => Number(/ (\d+)$/.exec(c.id)?.[1] ?? 1));
+    id = `${fighter.name} ${Math.max(...numbers) + 1}`;
+    init = members[0]?.init ?? init;
+  }
+  const used = new Set(f.combatants.map((c) => c.id));
+  const base = id;
+  for (let n = 2; used.has(id); n++) id = `${base} (${n})`;
+  const joining: Combatant = {
+    ...fighter,
+    id,
+    init,
+    hp: fighter.maxHp,
+    temp: 0,
+    conditions: [],
+    concentration: false,
+    saves: { ok: 0, fail: 0 },
+  };
+  // A group member right after its group, anyone else before the first one it outranks.
+  const last = f.combatants.findLastIndex((c) => members.includes(c));
+  const at = last !== -1 ? last + 1 : f.combatants.findIndex((c) => compare(joining, c) < 0);
+  const combatants = [...f.combatants];
+  combatants.splice(at === -1 ? combatants.length : at, 0, joining);
+  return { fight: { ...f, combatants }, id };
+}
+
+/** A combatant leaving the fight; when it was its turn, the turn passes to the next one acting. */
+export function removeCombatant(f: Fight, id: string): Fight {
+  const at = f.combatants.findIndex((c) => c.id === id);
+  if (at === -1) return f;
+  const combatants = f.combatants.filter((c) => c.id !== id);
+  if (f.turn !== id) return { ...f, combatants };
+  for (let step = 0; step < combatants.length; step++) {
+    const c = combatants[(at + step) % combatants.length];
+    if (c !== undefined && acting(c)) {
+      return { round: f.round + (at + step >= combatants.length ? 1 : 0), turn: c.id, combatants };
+    }
+  }
+  return { ...f, turn: null, combatants };
+}
 
 /** Round 1 begins with the first combatant in the order. */
 export function begin(f: Fight): Fight {

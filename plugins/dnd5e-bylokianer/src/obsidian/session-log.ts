@@ -1,5 +1,5 @@
-// The history side of the plugin: after a relation change, a notice that offers to log it to
-// tonight's session note (asking once a day whether session N+1 is due), the write itself, session
+// The history side of the plugin: after a relation change (or a moment of a fight), a notice that
+// offers to log it to tonight's session note (asking once a day whether session N+1 is due), the write itself, session
 // N+1 with the loot carried over, and the parsed log lines of all session notes for the tooltips.
 
 import {
@@ -142,6 +142,35 @@ export class SessionLog {
     });
   }
 
+  /**
+   * Offers a line of the battle tracker, by the setting: a notice with the log button, written
+   * at once, or not at all.
+   */
+  offerLine(text: string): void {
+    const mode = this.settings().battleLog;
+    if (mode === 'off') return;
+    const tonight = this.tonight();
+    if (tonight === null) return;
+    const time = clockTime(new Date());
+    if (mode === 'auto') {
+      void this.write(`- ${time} ${text}`, false);
+      return;
+    }
+    const fragment = createFragment();
+    const box = fragment.createDiv({ cls: 'dnd5e-log-notice' });
+    box.createDiv({ cls: 'dnd5e-log-notice-change', text });
+    const button = box.createEl('button', {
+      cls: 'mod-cta dnd5e-log-button',
+      text: this.t('log.notice', { session: baseName(tonight.path) }),
+    });
+    const notice = new Notice(fragment, NOTICE_TIME);
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      notice.hide();
+      void this.write(`- ${time} ${text}`, false);
+    });
+  }
+
   private value(v: number | null): string {
     return v === null ? '—' : signed(v);
   }
@@ -168,8 +197,12 @@ export class SessionLog {
     return findTonight(this.sessions());
   }
 
-  /** Writes the line, after asking about session N+1 when today's first log needs it. */
-  private async log(change: ValueChange): Promise<void> {
+  private log(change: ValueChange): Promise<void> {
+    return this.write(formatLogLine({ time: clockTime(new Date()), ...change }), change.secret);
+  }
+
+  /** Writes a line, after asking about session N+1 when today's first log needs it. */
+  private async write(line: string, secret: boolean): Promise<void> {
     const tonight = this.tonight();
     if (tonight === null) {
       new Notice(this.t('log.noSession'));
@@ -188,10 +221,7 @@ export class SessionLog {
     }
     const file = this.plugin.app.vault.getFileByPath(target);
     if (file === null) return;
-    const line = formatLogLine({ time: clockTime(new Date()), ...change });
-    await this.plugin.app.vault.process(file, (text) =>
-      appendToLog(text, line, { secret: change.secret }),
-    );
+    await this.plugin.app.vault.process(file, (text) => appendToLog(text, line, { secret }));
     new Notice(this.t('log.logged', { session: baseName(target) }));
   }
 

@@ -86,6 +86,8 @@ export interface MonsterManualDeps {
   openNote: (path: string) => void;
   /** Opens the monster builder. */
   newMonster: () => void;
+  /** Puts the monster into the battle tracker's running fight. */
+  addToCombat: (monster: SrdMonster) => void;
 }
 
 function hue(el: HTMLElement, type: string): void {
@@ -467,6 +469,12 @@ export class MonsterManualView extends ItemView {
       b.addEventListener('click', run);
     };
     action('file-input', 'monsters.insert', () => this.deps.insert(m), 'dnd5e-monsters-insert');
+    action(
+      'swords',
+      'monsters.addToCombat',
+      () => this.deps.addToCombat(m),
+      'dnd5e-monsters-fight',
+    );
     const path = m.path;
     if (path === undefined) {
       action('file-plus', 'monsters.makeNote', () => this.deps.makeNote(m), 'dnd5e-monsters-note');

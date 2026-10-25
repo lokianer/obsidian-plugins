@@ -34,7 +34,7 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Edit a stat block | [[Aldric Thane]], [[Lantern Warden]] | Open the block: click AC, HP, speed, senses, languages, CR, the name or an ability score to change it; pencil and × on traits and actions, **+ Add** under each section (Undo on remove) |
 | New archetype | command **New archetype** | Name and an archetype to start from (e.g. Spy) → a `type: archetype` note in `Templates/Archetypes/`, opened with its block unfolded |
 | AC · HP · CR on the card | [[Aldric Thane]], [[Ondine Vale]] | The card shows `AC 18 · HP 52 · CR 3`; it reads either block name; the faction view's member tooltips too |
-| Battle tracker | [[Ambush under the second arch]] | Party, a named NPC, groups with `count`; provisional format |
+| Encounter note | [[Ambush under the second arch]] | Party links (skipped, the party joins anyway), a named NPC, groups with `count`, a `monster:` entry |
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |
 | Decks | [[Omens of the River]] | Two of eight cards already drawn |
 | GM gate | Almost every note | `[!gm]` callouts with and without `revealed:`, `%%comments%%`, a link hidden in a comment |
@@ -50,6 +50,8 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Monster builder | command **New monster** or + in the Monster Manual | Start from an SRD monster or from nothing; live stat block; writes `Silverstadt/Monsters/<name>.md` and shows it in the Monster Manual |
 | Monster import | `Silverstadt/Monsters/Import example (5etools).json` | **New monster** → **Import from a file**: two made-up monsters in 5etools format as tiles; pick one to edit or **Create all 2**. Also reads Fantasy Statblocks YAML/JSON, Markdown with stat blocks, 5e-bits and Open5e JSON |
 | Battle tracker | [[Ambush under the second arch]] | **Open battle tracker** (ribbon swords): the party joins by itself, [[Sable]] with her frontmatter AC/HP, four Court thugs and two sharpshooters (one roll per group), three Bridge rats from the Monster Manual. **Start**, type the characters' initiative, **Begin round 1**; damage, conditions and turns are written to the note's `## Combat` table |
+| Battle log | the Battle tab, `Silverstadt/Sessions/` | **Begin round 1**, defeat a thug, **End combat**: each offers a line for tonight's session's `## Log` (setting **Battle log**: ask / automatic / off); the end line sums the defeated enemies' XP |
+| Add to combat | the Battle tab while a fight runs | Type "Owlbear" (or "Eulenbär") under the order and **Add**, or **Add to combat** on a Monster Manual card; "Bell ringer" needs HP; **Remove from fight** on a card. Reopen the tab: the added owlbear keeps its stat block |
 | Spellbook | none needed | **Open spellbook** (ribbon book icon): the 319 SRD spells, German names and metres with German Obsidian |
 | Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md`; its Loot table starts with Mira's calling card `(from [[Session 14 – Bell Square]])` (also via **Start next session**) |
 

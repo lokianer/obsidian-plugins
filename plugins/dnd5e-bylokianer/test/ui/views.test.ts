@@ -47,6 +47,7 @@ import { BattleView } from '../../src/obsidian/battle-view';
 import type { BattleSource } from '../../src/obsidian/battle-store';
 import type { Fight, Fighter } from '../../src/battle/fight';
 import { combatLines, readCombat } from '../../src/battle/table';
+import type { BattleEvent } from '../../src/battle/log';
 import { MonsterBuilderModal } from '../../src/obsidian/monster-builder';
 import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/monster-manual-view';
 import type { SrdMonster } from '../../src/monsters/model';
@@ -1195,6 +1196,7 @@ describe('monster manual', () => {
     const notes: string[] = [];
     const opened: string[] = [];
     const builders: number[] = [];
+    const fights: string[] = [];
     const view = new MonsterManualView({} as WorkspaceLeaf, {
       t: createT(lang),
       lang: () => lang,
@@ -1206,6 +1208,7 @@ describe('monster manual', () => {
       onOwnChange: () => () => undefined,
       openNote: (path) => opened.push(path),
       newMonster: () => builders.push(1),
+      addToCombat: (m) => fights.push(m.index),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1213,11 +1216,11 @@ describe('monster manual', () => {
     const rows = () => [...el.querySelectorAll<HTMLElement>('.dnd5e-spells-row')];
     const row = (name: string) =>
       rows().find((r) => r.querySelector('.dnd5e-spells-row-name')?.textContent === name);
-    return { el, rows, row, saved, inserted, notes, opened, builders, view };
+    return { el, rows, row, saved, inserted, notes, opened, builders, fights, view };
   }
 
   it('lists all 334 monsters by challenge rating and opens a stat block', async () => {
-    const { el, rows, row, inserted, notes } = await open('en');
+    const { el, rows, row, inserted, notes, fights } = await open('en');
     expect(rows()).toHaveLength(334);
     expect(el.querySelector('.dnd5e-spells-count')?.textContent).toBe('334 monsters');
     expect(texts(el, '.dnd5e-spells-level > span:first-child')[0]).toBe('CR 0');
@@ -1232,6 +1235,8 @@ describe('monster manual', () => {
     el.querySelector('.dnd5e-monsters-insert')?.dispatchEvent(new MouseEvent('click'));
     el.querySelector('.dnd5e-monsters-note')?.dispatchEvent(new MouseEvent('click'));
     expect(inserted).toEqual(['adult-red-dragon']);
+    el.querySelector('.dnd5e-monsters-fight')?.dispatchEvent(new MouseEvent('click'));
+    expect(fights).toEqual(['adult-red-dragon']);
     expect(notes).toEqual(['adult-red-dragon']);
   });
 
@@ -1429,6 +1434,7 @@ describe('battle tab', () => {
     dex: 10,
     path: null,
     monster: null,
+    xp: null,
     group: null,
     ...more,
   });
@@ -1436,7 +1442,7 @@ describe('battle tab', () => {
     fighter('Dagny', { side: 'party', pc: true, ac: 15, maxHp: 71, path: 'Dagny.md' }),
     fighter('Thug', { group: 'Thug', maxHp: 32 }),
     fighter('Thug', { group: 'Thug', maxHp: 32 }),
-    fighter('Owlbear', { maxHp: 59, ac: 13, monster: 'owlbear' }),
+    fighter('Owlbear', { maxHp: 59, ac: 13, monster: 'owlbear', group: 'Owlbear', xp: 700 }),
   ];
 
   async function open(lang: 'en' | 'de', text = '') {
@@ -1456,7 +1462,9 @@ describe('battle tab', () => {
             ? parseStatblock(parse(SRD_MONSTERS.find((m) => m.index === 'owlbear')?.yaml ?? ''))
             : null,
         ),
+      fighter: (name) => Promise.resolve(name === 'Owlbear' ? (fighters[3] ?? null) : null),
     };
+    const logged: BattleEvent[] = [];
     let selected: string | null = null;
     // Monsters roll a 10 (d20 → 11 for 0.5).
     const view = new BattleView({} as WorkspaceLeaf, {
@@ -1467,6 +1475,7 @@ describe('battle tab', () => {
       selected: () => selected,
       select: (path) => (selected = path),
       openNote: () => undefined,
+      log: (_path, events) => logged.push(...events),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1481,7 +1490,29 @@ describe('battle tab', () => {
       await settle();
     };
     const names = () => texts(el, '.dnd5e-battle-row .dnd5e-battle-name');
-    return { el, click, names, saves, note: () => note, selected: () => selected };
+    const type = (selector: string, value: string) => {
+      const input = el.querySelector<HTMLInputElement>(selector);
+      if (input === null) throw new Error(`no ${selector}`);
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    };
+    const submit = async () => {
+      el.querySelector('.dnd5e-battle-add')?.dispatchEvent(new Event('submit'));
+      await settle();
+      await settle();
+    };
+    return {
+      el,
+      click,
+      names,
+      saves,
+      note: () => note,
+      selected: () => selected,
+      logged,
+      type,
+      submit,
+      view,
+    };
   }
 
   it('starts a fight, orders it, runs turns and writes the note', async () => {
@@ -1528,6 +1559,59 @@ describe('battle tab', () => {
     expect(el.querySelector('.dnd5e-battle-round')?.textContent).toBe('Ended after 1 round');
     expect(el.querySelector('.dnd5e-battle-start')?.textContent).toBe('Start again');
     expect(saves.length).toBeGreaterThan(5);
+  });
+
+  it('adds and removes combatants mid-fight and reports the moments for the log', async () => {
+    const { el, click, names, logged, type, submit, note } = await open('en');
+    await click('.dnd5e-battle-start');
+    await click('.dnd5e-battle-begin');
+    expect(logged).toEqual([{ kind: 'begin' }]);
+    type('.dnd5e-battle-add-name', 'Owlbear');
+    await submit();
+    expect(names()).toEqual(['Owlbear', 'Owlbear 2', 'Thug 1', 'Thug 2', 'Dagny']);
+    expect(notices[notices.length - 1]).toBe('Owlbear 2 joins the fight');
+    expect(el.querySelector('.dnd5e-battle-card-name')?.textContent).toBe('Owlbear 2');
+    // A name that is no monster needs hit points.
+    type('.dnd5e-battle-add-name', 'Bell ringer');
+    await submit();
+    expect(notices[notices.length - 1]).toBe(
+      '“Bell ringer” is no monster or note: give it hit points to add it.',
+    );
+    type('.dnd5e-battle-add-hp', '9');
+    type('.dnd5e-battle-add-ac', '10');
+    await submit();
+    expect(names()).toContain('Bell ringer');
+    expect(note()).toMatch(/\| Bell ringer \| 9\/9 \| 10 \|/);
+    await click('.dnd5e-battle-remove');
+    expect(names()).not.toContain('Bell ringer');
+    // The owlbear's turn first: defeat it, then end.
+    await click('.dnd5e-battle-row', undefined);
+    type('.dnd5e-battle-amount', '59');
+    await click('.dnd5e-battle-damage');
+    await click('.dnd5e-battle-end');
+    expect(logged.slice(1)).toEqual([
+      { kind: 'defeated', id: 'Owlbear', round: 1 },
+      { kind: 'end', rounds: 1, xp: 700 },
+    ]);
+  });
+
+  it('brings a combatant added mid-fight back with its stat block', async () => {
+    const running = [
+      '## Combat',
+      '',
+      'Round 1 · Turn: Owlbear 2',
+      '',
+      '| Init | Combatant | HP | AC | Conditions |',
+      '| ---: | --- | ---: | ---: | --- |',
+      '| 11 | Owlbear | 59/59 | 13 | |',
+      '| 11 | Owlbear 2 | 40/59 | 13 | |',
+      '| 5 | [[Dagny]] | 71/71 | 15 | |',
+    ].join('\n');
+    const { el, names } = await open('en', running);
+    expect(names()).toEqual(['Owlbear', 'Owlbear 2', 'Dagny']);
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(el.querySelector('.dnd5e-battle-card-name')?.textContent).toBe('Owlbear 2');
+    expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear 2']);
   });
 
   it('reads a running fight back and tracks a downed character in German', async () => {
