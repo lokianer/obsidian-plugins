@@ -209,7 +209,7 @@ travelling); other sections.
 ## 2026-10-25 · UI smoke tests in happy-dom
 
 Approved by the maintainer. The views (card, graph, matrix, faction view, popover, tension panel)
-render the example vault in `test/ui/` under happy-dom (dev dependency `happy-dom` 20.14.6), with a
+render the example vault in `test/ui/` under happy-dom (dev dependency `happy-dom`, 21.0.4 since 20.14.6 had a high-severity advisory, GHSA-834v-8h66-3h79), with a
 small stand-in for the `obsidian` module and Obsidian's DOM helpers on the prototypes. The helpers
 are as strict as a browser where it matters: a class token with a space throws, which happy-dom
 alone lets pass. With that, reintroducing the bug that hid the graph's nodes fails two tests. They
