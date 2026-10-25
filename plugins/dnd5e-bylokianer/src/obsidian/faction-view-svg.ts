@@ -59,7 +59,7 @@ export class FactionViewSvg {
     private readonly stepNames: () => readonly string[],
     private readonly actions: FactionViewActions,
   ) {
-    this.svg = parent.createSvg('svg', { cls: 'dnd5e-world-graph dnd5e-faction-view' });
+    this.svg = parent.createSvg('svg', { cls: ['dnd5e-world-graph', 'dnd5e-faction-view'] });
     this.stage = this.svg.createSvg('g');
     this.panZoom = new PanZoom(this.svg, this.stage);
     this.svg.addEventListener('click', () => this.select(null));
@@ -223,7 +223,7 @@ export class FactionViewSvg {
   private drawBox(layer: SVGGElement, box: ViewBox, places: Map<string, Rect>): void {
     const r = places.get(box.id);
     if (r === undefined) return;
-    const group = layer.createSvg('g', { cls: `dnd5e-fv-box is-${box.kind}` });
+    const group = layer.createSvg('g', { cls: ['dnd5e-fv-box', `is-${box.kind}`] });
     group.createSvg('rect', {
       attr: { x: r.x - r.w / 2, y: r.y - r.h / 2, width: r.w, height: r.h, rx: 8 },
     });

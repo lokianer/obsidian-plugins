@@ -23,7 +23,12 @@ PC.
 The maintainer's first check found: (1) the graph in the faction world did not render properly —
 most likely it was fitted while the new tab still had no size, leaving the nodes off-screen; fixed by
 deferring the fit until the view is laid out (`pan-zoom.ts`), verified in the browser preview with a
-container that gets its size late; to be confirmed in Obsidian. (2) The Log button in the notice was
+container that gets its size late. The maintainer's screenshot then showed the arrows fitted but no
+nodes: `drawNode` passed `['dnd5e-world-node is-faction']` as one class token, Obsidian's
+`createSvg` hands array entries to `classList.add`, which throws on a space, so drawing stopped at
+the first node (the faction view's root and boxes passed spaced strings to SVG too). All SVG classes
+are now separate tokens; the preview harness's DOM shim now uses `classList.add` for arrays as well,
+which reproduced the error before the fix. To be confirmed in Obsidian. (2) The Log button in the notice was
 too small — now a full-width accent button, notice ten seconds. The maintainer also cleaned the
 example vault (broken notes moved to `test/fixtures/vault`, a fifth faction The Muddled Psalter).
 

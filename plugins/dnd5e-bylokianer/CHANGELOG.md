@@ -60,6 +60,9 @@ All notable changes to this plugin are documented here. The format follows
 
 - The faction world's graph and faction view were drawn off-screen when the tab had no size yet at
   its first render (usual in Obsidian): the fit to the content now waits until the view is laid out.
+- The graph showed only arrows, no factions or frames: a node's two classes were passed as one
+  token, which Obsidian's `classList` rejects, so drawing stopped at the first node. SVG classes are
+  now always separate tokens.
 
 ### Changed (after the first check in Obsidian)
 

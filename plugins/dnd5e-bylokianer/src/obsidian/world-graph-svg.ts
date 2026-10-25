@@ -234,8 +234,10 @@ export class WorldGraphSvg {
   private drawNode(layer: SVGGElement, node: GraphNode): void {
     const p = this.positions.get(node.id);
     if (p === undefined) return;
-    const cls = [`dnd5e-world-node is-${node.kind}`];
-    const group = layer.createSvg('g', { cls, attr: { transform: `translate(${p.x} ${p.y})` } });
+    const group = layer.createSvg('g', {
+      cls: ['dnd5e-world-node', `is-${node.kind}`],
+      attr: { transform: `translate(${p.x} ${p.y})` },
+    });
 
     if (node.kind === 'frame') {
       const height = frameHeight(node.rows.length);
