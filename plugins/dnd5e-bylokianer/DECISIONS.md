@@ -405,3 +405,24 @@ import". Decided with them: import from **pasted text** and from a **JSON file**
   the ticks.
 
 Left out: editing a deck in the builder (the note is the editor), exporting decks as JSON.
+
+## 2026-10-25 · Spellbook phase S3: links and own spells
+
+Built on the maintainer's "continue" after the deck was accepted; the phase was designed in the
+spellbook spec (§4.3, §5).
+
+- Links only in stat block entries whose name says Spellcasting (Innate Spellcasting, German
+  "Zauber…"): elsewhere common words ("light", "fly", "command") would turn into links.
+- Names match as whole words, in English and German, longest first; bold text (the entry's name)
+  and existing links are left alone. The DOM is split with createEl, never innerHTML.
+- A link opens the spellbook and the spell's card; filters that would hide the spell are cleared.
+- Own spells: `type: spell` notes anywhere in the vault (spells are not campaign-bound). `level`
+  and `school` are required (English or German words); casting time, range, duration default to
+  "1 action", "Self", "Instantaneous"; classes, damage types and the save read in either language,
+  unknown words dropped. The body is the description; a heading "At Higher Levels" / "Auf höheren
+  Graden" starts that section; a leading H1 is skipped. Meta phrases in English get the German
+  translation the SRD's get (metres); anything else shows as written.
+- Own spells are read once and again after their metadata changes, never per keystroke.
+
+Left out: plain spell names in ordinary notes (only stat blocks), a "New spell" command (a template
+does it).

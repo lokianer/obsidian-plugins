@@ -2747,3 +2747,24 @@ a.dnd5e-tensions-name:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Spell links in stat blocks, own spells ── */
+
+.dnd5e-spell-link {
+  color: var(--text-accent);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.dnd5e-spell-link:hover {
+  color: var(--text-accent-hover, var(--text-accent));
+  text-decoration-style: solid;
+}
+
+.dnd5e-spells-mark.is-own {
+  width: auto;
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-l);
+  color: var(--text-accent);
+}

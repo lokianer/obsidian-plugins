@@ -137,6 +137,37 @@ Levels" and material is there in German too, with German dice (8W6) and the Germ
 a narrow tab the card replaces the list,
 with a back button. The filters and the picked spell are kept.
 
+In an open stat block, the spell names of a **Spellcasting** trait are links (English or German
+names): a click opens the spellbook on that spell.
+
+**Own spells** — spells beyond the SRD you own — are notes anywhere in the vault:
+
+```markdown
+---
+type: spell
+level: 2 # 0 or "cantrip" for a cantrip
+school: abjuration # English or German
+casting_time: 1 action
+range: 30 feet
+components: V, S, M
+material: a lantern's wick
+duration: Up to 1 hour
+concentration: true
+ritual: false
+classes: [Cleric, Wizard]
+damage: radiant # optional; also save: wisdom, attack: ranged
+---
+
+The description, in Markdown.
+
+## At Higher Levels
+
+What a higher slot adds.
+```
+
+They join the list marked "own", filter and search like the SRD's, link from stat blocks, and their
+card has a button to open the note. A note without a valid `level` or `school` stays out.
+
 ## The Deck of Many Things
 
 **Open Deck of Many Things** (command, or the layers icon in the left ribbon) puts the SRD's deck on

@@ -43,14 +43,14 @@ repository, pushed by CI from its subfolder (Obsidian reads `manifest.json` from
 A game master's thinking tool for D&D 5e campaigns kept in Obsidian. It is not a rules engine: the
 plugin shows and suggests, the GM decides. It grows in modules, one after another:
 
-| Module                                                                                                              | Status                                                                   |
-| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log     | ✅ Built and accepted in Obsidian                                        |
-| 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | ✅ Accepted in Obsidian                                                  |
-| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | ✅ Accepted in Obsidian (tab and German texts)                           |
-| 🃏 **Deck of Many Things:** the standard deck or your own, a deck builder with import                               | 🚧 Standard deck, own decks, builder and reset built, awaiting the check |
-| 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                                               |
-| 🎲 **Dice**                                                                                                         | 🗓️ Planned                                                               |
+| Module                                                                                                              | Status                                         |
+| ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log     | ✅ Built and accepted in Obsidian              |
+| 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | ✅ Accepted in Obsidian                        |
+| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | ✅ Accepted in Obsidian (tab and German texts) |
+| 🃏 **Deck of Many Things:** the standard deck or your own, a deck builder with import                               | ✅ Accepted in Obsidian                        |
+| 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                     |
+| 🎲 **Dice**                                                                                                         | 🗓️ Planned                                     |
 
 <p align="center">
   <img src="site/assets/card.webp" alt="Faction card" width="360">

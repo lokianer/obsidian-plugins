@@ -7,6 +7,7 @@
 
 import { setIcon } from 'obsidian';
 
+import { listsSpells } from '../spells/links';
 import type { EntryKey } from '../npc/block-edit';
 import type { Bonus, Entry, Statblock } from '../npc/statblock';
 import { experience, formatBonus, modifier, proficiencyBonus, summary } from '../npc/statblock';
@@ -30,7 +31,9 @@ export interface StatblockEdits {
 export interface StatblockContext {
   t: T;
   /** Renders Markdown into an element (Obsidian's MarkdownRenderer, bound to the note). */
-  markdown: (markdown: string, el: HTMLElement) => void;
+  markdown: (markdown: string, el: HTMLElement) => void | Promise<unknown>;
+  /** Links the spell names in a rendered Spellcasting entry to the spellbook. */
+  spells?: (el: HTMLElement) => void;
   /** Present when the block can be edited in place. */
   edit?: StatblockEdits;
 }
@@ -196,13 +199,20 @@ export function renderStatblock(
     if (key !== 'traits' || edit !== undefined) {
       section.createDiv({ cls: 'dnd5e-sb-section-title', text: t(title) });
     }
-    if (intro !== null) ctx.markdown(intro, section.createDiv({ cls: 'dnd5e-sb-entry' }));
+    if (intro !== null) void ctx.markdown(intro, section.createDiv({ cls: 'dnd5e-sb-entry' }));
     list.forEach((entry, index) => {
       const row = section.createDiv({ cls: 'dnd5e-sb-entry' });
       const name = entry.name.trim().replace(/\.$/, '');
       const draw = () => {
         row.empty();
-        ctx.markdown(name === '' ? entry.desc : `***${name}.*** ${entry.desc}`, row);
+        const rendered = ctx.markdown(
+          name === '' ? entry.desc : `***${name}.*** ${entry.desc}`,
+          row,
+        );
+        const { spells } = ctx;
+        if (spells !== undefined && listsSpells(name)) {
+          void Promise.resolve(rendered).then(() => spells(row));
+        }
         if (edit !== undefined) entryTools(row, key, index, entry, edit, t, draw);
       };
       draw();

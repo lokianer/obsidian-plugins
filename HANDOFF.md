@@ -19,16 +19,15 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-1. The NPC builder (phases 1–4b) and the spellbook (S1, S2) were **accepted** by the maintainer on
-   2026-10-25; their checklists below are done. The faction world redesign (points 20–21) still
-   waits for its check.
-2. **Deck of Many Things** (module 4): D1 (the standard deck) and D2 (own decks, deck builder with
-   text and JSON import, reset) are built and wait for the check (points 27–33 below). Card data
-   in `src/deck/cards.ts` (SRD text from the Open5e data; 5e-bits lacks six effects), rules in
-   `src/deck/rules.ts`, the note in `src/deck/note.ts`, own decks and import in `src/deck/own.ts`,
-   the builder in `src/obsidian/deck-builder.ts`.
-3. Then: spellbook S3 (links from stat blocks, own spells — proposed, not planned) or module 5, the
-   battle tracker (needs a brainstorm and design first). Ask the maintainer which.
+1. Accepted by the maintainer on 2026-10-25: the NPC builder (phases 1–4b), the spellbook (S1, S2)
+   and the Deck of Many Things (D1, D2). The faction world redesign (points 20–21) still waits for
+   its check.
+2. **Spellbook S3** (links from stat blocks, own spells) is built and waits for the check (points
+   34–36 below). Code: `src/spells/links.ts` + `src/obsidian/spell-links.ts` (links),
+   `src/spells/own.ts` + `src/obsidian/own-spells.ts` (own spells).
+3. Next: module 5, the **battle tracker** — not brainstormed yet; start with the maintainer
+   (questions, a short design, the plan), from `examples/vault/Silverstadt/Encounters/Ambush under
+the second arch.md`.
 
 ## State of the working tree
 
@@ -215,6 +214,16 @@ fields)
       `Silverstadt/Decks/<name>.md` and opens it in the tab. ↺ asks: history only, or history and every
       card back.
 
+**Spellbook S3**
+
+34. Open Ondine Vale's stat block: counterspell, dispel magic, wall of force, hold monster, mislead
+    are dotted links; a click opens the spellbook on the spell, even with filters set; German
+    Obsidian shows the same. "Spellcasting" itself and the Quill-knife stay plain.
+35. `Silverstadt/Spells/Lantern Ward.md` is in the spellbook under Level 2, marked "own",
+    abjuration colour; the card shows its meta (German: 9 m), the text, "At Higher Levels" and the
+    note button. Edit its level to 3: the list follows without reopening the tab.
+36. A note with `type: spell` but no school stays out of the list.
+
 ## Decisions taken this session
 
 In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session" (2026-10-25).
@@ -251,5 +260,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 314 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 321 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

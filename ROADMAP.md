@@ -13,11 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Deck of Many Things** (module 4) — D1 (the standard deck) and D2 (own decks,
-deck builder with text and JSON import, reset) are built and wait for the maintainer's check in
-Obsidian. The NPC builder (phases 1–4b) and the spellbook (S1, S2) were accepted on 2026-10-25; the
-faction world redesign still waits for its check. Then: spellbook S3 (proposed) or module 5, the
-battle tracker (not brainstormed yet). Nothing is published for now.
+**dnd5e-byLokianer · Spellbook S3** (links from stat blocks, own spells) is built and waits for the
+maintainer's check in Obsidian. The NPC builder, the spellbook S1–S2 and the Deck of Many Things
+(D1, D2) are accepted (2026-10-25); the faction world redesign still waits for its check. Then
+module 5, the battle tracker: brainstorm and design first. Nothing is published for now.
 
 ---
 
@@ -118,8 +117,9 @@ the NPC builder is done; German distances in metres (5 ft = 1.5 m).
       `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
 - [x] **S2 — German texts** (built and accepted 2026-10-25): descriptions,
       At Higher Levels and materials of all 319 spells
-- [ ] **S3 — Links and own spells** (proposed): spell names in stat blocks open the spellbook;
-      `type: spell` notes join the list
+- [ ] **S3 — Links and own spells** ← _built 2026-10-25, awaiting the check in Obsidian_: spell
+      names in stat blocks open the spellbook; `type: spell` notes join the list. Plan
+      `docs/superpowers/plans/2026-10-25-spellbook-s3.md`
 
 ### Module 4 — Deck of Many Things (after the spellbook)
 
@@ -128,10 +128,10 @@ option to make one's own. The deck is in the SRD 5.1 (magic items), so its 22 ca
 Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md)
 (reviewed 2026-10-25).
 
-- [ ] **D1 — Standard deck** ← _built 2026-10-25, awaiting the check in Obsidian_: card data in
+- [x] **D1 — Standard deck** (built and accepted 2026-10-25): card data in
       both languages, the tab, drawing by the rules, the deck note with its draw history. Plan
       `docs/superpowers/plans/2026-10-25-deck-d1.md`
-- [ ] **D2 — Own decks, builder, reset** ← _built 2026-10-25, awaiting the check in Obsidian_:
+- [x] **D2 — Own decks, builder, reset** (built and accepted 2026-10-25):
       own `type: deck` notes in the tab, the deck builder (by hand, from the standard deck, pasted
       text, a JSON file), reset of the history (and the cards). Plan
       `docs/superpowers/plans/2026-10-25-deck-d2.md`

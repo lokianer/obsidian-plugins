@@ -41,6 +41,11 @@ import { type DraftDeck, ownCards, ownDeckText } from '../../src/deck/own';
 import { DeckBuilderModal } from '../../src/obsidian/deck-builder';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
+import { linkSpells } from '../../src/obsidian/spell-links';
+import { spellFinder } from '../../src/spells/links';
+import type { SrdSpell } from '../../src/spells/model';
+import { parseOwnSpell } from '../../src/spells/own';
+import { SRD_SPELLS } from '../../src/spells/srd-spells';
 import { archetypeKind, NewFromBaseModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
@@ -596,13 +601,17 @@ describe('tension panel', () => {
 });
 
 describe('spellbook', () => {
-  async function open(lang: 'en' | 'de', state: unknown = null) {
+  const openNote = vi.fn();
+  async function open(lang: 'en' | 'de', state: unknown = null, own: SrdSpell[] = []) {
     const saved: SpellbookState[] = [];
     const view = new SpellbookView({} as WorkspaceLeaf, {
       t,
       lang: () => lang,
       state: () => state,
       saveState: (s) => saved.push(s),
+      own: () => own,
+      onOwnChange: () => () => undefined,
+      openNote,
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -614,7 +623,7 @@ describe('spellbook', () => {
       [...el.querySelectorAll<HTMLElement>('.dnd5e-spells-chip')].find((c) =>
         c.textContent?.startsWith(text),
       );
-    return { el, rows, row, chip, saved };
+    return { el, rows, row, chip, saved, view };
   }
 
   it('lists all 319 spells by level and opens a card on a click', async () => {
@@ -679,6 +688,60 @@ describe('spellbook', () => {
     en?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Magic Missile']);
     expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('three glowing darts');
+  });
+
+  it('lists own spells marked "own", with their note one click away', async () => {
+    const ember = parseOwnSpell({
+      path: 'Spells/Ember Lance.md',
+      basename: 'Ember Lance',
+      frontmatter: { type: 'spell', level: 2, school: 'evocation', range: '60 feet' },
+      body: 'A lance of embers.',
+    });
+    if (ember === null) throw new Error('no spell');
+    const { el, rows, row } = await open('de', null, [ember]);
+    expect(rows()).toHaveLength(320);
+    expect(row('Ember Lance')?.querySelector('.dnd5e-spells-mark.is-own')?.textContent).toBe('own');
+    row('Ember Lance')?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-spells-card-other')).toEqual([]);
+    expect(texts(el, '.dnd5e-spells-grid-value')[1]).toBe('18 m');
+    expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('A lance of embers.');
+    expect(el.querySelector('.dnd5e-spells-source')?.textContent).toBe(
+      'Own spell · Spells/Ember Lance.md',
+    );
+    el.querySelector('.dnd5e-spells-note')?.dispatchEvent(new MouseEvent('click'));
+    expect(openNote).toHaveBeenCalledWith('Spells/Ember Lance.md');
+  });
+
+  it('opens a spell from a link, clearing filters that hide it', async () => {
+    const { el, view } = await open('en', { filters: { levels: [9] }, selected: null });
+    view.show('fireball');
+    expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Fireball']);
+    expect(el.querySelectorAll('.dnd5e-spells-row').length).toBe(319);
+  });
+
+  it('links the spell names of a Spellcasting trait in a stat block', () => {
+    const mage = SRD_NPCS.find((n) => n.name === 'Mage');
+    const opened: string[] = [];
+    renderStatblock(root, parseStatblock(parse(mage?.yaml ?? '')), {
+      t,
+      markdown: (md, target) => {
+        target.createEl('p', { text: md });
+      },
+      spells: (target) => linkSpells(target, spellFinder(SRD_SPELLS), (i) => opened.push(i)),
+    });
+    return new Promise<void>((resolve) =>
+      window.setTimeout(() => {
+        const links = [...root.querySelectorAll<HTMLElement>('.dnd5e-spell-link')];
+        expect(links.map((l) => l.textContent)).toContain('fire bolt');
+        expect(links.map((l) => l.textContent)).toContain('greater invisibility');
+        expect(links.some((l) => l.textContent === 'Spellcasting')).toBe(false);
+        links.find((l) => l.textContent === 'fireball')?.dispatchEvent(new MouseEvent('click'));
+        expect(opened).toEqual(['fireball']);
+        // Only the Spellcasting trait: the Dagger's text keeps no links.
+        expect(root.textContent).toContain('Dagger');
+        resolve();
+      }, 0),
+    );
   });
 });
 

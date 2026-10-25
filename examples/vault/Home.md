@@ -38,6 +38,8 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |
 | Decks | [[Omens of the River]] | Two of eight cards already drawn |
 | GM gate | Almost every note | `[!gm]` callouts with and without `revealed:`, `%%comments%%`, a link hidden in a comment |
+| Own spell | [[Lantern Ward]] | `type: spell` note: joins the spellbook marked "own" (Level 2, Abjuration), its card renders the note's text and "At Higher Levels" |
+| Spell links | [[Ondine Vale]], or any NPC made from the Mage, Priest or Druid archetype | In an open stat block the spell names of the Spellcasting trait are links: a click opens the spellbook on that spell |
 | Deck of Many Things | [[Deck of Many Things]] | **Open Deck of Many Things** (ribbon layers icon): the Fool is out (ticked), three draws in the history; each new draw appends a line, the Fool and the Jester get ticked |
 | Own decks | [[Fortunes of Bell Square]], [[Omens of the River]] | Pick them in the Deck tab: Bell Square returns its cards (the Cracked Bell leaves, Midnight ends, one effect over two lines); Omens keeps every drawn card out |
 | Deck builder | `Silverstadt/Decks/Omens of the Road.json` | **New deck** (or + in the Deck tab): fill from the standard deck, pasted text (`Name — effect`, lists, tables) or this JSON file; writes a note in `Decks/` |

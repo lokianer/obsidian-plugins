@@ -23,7 +23,11 @@ import { SessionLog } from './obsidian/session-log';
 import { NoteStatblocks } from './obsidian/note-statblocks';
 import { NpcBuilder } from './obsidian/npc-builder';
 import { tableLang } from './obsidian/npc-modal';
+import { OwnSpells } from './obsidian/own-spells';
+import { linkSpells } from './obsidian/spell-links';
 import { SPELLBOOK_VIEW, SpellbookView } from './obsidian/spellbook-view';
+import { spellFinder } from './spells/links';
+import { SRD_SPELLS } from './spells/srd-spells';
 import { statblockEdits } from './obsidian/statblock-edits';
 import { renderFolded, renderInvalid } from './obsidian/statblock-view';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
@@ -142,6 +146,14 @@ export default class Dnd5ePlugin extends Plugin {
     });
     this.addRibbonIcon('network', t('command.openWorld'), () => void openWorld());
 
+    const ownSpells = new OwnSpells(this);
+    this.app.workspace.onLayoutReady(() => void ownSpells.reload());
+    let finder: ReturnType<typeof spellFinder> | null = null;
+    ownSpells.onChange(() => (finder = null));
+    const findSpells = (text: string) => {
+      finder ??= spellFinder([...SRD_SPELLS, ...ownSpells.list]);
+      return finder(text);
+    };
     this.registerView(
       SPELLBOOK_VIEW,
       (leaf) =>
@@ -150,6 +162,9 @@ export default class Dnd5ePlugin extends Plugin {
           lang: () => tableLang(this.options, getLanguage()),
           state: () => this.options.spellbook,
           saveState: (spellbook) => void save({ ...this.options, spellbook }),
+          own: () => ownSpells.list,
+          onOwnChange: (listener) => ownSpells.onChange(listener),
+          openNote: (path) => openNote(path, false),
         }),
     );
     const openSpellbook = async () => {
@@ -164,6 +179,12 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openSpellbook,
     });
     this.addRibbonIcon('book-open', t('command.openSpellbook'), () => void openSpellbook());
+    const openSpell = async (index: string) => {
+      await openSpellbook();
+      for (const leaf of this.app.workspace.getLeavesOfType(SPELLBOOK_VIEW)) {
+        if (leaf.view instanceof SpellbookView) leaf.view.show(index);
+      }
+    };
 
     const deckStore = new DeckStore(
       this,
@@ -241,7 +262,8 @@ export default class Dnd5ePlugin extends Plugin {
             : statblockEdits(this.app, file, t, () => ctx.getSectionInfo(el)?.lineStart ?? null),
         t,
         markdown: (markdown, target) =>
-          void MarkdownRenderer.render(this.app, markdown, target, ctx.sourcePath, child),
+          MarkdownRenderer.render(this.app, markdown, target, ctx.sourcePath, child),
+        spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
         // Open or folded per note, for as long as Obsidian runs.
         open: openStatblocks.has(ctx.sourcePath),
         toggle: (open) => {

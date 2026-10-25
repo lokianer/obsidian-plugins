@@ -37,6 +37,8 @@ export interface SrdSpell {
   text: string;
   /** "At Higher Levels", Markdown; empty when the spell has none. */
   higher: string;
+  /** An own spell's note; absent for the SRD's spells. */
+  path?: string;
 }
 
 /** A spell's German text, by spell index: description, "At Higher Levels" and the material. */

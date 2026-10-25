@@ -1,7 +1,8 @@
 // The Spellbook tab: the 319 SRD spells with a search, level and school chips, filters for class,
 // casting time, damage, saving throw, concentration and ritual, a list grouped by level and a card
 // for the picked spell, accented by its school. Names and meta follow the dice-text language; the
-// card can switch to the other one. The filters are kept in the plugin's data.
+// card can switch to the other one. The filters are kept in the plugin's data. The GM's own
+// `type: spell` notes join the list, marked "own"; links in stat blocks open a spell's card.
 
 import {
   Component,
@@ -68,6 +69,10 @@ export interface SpellbookDeps {
   lang: () => Lang;
   state: () => unknown;
   saveState: (state: SpellbookState) => void;
+  /** The GM's own `type: spell` notes, and a way to hear when they change. */
+  own: () => readonly SrdSpell[];
+  onOwnChange: (listener: () => void) => () => void;
+  openNote: (path: string) => void;
 }
 
 function hue(el: HTMLElement, school: School): void {
@@ -113,7 +118,21 @@ export class SpellbookView extends ItemView {
     return 'book-open';
   }
 
+  /** Every spell: the SRD's and the GM's own. */
+  private get spells(): readonly SrdSpell[] {
+    const own = this.deps.own();
+    return own.length === 0 ? SRD_SPELLS : [...SRD_SPELLS, ...own];
+  }
+
+  /** Opens a spell's card (from a link in a stat block). */
+  show(index: string): void {
+    this.cardLang = null;
+    if (!this.shown.some((s) => s.index === index)) this.setFilters(NO_FILTERS);
+    this.pick(index, true);
+  }
+
   async onOpen(): Promise<void> {
+    this.register(this.deps.onOwnChange(() => this.render()));
     const stored = this.deps.state() as Partial<SpellbookState> | undefined;
     this.filters = readFilters(stored?.filters);
     this.selected = typeof stored?.selected === 'string' ? stored.selected : null;
@@ -306,7 +325,7 @@ export class SpellbookView extends ItemView {
         ? t('spells.count.one')
         : t('spells.count', { count: this.shown.length }),
     );
-    const counts = levelCounts(SRD_SPELLS, this.filters);
+    const counts = levelCounts(this.spells, this.filters);
     this.headerEl.querySelectorAll<HTMLElement>('[data-level]').forEach((chip) => {
       const n = counts[Number(chip.dataset.level)] ?? 0;
       chip.querySelector('.dnd5e-spells-chip-count')?.setText(String(n));
@@ -317,7 +336,7 @@ export class SpellbookView extends ItemView {
   // ── list ───────────────────────────────────────────────────────────────────────────────────
 
   private render(): void {
-    this.shown = filterSpells(SRD_SPELLS, this.filters, this.name);
+    this.shown = filterSpells(this.spells, this.filters, this.name);
     const list = this.listEl;
     list.empty();
     if (this.shown.length === 0) {
@@ -370,6 +389,9 @@ export class SpellbookView extends ItemView {
         attr: { 'aria-label': this.deps.t('spells.ritual') },
       });
     }
+    if (spell.path !== undefined) {
+      marks.createSpan({ cls: ['dnd5e-spells-mark', 'is-own'], text: this.deps.t('spells.own') });
+    }
     row.addEventListener('click', () => this.pick(spell.index, true));
   }
 
@@ -412,7 +434,7 @@ export class SpellbookView extends ItemView {
     this.cardText?.unload();
     this.cardText = null;
     card.empty();
-    const spell = SRD_SPELLS.find((s) => s.index === this.selected);
+    const spell = this.spells.find((s) => s.index === this.selected);
     if (spell === undefined) {
       const empty = card.createDiv({ cls: 'dnd5e-spells-pick' });
       setIcon(empty.createDiv({ cls: 'dnd5e-spells-pick-icon' }), 'book-open');
@@ -435,6 +457,15 @@ export class SpellbookView extends ItemView {
     });
     bar.createSpan({ cls: 'dnd5e-spells-school', text: label(spell.school, lang) });
     bar.createDiv({ cls: 'dnd5e-spells-spacer' });
+    const path = spell.path;
+    if (path !== undefined) {
+      const note = bar.createEl('button', {
+        cls: ['clickable-icon', 'dnd5e-spells-note'],
+        attr: { 'aria-label': t('spells.openNote') },
+      });
+      setIcon(note, 'file-text');
+      note.addEventListener('click', () => this.deps.openNote(path));
+    }
     const langs = bar.createDiv({ cls: 'dnd5e-world-segmented' });
     for (const l of ['en', 'de'] as const) {
       const button = langs.createEl('button', {
@@ -448,7 +479,10 @@ export class SpellbookView extends ItemView {
     }
 
     card.createDiv({ cls: 'dnd5e-spells-card-name', text: spellName(spell, lang) });
-    card.createDiv({ cls: 'dnd5e-spells-card-other', text: spellName(spell, other) });
+    const otherName = spellName(spell, other);
+    if (otherName !== spellName(spell, lang)) {
+      card.createDiv({ cls: 'dnd5e-spells-card-other', text: otherName });
+    }
     card.createDiv({ cls: 'dnd5e-spells-card-level', text: levelLine(spell, lang) });
 
     const grid = card.createDiv({ cls: 'dnd5e-spells-grid' });
@@ -489,18 +523,23 @@ export class SpellbookView extends ItemView {
     this.cardText = new Component();
     this.cardText.load();
     const text = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
-    void MarkdownRenderer.render(this.app, words.text, text, '', this.cardText);
+    const source = spell.path ?? '';
+    void MarkdownRenderer.render(this.app, words.text, text, source, this.cardText);
     if (words.higher !== '') {
       card.createDiv({ cls: 'dnd5e-spells-section', text: t('spells.higher') });
       const higher = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
-      void MarkdownRenderer.render(this.app, words.higher, higher, '', this.cardText);
+      void MarkdownRenderer.render(this.app, words.higher, higher, source, this.cardText);
     }
 
     card.createDiv({ cls: 'dnd5e-spells-section', text: t('spells.classes') });
     const classes = card.createDiv({ cls: 'dnd5e-spells-classes' });
     for (const c of spell.classes)
       classes.createSpan({ cls: 'dnd5e-spells-tag', text: label(c, lang) });
-    card.createDiv({ cls: 'dnd5e-spells-source', text: t('spells.source') });
+    card.createDiv({
+      cls: 'dnd5e-spells-source',
+      text:
+        spell.path === undefined ? t('spells.source') : t('spells.ownSource', { path: spell.path }),
+    });
   }
 }
 

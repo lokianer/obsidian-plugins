@@ -4,7 +4,9 @@ import { DE_NAMES } from '../src/spells/de';
 import { DE_TEXTS } from '../src/spells/de-texts';
 import { filterSpells, levelCounts, NO_FILTERS, readFilters } from '../src/spells/filter';
 import { castingTime, components, duration, levelLine, range } from '../src/spells/meta';
+import { listsSpells, spellFinder } from '../src/spells/links';
 import type { SrdSpell } from '../src/spells/model';
+import { ownIndex, parseOwnSpell } from '../src/spells/own';
 import { SRD_SPELLS } from '../src/spells/srd-spells';
 
 const spell = (index: string) => SRD_SPELLS.find((s) => s.index === index);
@@ -194,5 +196,80 @@ describe('German texts', () => {
         imperial,
       );
     }
+  });
+});
+
+describe('own spells', () => {
+  const note = (frontmatter: Record<string, unknown>, body = '') =>
+    parseOwnSpell({ path: 'Spells/Ember Lance.md', basename: 'Ember Lance', frontmatter, body });
+
+  it('reads a spell note with English or German words', () => {
+    const own = note(
+      {
+        type: 'spell',
+        level: 2,
+        school: 'Hervorrufung',
+        casting_time: '1 bonus action',
+        range: '60 feet',
+        components: 'V, G, M',
+        material: 'a burnt twig',
+        duration: 'Up to 1 minute',
+        concentration: true,
+        classes: ['Wizard', 'Zauberer', 'Bäcker'],
+        damage: 'fire',
+        save: 'Geschicklichkeit',
+      },
+      '# Ember Lance\n\nA lance of embers, *2d6* fire damage.\n\n## At Higher Levels\n\n+1d6 per slot level above 2nd.\n',
+    );
+    expect(own).toMatchObject({
+      index: ownIndex('Spells/Ember Lance.md'),
+      name: 'Ember Lance',
+      level: 2,
+      school: 'evocation',
+      casting: '1 bonus action',
+      components: ['V', 'S', 'M'],
+      concentration: true,
+      ritual: false,
+      classes: ['wizard', 'sorcerer'],
+      damage: ['fire'],
+      save: 'dex',
+      text: 'A lance of embers, *2d6* fire damage.',
+      higher: '+1d6 per slot level above 2nd.',
+      path: 'Spells/Ember Lance.md',
+    });
+    // Its German meta still translates, as the SRD's does.
+    expect(range(own as SrdSpell, 'de')).toBe('18 m');
+  });
+
+  it('takes "cantrip" and the frontmatter name; refuses a note without level or school', () => {
+    expect(note({ level: 'Zaubertrick', school: 'illusion', name: 'Glimmer' })?.level).toBe(0);
+    expect(note({ level: 'cantrip', school: 'illusion', name: 'Glimmer' })?.name).toBe('Glimmer');
+    expect(note({ school: 'illusion' })).toBeNull();
+    expect(note({ level: 3, school: 'cooking' })).toBeNull();
+    expect(note({ level: 12, school: 'illusion' })).toBeNull();
+  });
+});
+
+describe('spell names in stat blocks', () => {
+  const find = spellFinder(SRD_SPELLS);
+  const names = (text: string) => find(text).map((m) => [text.slice(m.start, m.end), m.index]);
+
+  it('finds English and German names as whole words, longest first', () => {
+    expect(names('- 4th level (3 slots): greater invisibility, ice storm')).toEqual([
+      ['greater invisibility', 'greater-invisibility'],
+      ['ice storm', 'ice-storm'],
+    ]);
+    expect(names('Zaubertricks: Feuerpfeil, Licht')).toEqual([
+      ['Feuerpfeil', 'fire-bolt'],
+      ['Licht', 'light'],
+    ]);
+    expect(names('mage armor*, delight, flyer')).toEqual([['mage armor', 'mage-armor']]);
+  });
+
+  it('knows which entries list spells', () => {
+    expect(listsSpells('Spellcasting')).toBe(true);
+    expect(listsSpells('Innate Spellcasting')).toBe(true);
+    expect(listsSpells('Zauberwirken')).toBe(true);
+    expect(listsSpells('Multiattack')).toBe(false);
   });
 });

@@ -8,6 +8,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Spell links and own spells** (spellbook, phase S3): spell names in a stat block's Spellcasting
+  trait are links that open the spellbook on that spell; notes with `type: spell` (level, school,
+  casting time, range, components, duration, classes … in English or German; the description and
+  "At Higher Levels" as the body) join the spellbook, marked "own", with a button to open the note.
+
 - **Own decks, deck builder and reset** (Deck of Many Things, phase D2): every `type: deck` note of
   the campaign can be drawn from in the Deck tab (picked in a list, remembered); returning decks
   with `leaves` and `ends`, or decks whose drawn cards stay out. **New deck** opens a builder —

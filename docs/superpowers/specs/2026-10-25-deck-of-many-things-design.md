@@ -1,6 +1,6 @@
 # Deck of Many Things — design
 
-Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §8 accepted); D1 and D2 built**. Module 4 of
+Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §8 accepted); D1 and D2 built and accepted in Obsidian on 2026-10-25**. Module 4 of
 `dnd5e-byLokianer`, after the spellbook.
 
 Asked for by the maintainer: "the Deck of Many Things, with the option to make one's own, otherwise
