@@ -13,10 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder** — phases 2, 3, 4a and 4b (the fancier dialog) are built and
-wait for the maintainer's check in Obsidian; with them module 2 is complete. The **spellbook** follows as module 3, after the
-NPC builder (the maintainer's call, 2026-10-25); its spec and S1 plan are written, German distances
-in metres. Nothing is published for now.
+**dnd5e-byLokianer · Spellbook S2** — the German descriptions of the 319 spells, in batches by level.
+S1 (the tab) is built and waits for the maintainer's check in Obsidian, as do NPC builder phases
+2–4b and the faction world redesign. After the spellbook comes the **Deck of Many Things** (module
+4, asked for 2026-10-25). Nothing is published for now.
 
 ---
 
@@ -113,18 +113,25 @@ Design: [`docs/superpowers/specs/2026-10-25-spellbook-design.md`](docs/superpowe
 Its own tab, filters, German, fancy; the 319 SRD 5.1 spells (others as own notes later). Starts when
 the NPC builder is done; German distances in metres (5 ft = 1.5 m).
 
-- [ ] **S1 — Spellbook tab** ← _plan written_: data, German names and meta,
-      search, filters, list, spell card. Plan `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
+- [ ] **S1 — Spellbook tab** ← _built 2026-10-25, awaiting the check in Obsidian_: data, German
+      names and meta, search, filters, list, spell card, ribbon button. Plan
+      `docs/superpowers/plans/2026-10-25-spellbook-s1.md`
 - [ ] **S2 — German texts** for all 319 spells
 - [ ] **S3 — Links and own spells** (proposed): spell names in stat blocks open the spellbook;
       `type: spell` notes join the list
 
-### Module 4 — Battle tracker
+### Module 4 — Deck of Many Things (after the spellbook)
+
+Asked for 2026-10-25: the Deck of Many Things to draw from, the standard deck by default and the
+option to make one's own. The deck is in the SRD 5.1 (magic items), so its 22 cards can ship. Not
+designed yet; starting point: `examples/vault/Silverstadt/Decks/Omens of the River.md`.
+
+### Module 5 — Battle tracker
 
 Not brainstormed yet. Starting point: `examples/vault/Silverstadt/Encounters/Ambush under the second
 arch.md` (provisional format), party notes with `ac`, `hp`, `initiative`.
 
-### Module 5 — Dice
+### Module 6 — Dice
 
 Not brainstormed yet. Starting points: Rhizom's dice grammar and rollable-table rules (handoff §4),
 `examples/vault/Silverstadt/Tables/Street Rumours.md`, `Decks/Omens of the River.md`, roll lines in
@@ -141,7 +148,7 @@ whole vault.
 ### Decisions so far (carry into `plugins/dnd5e-bylokianer/DECISIONS.md` in phase 1)
 
 - Scope: factions, NPC builder, battle tracker, dice — all our own code (2026-10-24); a spellbook
-  joins as module 3, after the NPC builder (2026-10-25).
+  joins as module 3, after the NPC builder, and the Deck of Many Things as module 4 (2026-10-25).
 - Factions are folders holding `factions.md` (or a note named like the folder); members are the
   character notes in that folder; a faction folder inside another is a sub-faction.
 - Relations −5 … +5, one-directional, red–yellow–green; `relations` = public face,

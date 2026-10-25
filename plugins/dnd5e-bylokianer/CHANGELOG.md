@@ -8,6 +8,13 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Spellbook** (module 3, phase S1): its own tab (command and ribbon icon) with the 319 SRD 5.1
+  spells — search in English and German, level and school chips with counts, filters for class,
+  casting time, damage, saving throw, concentration and ritual; a list grouped by level in the
+  schools' colours, keyboard navigation, and a spell card accented by its school with the level
+  line, casting time, range, components, duration, badges, description and classes, switchable
+  between English and German. German names for every spell, German meta with distances in metres;
+  descriptions in English until phase S2. Filters are kept.
 - **A fancier New NPC dialog** (NPC builder, phase 4b): a live preview card beside the form; race
   and archetype as tiles with a search (archetypes by challenge with AC · HP · CR, a free race when
   no tile fits); the class from tiles of the twelve SRD classes (or free text), written in English;

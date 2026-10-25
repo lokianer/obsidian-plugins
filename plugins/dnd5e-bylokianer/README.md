@@ -120,6 +120,21 @@ under each section. Every change is one line edit inside the block; when the not
 else than you saw, nothing is written. **New archetype** asks for a name and an archetype to start
 from (or none) and writes the archetype note, opened for editing.
 
+## The spellbook
+
+**Open spellbook** (command, or the book icon in the left ribbon) opens a tab with the 319 spells
+of the SRD 5.1. Search by English or German name (case and accents do not matter), narrow by level
+and school chips — each level chip says how many spells it would show — and by class, casting
+time, damage type, saving throw, concentration and ritual. The list is grouped by level, each
+spell in its school's colour with its casting time and range and C (concentration) or R (ritual)
+marks; ↑ ↓ move through it, Enter opens the card. The card shows the spell's name in both
+languages, its level line ("3rd-level evocation" / "Hervorrufung des 3. Grades"), casting time,
+range, components and duration, the material, damage and save badges, the description with "At
+Higher Levels" and the classes; EN / DE switches its language. Names and meta follow the dice-text
+language setting; German distances are in metres (5 ft. = 1.5 m). The descriptions are English
+for now — the German texts follow in the next phase. On a narrow tab the card replaces the list,
+with a back button. The filters and the picked spell are kept.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -127,6 +142,7 @@ from (or none) and writes the archetype note, opened for editing.
 - **Edit faction data** — focuses the card of the active note.
 - **Open faction world** — the graph and matrix of all factions.
 - **Show faction tensions** — the tension panel in the right sidebar.
+- **Open spellbook** — the SRD spells to look up.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).
@@ -172,4 +188,6 @@ MIT — see [LICENSE](LICENSE).
 This plugin includes material from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the
 Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is
 licensed under the Creative Commons Attribution 4.0 International License, available at
-https://creativecommons.org/licenses/by/4.0/legalcode. See `src/npc/NOTICE.md`.
+https://creativecommons.org/licenses/by/4.0/legalcode. See `src/npc/NOTICE.md` (NPCs, races) and
+`src/spells/NOTICE.md` (spells; the German names are this plugin's own translation, under the same
+licence).

@@ -1885,3 +1885,401 @@ a.dnd5e-tensions-name:hover {
   color: var(--text-normal);
   background: var(--background-modifier-hover);
 }
+
+/* Spellbook ----------------------------------------------------------------------------------
+   Search and chips on top, the list grouped by level on the left, the picked spell's card on the
+   right, accented by its school; on a narrow tab the card replaces the list. */
+
+.dnd5e-spells {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  font-size: 16px;
+  container-type: inline-size;
+}
+
+.dnd5e-spells-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  padding: var(--size-4-3) var(--size-4-4);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.dnd5e-spells-top {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-spells-search {
+  position: relative;
+  flex: 1;
+}
+
+.dnd5e-spells-search input {
+  width: 100%;
+  padding-left: 34px;
+  font-size: 16px;
+}
+
+.dnd5e-spells-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  display: flex;
+  color: var(--text-faint);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.dnd5e-spells-count {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.dnd5e-spells-chips,
+.dnd5e-spells-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1) var(--size-4-2);
+}
+
+.dnd5e-spells-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  height: auto;
+  padding: var(--size-4-1) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.dnd5e-spells-chip:hover {
+  border-color: var(--background-modifier-border-hover, var(--interactive-accent));
+  color: var(--text-normal);
+}
+
+.dnd5e-spells-chip.is-active {
+  border-color: var(--interactive-accent);
+  background: hsla(var(--interactive-accent-hsl), 0.18);
+  color: var(--text-normal);
+}
+
+.dnd5e-spells-chip.has-school.is-active {
+  border-color: var(--dnd5e-school);
+  background: rgba(var(--dnd5e-school-rgb), 0.16);
+}
+
+.dnd5e-spells-chip.is-empty:not(.is-active) {
+  opacity: 0.45;
+}
+
+.dnd5e-spells-chip-count {
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-spells-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dnd5e-school);
+}
+
+.dnd5e-spells-filters .dropdown {
+  font-size: 16px;
+}
+
+.dnd5e-spells-filters .dropdown.is-active {
+  border-color: var(--interactive-accent);
+  color: var(--text-normal);
+}
+
+.dnd5e-spells-body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(260px, 2fr) minmax(0, 3fr);
+  min-height: 0;
+}
+
+.dnd5e-spells-list {
+  overflow-y: auto;
+  padding: 0 var(--size-4-2) var(--size-4-6);
+  border-right: 1px solid var(--background-modifier-border);
+  outline: none;
+}
+
+.dnd5e-spells-level {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: var(--size-4-3) var(--size-4-2) var(--size-4-1);
+  background: var(--background-primary);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-level-count {
+  color: var(--text-faint);
+  font-weight: var(--font-normal);
+}
+
+.dnd5e-spells-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin: 2px 0;
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  box-shadow: inset 3px 0 0 var(--dnd5e-school);
+  cursor: pointer;
+}
+
+.dnd5e-spells-row:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-spells-row.is-selected {
+  background: rgba(var(--dnd5e-school-rgb), 0.16);
+}
+
+.dnd5e-spells-list:focus-visible .dnd5e-spells-row.is-selected {
+  outline: 2px solid var(--dnd5e-school);
+  outline-offset: -2px;
+}
+
+.dnd5e-spells-row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.dnd5e-spells-row-name {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-row-meta {
+  overflow: hidden;
+  color: var(--text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dnd5e-spells-marks {
+  display: flex;
+  gap: var(--size-4-1);
+}
+
+.dnd5e-spells-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-empty,
+.dnd5e-spells-pick {
+  padding: var(--size-4-8) var(--size-4-4);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.dnd5e-spells-pick-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--size-4-2);
+  color: var(--text-faint);
+}
+
+.dnd5e-spells-pick-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* The spell card: a band of the school's colour fading into the page. */
+.dnd5e-spells-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+  overflow-y: auto;
+  padding: var(--size-4-4) var(--size-4-6) var(--size-4-8);
+  background: linear-gradient(
+    180deg,
+    rgba(var(--dnd5e-school-rgb, 0, 0, 0), 0.14),
+    transparent 220px
+  );
+  border-top: 3px solid var(--dnd5e-school, transparent);
+}
+
+.dnd5e-spells-card-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-spells-back {
+  display: none;
+}
+
+.dnd5e-spells-spacer {
+  flex: 1;
+}
+
+.dnd5e-spells-school {
+  padding: 2px var(--size-4-3);
+  border-radius: 999px;
+  background: rgba(var(--dnd5e-school-rgb), 0.2);
+  color: var(--dnd5e-school);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-card-name {
+  color: var(--text-normal);
+  font-size: var(--h1-size, 2em);
+  font-weight: var(--font-bold);
+  line-height: 1.15;
+}
+
+.dnd5e-spells-card-other {
+  color: var(--text-muted);
+  margin-top: calc(-1 * var(--size-4-2));
+}
+
+.dnd5e-spells-card-level {
+  color: var(--dnd5e-school);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--size-4-2);
+}
+
+.dnd5e-spells-grid > div {
+  padding: var(--size-4-2) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary);
+}
+
+.dnd5e-spells-grid-label {
+  color: var(--text-muted);
+}
+
+.dnd5e-spells-grid-value {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-material,
+.dnd5e-spells-note,
+.dnd5e-spells-source {
+  color: var(--text-muted);
+}
+
+.dnd5e-spells-note {
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-spells-badges,
+.dnd5e-spells-classes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-1) var(--size-4-2);
+}
+
+.dnd5e-spells-badge {
+  padding: 2px var(--size-4-3);
+  border: 1px solid rgba(var(--dnd5e-school-rgb), 0.5);
+  border-radius: 999px;
+  color: var(--text-normal);
+}
+
+.dnd5e-spells-tag {
+  padding: 2px var(--size-4-2);
+  border-radius: var(--tag-radius, 999px);
+  background: var(--tag-background);
+  color: var(--tag-color);
+}
+
+.dnd5e-spells-section {
+  margin-top: var(--size-4-2);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-spells-text p:first-child {
+  margin-top: 0;
+}
+
+.dnd5e-spells-text table {
+  border-collapse: collapse;
+}
+
+.dnd5e-spells-text th,
+.dnd5e-spells-text td {
+  padding: var(--size-4-1) var(--size-4-2);
+  border: 1px solid var(--background-modifier-border);
+}
+
+@container (max-width: 640px) {
+  /* One line each, scrolled sideways, so the list keeps most of a phone's height. */
+  .dnd5e-spells-chips,
+  .dnd5e-spells-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .dnd5e-spells-chip,
+  .dnd5e-spells-filters .dropdown {
+    flex: none;
+  }
+
+  .dnd5e-spells-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dnd5e-spells-list {
+    border-right: none;
+  }
+
+  .dnd5e-spells-card,
+  .dnd5e-spells.is-card-open .dnd5e-spells-list {
+    display: none;
+  }
+
+  .dnd5e-spells.is-card-open .dnd5e-spells-card {
+    display: flex;
+  }
+
+  .dnd5e-spells-back {
+    display: flex;
+  }
+
+  .dnd5e-spells-card {
+    padding: var(--size-4-3) var(--size-4-4) var(--size-4-8);
+  }
+}

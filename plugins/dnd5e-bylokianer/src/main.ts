@@ -19,6 +19,8 @@ import { ModeStore } from './obsidian/mode-store';
 import { SessionLog } from './obsidian/session-log';
 import { NoteStatblocks } from './obsidian/note-statblocks';
 import { NpcBuilder } from './obsidian/npc-builder';
+import { tableLang } from './obsidian/npc-modal';
+import { SPELLBOOK_VIEW, SpellbookView } from './obsidian/spellbook-view';
 import { statblockEdits } from './obsidian/statblock-edits';
 import { renderFolded, renderInvalid } from './obsidian/statblock-view';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
@@ -136,6 +138,29 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openWorld,
     });
     this.addRibbonIcon('network', t('command.openWorld'), () => void openWorld());
+
+    this.registerView(
+      SPELLBOOK_VIEW,
+      (leaf) =>
+        new SpellbookView(leaf, {
+          t,
+          lang: () => tableLang(this.options, getLanguage()),
+          state: () => this.options.spellbook,
+          saveState: (spellbook) => void save({ ...this.options, spellbook }),
+        }),
+    );
+    const openSpellbook = async () => {
+      const { workspace } = this.app;
+      const leaf = workspace.getLeavesOfType(SPELLBOOK_VIEW)[0] ?? workspace.getLeaf('tab');
+      await leaf.setViewState({ type: SPELLBOOK_VIEW, active: true });
+      await workspace.revealLeaf(leaf);
+    };
+    this.addCommand({
+      id: 'open-spellbook',
+      name: t('command.openSpellbook'),
+      callback: openSpellbook,
+    });
+    this.addRibbonIcon('book-open', t('command.openSpellbook'), () => void openSpellbook());
 
     const openStatblocks = new Set<string>();
     this.registerMarkdownCodeBlockProcessor(BLOCK, (source, el, ctx) => {

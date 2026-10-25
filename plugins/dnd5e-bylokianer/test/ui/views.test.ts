@@ -27,6 +27,7 @@ import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
 import { NewNpcModal } from '../../src/obsidian/npc-dialog';
+import { SpellbookView, type SpellbookState } from '../../src/obsidian/spellbook-view';
 import { archetypeKind, NewFromBaseModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
@@ -578,5 +579,88 @@ describe('tension panel', () => {
     await view.onOpen();
     expect(root.querySelectorAll('.dnd5e-tensions-line').length).toBeGreaterThan(0);
     expect(texts(root, '.dnd5e-tensions-name')).toContain('Mira Voss');
+  });
+});
+
+describe('spellbook', () => {
+  async function open(lang: 'en' | 'de', state: unknown = null) {
+    const saved: SpellbookState[] = [];
+    const view = new SpellbookView({} as WorkspaceLeaf, {
+      t,
+      lang: () => lang,
+      state: () => state,
+      saveState: (s) => saved.push(s),
+    });
+    root.appendChild(view.contentEl);
+    await view.onOpen();
+    const el = view.contentEl;
+    const rows = () => [...el.querySelectorAll<HTMLElement>('.dnd5e-spells-row')];
+    const row = (name: string) =>
+      rows().find((r) => r.querySelector('.dnd5e-spells-row-name')?.textContent === name);
+    const chip = (text: string) =>
+      [...el.querySelectorAll<HTMLElement>('.dnd5e-spells-chip')].find((c) =>
+        c.textContent?.startsWith(text),
+      );
+    return { el, rows, row, chip, saved };
+  }
+
+  it('lists all 319 spells by level and opens a card on a click', async () => {
+    const { el, rows, row } = await open('en');
+    expect(rows()).toHaveLength(319);
+    expect(texts(el, '.dnd5e-spells-level > span:first-child').slice(0, 2)).toEqual([
+      'Cantrip',
+      'Level 1',
+    ]);
+    expect(el.querySelector('.dnd5e-spells-count')?.textContent).toBe('319 spells');
+    row('Fireball')?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Fireball']);
+    expect(texts(el, '.dnd5e-spells-card-other')).toEqual(['Feuerball']);
+    expect(texts(el, '.dnd5e-spells-card-level')).toEqual(['3rd-level evocation']);
+    expect(texts(el, '.dnd5e-spells-grid-value')).toEqual([
+      '1 action',
+      '150 feet',
+      'V, S, M',
+      'Instantaneous',
+    ]);
+    expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('8d6 fire damage');
+    expect(row('Fireball')?.classList.contains('is-selected')).toBe(true);
+  });
+
+  it('filters by level chips and school, and keeps the filters', async () => {
+    const { el, rows, chip, saved } = await open('en');
+    chip('Level 3')?.dispatchEvent(new MouseEvent('click'));
+    chip('Evocation')?.dispatchEvent(new MouseEvent('click'));
+    expect(rows().length).toBeGreaterThan(0);
+    expect(
+      rows().every((r) =>
+        r.querySelector('.dnd5e-spells-row-meta')?.textContent?.startsWith('Evocation'),
+      ),
+    ).toBe(true);
+    expect(texts(el, '.dnd5e-spells-level > span:first-child')).toEqual(['Level 3']);
+    await new Promise((resolve) => window.setTimeout(resolve, 450));
+    expect(saved[saved.length - 1]?.filters).toMatchObject({ levels: [3], schools: ['evocation'] });
+  });
+
+  it('shows German names and meta, finds German names, and switches the card’s language', async () => {
+    const { el, rows, row } = await open('de', {
+      filters: { query: 'magisches gesch' },
+      selected: null,
+    });
+    expect(rows().map((r) => r.querySelector('.dnd5e-spells-row-name')?.textContent)).toEqual([
+      'Magisches Geschoss',
+    ]);
+    row('Magisches Geschoss')?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-spells-card-level')).toEqual(['Hervorrufung des 1. Grades']);
+    expect(texts(el, '.dnd5e-spells-grid-value')).toEqual([
+      '1 Aktion',
+      '36 m',
+      'V, G',
+      'Unmittelbar',
+    ]);
+    const en = [...el.querySelectorAll('.dnd5e-spells-card .dnd5e-world-segmented button')].find(
+      (b) => b.textContent === 'EN',
+    );
+    en?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Magic Missile']);
   });
 });

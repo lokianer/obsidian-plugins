@@ -1,6 +1,6 @@
 # Spellbook S1 — The Spellbook Tab — Implementation Plan
 
-**Status:** reviewed; starts after the NPC builder (module 2) is done.
+**Status:** built 2026-10-25; awaiting the maintainer's check in Obsidian.
 
 **Goal:** A Spellbook tab with the 319 SRD spells: search, filters (level chips, school, class,
 ritual, concentration, casting time, damage type, saving throw), a list grouped by level and a

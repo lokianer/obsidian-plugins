@@ -43,6 +43,8 @@ export interface Settings {
   racesFolder: string;
   /** The language of the dice texts: Obsidian's (auto), English or German. */
   tableLanguage: 'auto' | Lang;
+  /** The spellbook's filters and picked spell, read back with care (readFilters). */
+  spellbook: unknown;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -60,6 +62,7 @@ export const DEFAULT_SETTINGS: Settings = {
   npcFolder: 'NPCs',
   racesFolder: 'Templates/Races',
   tableLanguage: 'auto',
+  spellbook: null,
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */

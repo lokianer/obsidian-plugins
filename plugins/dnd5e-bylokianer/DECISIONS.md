@@ -313,3 +313,23 @@ Calls made while building:
   age fall back to the Human race's.
 
 Left out (phase 4b): the live preview, roll everything with locks, tiles.
+
+## 2026-10-25 · Spellbook phase S1
+
+Decided with the maintainer: its own tab (a ribbon button like the faction world's), filters, German,
+"fancy"; module 3, after the NPC builder; German distances in metres.
+
+Calls made while building:
+
+- Only the 319 SRD 5.1 spells ship (CC-BY-4.0, `src/spells/NOTICE.md`), generated from the 5e-bits
+  database by `scripts/spells-from-srd.mjs`; the plugin never fetches anything. The database writes
+  ability names in lower case ("dexterity saving throw"); the generator restores the SRD's capitals.
+- German spell names follow the German 5e books where they are established, otherwise they are a
+  faithful translation; German components are V, G, M.
+- Names and meta follow the NPC builder's dice-text language; the card's EN / DE switch is not kept.
+- Filters: groups combine with AND, values in a group with OR (level and school chips allow
+  several; class, casting time, damage and save are one value each, as dropdowns).
+- Schools in Obsidian's palette: abjuration blue, conjuration yellow, divination cyan, enchantment
+  pink, evocation red, illusion purple, necromancy green, transmutation orange.
+
+Left out (S2, S3): German descriptions and materials; links from stat blocks; own spells as notes.

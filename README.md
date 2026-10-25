@@ -30,9 +30,9 @@ the same principles, tooling, CI and example vault. Every plugin follows the sam
 
 ## 🧩 Plugins
 
-| Plugin                                            | Id                 | Status                                 | Description                                                                                                        |
-| ------------------------------------------------- | ------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, later spells, battles and dice. |
+| Plugin                                            | Id                 | Status                                 | Description                                                                                                                                      |
+| ------------------------------------------------- | ------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, a spellbook, later the Deck of Many Things, battles and dice. |
 
 More plugins will join the collection. Each plugin has its own `README.md`, `CHANGELOG.md` and
 `DECISIONS.md` in its folder; a plugin that is ready for Obsidian's directory gets its own release
@@ -47,7 +47,8 @@ plugin shows and suggests, the GM decides. It grows in modules, one after anothe
 | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log     | ✅ Built and accepted in Obsidian                    |
 | 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | 🚧 Phases 1–4b built, awaiting the check in Obsidian |
-| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | 📐 Designed, after the NPC builder                   |
+| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | 🚧 S1 built (the tab); German texts next             |
+| 🃏 **Deck of Many Things:** the standard deck or your own                                                           | 🗓️ Planned                                           |
 | 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                           |
 | 🎲 **Dice**                                                                                                         | 🗓️ Planned                                           |
 
@@ -140,6 +141,6 @@ Where things stand: [ROADMAP.md](ROADMAP.md) · how the last session ended: [HAN
 
 MIT, see [LICENSE](LICENSE). © 2026 Lokianer.
 
-dnd5e-byLokianer's NPC stat blocks and races include material from the System Reference Document 5.1 by Wizards of the Coast
+dnd5e-byLokianer's NPC stat blocks, races and spells include material from the System Reference Document 5.1 by Wizards of the Coast
 LLC, licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode) — see
 [`plugins/dnd5e-bylokianer/src/npc/NOTICE.md`](plugins/dnd5e-bylokianer/src/npc/NOTICE.md).
