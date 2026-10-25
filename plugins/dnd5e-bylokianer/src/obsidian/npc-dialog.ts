@@ -7,6 +7,7 @@ import { PARTY, UNAFFILIATED } from '../factions/discover';
 import type { FactionWorld } from '../factions/model';
 import type { T } from '../i18n/strings';
 import { type Archetype, byChallenge, searchArchetypes } from '../npc/archetypes';
+import { classLine, type NpcClass, searchClasses } from '../npc/classes';
 import type { LineField, NpcChoices } from '../npc/note';
 import { type Lang, type Race, rollAge, rollLooks, searchRaces } from '../npc/races';
 import { SRD_RACES } from '../npc/srd-races';
@@ -76,10 +77,10 @@ export interface NewNpcDeps {
   random?: () => number;
 }
 
-type TextField = 'name' | 'class' | 'alignment' | 'occupation' | 'age' | LineField;
+type TextField = 'name' | 'alignment' | 'occupation' | 'age' | LineField;
 
 /** What Roll everything can roll, each with a lock. */
-type Rolled = TextField | 'race';
+type Rolled = TextField | 'race' | 'class';
 
 /** The dice table behind each table-rolled field (name, age and appearance roll on their own). */
 const ROLLS: Partial<Record<TextField, TableName>> = {
@@ -98,7 +99,6 @@ const ROLLS: Partial<Record<TextField, TableName>> = {
 
 /** The fields under Details, in order. */
 const FIELDS: readonly TextField[] = [
-  'class',
   'alignment',
   'occupation',
   'age',
@@ -116,9 +116,7 @@ const FIELDS: readonly TextField[] = [
 ];
 
 /** The lines the preview lists under their labels, in the order of the fields. */
-const LINES = FIELDS.filter(
-  (f): f is LineField => !['class', 'alignment', 'occupation', 'age'].includes(f),
-);
+const LINES = FIELDS.filter((f): f is LineField => !['alignment', 'occupation', 'age'].includes(f));
 
 interface Tile {
   icon: string;
@@ -142,9 +140,14 @@ export class NewNpcModal extends Modal {
   /** A race typed as free text (no model), written as it is. */
   private freeRace = '';
   private raceQuery = '';
+  private cls: NpcClass | null = null;
+  /** A class typed as free text, written as it is. */
+  private freeClass = '';
+  private classQuery = '';
   private archetype: Archetype | null = null;
   private archetypeQuery = '';
   private raceTiles!: HTMLElement;
+  private classTiles!: HTMLElement;
   private archetypeTiles!: HTMLElement;
   private previewEl!: HTMLElement;
   private busy = false;
@@ -189,6 +192,15 @@ export class NewNpcModal extends Modal {
       this.drawRaces();
     });
     this.drawRaces();
+
+    this.rollButtons(new Setting(form).setName(t('npc.class')).setHeading(), 'class', () =>
+      this.rollClass(),
+    );
+    this.classTiles = this.tilePicker(form, t('npc.class.placeholder'), (query) => {
+      this.classQuery = query;
+      this.drawClasses();
+    });
+    this.drawClasses();
 
     new Setting(form).setName(t('npc.archetype')).setHeading();
     this.archetypeTiles = this.tilePicker(form, t('npc.archetype.search'), (query) => {
@@ -351,6 +363,51 @@ export class NewNpcModal extends Modal {
     this.chooseRace(races[Math.floor(this.random() * races.length)] ?? null, '', false);
   }
 
+  private drawClasses(): void {
+    const { t, lang } = this.deps;
+    this.classTiles.empty();
+    const classes = searchClasses(this.classQuery, lang);
+    for (const cls of classes) {
+      this.tile(
+        this.classTiles,
+        {
+          icon: cls.icon,
+          name: cls.label[lang],
+          line: classLine(cls, lang),
+          selected: cls === this.cls,
+        },
+        () => this.chooseClass(cls === this.cls ? null : cls, ''),
+      );
+    }
+    const typed = this.classQuery.trim();
+    if (classes.length === 0 && typed !== '') {
+      this.tile(
+        this.classTiles,
+        {
+          icon: 'pencil',
+          name: t('npc.race.free', { name: typed }),
+          line: t('npc.class.freeLine'),
+          selected: this.freeClass === typed,
+        },
+        () => this.chooseClass(null, this.freeClass === typed ? '' : typed),
+      );
+    }
+  }
+
+  /** Picks a class or a free one (or none); the GM's pick is locked. */
+  private chooseClass(cls: NpcClass | null, free: string, byHand = true): void {
+    this.cls = cls;
+    this.freeClass = free;
+    if (byHand) this.lock('class', cls !== null || free !== '');
+    this.drawClasses();
+    this.drawPreview();
+  }
+
+  private rollClass(): void {
+    const classes = searchClasses('', this.deps.lang);
+    this.chooseClass(classes[Math.floor(this.random() * classes.length)] ?? null, '', false);
+  }
+
   private drawArchetypes(): void {
     const { t } = this.deps;
     this.archetypeTiles.empty();
@@ -469,7 +526,8 @@ export class NewNpcModal extends Modal {
 
     const faction = factionOptions(this.deps.world, t).find(([id]) => id === this.faction)?.[1];
     const tags = card.createDiv({ cls: 'dnd5e-npc-card-tags' });
-    for (const tag of [faction?.trim() ?? '', v('class'), v('alignment')]) {
+    const cls = this.cls === null ? this.freeClass : this.cls.label[lang];
+    for (const tag of [faction?.trim() ?? '', cls, v('alignment')]) {
       if (tag !== '') tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: tag });
     }
     if (this.race !== null && this.race.traits.length > 0) {
@@ -517,6 +575,7 @@ export class NewNpcModal extends Modal {
           name,
           // A model is written by its English name; a free race as typed.
           race: this.race?.name ?? this.freeRace,
+          class: this.cls?.name ?? this.freeClass,
           raceModel: this.race,
           archetype: this.archetype,
         },

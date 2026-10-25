@@ -404,6 +404,7 @@ describe('New NPC dialog', () => {
   it('rolls names and looks for the chosen race tile, in the dialog’s language', () => {
     const { row, input, click, tile } = open('de');
     expect(tile('Zwerg')?.textContent).toContain('Mittelgroß · 7,5 m · Dunkelsicht 18 m');
+    expect(tile('Kämpfer')?.textContent).toContain('W10 · STÄ, GES');
     click(tile('Zwerg'));
     click(row('Name')?.querySelector('button'));
     expect(input('Name')?.value).toBe('Adran Anvilhand');
@@ -416,7 +417,7 @@ describe('New NPC dialog', () => {
   });
 
   it('rolls everything that is not locked, typing locks, and the preview follows', async () => {
-    const { el, row, input, click, type, preview, create } = open('en');
+    const { el, row, input, click, tile, type, preview, create } = open('en');
     type(input('Voice'), 'A whisper like dry paper');
     expect(row('Voice')?.classList.contains('is-locked')).toBe(true);
     // The quirk's lock, by hand.
@@ -425,7 +426,7 @@ describe('New NPC dialog', () => {
     expect(input('Voice')?.value).toBe('A whisper like dry paper');
     expect(input('Quirk')?.value).toBe('');
     expect(input('Hook')?.value).toBe(tablesFor('en').hook[0]);
-    expect(input('Class')?.value).toBe('');
+    expect(tile('Barbarian')?.classList.contains('is-selected')).toBe(true);
     const name = input('Name')?.value ?? '';
     expect(name).not.toBe('');
     expect(preview()?.querySelector('.dnd5e-npc-card-name')?.textContent).toBe(name);
@@ -437,19 +438,38 @@ describe('New NPC dialog', () => {
     click(el.querySelector('button.mod-cta'));
     await Promise.resolve();
     const calls = create.mock.calls as unknown as [NpcChoices, string][];
+    expect(calls[0]?.[0]).toMatchObject({ race: 'Dwarf', class: 'Barbarian' });
     expect(calls[0]?.[0].raceModel?.name).toBe('Dwarf');
-    expect(calls[0]?.[0].race).toBe('Dwarf');
   });
 
-  it('keeps a race typed in the search as free text', async () => {
+  it('writes a class tile by its English name, in the preview by its label', async () => {
+    const { el, input, click, tile, type, preview, create } = open('de');
+    click(tile('Magier'));
+    expect(preview()?.textContent).toContain('Magier');
+    type(input('Name'), 'Corvin');
+    click(el.querySelector('button.mod-cta'));
+    await Promise.resolve();
+    const calls = create.mock.calls as unknown as [NpcChoices, string][];
+    expect(calls[0]?.[0].class).toBe('Wizard');
+  });
+
+  it('keeps a race and a class typed in the search as free text', async () => {
     const { el, input, click, tile, type, create } = open('en');
-    type(el.querySelector<HTMLInputElement>('.dnd5e-npc-search'), 'Owlfolk');
+    const [races, classes] = el.querySelectorAll<HTMLInputElement>('.dnd5e-npc-search');
+    type(races, 'Owlfolk');
     click(tile('Use “Owlfolk”'));
+    type(classes, 'Bell-ringer');
+    click(tile('Use “Bell-ringer”'));
     type(input('Name'), 'Hoot');
     click(el.querySelector('button.mod-cta'));
     await Promise.resolve();
     const calls = create.mock.calls as unknown as [NpcChoices, string][];
-    expect(calls[0]?.[0]).toMatchObject({ race: 'Owlfolk', raceModel: null, archetype: null });
+    expect(calls[0]?.[0]).toMatchObject({
+      race: 'Owlfolk',
+      class: 'Bell-ringer',
+      raceModel: null,
+      archetype: null,
+    });
   });
 
   it('refuses without a name', () => {

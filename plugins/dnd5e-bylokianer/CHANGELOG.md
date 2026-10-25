@@ -10,7 +10,8 @@ All notable changes to this plugin are documented here. The format follows
 
 - **A fancier New NPC dialog** (NPC builder, phase 4b): a live preview card beside the form; race
   and archetype as tiles with a search (archetypes by challenge with AC · HP · CR, a free race when
-  no tile fits); **Roll everything** with a lock per field — typing locks a field, picking a race
+  no tile fits); the class from tiles of the twelve SRD classes (or free text), written in English;
+  **Roll everything** with a lock per field — typing locks a field, picking a race
   locks the race. German race tiles give distances in metres.
 - **Races and richer dice** (NPC builder, phase 4a): the nine SRD races and own `type: race` notes
   in New NPC, writing their traits into the stat block and steering name, looks and age; command

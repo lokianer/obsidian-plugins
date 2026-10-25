@@ -23,7 +23,7 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    what turns up.
 2. Phases 4a (races, own races, German and larger dice tables, new fields) and 4b (preview card,
    Roll everything with locks, race and archetype tiles) are built and wait for the check (points
-   11–18 below). With them the NPC builder is complete; then the spellbook.
+   11–19 below). With them the NPC builder is complete; then the spellbook.
 3. **Spellbook** (module 3, **after** the NPC builder): its own tab, filters, German, fancy. Spec
    and S1 plan reviewed; German distances in metres (5 ft = 1.5 m). Data source checked: the 5e-bits
    SRD database has all 319 SRD spells (`src/2014/en/5e-SRD-Spells.json`, about 48,000 words of
@@ -156,7 +156,9 @@ fields)
     `race: Owl` with no traits. Clicking the chosen tile again clears it.
 17. Archetype tiles: No archetype (chosen), Lantern Warden ("own"), then the SRD NPCs from Commoner
     (CR 0) to Archmage, each with AC · HP · CR; the preview shows the short stats.
-18. **Roll everything** fills race, name, age, appearance and every table field; type a voice →
+18. Class tiles: the twelve SRD classes (German: Barbar … Magier, "W10 · STÄ, GES"); Magier writes
+    `class: Wizard`; a typed class without a tile works as free text.
+19. **Roll everything** fills race, class, name, age, appearance and every table field; type a voice →
     its lock closes and it survives the next Roll everything; a lock clicked by hand keeps an empty
     field empty; the single dice still roll locked fields.
 

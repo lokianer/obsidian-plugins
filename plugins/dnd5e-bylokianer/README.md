@@ -90,12 +90,13 @@ under a new `## Stats` heading; it leaves a note that has one alone.
 **The dialog.** The form sits beside a **preview card** of the NPC — name, race, occupation and
 age, faction, class and alignment as tags, the race's traits, the archetype's AC, HP, CR, speed and
 modifiers, and every filled line (the secret marked) — which updates as you type and roll. Race and
-archetype are picked from **tiles** with a search: the races with their size, speed and darkvision,
+archetype — and the class, from the twelve SRD classes with hit die and main abilities, written in
+English — are picked from **tiles** with a search: the races with their size, speed and darkvision,
 the archetypes by challenge with AC · HP · CR, **No archetype** keeping the template's block; a race
 typed that has no tile can still be used as free text. **Roll everything** rolls the race and then
 every field that is not **locked**: each rolled field has a lock beside its die, typing into a
-field locks it, picking a race tile locks the race. Faction, archetype, class and alignment are
-never rolled.
+field locks it, picking a race tile locks the race. Faction, archetype and alignment are never
+rolled.
 
 **Races and dice texts.** The race tiles offer the nine SRD races (Dwarf, Elf, Halfling, Human,
 Dragonborn, Gnome, Half-Elf, Half-Orc, Tiefling) and your own `type: race` notes in
