@@ -13,9 +13,10 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder phase 2 (builder) — built, waiting for the maintainer's check in
-Obsidian** (list in `HANDOFF.md`). Then phase 3: editing inside the stat block and the template
-builder for own archetypes (plan still to write). Nothing is published for now.
+**dnd5e-byLokianer · NPC builder** — phase 2 (builder) is built and waits for the maintainer's check
+in Obsidian (list in `HANDOFF.md`; they test later). The phase 3 plan (editing inside the stat block,
+New archetype) is written and **awaits approval**, including one proposed deviation from the spec:
+`docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`. Nothing is published for now.
 
 ---
 
@@ -96,8 +97,8 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
 - [ ] **Phase 2 — Builder** ← _built 2026-10-25, awaiting the check in Obsidian_: archetypes (SRD + own notes), New
       NPC modal into the faction's folder, Add stat block, random tables with overrides. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`
-- [ ] **Phase 3 — Editing and template builder**: editing in the rendered block, the template
-      builder for own archetypes
+- [ ] **Phase 3 — Editing and template builder** ← _plan written, awaiting approval_: editing in
+      the rendered block, New archetype. Plan `docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`
 
 ### Module 3 — Battle tracker
 

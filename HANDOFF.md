@@ -21,8 +21,9 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 1. The maintainer checks NPC builder phase 2 in Obsidian (list under "Half-finished"). Fix what
    turns up.
-2. Then the phase 3 plan (editing in the stat block, template builder) from spec §8, and a review
-   stop.
+2. The phase 3 plan is written (`docs/superpowers/plans/2026-10-25-npc-phase-3-editing.md`) and
+   awaits the maintainer's approval — especially the proposed deviation: New archetype writes the
+   note from a base and the GM edits it in place, instead of a form modal. Build only after "passt".
 
 ## State of the working tree
 
@@ -75,6 +76,7 @@ From the maintainer's check in Obsidian, in order:
   (rendering), `stat-summaries.ts` (the card's `AC · HP · CR`, read from the note's text), the
   command Convert stat block, example vault notes on the new block (Ondine kept on `statblock`),
   README attribution. Seen in Chromium at desktop and phone width.
+- Phase 3 plan written after the maintainer said "mach weiter" (they test phase 2 later).
 - NPC builder phase 1 accepted ("passt"); phase 2 planned, approved ("Ja") and built:
   `src/npc/archetypes.ts` (own archetypes from notes, search, `withName`), `src/npc/tables.ts`
   (default dice tables, note overrides), `src/npc/note.ts` (NPC note from template, Add stat block,
