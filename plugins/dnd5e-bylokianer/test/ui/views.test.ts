@@ -19,10 +19,13 @@ import { buildGraph } from '../../src/factions/world-graph';
 import { buildWorld } from '../../src/factions/world';
 import { createT } from '../../src/i18n/strings';
 import { SRD_NPCS } from '../../src/npc/srd';
+import type { NpcChoices } from '../../src/npc/note';
+import { DEFAULT_TABLES } from '../../src/npc/tables';
 import { findStatblocks, parseStatblock, type Statblock } from '../../src/npc/statblock';
 import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
+import { NewNpcModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
@@ -30,6 +33,7 @@ import type { WorldCache } from '../../src/obsidian/world-cache';
 import { WorldGraphSvg } from '../../src/obsidian/world-graph-svg';
 import { renderMatrix } from '../../src/obsidian/world-matrix';
 import { loadExampleVault } from '../fixture';
+import { notices } from './obsidian';
 
 const vault = join(import.meta.dirname, '../../../../examples/vault');
 const notes = loadExampleVault();
@@ -60,6 +64,7 @@ beforeEach(() => {
 });
 
 describe('faction card', () => {
+  const newNpc = vi.fn();
   const render = (path: string, statblock: Statblock | null = null) => {
     const card = buildCard(path, notes.find((n) => n.path === path)?.frontmatter, world);
     if (card === null) throw new Error(`no card for ${path}`);
@@ -75,6 +80,7 @@ describe('faction card', () => {
         stepNames: [],
         offerLog: () => {},
         statblock,
+        newNpc,
         refresh: () => {
           renderer.render();
         },
@@ -88,6 +94,15 @@ describe('faction card', () => {
     render(`${F}/The Drowned Choir/factions.md`);
     expect(texts(root, '.dnd5e-card-name')).toEqual(['The Drowned Choir']);
     expect(root.querySelectorAll('.dnd5e-card-row').length).toBeGreaterThan(0);
+  });
+
+  it('offers a New NPC button on a faction’s card, not on a character’s', () => {
+    render(`${F}/The Drowned Choir/factions.md`);
+    root.querySelector('.dnd5e-card-new-npc')?.dispatchEvent(new MouseEvent('click'));
+    expect(newNpc).toHaveBeenCalledWith(`${F}/The Drowned Choir`);
+    root.empty();
+    render(`${COURT}/Sable.md`);
+    expect(root.querySelector('.dnd5e-card-new-npc')).toBeNull();
   });
 
   it('shows a character’s short stats under the title', () => {
@@ -253,6 +268,86 @@ describe('stat block', () => {
     renderInvalid(root, 'name: [broken', t);
     expect(texts(root, '.dnd5e-sb-warning')).toEqual(['This stat block is not valid YAML.']);
     expect(texts(root, 'pre')).toEqual(['name: [broken']);
+  });
+});
+
+describe('New NPC dialog', () => {
+  it('rolls, picks a faction and an archetype, and hands the choices over', async () => {
+    const create = vi.fn(() => Promise.resolve());
+    const modal = new NewNpcModal({
+      app,
+      t,
+      world,
+      archetypes: SRD_NPCS,
+      tables: DEFAULT_TABLES,
+      faction: COURT,
+      create,
+      random: () => 0,
+    });
+    modal.onOpen();
+    const el = modal.contentEl;
+    root.appendChild(modal.modalEl);
+    const rows = [...el.querySelectorAll('.setting-item')];
+    const row = (name: string) =>
+      rows.find((r) => r.querySelector('.setting-item-name')?.textContent === name);
+    const select = row('Faction')?.querySelector('select');
+    expect(select?.value).toBe(COURT);
+    expect([...(select?.options ?? [])].map((o) => o.textContent?.trim()).slice(-2)).toEqual([
+      'Party',
+      'Unaffiliated',
+    ]);
+
+    row('Name')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
+    expect(row('Name')?.querySelector('input')?.value).toBe('Alda Ashgrove');
+    row('Quirk')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
+    const archetype = row('Archetype')?.querySelector('input');
+    if (archetype) {
+      archetype.value = 'guard';
+      archetype.dispatchEvent(new Event('input'));
+    }
+    if (select) {
+      select.value = BENCH;
+      select.dispatchEvent(new Event('change'));
+    }
+    el.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+    await Promise.resolve();
+    expect(create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Alda Ashgrove',
+        quirk: DEFAULT_TABLES.quirks[0],
+      }),
+      BENCH,
+    );
+    const calls = create.mock.calls as unknown as [NpcChoices, string][];
+    expect(calls[0]?.[0].archetype?.name).toBe('Guard');
+  });
+
+  it('refuses without a name or with an unknown archetype', () => {
+    const create = vi.fn(() => Promise.resolve());
+    const modal = new NewNpcModal({
+      app,
+      t,
+      world,
+      archetypes: SRD_NPCS,
+      tables: DEFAULT_TABLES,
+      faction: COURT,
+      create,
+    });
+    modal.onOpen();
+    modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+    expect(create).not.toHaveBeenCalled();
+    expect(notices[notices.length - 1]).toBe('Give the NPC a name');
+    const inputs = [...modal.contentEl.querySelectorAll('input')];
+    const [name, archetype] = [inputs[0], inputs[1]];
+    if (name && archetype) {
+      name.value = 'Pell';
+      name.dispatchEvent(new Event('input'));
+      archetype.value = 'Lantern Warden';
+      archetype.dispatchEvent(new Event('input'));
+    }
+    modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+    expect(create).not.toHaveBeenCalled();
+    expect(notices[notices.length - 1]).toBe('No archetype called “Lantern Warden”');
   });
 });
 

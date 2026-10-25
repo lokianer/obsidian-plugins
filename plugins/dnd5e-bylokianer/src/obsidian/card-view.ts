@@ -66,6 +66,7 @@ export class CardManager {
     private readonly settings: () => Settings,
     private readonly offerLog: (change: ValueChange) => void,
     private readonly statblocks: NoteStatblocks,
+    private readonly newNpc: (faction: string) => void,
   ) {}
 
   start(): void {
@@ -164,6 +165,7 @@ export class CardManager {
         stepNames,
         offerLog: this.offerLog,
         statblock,
+        newNpc: this.newNpc,
         refresh: () => {
           const mount = this.mounts.get(view);
           if (mount !== undefined) mount.signature = '';

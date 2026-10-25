@@ -8,6 +8,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **New NPC** (NPC builder, phase 2): a dialog (command, and a button on faction cards) that writes
+  an NPC note from the template into the faction's folder, with dice tables for name and
+  personality and a stat block from an archetype — the SRD NPCs or the GM's own `type: archetype`
+  notes; table notes replace default tables; command **Add stat block** for an existing note;
+  settings for the NPC template, archetype and tables folders and the folder for NPCs of no faction.
 - **Stat blocks** (NPC builder, phase 1): ` ```dnd5e-statblock ` blocks render as 5e stat blocks
   (Fantasy Statblocks' keys, ability modifiers, XP, proficiency bonus); command **Convert stat block**
   between the two block names; short stats (AC, HP, CR, speed, ability modifiers) on a character's

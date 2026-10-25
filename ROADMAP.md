@@ -13,10 +13,9 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder phase 2 (builder) — plan written, awaiting the maintainer's
-approval:** `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md` (New NPC modal into the
-faction's folder, archetypes SRD + own notes, dice tables, Add stat block). Phase 1 (stat block view,
-short stats on the card, layout B) was accepted on 2026-10-25. Nothing is published for now.
+**dnd5e-byLokianer · NPC builder phase 2 (builder) — built, waiting for the maintainer's check in
+Obsidian** (list in `HANDOFF.md`). Then phase 3: editing inside the stat block and the template
+builder for own archetypes (plan still to write). Nothing is published for now.
 
 ---
 
@@ -94,7 +93,7 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
 - [x] **Phase 1 — Stat block model and view** (built and accepted 2026-10-25): parser and
       derived values, the 21 SRD NPCs as data, rendering of `dnd5e-statblock`, AC · HP · CR on the
       card, Convert command. Plan `docs/superpowers/plans/2026-10-25-npc-phase-1-statblock.md`
-- [ ] **Phase 2 — Builder** ← _plan written, awaiting approval_: archetypes (SRD + own notes), New
+- [ ] **Phase 2 — Builder** ← _built 2026-10-25, awaiting the check in Obsidian_: archetypes (SRD + own notes), New
       NPC modal into the faction's folder, Add stat block, random tables with overrides. Plan
       `docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`
 - [ ] **Phase 3 — Editing and template builder**: editing in the rendered block, the template

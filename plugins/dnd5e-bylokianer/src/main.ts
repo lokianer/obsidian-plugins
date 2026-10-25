@@ -18,6 +18,7 @@ import { WarningsModal } from './obsidian/warnings-modal';
 import { ModeStore } from './obsidian/mode-store';
 import { SessionLog } from './obsidian/session-log';
 import { NoteStatblocks } from './obsidian/note-statblocks';
+import { NpcBuilder } from './obsidian/npc-builder';
 import { renderFolded, renderInvalid } from './obsidian/statblock-view';
 import { TENSION_VIEW, TensionView } from './obsidian/tension-view';
 import { WorldCache } from './obsidian/world-cache';
@@ -41,6 +42,7 @@ export default class Dnd5ePlugin extends Plugin {
       () => this.options,
       (change) => sessionLog.offer(change),
       statblocks,
+      (faction) => void npcs.newNpc(faction),
     );
     cards.start();
 
@@ -171,6 +173,24 @@ export default class Dnd5ePlugin extends Plugin {
         });
         new Notice(count === 0 ? t('notice.noStatblock') : t('notice.converted', { count }));
       },
+    });
+
+    const npcs = new NpcBuilder(
+      this,
+      cache,
+      t,
+      () => this.options,
+      (path) => openNote(path, false),
+    );
+    this.addCommand({
+      id: 'new-npc',
+      name: t('command.newNpc'),
+      callback: () => void npcs.newNpc(),
+    });
+    this.addCommand({
+      id: 'add-statblock',
+      name: t('command.addStatblock'),
+      callback: () => void npcs.addStatblock(),
     });
 
     this.addCommand({

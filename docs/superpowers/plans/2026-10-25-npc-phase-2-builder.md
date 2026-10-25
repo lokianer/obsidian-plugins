@@ -1,6 +1,6 @@
 # NPC Builder Phase 2 — Builder — Implementation Plan
 
-**Status:** draft, awaiting the maintainer's approval.
+**Status:** approved ("Ja", 2026-10-25) and built; tasks 1–6 done, the check in Obsidian is open.
 
 **Goal:** A GM creates an NPC in a minute: a **New NPC** modal (command, and a button on a faction's
 card) writes a note from the NPC template into the chosen faction's folder, with personality lines

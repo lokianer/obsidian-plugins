@@ -30,6 +30,14 @@ export interface Settings {
   positions: Record<string, Record<string, { x: number; y: number; pinned?: boolean }>>;
   /** What the GM dragged in a faction view, per viewed faction: offsets by frame or box id. */
   viewMoves: Record<string, Record<string, Point>>;
+  /** The note new NPC notes are made from. */
+  npcTemplate: string;
+  /** Where the GM's own archetype notes live. */
+  archetypeFolder: string;
+  /** Where table notes that replace the default dice tables live. */
+  tablesFolder: string;
+  /** The folder in the campaign that takes NPCs of no faction. */
+  npcFolder: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -41,7 +49,22 @@ export const DEFAULT_SETTINGS: Settings = {
   sessionAnswer: null,
   positions: {},
   viewMoves: {},
+  npcTemplate: 'Templates/NPC.md',
+  archetypeFolder: 'Templates/Archetypes',
+  tablesFolder: 'Templates/Tables',
+  npcFolder: 'NPCs',
 };
+
+/** The text settings that name a note or folder, falling back to the default when emptied. */
+type PathKey = 'sessionTemplate' | 'npcTemplate' | 'archetypeFolder' | 'tablesFolder' | 'npcFolder';
+const PATHS: readonly PathKey[] = [
+  'sessionTemplate',
+  'npcTemplate',
+  'archetypeFolder',
+  'tablesFolder',
+  'npcFolder',
+];
+const isPath = (key: string): key is PathKey => (PATHS as readonly string[]).includes(key);
 
 const STEP_KEY = 'step:';
 const THRESHOLD_KEY = 'threshold:';
@@ -77,15 +100,11 @@ export class SettingsTab extends PluginSettingTab {
         desc: this.t('settings.showProperties.desc'),
         control: { type: 'toggle', key: 'showProperties', defaultValue: false },
       },
-      {
-        name: this.t('settings.template'),
-        desc: this.t('settings.template.desc'),
-        control: {
-          type: 'text',
-          key: 'sessionTemplate',
-          placeholder: DEFAULT_SETTINGS.sessionTemplate,
-        },
-      },
+      ...PATHS.map((key) => ({
+        name: this.t(`settings.${key}`),
+        desc: this.t(`settings.${key}.desc`),
+        control: { type: 'text' as const, key, placeholder: DEFAULT_SETTINGS[key] },
+      })),
       {
         type: 'group',
         heading: this.t('settings.stepNames'),
@@ -118,7 +137,7 @@ export class SettingsTab extends PluginSettingTab {
     if (key.startsWith(THRESHOLD_KEY)) {
       return this.settings().thresholds[key.slice(THRESHOLD_KEY.length) as keyof Thresholds];
     }
-    if (key === 'sessionTemplate') return this.settings().sessionTemplate;
+    if (isPath(key)) return this.settings()[key];
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
 
@@ -126,18 +145,17 @@ export class SettingsTab extends PluginSettingTab {
     if (key === 'showProperties' && typeof value === 'boolean') {
       await this.save({ ...this.settings(), showProperties: value });
     }
-    if (key === 'sessionTemplate' && typeof value === 'string') {
-      await this.save({
-        ...this.settings(),
-        sessionTemplate: value.trim() || DEFAULT_SETTINGS.sessionTemplate,
-      });
-    }
+    if (isPath(key) && typeof value === 'string') await this.setPath(key, value);
     if (key.startsWith(STEP_KEY) && typeof value === 'string') {
       await this.setStepName(Number(key.slice(STEP_KEY.length)), value);
     }
     if (key.startsWith(THRESHOLD_KEY)) {
       await this.setThreshold(key.slice(THRESHOLD_KEY.length) as keyof Thresholds, value);
     }
+  }
+
+  private async setPath(key: PathKey, value: string): Promise<void> {
+    await this.save({ ...this.settings(), [key]: value.trim() || DEFAULT_SETTINGS[key] });
   }
 
   private async setThreshold(key: keyof Thresholds, value: unknown): Promise<void> {
@@ -165,20 +183,17 @@ export class SettingsTab extends PluginSettingTab {
           .setValue(this.settings().showProperties)
           .onChange((value) => this.save({ ...this.settings(), showProperties: value })),
       );
-    new Setting(containerEl)
-      .setName(t('settings.template'))
-      .setDesc(t('settings.template.desc'))
-      .addText((text) =>
-        text
-          .setPlaceholder(DEFAULT_SETTINGS.sessionTemplate)
-          .setValue(this.settings().sessionTemplate)
-          .onChange((value) =>
-            this.save({
-              ...this.settings(),
-              sessionTemplate: value.trim() || DEFAULT_SETTINGS.sessionTemplate,
-            }),
-          ),
-      );
+    for (const key of PATHS) {
+      new Setting(containerEl)
+        .setName(t(`settings.${key}`))
+        .setDesc(t(`settings.${key}.desc`))
+        .addText((text) =>
+          text
+            .setPlaceholder(DEFAULT_SETTINGS[key])
+            .setValue(this.settings()[key])
+            .onChange((value) => this.setPath(key, value)),
+        );
+    }
     new Setting(containerEl).setName(t('settings.stepNames')).setHeading();
     for (const step of STEPS) {
       new Setting(containerEl)

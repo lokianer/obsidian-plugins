@@ -1269,3 +1269,27 @@ a.dnd5e-tensions-name:hover {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* ── NPC builder ─────────────────────────────────────────────────────────────────────────────── */
+
+.dnd5e-card-new-npc {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  margin-left: auto;
+  font-size: 16px;
+}
+
+.dnd5e-npc-modal .setting-item-name {
+  font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  .dnd5e-npc-modal .setting-item {
+    flex-wrap: wrap;
+  }
+
+  .dnd5e-npc-modal .setting-item-control {
+    width: 100%;
+  }
+}

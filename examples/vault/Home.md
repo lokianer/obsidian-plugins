@@ -24,6 +24,10 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Value popover | Faction world → Matrix → The Bench × Order of the Lantern | Public: inherited −4 from the Court (moving it gives The Bench its own value); True: its own secret +4 with Reset to inherited |
 | Stat block view | [[Isolde Ferrant]], [[Aldric Thane]], [[Mira Voss]] | `dnd5e-statblock` blocks render as 5e stat blocks (Mira's has an unknown key, `ledger_pages`, which is kept and ignored); [[Sergeant Pell]] has none yet |
 | Convert stat block | [[Ondine Vale]] | Still a Fantasy Statblocks `statblock` block: **Convert stat block** turns it into `dnd5e-statblock` and back |
+| New NPC | any faction card (**New NPC** button) or the command | Writes `Templates/NPC.md` into the faction's folder (Party → `Silverstadt/Party`, Unaffiliated → `Silverstadt/NPCs`); dice for name and personality; archetype from the SRD or [[Lantern Warden]] |
+| Own archetype | [[Lantern Warden]] | `type: archetype` note in `Templates/Archetypes/`, listed first in the archetype search |
+| Dice table override | [[NPC quirks]] | Replaces the default quirks table; the other tables stay the plugin's |
+| Add stat block | [[Sergeant Pell]] | Has no stat block: **Add stat block** inserts one under a new `## Stats`; a second run refuses |
 | AC · HP · CR on the card | [[Aldric Thane]], [[Ondine Vale]] | The card shows `AC 18 · HP 52 · CR 3`; it reads either block name; the faction view's member tooltips too |
 | Battle tracker | [[Ambush under the second arch]] | Party, a named NPC, groups with `count`; provisional format |
 | Dice and tables | [[Street Rumours]] | List (d6), ranged table with mixed dashes (1d8), table with a gap (d20) |

@@ -19,8 +19,10 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-1. The maintainer reviews the phase 2 plan (`docs/superpowers/plans/2026-10-25-npc-phase-2-builder.md`).
-   Build only after their "passt".
+1. The maintainer checks NPC builder phase 2 in Obsidian (list under "Half-finished"). Fix what
+   turns up.
+2. Then the phase 3 plan (editing in the stat block, template builder) from spec §8, and a review
+   stop.
 
 ## State of the working tree
 
@@ -73,11 +75,37 @@ From the maintainer's check in Obsidian, in order:
   (rendering), `stat-summaries.ts` (the card's `AC · HP · CR`, read from the note's text), the
   command Convert stat block, example vault notes on the new block (Ondine kept on `statblock`),
   README attribution. Seen in Chromium at desktop and phone width.
+- NPC builder phase 1 accepted ("passt"); phase 2 planned, approved ("Ja") and built:
+  `src/npc/archetypes.ts` (own archetypes from notes, search, `withName`), `src/npc/tables.ts`
+  (default dice tables, note overrides), `src/npc/note.ts` (NPC note from template, Add stat block,
+  folder and free file name), `src/obsidian/npc-modal.ts` (New NPC dialog, archetype picker,
+  loaders), `src/obsidian/npc-builder.ts` (commands), the New NPC button on faction cards, four
+  path settings; example vault: `Templates/Archetypes/Lantern Warden.md`,
+  `Templates/Tables/NPC quirks.md`. The UI stand-in gained `Setting`, `FuzzySuggestModal`,
+  `parseYaml`.
 
-## Half-finished
+## Half-finished — check in Obsidian
 
-Nothing. NPC builder phase 1 (with layout B) passed the maintainer's check in Obsidian. GitHub Pages
-needs the repository setting "Source: GitHub Actions" once, then a re-run of the Pages workflow.
+Rebuild and install (`pnpm --filter dnd5e-bylokianer build`, then `… install-example`), reload.
+
+1. **Button**: The Gutter Court's card shows **New NPC** in its top line; a character's card does
+   not. It opens the dialog with The Gutter Court chosen.
+2. **Dialog**: the dice fill name (first + family name), appearance, manner, wants, quirk; the quirk
+   die uses the vault's `Templates/Tables/NPC quirks.md` (Bell Square, Mira …), the others the
+   defaults. The archetype field suggests SRD NPCs and Lantern Warden (first, "own"), with CR.
+   Phone width: one column, dice stay.
+3. **Create** with archetype Guard into The Bench → `Silverstadt/Factions/The Gutter Court/The
+Bench/<name>.md` opens: frontmatter `type: npc`, race, alignment, `archetype: Guard`; the lines
+   under their headings; the stat block named after the NPC, folded; the card shows the short stats
+   and the NPC appears as a member in the faction world. Party → `Silverstadt/Party`, Unaffiliated
+   → `Silverstadt/NPCs`. Creating the same name again gives `<name> 2.md`.
+4. **Refusals**: no name → notice; an archetype typed that does not exist → notice, no note.
+5. **Add stat block** on Sergeant Pell → pick Lantern Warden → `## Stats` with a block named
+   "Sergeant Pell" at the end; the card shows AC 16 · HP 16 · CR 1/4; a second run says the note
+   has one. `git diff` shows only the added lines.
+6. **Settings**: NPC template, archetype folder, tables folder, folder for NPCs of no faction — in
+   both the settings search (1.13+) and the classic tab. German UI says "Neuer NSC".
+7. Revert the example vault afterwards (`git checkout examples/vault`, delete created notes).
 
 ## Decisions taken this session
 
@@ -115,5 +143,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 221 plugin tests (13 of them UI tests) and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 237 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

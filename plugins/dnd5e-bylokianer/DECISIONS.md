@@ -255,3 +255,20 @@ where it is in the note, folded behind one line (`Stat block · name · AC · HP
 Open or folded is remembered per note while Obsidian runs.
 
 Left out: A (full block under the card), C (full block as a card section), D (two columns).
+
+## 2026-10-25 · NPC builder phase 2: the builder
+
+Approved plan (maintainer: "Ja"). Calls made while building:
+
+- The personality lines go under the example template's headings as list items: appearance and
+  manner under "Appearance and manner", wants under "What they want", the quirk under "Voice
+  notes"; a missing heading is added at the end of the note.
+- An own archetype is named after its note's file name (the block's `name:` is the NPC's name once
+  used); a note without a usable stat block is named in a notice, not listed.
+- A new note never overwrites one: `Name 2.md`, `Name 3.md` …; characters that cannot stand in a file
+  name are dropped from it. A missing folder is created.
+- An archetype typed but not found refuses Create with a notice instead of creating a note without
+  stats.
+- German UI says "NSC" for NPC, as German rulebooks do; keys and file names stay English.
+
+Left out (phase 3): editing inside the stat block and a dialog that builds archetypes.

@@ -77,6 +77,16 @@ CR and speed and the six ability modifiers right under the title, from the note'
 (either name). Its own block name keeps it apart from Fantasy Statblocks; **Convert stat block**
 switches a note's blocks between the two names. The 21 NPC stat blocks of the SRD 5.1 come with the plugin for the NPC builder.
 
+**New NPC.** The command **New NPC** — or the **New NPC** button on a faction's card — opens a
+dialog: name, faction, archetype, race, class, alignment, appearance, manner, wants and a quirk, each
+with a die that rolls from a table. **Create** writes the note from your NPC template (setting,
+default `Templates/NPC.md`) into the faction's folder — the Party's folder for the Party, the
+campaign's `NPCs` folder for the unaffiliated — with the archetype's stat block named after the NPC.
+Archetypes are the 21 SRD NPCs and your own: notes with `type: archetype` and a stat block in
+`Templates/Archetypes/`. A note such as `Templates/Tables/NPC quirks.md` (one entry per list item)
+replaces that dice table. **Add stat block** gives the open note a stat block from an archetype,
+under a new `## Stats` heading; it leaves a note that has one alone.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button

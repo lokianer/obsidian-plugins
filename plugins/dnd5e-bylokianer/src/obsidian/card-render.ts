@@ -45,6 +45,8 @@ interface CardContext {
   offerLog: (change: ValueChange) => void;
   /** A character's stat block, shown as short stats under the title, or null. */
   statblock: Statblock | null;
+  /** Opens the New NPC dialog for a faction (the button on a faction's card). */
+  newNpc: (faction: string) => void;
   /** Asks for a rebuild from fresh data (after a refused edit). */
   refresh: () => void;
 }
@@ -131,6 +133,15 @@ export class CardRenderer extends Component {
         cls: 'dnd5e-card-place',
         text: card.place.map((p) => this.placeName(p)).join(' › '),
       });
+    }
+    if (card.kind === 'faction') {
+      const add = line.createEl('button', {
+        cls: ['clickable-icon', 'dnd5e-card-new-npc'],
+        attr: { 'aria-label': this.t('card.newMember') },
+      });
+      setIcon(add.createSpan({ cls: 'dnd5e-card-icon' }), 'user-plus');
+      add.createSpan({ text: this.t('card.newMember') });
+      add.addEventListener('click', () => this.ctx.newNpc(card.entityId));
     }
     if (card.warningCount > 0) {
       const badge = line.createEl('button', {
