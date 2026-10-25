@@ -3,6 +3,15 @@ import { parse } from 'yaml';
 
 import { DE_NAMES } from '../src/monsters/de';
 import {
+  bonusText,
+  emptyMonster,
+  legendaryParagraph,
+  monsterNoteText,
+  parseBonuses,
+  statblockYaml,
+} from '../src/monsters/draft';
+import { ownIndex, ownMonster } from '../src/monsters/own';
+import {
   bandCounts,
   bandOf,
   filterMonsters,
@@ -14,7 +23,7 @@ import { germanBlock, monsterName } from '../src/monsters/meta';
 import type { SrdMonster } from '../src/monsters/model';
 import { SRD_MONSTERS } from '../src/monsters/srd-monsters';
 import { SRD_NPCS } from '../src/npc/srd';
-import { parseStatblock, type Statblock } from '../src/npc/statblock';
+import { findStatblocks, parseStatblock, type Statblock } from '../src/npc/statblock';
 
 const block = (index: string): Statblock => {
   const m = SRD_MONSTERS.find((x) => x.index === index);
@@ -251,5 +260,80 @@ describe('Monster Manual filters', () => {
       legendary: true,
     });
     expect(isFiltered(NO_FILTERS)).toBe(false);
+  });
+});
+
+describe('monster builder drafts', () => {
+  it('writes every SRD monster back as a block that reads the same', () => {
+    for (const m of SRD_MONSTERS) {
+      const b = parseStatblock(parse(m.yaml));
+      const again = parseStatblock(parse(statblockYaml(b)));
+      expect({ ...again, extra: {} }, m.index).toEqual({ ...b, extra: {} });
+    }
+  });
+
+  it('reads and writes saves and skills as one line', () => {
+    expect(bonusText(block('adult-red-dragon').saves)).toBe('dex +6, con +13, wis +7, cha +11');
+    expect(parseBonuses('DEX +6, CON +13, junk, Sleight of Hand −2')).toEqual([
+      { key: 'dex', bonus: 6 },
+      { key: 'con', bonus: 13 },
+      { key: 'sleight_of_hand', bonus: -2 },
+    ]);
+    expect(bonusText(parseBonuses('Sleight of Hand +4'))).toBe('sleight of hand +4');
+  });
+
+  it('leaves empty fields and empty entries out, and the legendary paragraph without actions', () => {
+    const b = {
+      ...emptyMonster(),
+      name: 'Mire Hound',
+      actions: [
+        { name: 'Bite', desc: 'Melee Weapon Attack: +4 to hit.' },
+        { name: '', desc: '' },
+      ],
+      legendaryDescription: 'unused',
+    };
+    const yaml = statblockYaml(b);
+    expect(yaml).not.toContain('legendary');
+    expect(yaml).not.toContain('damage_');
+    expect(parseStatblock(parse(yaml)).actions).toEqual([
+      { name: 'Bite', desc: 'Melee Weapon Attack: +4 to hit.' },
+    ]);
+    expect(legendaryParagraph('Mire Hound')).toMatch(/^The mire hound can take 3 legendary/);
+  });
+
+  it('writes a monster note with its block', () => {
+    const text = monsterNoteText('Mire Hound', '1/2', 'name: "Mire Hound"', 'dnd5e-statblock');
+    expect(text).toBe(
+      '---\ntype: monster\ncr: "1/2"\n---\n\n# Mire Hound\n\n```dnd5e-statblock\nname: "Mire Hound"\n```\n',
+    );
+    expect(findStatblocks(text)[0]?.source).toBe('name: "Mire Hound"');
+  });
+});
+
+describe('own monsters', () => {
+  it('reads a note’s stat block for the list and filters', () => {
+    const yaml =
+      'name: Mire Hound\nsize: Medium\ntype: monstrosity (marsh)\nac: 13\nhp: 22\nspeed: 40 ft., swim 30 ft.\ncr: "1/2"\ntraits:\n  - name: Innate Spellcasting\n    desc: x';
+    const m = ownMonster('Monsters/Mire Hound.md', parseStatblock(parse(yaml)), yaml);
+    expect(m).toMatchObject({
+      index: ownIndex('Monsters/Mire Hound.md'),
+      name: 'Mire Hound',
+      cr: '1/2',
+      type: 'monstrosity',
+      size: 'Medium',
+      ac: 13,
+      hp: 22,
+      moves: ['swim'],
+      legendary: false,
+      spellcaster: true,
+      path: 'Monsters/Mire Hound.md',
+    });
+    expect(ownMonster('x.md', parseStatblock(parse('ac: 3')), 'ac: 3')).toBeNull();
+    const found = filterMonsters(
+      [...SRD_MONSTERS, m as SrdMonster],
+      { ...NO_FILTERS, query: 'mire' },
+      (x) => x.name,
+    );
+    expect(found.map((x) => x.name)).toEqual(['Mire Hound']);
   });
 });

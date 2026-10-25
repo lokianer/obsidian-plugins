@@ -480,3 +480,25 @@ call in its §7.
 - `main.js` grows to about 1.7 MB with the monster data.
 
 Left out: German traits and actions (M2), own monsters and the monster builder (M3).
+
+## 2026-10-25 · Monster Manual, phase M3 ahead of M2: own monsters and the monster builder
+
+Asked for by the maintainer after M1 ("jetzt einen Monster Creator"); M2 (German traits and
+actions) stays the next phase.
+
+- Own monsters: `type: monster` notes anywhere in the vault, their first stat block read for the
+  list (name required; the base type from the type's first word; movement from the speed).
+- The builder keeps the stat block in the SRD's words: size, type, alignment and CR are dropdowns
+  showing the GM's language and storing English, like the spell builder's casting time; its
+  preview — and the Monster Manual's card for own monsters — show the German header and lines with
+  German Obsidian. Free fields (speed, senses, languages, damage, traits, actions) are written as
+  typed. Saves and skills are one line each (`DEX +6, CON +13`).
+- A block written by the builder reads back as the same block: tested on all 334 SRD monsters,
+  which found the Druid's leading space (now trimmed by the generator).
+- The paragraph above legendary actions fills itself in with the SRD's sentence when the first
+  legendary action is added, and can be changed.
+- The yaml library is no longer bundled into the plugin by the Monster Manual: it reads blocks with
+  Obsidian's `parseYaml`.
+
+Left out: editing a note's monster in the builder (the rendered block is editable already), lair
+actions, spell lists as separate fields (Spellcasting stays a trait).

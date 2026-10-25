@@ -43,7 +43,11 @@ import { SpellBuilderModal } from '../../src/obsidian/spell-builder';
 import type { SpellDraft } from '../../src/spells/draft';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
+import { MonsterBuilderModal } from '../../src/obsidian/monster-builder';
 import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/monster-manual-view';
+import type { SrdMonster } from '../../src/monsters/model';
+import { ownMonster } from '../../src/monsters/own';
+import { SRD_MONSTERS } from '../../src/monsters/srd-monsters';
 import { linkSpells } from '../../src/obsidian/spell-links';
 import { spellFinder } from '../../src/spells/links';
 import type { SrdSpell } from '../../src/spells/model';
@@ -1181,10 +1185,12 @@ describe('spell builder', () => {
 });
 
 describe('monster manual', () => {
-  async function open(lang: 'en' | 'de', state: unknown = null) {
+  async function open(lang: 'en' | 'de', state: unknown = null, own: SrdMonster[] = []) {
     const saved: MonsterManualState[] = [];
     const inserted: string[] = [];
     const notes: string[] = [];
+    const opened: string[] = [];
+    const builders: number[] = [];
     const view = new MonsterManualView({} as WorkspaceLeaf, {
       t: createT(lang),
       lang: () => lang,
@@ -1192,6 +1198,10 @@ describe('monster manual', () => {
       saveState: (s) => saved.push(s),
       insert: (m) => inserted.push(m.index),
       makeNote: (m) => notes.push(m.index),
+      own: () => own,
+      onOwnChange: () => () => undefined,
+      openNote: (path) => opened.push(path),
+      newMonster: () => builders.push(1),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1199,7 +1209,7 @@ describe('monster manual', () => {
     const rows = () => [...el.querySelectorAll<HTMLElement>('.dnd5e-spells-row')];
     const row = (name: string) =>
       rows().find((r) => r.querySelector('.dnd5e-spells-row-name')?.textContent === name);
-    return { el, rows, row, saved, inserted, notes };
+    return { el, rows, row, saved, inserted, notes, opened, builders, view };
   }
 
   it('lists all 334 monsters by challenge rating and opens a stat block', async () => {
@@ -1255,5 +1265,118 @@ describe('monster manual', () => {
       .find((b) => b.textContent === 'EN')
       ?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear']);
+  });
+
+  it('lists own monsters marked "own", opens their note and the builder', async () => {
+    const yaml = 'name: Mire Hound\nsize: Medium\ntype: monstrosity\nac: 13\nhp: 22\ncr: "1/2"';
+    const own = ownMonster('Monsters/Mire Hound.md', parseStatblock(parse(yaml)), yaml);
+    if (own === null) throw new Error('no monster');
+    const { el, rows, row, opened, builders, view } = await open('en', null, [own]);
+    expect(rows()).toHaveLength(335);
+    expect(row('Mire Hound')?.querySelector('.is-own')?.textContent).toBe('own');
+    view.show(own.index);
+    expect(texts(el, '.dnd5e-sb-name')).toEqual(['Mire Hound']);
+    expect(el.querySelector('.dnd5e-monsters-note')).toBeNull();
+    el.querySelector('.dnd5e-monsters-open')?.dispatchEvent(new MouseEvent('click'));
+    expect(opened).toEqual(['Monsters/Mire Hound.md']);
+    expect(el.querySelector('.dnd5e-spells-source')?.textContent).toBe(
+      'Own monster · Monsters/Mire Hound.md',
+    );
+    el.querySelector('.dnd5e-monsters-new')?.dispatchEvent(new MouseEvent('click'));
+    expect(builders).toEqual([1]);
+  });
+});
+
+describe('monster builder', () => {
+  function builder(lang: 'en' | 'de' = 'en') {
+    const created: Statblock[] = [];
+    const modal = new MonsterBuilderModal(app, {
+      t: createT(lang),
+      lang,
+      monsters: SRD_MONSTERS,
+      create: (b) => {
+        created.push(structuredClone(b));
+        return Promise.resolve();
+      },
+    });
+    root.appendChild(modal.modalEl);
+    modal.onOpen();
+    const el = modal.contentEl;
+    const type = (selector: string, value: string) => {
+      const input = el.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector);
+      if (input === null) throw new Error(selector);
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    };
+    const choose = (selector: string, value: string) => {
+      const select = el.querySelector<HTMLSelectElement>(selector);
+      if (select === null) throw new Error(selector);
+      select.value = value;
+      select.dispatchEvent(new Event('change'));
+    };
+    return { modal, el, created, type, choose };
+  }
+
+  it('builds a monster by hand with a live stat block preview', async () => {
+    const { el, created, type, choose } = builder();
+    type('.dnd5e-monster-name', 'Mire Hound');
+    choose('.dnd5e-monster-type', 'monstrosity');
+    choose('.dnd5e-monster-size', 'Large');
+    choose('.dnd5e-monster-cr', '2');
+    type('.dnd5e-monster-ac', '13');
+    type('.dnd5e-monster-abilities input', '16');
+    expect(texts(el, '.dnd5e-monster-preview .dnd5e-sb-name')).toEqual(['Mire Hound']);
+    expect(el.querySelector('.dnd5e-monster-preview .dnd5e-sb-meta')?.textContent).toBe(
+      'Large monstrosity, unaligned',
+    );
+    expect(el.querySelector('.dnd5e-monster-preview .dnd5e-sb-ability')?.textContent).toContain(
+      '16 (+3)',
+    );
+    el.querySelector<HTMLElement>('[data-list="actions"] .setting-item button')?.dispatchEvent(
+      new MouseEvent('click'),
+    );
+    type('[data-list="actions"] .dnd5e-builder-row input', 'Bite');
+    type('[data-list="actions"] .dnd5e-builder-row textarea', 'Melee Weapon Attack: +5 to hit.');
+    el.querySelector<HTMLElement>(
+      '[data-list="legendaryActions"] .setting-item button',
+    )?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector<HTMLTextAreaElement>('.dnd5e-monster-legendary')?.value).toMatch(
+      /^The mire hound can take 3 legendary actions/,
+    );
+    [...el.querySelectorAll<HTMLElement>('button')]
+      .find((b) => b.textContent === 'Create monster')
+      ?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(created[0]).toMatchObject({
+      name: 'Mire Hound',
+      type: 'monstrosity',
+      size: 'Large',
+      cr: '2',
+      ac: 13,
+      actions: [{ name: 'Bite', desc: 'Melee Weapon Attack: +5 to hit.' }],
+    });
+    expect(created[0]?.stats?.[0]).toBe(16);
+  });
+
+  it('starts from an SRD monster picked in the tiles; German labels, the SRD’s words', () => {
+    const { el } = builder('de');
+    const search = el.querySelector<HTMLInputElement>('.dnd5e-npc-search');
+    if (search === null) throw new Error('no search');
+    search.value = 'eulenb';
+    search.dispatchEvent(new Event('input'));
+    expect(texts(el, '.dnd5e-monster-tiles .dnd5e-npc-tile-name')).toEqual(['Eulenbär']);
+    el.querySelector<HTMLElement>('.dnd5e-monster-tiles .dnd5e-npc-tile')?.dispatchEvent(
+      new MouseEvent('click'),
+    );
+    expect(el.querySelector<HTMLInputElement>('.dnd5e-monster-name')?.value).toBe('Owlbear');
+    const size = el.querySelector<HTMLSelectElement>('.dnd5e-monster-size');
+    expect(size?.value).toBe('Large');
+    expect(size?.selectedOptions[0]?.textContent).toBe('Groß');
+    expect(el.querySelector('.dnd5e-monster-preview .dnd5e-sb-meta')?.textContent).toBe(
+      'Große Monstrosität, gesinnungslos',
+    );
+    expect(
+      [...el.querySelectorAll<HTMLInputElement>('[data-list="actions"] input')].map((i) => i.value),
+    ).toEqual(['Multiattack', 'Beak', 'Claws']);
   });
 });

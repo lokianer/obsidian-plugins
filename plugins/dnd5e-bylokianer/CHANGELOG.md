@@ -8,6 +8,12 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Own monsters and the monster builder** (Monster Manual, phase M3): `type: monster` notes with a
+  stat block join the Monster Manual, marked "own", their card opening the note. **New monster**
+  (command, or + in the Monster Manual) opens a builder in the New NPC dialog's style — start from
+  an SRD monster or from nothing, every part of the stat block as a field, the stat block live
+  beside it — and writes the note.
+
 - **Monster Manual** (module 5, phase M1): the 334 SRD monsters in their own tab, built like the
   spellbook — search in English or German, challenge rating bands, type, size, movement, legendary
   and spellcaster filters, a list by challenge rating and the stat block as the card with spell
@@ -138,6 +144,9 @@ All notable changes to this plugin are documented here. The format follows
 - The warnings summary says "1 faction" / "1 warning" in the singular.
 
 ### Fixed
+
+- Leading spaces in a few SRD monster texts (the Druid's quarterstaff) are trimmed when the data is
+  generated.
 
 - Three broken dice in the SRD source data (Moonbeam's "1dl0", Reincarnate's "d 100", Symbol's
   "10d 10") are repaired when the spell data is generated.

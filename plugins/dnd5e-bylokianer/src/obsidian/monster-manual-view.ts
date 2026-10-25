@@ -2,17 +2,18 @@
 // rating bands and type chips, size and movement dropdowns, Legendary and Spellcaster chips, a list
 // grouped by challenge rating, and the stat block as the card, in the type's colour. Names and
 // meta follow the dice-text language; the card can switch to the other one. From the card a
-// monster goes into the last note or into a note of its own. The filters are kept.
+// monster goes into the last note or into a note of its own. The GM's own `type: monster` notes
+// join the list, marked "own"; + opens the monster builder. The filters are kept.
 
 import {
   Component,
   debounce,
   ItemView,
   MarkdownRenderer,
+  parseYaml,
   setIcon,
   type WorkspaceLeaf,
 } from 'obsidian';
-import { parse } from 'yaml';
 
 import { createT, type StringKey, type T } from '../i18n/strings';
 import {
@@ -79,6 +80,12 @@ export interface MonsterManualDeps {
   insert: (monster: SrdMonster) => void;
   /** Writes a note of its own for the monster. */
   makeNote: (monster: SrdMonster) => void;
+  /** The GM's own `type: monster` notes, and a way to hear when they change. */
+  own: () => readonly SrdMonster[];
+  onOwnChange: (listener: () => void) => () => void;
+  openNote: (path: string) => void;
+  /** Opens the monster builder. */
+  newMonster: () => void;
 }
 
 function hue(el: HTMLElement, type: string): void {
@@ -124,7 +131,21 @@ export class MonsterManualView extends ItemView {
     return 'skull';
   }
 
+  /** Every monster: the SRD's and the GM's own. */
+  private get monsters(): readonly SrdMonster[] {
+    const own = this.deps.own();
+    return own.length === 0 ? SRD_MONSTERS : [...SRD_MONSTERS, ...own];
+  }
+
+  /** Opens a monster's card (one just built, say), clearing filters that would hide it. */
+  show(index: string): void {
+    this.cardLang = null;
+    if (!this.shown.some((m) => m.index === index)) this.setFilters(NO_FILTERS);
+    this.pick(index, true);
+  }
+
   async onOpen(): Promise<void> {
+    this.register(this.deps.onOwnChange(() => this.render()));
     const stored = this.deps.state() as Partial<MonsterManualState> | undefined;
     this.filters = readFilters(stored?.filters);
     this.selected = typeof stored?.selected === 'string' ? stored.selected : null;
@@ -191,6 +212,12 @@ export class MonsterManualView extends ItemView {
     });
     if (focused) input.focus();
     top.createDiv({ cls: 'dnd5e-spells-count' });
+    const add = top.createEl('button', {
+      cls: ['clickable-icon', 'dnd5e-monsters-new'],
+      attr: { 'aria-label': t('monsters.new') },
+    });
+    setIcon(add, 'plus');
+    add.addEventListener('click', () => this.deps.newMonster());
     if (isFiltered(this.filters)) {
       const reset = top.createEl('button', {
         cls: 'clickable-icon',
@@ -288,7 +315,7 @@ export class MonsterManualView extends ItemView {
           ? t('monsters.count.one')
           : t('monsters.count', { count: this.shown.length }),
       );
-    const counts = bandCounts(SRD_MONSTERS, this.filters);
+    const counts = bandCounts(this.monsters, this.filters);
     this.headerEl.querySelectorAll<HTMLElement>('[data-band]').forEach((chip) => {
       const n = counts[chip.dataset.band as Band];
       chip.querySelector('.dnd5e-spells-chip-count')?.setText(String(n));
@@ -300,7 +327,7 @@ export class MonsterManualView extends ItemView {
 
   private render(): void {
     const { t } = this.deps;
-    this.shown = filterMonsters(SRD_MONSTERS, this.filters, this.name);
+    this.shown = filterMonsters(this.monsters, this.filters, this.name);
     const list = this.listEl;
     list.empty();
     if (this.shown.length === 0) {
@@ -346,6 +373,9 @@ export class MonsterManualView extends ItemView {
     if (m.legendary) mark('L', 'monsters.legendary');
     if (m.moves.includes('fly')) mark('✈', 'monsters.moves.fly');
     if (m.spellcaster) mark('✦', 'monsters.spellcaster');
+    if (m.path !== undefined) {
+      marks.createSpan({ cls: ['dnd5e-spells-mark', 'is-own'], text: t('spells.own') });
+    }
     row.addEventListener('click', () => this.pick(m.index, true));
   }
 
@@ -387,7 +417,7 @@ export class MonsterManualView extends ItemView {
     this.cardText?.unload();
     this.cardText = null;
     card.empty();
-    const m = SRD_MONSTERS.find((x) => x.index === this.selected);
+    const m = this.monsters.find((x) => x.index === this.selected);
     if (m === undefined) {
       const empty = card.createDiv({ cls: 'dnd5e-spells-pick' });
       setIcon(empty.createDiv({ cls: 'dnd5e-spells-pick-icon' }), 'skull');
@@ -437,9 +467,14 @@ export class MonsterManualView extends ItemView {
       b.addEventListener('click', run);
     };
     action('file-input', 'monsters.insert', () => this.deps.insert(m), 'dnd5e-monsters-insert');
-    action('file-plus', 'monsters.makeNote', () => this.deps.makeNote(m), 'dnd5e-monsters-note');
+    const path = m.path;
+    if (path === undefined) {
+      action('file-plus', 'monsters.makeNote', () => this.deps.makeNote(m), 'dnd5e-monsters-note');
+    } else {
+      action('file-text', 'spells.openNote', () => this.deps.openNote(path), 'dnd5e-monsters-open');
+    }
 
-    const raw = parseStatblock(parse(m.yaml));
+    const raw = parseStatblock(parseYaml(m.yaml));
     const block = lang === 'de' ? germanBlock(raw, monsterName(m, 'de')) : raw;
     this.cardText = new Component();
     this.cardText.load();
@@ -449,7 +484,10 @@ export class MonsterManualView extends ItemView {
       markdown: (md, el) => MarkdownRenderer.render(this.app, md, el, '', text),
       spells: this.deps.spells,
     });
-    card.createDiv({ cls: 'dnd5e-spells-source', text: t('spells.source') });
+    card.createDiv({
+      cls: 'dnd5e-spells-source',
+      text: path === undefined ? t('spells.source') : t('monsters.ownSource', { path }),
+    });
   }
 }
 

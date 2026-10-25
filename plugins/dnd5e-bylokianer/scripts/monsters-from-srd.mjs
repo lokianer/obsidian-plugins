@@ -89,7 +89,7 @@ function entries(key, list) {
 	if (list === undefined || list.length === 0) return [];
 	return [
 		`${key}:`,
-		...list.flatMap((e) => [`  - name: ${q(entryName(e))}`, `    desc: ${q(e.desc)}`]),
+		...list.flatMap((e) => [`  - name: ${q(entryName(e))}`, `    desc: ${q(e.desc.trim())}`]),
 	];
 }
 

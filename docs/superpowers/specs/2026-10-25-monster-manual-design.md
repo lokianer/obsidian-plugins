@@ -1,6 +1,6 @@
 # Monster Manual — design
 
-Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §7 accepted); M1 built**. Module 5 of
+Date: 2026-10-25. Status: **reviewed 2026-10-25 (every call in §7 accepted); M1 built; M3 pulled ahead of M2 by the maintainer ("jetzt einen Monster Creator")**. Module 5 of
 `dnd5e-byLokianer`, before the battle tracker.
 
 Asked for by the maintainer: "beside the spellbook a Monster Manual, built like the spellbook,

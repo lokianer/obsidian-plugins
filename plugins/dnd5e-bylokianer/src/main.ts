@@ -24,7 +24,12 @@ import { NoteStatblocks } from './obsidian/note-statblocks';
 import { NpcBuilder } from './obsidian/npc-builder';
 import { tableLang } from './obsidian/npc-modal';
 import { newNote } from './obsidian/new-note';
+import { MonsterBuilderModal } from './obsidian/monster-builder';
 import { MONSTER_VIEW, MonsterManualView } from './obsidian/monster-manual-view';
+import { OwnMonsters } from './obsidian/own-monsters';
+import { monsterNoteText, statblockYaml } from './monsters/draft';
+import { ownIndex as ownMonsterIndex } from './monsters/own';
+import { SRD_MONSTERS } from './monsters/srd-monsters';
 import { OwnSpells } from './obsidian/own-spells';
 import { SpellBuilderModal } from './obsidian/spell-builder';
 import type { SrdMonster } from './monsters/model';
@@ -192,6 +197,16 @@ export default class Dnd5ePlugin extends Plugin {
         if (leaf.view instanceof SpellbookView) leaf.view.show(index);
       }
     };
+    /** Resolves once a new note's metadata is there (or after two seconds). */
+    const indexed = (path: string) =>
+      new Promise<void>((resolve) => {
+        const ref = this.app.metadataCache.on('changed', (file) => {
+          if (file.path !== path) return;
+          this.app.metadataCache.offref(ref);
+          resolve();
+        });
+        window.setTimeout(resolve, 2000);
+      });
     const newSpell = () =>
       new SpellBuilderModal(this.app, {
         t,
@@ -207,14 +222,7 @@ export default class Dnd5ePlugin extends Plugin {
           );
           new Notice(t('spellBuilder.created', { path }));
           // The new note's metadata first, then the spellbook can show it.
-          await new Promise<void>((resolve) => {
-            const ref = this.app.metadataCache.on('changed', (file) => {
-              if (file.path !== path) return;
-              this.app.metadataCache.offref(ref);
-              resolve();
-            });
-            window.setTimeout(resolve, 2000);
-          });
+          await indexed(path);
           await ownSpells.reload();
           await openSpell(ownIndex(path));
         },
@@ -229,6 +237,8 @@ export default class Dnd5ePlugin extends Plugin {
       }),
     );
     const fence = (monster: SrdMonster) => `\`\`\`${BLOCK}\n${monster.yaml}\n\`\`\``;
+    const ownMonsters = new OwnMonsters(this);
+    this.app.workspace.onLayoutReady(() => void ownMonsters.reload());
     this.registerView(
       MONSTER_VIEW,
       (leaf) =>
@@ -256,9 +266,13 @@ export default class Dnd5ePlugin extends Plugin {
                   new Notice(t('monsters.inserted', { name: monster.name, note: file.basename })),
               );
           },
+          own: () => ownMonsters.list,
+          onOwnChange: (listener) => ownMonsters.onChange(listener),
+          openNote: (path) => openNote(path, false),
+          newMonster: () => newMonster(),
           makeNote: (monster) =>
             void (async () => {
-              const text = `---\ntype: monster\ncr: "${monster.cr}"\n---\n\n# ${monster.name}\n\n${fence(monster)}\n`;
+              const text = monsterNoteText(monster.name, monster.cr, monster.yaml, BLOCK);
               const path = await newNote(
                 this.app,
                 cache,
@@ -284,6 +298,25 @@ export default class Dnd5ePlugin extends Plugin {
       callback: openMonsters,
     });
     this.addRibbonIcon('skull', t('command.openMonsters'), () => void openMonsters());
+    const newMonster = () =>
+      new MonsterBuilderModal(this.app, {
+        t,
+        lang: tableLang(this.options, getLanguage()),
+        monsters: SRD_MONSTERS,
+        create: async (block) => {
+          const name = (block.name ?? '').trim();
+          const text = monsterNoteText(name, block.cr, statblockYaml(block), BLOCK);
+          const path = await newNote(this.app, cache, this.options.monsterFolder, name, text);
+          new Notice(t('monsters.created', { path }));
+          await indexed(path);
+          await ownMonsters.reload();
+          await openMonsters();
+          for (const leaf of this.app.workspace.getLeavesOfType(MONSTER_VIEW)) {
+            if (leaf.view instanceof MonsterManualView) leaf.view.show(ownMonsterIndex(path));
+          }
+        },
+      }).open();
+    this.addCommand({ id: 'new-monster', name: t('command.newMonster'), callback: newMonster });
 
     const deckStore = new DeckStore(
       this,

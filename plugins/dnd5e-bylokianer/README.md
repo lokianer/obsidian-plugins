@@ -262,6 +262,15 @@ and actions' texts follow in the next phase. EN / DE switches the card.
 note you were in; **Make a note** writes a `type: monster` note with the block in the campaign's
 monster folder (setting, `Monsters` by default).
 
+**Own monsters** are notes with `type: monster` and a `dnd5e-statblock` block anywhere in the
+vault: they join the list marked "own", filter and search like the SRD's, and their card opens the
+note. **New monster** (command, or + in the Monster Manual) opens the monster builder, laid out like
+the New NPC dialog with the stat block as a live preview: start from one of the 334 SRD monsters
+(search the tiles) or from nothing; size, type, alignment and challenge rating are dropdowns in your
+language, the six abilities numbers, saves and skills one line each (`DEX +6, CON +13`), traits,
+actions, reactions and legendary actions rows — the paragraph above legendary actions fills itself
+in. It writes the note in the monster folder and shows it in the Monster Manual.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -274,6 +283,7 @@ monster folder (setting, `Monsters` by default).
 - **New deck** — the deck builder.
 - **New spell** — the spell builder.
 - **Open Monster Manual** — the SRD monsters to look up and drop into notes.
+- **New monster** — the monster builder.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

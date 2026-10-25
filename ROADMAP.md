@@ -13,11 +13,11 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Monster Manual** (module 5): M1 (the tab) is built and waits for the
-maintainer's check in Obsidian; next M2, the German texts of all traits and actions. Also waiting
-for the check: spellbook S3 (links, own spells), the spell builder (now with casting time and
-duration dropdowns) and the restyled deck builder; the faction world redesign. Then module 6, the
-battle tracker. Nothing is published for now.
+**dnd5e-byLokianer · Monster Manual** (module 5): M1 (the tab, liked by the maintainer) and M3
+(own monsters, the monster builder — pulled ahead on request) are built and wait for the check in
+Obsidian; next M2, the German texts of all traits and actions. Also waiting for the check: spellbook
+S3, the spell builder (with casting time and duration dropdowns), the restyled deck builder, the
+faction world redesign. Then module 6, the battle tracker. Nothing is published for now.
 
 ---
 
@@ -154,7 +154,8 @@ Design: [`docs/superpowers/specs/2026-10-25-monster-manual-design.md`](docs/supe
       monsters as data, German names and meta, search, filters, list, stat block card, Insert into
       note, Make a note. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m1.md`
 - [ ] **M2 — German texts** of all traits and actions
-- [ ] **M3 — Own monsters and a monster builder**
+- [ ] **M3 — Own monsters and a monster builder** ← _built 2026-10-25 (ahead of M2, on request),
+      awaiting the check in Obsidian_. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m3.md`
 
 ### Module 6 — Battle tracker
 

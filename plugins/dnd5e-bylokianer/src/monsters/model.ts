@@ -18,4 +18,6 @@ export interface SrdMonster {
   spellcaster: boolean;
   /** The stat block as YAML in the plugin's format. */
   yaml: string;
+  /** An own monster's note; absent for the SRD's monsters. */
+  path?: string;
 }
