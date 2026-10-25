@@ -198,4 +198,5 @@ Anti-goals: a race silently changes an archetype's numbers beyond the SRD traits
 bonuses — NPC stat blocks already include them); German text in keys or headings.
 
 Phases: **4a** race model, own races, bilingual and larger tables, new fields in the note; **4b** the
-dialog: preview, roll everything with locks, tiles. Each with a plan and a review stop.
+dialog: preview, roll everything with locks, tiles. Each with a plan and a review stop. Both built
+2026-10-25 (plans `2026-10-25-npc-phase-4a-races-tables.md`, `2026-10-25-npc-phase-4b-dialog.md`).

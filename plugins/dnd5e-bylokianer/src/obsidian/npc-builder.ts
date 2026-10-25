@@ -23,10 +23,10 @@ import {
   loadRaces,
   loadTables,
   NewFromBaseModal,
-  NewNpcModal,
   raceKind,
   tableLang,
 } from './npc-modal';
+import { NewNpcModal } from './npc-dialog';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 

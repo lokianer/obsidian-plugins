@@ -13,8 +13,8 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · NPC builder** — phases 2, 3 and 4a wait for the maintainer's check in
-Obsidian; then the phase 4b plan (fancier dialog). The **spellbook** follows as module 3, after the
+**dnd5e-byLokianer · NPC builder** — phases 2, 3, 4a and 4b (the fancier dialog) are built and
+wait for the maintainer's check in Obsidian; with them module 2 is complete. The **spellbook** follows as module 3, after the
 NPC builder (the maintainer's call, 2026-10-25); its spec and S1 plan are written, German distances
 in metres. Nothing is published for now.
 
@@ -103,8 +103,9 @@ Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpo
 - [ ] **Phase 4a — Races and richer tables** ← _built 2026-10-25, awaiting the check in Obsidian_: SRD races and own
       `type: race` notes into the stat block and the dice; English and German tables (≥ 50 each);
       occupation, age, build, voice, ideal, bond, flaw, secret, hook
-- [ ] **Phase 4b — A fancier dialog**: live preview card, roll everything with locks, race and
-      archetype tiles
+- [ ] **Phase 4b — A fancier dialog** ← _built 2026-10-25, awaiting the check in Obsidian_: live
+      preview card, roll everything with locks, race and archetype tiles. Plan
+      `docs/superpowers/plans/2026-10-25-npc-phase-4b-dialog.md`
 
 ### Module 3 — Spellbook (after module 2)
 

@@ -26,7 +26,8 @@ import { findStatblocks, parseStatblock, type Statblock } from '../../src/npc/st
 import { CardRenderer } from '../../src/obsidian/card-render';
 import { FactionViewSvg } from '../../src/obsidian/faction-view-svg';
 import { ModeStore } from '../../src/obsidian/mode-store';
-import { archetypeKind, NewFromBaseModal, NewNpcModal } from '../../src/obsidian/npc-modal';
+import { NewNpcModal } from '../../src/obsidian/npc-dialog';
+import { archetypeKind, NewFromBaseModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
@@ -334,122 +335,131 @@ describe('stat block', () => {
 });
 
 describe('New NPC dialog', () => {
-  it('rolls, picks a faction and an archetype, and hands the choices over', async () => {
-    const create = vi.fn(() => Promise.resolve());
+  /** Opens the dialog in `root`; helpers find rows by label and tiles by name. */
+  function open(lang: 'en' | 'de', create = vi.fn(() => Promise.resolve()), random = () => 0) {
     const modal = new NewNpcModal({
       app,
       t,
       world,
       archetypes: SRD_NPCS,
-      tables: tablesFor('en'),
       races: SRD_RACES,
-      lang: 'en',
+      tables: tablesFor(lang),
+      lang,
       faction: COURT,
       create,
-      random: () => 0,
+      random,
     });
     modal.onOpen();
-    const el = modal.contentEl;
     root.appendChild(modal.modalEl);
-    const rows = [...el.querySelectorAll('.setting-item')];
-    const row = (name: string) =>
-      rows.find((r) => r.querySelector('.setting-item-name')?.textContent === name);
+    const el = modal.contentEl;
+    const row = (label: string) =>
+      [...el.querySelectorAll('.setting-item')].find(
+        (r) => r.querySelector('.setting-item-name')?.textContent === label,
+      );
+    const input = (label: string) => row(label)?.querySelector('input');
+    const click = (target: Element | null | undefined) =>
+      target?.dispatchEvent(new MouseEvent('click'));
+    const tile = (name: string) =>
+      [...el.querySelectorAll('.dnd5e-npc-tile')].find(
+        (t) => t.querySelector('.dnd5e-npc-tile-name')?.textContent === name,
+      );
+    const type = (target: HTMLInputElement | null | undefined, value: string) => {
+      if (!target) return;
+      target.value = value;
+      target.dispatchEvent(new Event('input'));
+    };
+    const preview = () => el.querySelector('.dnd5e-npc-preview');
+    return { el, row, input, click, tile, type, preview, create };
+  }
+
+  it('rolls, picks a faction and an archetype tile, and hands the choices over', async () => {
+    const { el, row, input, click, tile, create } = open('en');
     const select = row('Faction')?.querySelector('select');
     expect(select?.value).toBe(COURT);
     expect([...(select?.options ?? [])].map((o) => o.textContent?.trim()).slice(-2)).toEqual([
       'Party',
       'Unaffiliated',
     ]);
-
-    row('Name')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
-    expect(row('Name')?.querySelector('input')?.value).toBe('Alda Ashgrove');
-    row('Quirk')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
-    const archetype = row('Archetype')?.querySelector('input');
-    if (archetype) {
-      archetype.value = 'guard';
-      archetype.dispatchEvent(new Event('input'));
-    }
+    click(row('Name')?.querySelector('button'));
+    expect(input('Name')?.value).toBe('Alda Ashgrove');
+    click(row('Quirk')?.querySelector('button'));
+    click(tile('Guard'));
+    expect(tile('Guard')?.classList.contains('is-selected')).toBe(true);
+    expect(tile('Guard')?.textContent).toContain('AC 16 · HP 11 · CR 1/8');
     if (select) {
       select.value = BENCH;
       select.dispatchEvent(new Event('change'));
     }
-    el.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+    click(el.querySelector('button.mod-cta'));
     await Promise.resolve();
-    expect(create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Alda Ashgrove',
-        quirk: tablesFor('en').quirks[0],
-      }),
-      BENCH,
-    );
     const calls = create.mock.calls as unknown as [NpcChoices, string][];
+    expect(calls[0]?.[0]).toMatchObject({
+      name: 'Alda Ashgrove',
+      quirk: tablesFor('en').quirks[0],
+    });
     expect(calls[0]?.[0].archetype?.name).toBe('Guard');
+    expect(calls[0]?.[1]).toBe(BENCH);
   });
 
-  it('rolls names and looks for the chosen race, in the dialog’s language', () => {
-    const modal = new NewNpcModal({
-      app,
-      t,
-      world,
-      archetypes: SRD_NPCS,
-      races: SRD_RACES,
-      tables: tablesFor('de'),
-      lang: 'de',
-      faction: COURT,
-      create: () => Promise.resolve(),
-      random: () => 0,
-    });
-    modal.onOpen();
-    const row = (label: string) =>
-      [...modal.contentEl.querySelectorAll('.setting-item')].find(
-        (r) => r.querySelector('.setting-item-name')?.textContent === label,
-      );
-    const race = row('Race')?.querySelector('input');
-    if (race) {
-      race.value = 'Zwerg';
-      race.dispatchEvent(new Event('input'));
-    }
-    row('Name')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
-    expect(row('Name')?.querySelector('input')?.value).toBe('Adran Anvilhand');
-    row('Appearance')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
-    expect(row('Appearance')?.querySelector('input')?.value).toBe(
+  it('rolls names and looks for the chosen race tile, in the dialog’s language', () => {
+    const { row, input, click, tile } = open('de');
+    expect(tile('Zwerg')?.textContent).toContain('Mittelgroß · 7,5 m · Dunkelsicht 18 m');
+    click(tile('Zwerg'));
+    click(row('Name')?.querySelector('button'));
+    expect(input('Name')?.value).toBe('Adran Anvilhand');
+    click(row('Appearance')?.querySelector('button'));
+    expect(input('Appearance')?.value).toBe(
       'ein geflochtener roter Bart, tiefliegende braune Augen, rötliche, wettergegerbte Haut; Tintenfleckige Finger und eine Feder hinter dem Ohr',
     );
-    row('Age')?.querySelector('button')?.dispatchEvent(new MouseEvent('click'));
-    expect(row('Age')?.querySelector('input')?.value).toBe('50');
+    click(row('Age')?.querySelector('button'));
+    expect(input('Age')?.value).toBe('50');
   });
 
-  it('refuses without a name or with an unknown archetype', () => {
-    const create = vi.fn(() => Promise.resolve());
-    const modal = new NewNpcModal({
-      app,
-      t,
-      world,
-      archetypes: SRD_NPCS,
-      tables: tablesFor('en'),
-      races: SRD_RACES,
-      lang: 'en',
-      faction: COURT,
-      create,
-    });
-    modal.onOpen();
-    modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
+  it('rolls everything that is not locked, typing locks, and the preview follows', async () => {
+    const { el, row, input, click, type, preview, create } = open('en');
+    type(input('Voice'), 'A whisper like dry paper');
+    expect(row('Voice')?.classList.contains('is-locked')).toBe(true);
+    // The quirk's lock, by hand.
+    click(row('Quirk')?.querySelectorAll('button')[1]);
+    click(el.querySelector('.dnd5e-npc-roll-all'));
+    expect(input('Voice')?.value).toBe('A whisper like dry paper');
+    expect(input('Quirk')?.value).toBe('');
+    expect(input('Hook')?.value).toBe(tablesFor('en').hook[0]);
+    expect(input('Class')?.value).toBe('');
+    const name = input('Name')?.value ?? '';
+    expect(name).not.toBe('');
+    expect(preview()?.querySelector('.dnd5e-npc-card-name')?.textContent).toBe(name);
+    expect(preview()?.querySelector('.dnd5e-npc-card-sub')?.textContent).toContain('Dwarf');
+    expect(preview()?.textContent).toContain('A whisper like dry paper');
+    expect(preview()?.querySelector('.is-secret')?.textContent).toContain(
+      tablesFor('en').secret[0],
+    );
+    click(el.querySelector('button.mod-cta'));
+    await Promise.resolve();
+    const calls = create.mock.calls as unknown as [NpcChoices, string][];
+    expect(calls[0]?.[0].raceModel?.name).toBe('Dwarf');
+    expect(calls[0]?.[0].race).toBe('Dwarf');
+  });
+
+  it('keeps a race typed in the search as free text', async () => {
+    const { el, input, click, tile, type, create } = open('en');
+    type(el.querySelector<HTMLInputElement>('.dnd5e-npc-search'), 'Owlfolk');
+    click(tile('Use “Owlfolk”'));
+    type(input('Name'), 'Hoot');
+    click(el.querySelector('button.mod-cta'));
+    await Promise.resolve();
+    const calls = create.mock.calls as unknown as [NpcChoices, string][];
+    expect(calls[0]?.[0]).toMatchObject({ race: 'Owlfolk', raceModel: null, archetype: null });
+  });
+
+  it('refuses without a name', () => {
+    const { el, click, create, preview } = open('en');
+    expect(preview()?.querySelector('.dnd5e-npc-card-hint')?.textContent).toBe(
+      'Pick a race and an archetype, or roll everything.',
+    );
+    click(el.querySelector('button.mod-cta'));
     expect(create).not.toHaveBeenCalled();
     expect(notices[notices.length - 1]).toBe('Give the NPC a name');
-    const rowInput = (label: string) =>
-      [...modal.contentEl.querySelectorAll('.setting-item')]
-        .find((r) => r.querySelector('.setting-item-name')?.textContent === label)
-        ?.querySelector('input');
-    const [name, archetype] = [rowInput('Name'), rowInput('Archetype')];
-    if (name && archetype) {
-      name.value = 'Pell';
-      name.dispatchEvent(new Event('input'));
-      archetype.value = 'Lantern Warden';
-      archetype.dispatchEvent(new Event('input'));
-    }
-    modal.contentEl.querySelector('button.mod-cta')?.dispatchEvent(new MouseEvent('click'));
-    expect(create).not.toHaveBeenCalled();
-    expect(notices[notices.length - 1]).toBe('No archetype called “Lantern Warden”');
   });
 });
 

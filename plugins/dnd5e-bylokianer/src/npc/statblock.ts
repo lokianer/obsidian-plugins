@@ -217,7 +217,7 @@ function crText(value: unknown, note: (key: string) => void): string | null {
 export function crValue(cr: string): number | null {
   const fraction = { '1/8': 0.125, '1/4': 0.25, '1/2': 0.5 }[cr.trim()];
   if (fraction !== undefined) return fraction;
-  const n = Number(cr);
+  const n = cr.trim() === '' ? NaN : Number(cr);
   return Number.isInteger(n) && n >= 0 && n <= 30 ? n : null;
 }
 

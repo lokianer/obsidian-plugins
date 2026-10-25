@@ -8,6 +8,10 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **A fancier New NPC dialog** (NPC builder, phase 4b): a live preview card beside the form; race
+  and archetype as tiles with a search (archetypes by challenge with AC · HP · CR, a free race when
+  no tile fits); **Roll everything** with a lock per field — typing locks a field, picking a race
+  locks the race. German race tiles give distances in metres.
 - **Races and richer dice** (NPC builder, phase 4a): the nine SRD races and own `type: race` notes
   in New NPC, writing their traits into the stat block and steering name, looks and age; command
   **New race**; dice texts in English and German (Obsidian's language or a setting), each table at
@@ -76,6 +80,7 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Fixed
 
+- A stat block with an empty challenge rating counted as CR 0 (`crValue('')` read `Number('')`).
 - A link in another field of the card (`leader: "[[Isolde Ferrant]]"`) showed as plain text; it
   is now a link that opens the note (Ctrl/Cmd: new tab), and links in reasons open the same way.
 - The faction world's graph and faction view were drawn off-screen when the tab had no size yet at

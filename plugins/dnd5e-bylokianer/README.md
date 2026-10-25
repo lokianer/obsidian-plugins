@@ -78,8 +78,8 @@ CR and speed and the six ability modifiers right under the title, from the note'
 switches a note's blocks between the two names. The 21 NPC stat blocks of the SRD 5.1 come with the plugin for the NPC builder.
 
 **New NPC.** The command **New NPC** — or the **New NPC** button on a faction's card — opens a
-dialog: name, faction, archetype, race, class, alignment, appearance, manner, wants and a quirk, each
-with a die that rolls from a table. **Create** writes the note from your NPC template (setting,
+dialog: name, faction, race, archetype, class, alignment and the lines that describe the NPC, each
+rolled one with a die. **Create** writes the note from your NPC template (setting,
 default `Templates/NPC.md`) into the faction's folder — the Party's folder for the Party, the
 campaign's `NPCs` folder for the unaffiliated — with the archetype's stat block named after the NPC.
 Archetypes are the 21 SRD NPCs and your own: notes with `type: archetype` and a stat block in
@@ -87,7 +87,17 @@ Archetypes are the 21 SRD NPCs and your own: notes with `type: archetype` and a 
 replaces that dice table. **Add stat block** gives the open note a stat block from an archetype,
 under a new `## Stats` heading; it leaves a note that has one alone.
 
-**Races and dice texts.** The race field offers the nine SRD races (Dwarf, Elf, Halfling, Human,
+**The dialog.** The form sits beside a **preview card** of the NPC — name, race, occupation and
+age, faction, class and alignment as tags, the race's traits, the archetype's AC, HP, CR, speed and
+modifiers, and every filled line (the secret marked) — which updates as you type and roll. Race and
+archetype are picked from **tiles** with a search: the races with their size, speed and darkvision,
+the archetypes by challenge with AC · HP · CR, **No archetype** keeping the template's block; a race
+typed that has no tile can still be used as free text. **Roll everything** rolls the race and then
+every field that is not **locked**: each rolled field has a lock beside its die, typing into a
+field locks it, picking a race tile locks the race. Faction, archetype, class and alignment are
+never rolled.
+
+**Races and dice texts.** The race tiles offer the nine SRD races (Dwarf, Elf, Halfling, Human,
 Dragonborn, Gnome, Half-Elf, Half-Orc, Tiefling) and your own `type: race` notes in
 `Templates/Races/` — **New race** writes one from a base race. A picked race writes its traits into
 the stat block (size, speed, darkvision, languages, resistances, racial traits; never ability scores)

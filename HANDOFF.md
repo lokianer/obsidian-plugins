@@ -21,9 +21,9 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 1. The maintainer checks NPC builder phases 2 and 3 in Obsidian (lists under "Half-finished"). Fix
    what turns up.
-2. Phase 4a (races, own races, German and larger dice tables, new fields) is built and waits for
-   the check (points 11–14 below). Then the phase 4b plan (live preview, roll everything with locks,
-   tiles).
+2. Phases 4a (races, own races, German and larger dice tables, new fields) and 4b (preview card,
+   Roll everything with locks, race and archetype tiles) are built and wait for the check (points
+   11–18 below). With them the NPC builder is complete; then the spellbook.
 3. **Spellbook** (module 3, **after** the NPC builder): its own tab, filters, German, fancy. Spec
    and S1 plan reviewed; German distances in metres (5 ft = 1.5 m). Data source checked: the 5e-bits
    SRD database has all 319 SRD spells (`src/2014/en/5e-SRD-Spells.json`, about 48,000 words of
@@ -145,6 +145,20 @@ Bench/<name>.md` opens: frontmatter `type: npc`, race, alignment, `archetype: Gu
     in the note (labels "Ideal:", "Makel:" …; Secrets as its own section).
 13. Own race: pick Tideborn → its traits and names; **New race** from Elf writes a race note.
 14. Settings: language of the dice texts (As Obsidian / English / German), races folder.
+
+**Phase 4b — the fancier dialog** (points 2, 4 and 11 above now go through tiles instead of text
+fields)
+
+15. New NPC opens wide: form left, preview right ("Unnamed" and a hint until something is
+    chosen); phone width: the preview above the form, only name, tags and numbers.
+16. Race tiles: Tideborn first, then the nine SRD races with icons, size, speed, darkvision (German
+    Obsidian: "Mittelgroß · 7,5 m · Dunkelsicht 18 m"); search "Owl" → **Use “Owl”** writes
+    `race: Owl` with no traits. Clicking the chosen tile again clears it.
+17. Archetype tiles: No archetype (chosen), Lantern Warden ("own"), then the SRD NPCs from Commoner
+    (CR 0) to Archmage, each with AC · HP · CR; the preview shows the short stats.
+18. **Roll everything** fills race, name, age, appearance and every table field; type a voice →
+    its lock closes and it survives the next Roll everything; a lock clicked by hand keeps an empty
+    field empty; the single dice still roll locked fields.
 
 ## Decisions taken this session
 

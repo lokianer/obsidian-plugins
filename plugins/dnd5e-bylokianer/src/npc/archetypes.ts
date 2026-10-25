@@ -2,7 +2,7 @@
 // notes with `type: archetype` and a stat block. Pure: the Obsidian side reads the notes.
 
 import { formatString } from '../yaml/scalar';
-import { findStatblocks, parseStatblock } from './statblock';
+import { crValue, findStatblocks, parseStatblock } from './statblock';
 
 export interface Archetype {
   name: string;
@@ -51,6 +51,18 @@ export function searchArchetypes(list: readonly Archetype[], query: string): Arc
       (a, b) =>
         Number(a.source === 'srd') - Number(b.source === 'srd') || a.name.localeCompare(b.name),
     );
+}
+
+/** The GM's own archetypes first, then by challenge rating (none last), then by name. */
+export function byChallenge(list: readonly Archetype[]): Archetype[] {
+  // Without a rating: after 30, the highest there is.
+  const cr = (a: Archetype) => crValue(a.cr) ?? 31;
+  return [...list].sort(
+    (a, b) =>
+      Number(a.source === 'srd') - Number(b.source === 'srd') ||
+      cr(a) - cr(b) ||
+      a.name.localeCompare(b.name),
+  );
 }
 
 /** The block's YAML with its `name:` set to the NPC's name (added on top when missing). */

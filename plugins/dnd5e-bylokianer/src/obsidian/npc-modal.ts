@@ -1,6 +1,6 @@
-// The NPC builder in Obsidian: the New NPC dialog (name, faction, race, archetype, many fields with
-// dice), the New archetype and New race dialogs, the archetype picker of Add stat block, and loading
-// the GM's own archetypes, races and table notes.
+// The NPC builder in Obsidian, besides the New NPC dialog (npc-dialog.ts): the New archetype and New
+// race dialogs, the archetype picker of Add stat block, and loading the GM's own archetypes, races
+// and table notes.
 
 import {
   AbstractInputSuggest,
@@ -14,27 +14,16 @@ import {
   TFile,
 } from 'obsidian';
 
-import { PARTY, UNAFFILIATED } from '../factions/discover';
-import type { FactionWorld } from '../factions/model';
 import type { StringKey, T } from '../i18n/strings';
 import { type Archetype, ownArchetype, searchArchetypes } from '../npc/archetypes';
-import type { Labels, LineField, NpcChoices } from '../npc/note';
-import { type Lang, ownRace, type Race, rollAge, rollLooks, searchRaces } from '../npc/races';
+import type { Labels } from '../npc/note';
+import { type Lang, ownRace, type Race, searchRaces } from '../npc/races';
 import { SRD_NPCS } from '../npc/srd';
 import { SRD_RACES } from '../npc/srd-races';
-import {
-  pick,
-  TABLE_NAMES,
-  type TableName,
-  tableFromNote,
-  tableNote,
-  tablesFor,
-} from '../npc/tables';
+import { TABLE_NAMES, type TableName, tableFromNote, tableNote, tablesFor } from '../npc/tables';
 import type { Settings } from './settings';
 
-type Tables = Record<TableName, readonly string[]>;
-
-const HUMAN = SRD_RACES.find((r) => r.name === 'Human') as Race;
+export type Tables = Record<TableName, readonly string[]>;
 
 /** The language the dice texts are rolled in: the setting, or Obsidian's language. */
 export function tableLang(settings: Settings, obsidianLang: string): Lang {
@@ -129,7 +118,7 @@ class RaceSuggest extends AbstractInputSuggest<Race> {
 }
 
 /** A race's name in the dialog's language. */
-function raceLabel(race: Race, lang: Lang): string {
+export function raceLabel(race: Race, lang: Lang): string {
   return race.label?.[lang] ?? race.name;
 }
 
@@ -163,229 +152,6 @@ function renderArchetype(archetype: Archetype, el: HTMLElement, t: T): void {
     cls: 'dnd5e-suggestion-detail',
     text: detail.filter((d) => d !== '').join(' · '),
   });
-}
-
-/** The factions a new NPC can join: the campaign's factions by place, then Party and Unaffiliated. */
-function factionOptions(world: FactionWorld, t: T): [string, string][] {
-  const depth = (id: string): number => {
-    const parent = world.entities.get(id)?.parent ?? null;
-    return parent === null ? 0 : depth(parent) + 1;
-  };
-  const factions = [...world.entities.values()]
-    .filter((e) => e.kind === 'faction' && !e.pseudo)
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .map((e): [string, string] => [e.id, `${'  '.repeat(depth(e.id))}${e.name}`]);
-  return [...factions, [PARTY, t('pseudo.party')], [UNAFFILIATED, t('pseudo.unaffiliated')]];
-}
-
-export interface NewNpcDeps {
-  app: App;
-  t: T;
-  world: FactionWorld;
-  archetypes: readonly Archetype[];
-  races: readonly Race[];
-  tables: Tables;
-  /** The language the dice texts are in (and the dialog shows race names in). */
-  lang: Lang;
-  /** The faction chosen when the dialog opens (the card it was opened from). */
-  faction: string;
-  /** Writes and opens the note; resolves when done. */
-  create: (choices: NpcChoices, faction: string) => Promise<void>;
-  random?: () => number;
-}
-
-type TextField = 'name' | 'race' | 'class' | 'alignment' | 'occupation' | 'age' | LineField;
-
-/** The dice table behind each rolled field (name, age and the race's looks roll on their own). */
-const ROLLS: Partial<Record<TextField, TableName>> = {
-  occupation: 'occupation',
-  build: 'build',
-  manner: 'manner',
-  voice: 'voice',
-  want: 'wants',
-  ideal: 'ideal',
-  bond: 'bond',
-  flaw: 'flaw',
-  quirk: 'quirks',
-  secret: 'secret',
-  hook: 'hook',
-};
-
-/** The fields of the dialog after name, faction, race and archetype, in order. */
-const FIELDS: readonly TextField[] = [
-  'class',
-  'alignment',
-  'occupation',
-  'age',
-  'appearance',
-  'build',
-  'manner',
-  'voice',
-  'want',
-  'ideal',
-  'bond',
-  'flaw',
-  'quirk',
-  'secret',
-  'hook',
-];
-
-export class NewNpcModal extends Modal {
-  private readonly values = Object.fromEntries(
-    ['name', 'race', ...FIELDS].map((f) => [f, '']),
-  ) as Record<TextField, string>;
-  private readonly inputs = new Map<TextField, (value: string) => void>();
-  private faction: string;
-  private archetypeText = '';
-  private busy = false;
-
-  constructor(private readonly deps: NewNpcDeps) {
-    super(deps.app);
-    this.faction = deps.faction;
-  }
-
-  onOpen(): void {
-    const { t, lang } = this.deps;
-    this.setTitle(t('npc.title'));
-    this.modalEl.addClass('dnd5e-npc-modal');
-    const el = this.contentEl;
-
-    this.text(el, 'name', t('npc.name'), () => this.rollName());
-    new Setting(el).setName(t('npc.faction')).addDropdown((dropdown) => {
-      for (const [id, label] of factionOptions(this.deps.world, t)) dropdown.addOption(id, label);
-      dropdown.setValue(this.faction).onChange((value) => (this.faction = value));
-    });
-    new Setting(el).setName(t('npc.race')).addText((text) => {
-      text.setPlaceholder(t('npc.race.placeholder')).onChange((v) => (this.values.race = v));
-      this.inputs.set('race', (value) => {
-        text.setValue(value);
-        this.values.race = value;
-      });
-      new RaceSuggest(this.app, text.inputEl, this.deps.races, t, lang).onSelect((race) => {
-        this.set('race', raceLabel(race, lang));
-      });
-    });
-    new Setting(el).setName(t('npc.archetype')).addText((text) => {
-      text.setPlaceholder(t('npc.archetype.placeholder')).onChange((v) => (this.archetypeText = v));
-      new ArchetypeSuggest(this.app, text.inputEl, this.deps.archetypes, t).onSelect(
-        (archetype) => {
-          text.setValue(archetype.name);
-          this.archetypeText = archetype.name;
-        },
-      );
-    });
-    for (const field of FIELDS) {
-      const table = ROLLS[field];
-      const roll =
-        field === 'age'
-          ? () => this.set('age', String(rollAge(this.race() ?? HUMAN, this.random)))
-          : field === 'appearance'
-            ? () => this.rollAppearance()
-            : table === undefined
-              ? undefined
-              : () => this.set(field, pick(this.deps.tables[table], this.random));
-      this.text(el, field, t(`npc.${field}`), roll);
-    }
-    new Setting(el).addButton((button) =>
-      button
-        .setButtonText(t('npc.create'))
-        .setCta()
-        .onClick(() => void this.submit()),
-    );
-  }
-
-  private get random(): () => number {
-    return this.deps.random ?? Math.random;
-  }
-
-  private text(el: HTMLElement, field: TextField, name: string, roll?: () => void): void {
-    const setting = new Setting(el).setName(name).addText((text) => {
-      text.onChange((value) => (this.values[field] = value));
-      this.inputs.set(field, (value) => {
-        text.setValue(value);
-        this.values[field] = value;
-      });
-    });
-    if (roll !== undefined) {
-      setting.addExtraButton((button) =>
-        button.setIcon('dices').setTooltip(this.deps.t('npc.roll')).onClick(roll),
-      );
-    }
-  }
-
-  private set(field: TextField, value: string): void {
-    this.inputs.get(field)?.(value);
-  }
-
-  /** The race model the race field names (by English name or label), or null for free text. */
-  private race(): Race | null {
-    const wanted = this.values.race.trim().toLowerCase();
-    if (wanted === '') return null;
-    return (
-      this.deps.races.find(
-        (r) =>
-          r.name.toLowerCase() === wanted || raceLabel(r, this.deps.lang).toLowerCase() === wanted,
-      ) ?? null
-    );
-  }
-
-  /** First and family name from the race's lists, or the general ones. */
-  private rollName(): void {
-    const race = this.race();
-    const { tables } = this.deps;
-    const first = race?.names.length ? race.names : tables['first-names'];
-    const family = race?.familyNames.length ? race.familyNames : tables['family-names'];
-    this.set('name', `${pick(first, this.random)} ${pick(family, this.random)}`);
-  }
-
-  /** The race's looks and one detail from the appearance table. */
-  private rollAppearance(): void {
-    const race = this.race();
-    const looks = race === null ? '' : rollLooks(race, this.deps.lang, this.random);
-    const detail = pick(this.deps.tables.appearance, this.random);
-    this.set('appearance', [looks, detail].filter((p) => p !== '').join('; '));
-  }
-
-  private async submit(): Promise<void> {
-    const { t } = this.deps;
-    const name = this.values.name.trim();
-    if (name === '') {
-      new Notice(t('npc.needName'));
-      return;
-    }
-    const wanted = this.archetypeText.trim().toLowerCase();
-    const archetype =
-      wanted === ''
-        ? null
-        : (this.deps.archetypes.find((a) => a.name.toLowerCase() === wanted) ?? null);
-    if (wanted !== '' && archetype === null) {
-      new Notice(t('npc.unknownArchetype', { name: this.archetypeText.trim() }));
-      return;
-    }
-    if (this.busy) return;
-    this.busy = true;
-    const raceModel = this.race();
-    try {
-      await this.deps.create(
-        {
-          ...this.values,
-          name,
-          // A model is written by its English name; free text as typed.
-          race: raceModel?.name ?? this.values.race.trim(),
-          raceModel,
-          archetype,
-        },
-        this.faction,
-      );
-      this.close();
-    } finally {
-      this.busy = false;
-    }
-  }
-
-  onClose(): void {
-    this.contentEl.empty();
-  }
 }
 
 /** What New archetype and New race differ in: their words, their bases and how to suggest them. */

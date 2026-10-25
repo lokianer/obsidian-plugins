@@ -3,7 +3,13 @@ import { parse } from 'yaml';
 
 import { PARTY, UNAFFILIATED } from '../src/factions/discover';
 import { buildWorld } from '../src/factions/world';
-import { ownArchetype, searchArchetypes, withName, type Archetype } from '../src/npc/archetypes';
+import {
+  byChallenge,
+  ownArchetype,
+  searchArchetypes,
+  withName,
+  type Archetype,
+} from '../src/npc/archetypes';
 import {
   addStatblock,
   archetypeNote,
@@ -85,6 +91,14 @@ describe('archetypes', () => {
     expect(searchArchetypes(list, 'guard').map((a) => a.name)).toEqual(['Lantern Guard', 'Guard']);
     expect(searchArchetypes(list, 'bandit cap').map((a) => a.name)).toEqual(['Bandit Captain']);
     expect(searchArchetypes(list, '')).toHaveLength(22);
+  });
+
+  it('orders the GM’s own first, then by challenge rating', () => {
+    const own = { name: 'Lantern Guard', cr: '1', yaml: '', source: 'x.md' };
+    const blank = { name: 'Blank', cr: '', yaml: '', source: 'y.md' };
+    const sorted = byChallenge([...SRD_NPCS, blank, own]).map((a) => a.name);
+    expect(sorted.slice(0, 4)).toEqual(['Lantern Guard', 'Blank', 'Commoner', 'Bandit']);
+    expect(sorted[sorted.length - 1]).toBe('Archmage');
   });
 
   it('names the block after the NPC, quoting when YAML needs it', () => {

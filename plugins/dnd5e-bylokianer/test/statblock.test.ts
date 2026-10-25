@@ -85,7 +85,7 @@ describe('derived values', () => {
     const pb = ['0', '1/8', '4', '5', '8', '9', '12', '13', '17', '21', '25', '29', '30'];
     expect(pb.map(proficiencyBonus)).toEqual([2, 2, 2, 3, 3, 4, 4, 5, 6, 7, 8, 9, 9]);
     expect(['1/4', '3', '30'].map(experience)).toEqual([50, 700, 155000]);
-    expect(['1/2', '31', '2.5', 'x'].map(crValue)).toEqual([0.5, null, null, null]);
+    expect(['1/2', '31', '2.5', 'x', ''].map(crValue)).toEqual([0.5, null, null, null, null]);
   });
 
   it('sums up AC, HP and CR for the card', () => {
