@@ -55,3 +55,13 @@ All notable changes to this plugin are documented here. The format follows
 - Name clashes that differ only in case, or a faction named like another's folder, are warned about
   (`duplicate-name` now carries the clashing name).
 - The warnings summary says "1 faction" / "1 warning" in the singular.
+
+### Fixed
+
+- The faction world's graph and faction view were drawn off-screen when the tab had no size yet at
+  its first render (usual in Obsidian): the fit to the content now waits until the view is laid out.
+
+### Changed (after the first check in Obsidian)
+
+- The log notice shows the change and a full-width, accent-coloured **Log → Session …** button, and
+  stays ten seconds instead of six.

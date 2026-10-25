@@ -1055,6 +1055,29 @@
   font-size: 16px;
 }
 
+/* Log notice: the change, and a prominent button to log it */
+
+.dnd5e-log-notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  min-width: 240px;
+  font-size: 16px;
+}
+
+.dnd5e-log-notice-change {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-log-notice .dnd5e-log-button {
+  width: 100%;
+  height: auto;
+  padding: var(--size-4-2) var(--size-4-4);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+}
+
 /* Tension panel ------------------------------------------------------------------------------- */
 
 .dnd5e-tensions-head {

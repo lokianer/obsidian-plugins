@@ -26,7 +26,7 @@ import type { T } from '../i18n/strings';
 import type { Settings } from './settings';
 import type { WorldCache } from './world-cache';
 
-const NOTICE_TIME = 6000;
+const NOTICE_TIME = 10000;
 
 /** A change of one relation value, by names, as the log line states it. */
 export interface ValueChange {
@@ -116,20 +116,23 @@ export class SessionLog {
     }
     const tonight = this.tonight();
     if (tonight === null) return;
+    // The change on one line, and below it a full-width call-to-action button to log it.
     const fragment = createFragment();
-    fragment.createSpan({
-      text: `${merged.from} → ${merged.to}: ${this.value(merged.before)} → ${this.value(merged.after)} · `,
+    const box = fragment.createDiv({ cls: 'dnd5e-log-notice' });
+    box.createDiv({
+      cls: 'dnd5e-log-notice-change',
+      text: `${merged.from} → ${merged.to}: ${this.value(merged.before)} → ${this.value(merged.after)}`,
     });
-    const link = fragment.createEl('a', {
+    const button = box.createEl('button', {
+      cls: 'mod-cta dnd5e-log-button',
       text: this.t('log.notice', { session: baseName(tonight.path) }),
-      href: '#',
     });
     const notice = new Notice(fragment, NOTICE_TIME);
     this.pending.set(key, { notice, change: merged });
     window.setTimeout(() => {
       if (this.pending.get(key)?.notice === notice) this.pending.delete(key);
     }, NOTICE_TIME);
-    link.addEventListener('click', (event) => {
+    button.addEventListener('click', (event) => {
       event.preventDefault();
       notice.hide();
       this.pending.delete(key);

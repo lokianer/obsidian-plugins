@@ -79,7 +79,8 @@ export class FactionViewSvg {
         { x: r.x - r.w / 2, y: r.y - r.h / 2 },
         { x: r.x + r.w / 2, y: r.y + r.h / 2 },
       ]);
-      if (this.panZoom.fit(corners, 60)) this.fittedFor = view.id;
+      this.panZoom.fit(corners, 60);
+      this.fittedFor = view.id;
     }
   }
 

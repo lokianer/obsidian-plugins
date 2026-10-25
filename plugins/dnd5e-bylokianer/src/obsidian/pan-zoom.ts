@@ -8,12 +8,24 @@ const MAX_ZOOM = 3;
 
 export class PanZoom {
   private view = { x: 0, y: 0, k: 1 };
+  /** A fit asked for while the SVG had no size yet; done as soon as it has one. */
+  private pending: { points: readonly Point[]; margin: number } | null = null;
 
   constructor(
     private readonly svg: SVGSVGElement,
     private readonly stage: SVGGElement,
   ) {
     this.bind();
+    // A new tab is often laid out after its first render: catch up on the fit then.
+    const observer = new ResizeObserver(() => {
+      if (!svg.isConnected) {
+        observer.disconnect();
+        return;
+      }
+      const pending = this.pending;
+      if (pending !== null) this.fit(pending.points, pending.margin);
+    });
+    observer.observe(svg);
   }
 
   /** The current zoom factor, to turn screen distances into stage distances. */
@@ -21,10 +33,15 @@ export class PanZoom {
     return this.view.k;
   }
 
-  /** Zooms and pans so every point (plus a margin) is in view; false while the SVG has no size. */
-  fit(points: readonly Point[], margin = 120): boolean {
+  /** Zooms and pans so every point (plus a margin) is in view, now or once the SVG has a size. */
+  fit(points: readonly Point[], margin = 120): void {
     const box = this.svg.getBoundingClientRect();
-    if (box.width === 0 || points.length === 0) return false;
+    if (points.length === 0) return;
+    if (box.width === 0 || box.height === 0) {
+      this.pending = { points, margin };
+      return;
+    }
+    this.pending = null;
     const xs = points.map((p) => p.x);
     const ys = points.map((p) => p.y);
     const [minX, maxX] = [Math.min(...xs) - margin, Math.max(...xs) + margin];
@@ -36,7 +53,6 @@ export class PanZoom {
       y: box.height / 2 - ((minY + maxY) / 2) * k,
     };
     this.apply();
-    return true;
   }
 
   private apply(): void {

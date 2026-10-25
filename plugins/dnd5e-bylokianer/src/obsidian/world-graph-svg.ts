@@ -320,6 +320,7 @@ export class WorldGraphSvg {
 
   /** Zooms and pans so every node is in view. */
   fit(): void {
-    if (this.panZoom.fit([...this.positions.values()])) this.fitted = true;
+    this.panZoom.fit([...this.positions.values()]);
+    this.fitted = true;
   }
 }
