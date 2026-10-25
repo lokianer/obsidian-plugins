@@ -8,6 +8,8 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- Spell builder: **casting time and duration are dropdowns** of every value the SRD's spells use,
+  shown in your language; a spell copied or imported keeps its own value as an extra option.
 - **Spell builder**: **New spell** (command, or + in the spellbook) — a dialog in the New NPC
   dialog's style with a live preview: start from an SRD spell (its text in your language), fill it
   by hand, or load a JSON file (own keys, 5e-bits or Open5e format); writes a `type: spell` note in

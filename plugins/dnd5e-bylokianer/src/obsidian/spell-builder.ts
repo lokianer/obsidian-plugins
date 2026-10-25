@@ -12,10 +12,12 @@ import { draftFromSpell, emptyDraft, parseSpellJson, type SpellDraft } from '../
 import { filterSpells, NO_FILTERS } from '../spells/filter';
 import {
   ABILITIES,
+  CASTING_TIMES,
   castingTime,
   components,
   DAMAGE_TYPES,
   duration,
+  DURATIONS,
   label,
   levelLabel,
   levelLine,
@@ -163,9 +165,25 @@ export class SpellBuilderModal extends Modal {
     }
 
     new Setting(form).setName(t('spellBuilder.casting')).setHeading();
-    this.text(form, t('spells.castingTime'), d.casting, (v) => (d.casting = v));
+    this.pick(
+      form,
+      t('spells.castingTime'),
+      CASTING_TIMES,
+      d.casting,
+      (v) => castingTime({ ...d, index: '', casting: v }, lang),
+      (v) => (d.casting = v),
+      'dnd5e-spell-casting',
+    );
     this.text(form, t('spells.range'), d.range, (v) => (d.range = v));
-    this.text(form, t('spells.duration'), d.duration, (v) => (d.duration = v));
+    this.pick(
+      form,
+      t('spells.duration'),
+      DURATIONS,
+      d.duration,
+      (v) => duration({ ...d, index: '', duration: v, concentration: false }, lang),
+      (v) => (d.duration = v),
+      'dnd5e-spell-duration',
+    );
     const comps = this.row(form, t('spells.components'));
     for (const c of ['V', 'S', 'M'] as const) {
       this.toggleChip(
@@ -255,6 +273,28 @@ export class SpellBuilderModal extends Modal {
         this.drawPreview();
       });
       if (cls !== '') text.inputEl.addClass(cls);
+    });
+  }
+
+  /** A dropdown over `values`; a value from elsewhere (a JSON file) is offered first. */
+  private pick(
+    el: HTMLElement,
+    name: string,
+    values: readonly string[],
+    value: string,
+    text: (v: string) => string,
+    set: (v: string) => void,
+    cls: string,
+  ): void {
+    new Setting(el).setName(name).addDropdown((dropdown) => {
+      dropdown.selectEl.addClass(cls);
+      for (const v of values.includes(value) ? values : [value, ...values]) {
+        dropdown.addOption(v, text(v));
+      }
+      dropdown.setValue(value).onChange((v) => {
+        set(v);
+        this.drawPreview();
+      });
     });
   }
 

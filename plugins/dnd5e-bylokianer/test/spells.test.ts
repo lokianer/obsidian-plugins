@@ -315,7 +315,8 @@ describe('spell builder drafts', () => {
     const draft = draftFromSpell(hold, 'de');
     expect(draft.name).toBe('Person festhalten');
     expect(draft.range).toBe('18 m');
-    expect(draft.duration).toBe('Bis zu 1 Minute');
+    expect(draft.duration).toBe('Up to 1 minute');
+    expect(duration({ ...hold, concentration: false }, 'de')).toBe('Bis zu 1 Minute');
     expect(draft.concentration).toBe(true);
     expect(draft.text).toContain('Weisheitsrettungswurf');
   });

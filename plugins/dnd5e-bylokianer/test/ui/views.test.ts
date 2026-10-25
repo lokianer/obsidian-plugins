@@ -1106,6 +1106,16 @@ describe('spell builder', () => {
       'Unmittelbar',
     ]);
     expect(el.querySelector<HTMLTextAreaElement>('.dnd5e-spell-text')?.value).toContain('8W6');
+    const casting = el.querySelector<HTMLSelectElement>('.dnd5e-spell-casting');
+    expect(casting?.value).toBe('1 action');
+    expect(casting?.selectedOptions[0]?.textContent).toBe('1 Aktion');
+    expect([...(casting?.options ?? [])].map((o) => o.textContent)).toContain('1 Bonusaktion');
+    const lasting = el.querySelector<HTMLSelectElement>('.dnd5e-spell-duration');
+    expect(lasting?.selectedOptions[0]?.textContent).toBe('Unmittelbar');
+    if (lasting === null) throw new Error('no duration');
+    lasting.value = 'Up to 1 minute';
+    lasting.dispatchEvent(new Event('change'));
+    expect(texts(el, '.dnd5e-spells-grid-value')[3]).toBe('Bis zu 1 Minute');
     expect(el.querySelector('.dnd5e-spell-schools .is-selected')?.textContent).toBe('Hervorrufung');
   });
 

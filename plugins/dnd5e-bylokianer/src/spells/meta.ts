@@ -47,6 +47,42 @@ export const DAMAGE_TYPES = [
 
 export const ABILITIES: readonly Ability[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
+/** Every casting time the SRD's spells use, shortest first; the spell builder offers these. */
+export const CASTING_TIMES = [
+  '1 action',
+  '1 bonus action',
+  '1 reaction',
+  '1 minute',
+  '10 minutes',
+  '1 hour',
+  '8 hours',
+  '12 hours',
+  '24 hours',
+] as const;
+
+/** Every duration the SRD's spells use, shortest first; concentration is a field of its own. */
+export const DURATIONS = [
+  'Instantaneous',
+  '1 round',
+  'Up to 1 round',
+  '1 minute',
+  'Up to 1 minute',
+  '10 minutes',
+  'Up to 10 minutes',
+  '1 hour',
+  'Up to 1 hour',
+  'Up to 2 hours',
+  '8 hours',
+  'Up to 8 hours',
+  '24 hours',
+  'Up to 24 hours',
+  '7 days',
+  '10 days',
+  '30 days',
+  'Until dispelled',
+  'Special',
+] as const;
+
 const LABELS: Record<Lang, Record<string, string>> = {
   en: {
     abjuration: 'Abjuration',

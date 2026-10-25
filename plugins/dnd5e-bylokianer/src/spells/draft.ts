@@ -5,10 +5,8 @@
 import type { Lang } from '../npc/races';
 import {
   ABILITIES,
-  castingTime,
   components as componentText,
   DAMAGE_TYPES,
-  duration,
   label,
   range,
   SCHOOLS,
@@ -42,14 +40,12 @@ export const emptyDraft = (): SpellDraft => ({
 /** An SRD spell as a draft, its words in one language, to change into an own spell. */
 export function draftFromSpell(spell: SrdSpell, lang: Lang): SpellDraft {
   const words = spellText(spell, lang);
-  // Concentration is its own field; the duration keeps only the span.
-  const span = duration({ ...spell, concentration: false }, lang);
   return {
     ...spell,
     name: spellName(spell, lang),
-    casting: castingTime(spell, lang),
+    // Casting time and duration stay in the SRD's words, the builder's dropdowns show them in
+    // the GM's language, and the spellbook translates them as it does the SRD's.
     range: range(spell, lang),
-    duration: span,
     components: [...spell.components],
     classes: [...spell.classes],
     damage: [...spell.damage],

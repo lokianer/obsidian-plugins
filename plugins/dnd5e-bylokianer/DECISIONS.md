@@ -446,3 +446,10 @@ builders, deck and spell, fancier, with Obsidian's design in focus like the NPC 
 
 Left out: pasted-text import for spells (a spell has too many fields for one line), editing an
 existing spell in the builder.
+
+## 2026-10-25 · Spell builder: casting time and duration as dropdowns
+
+Asked for by the maintainer. The options are every casting time (9) and duration (19) the SRD's
+spells use, stored in the SRD's English words and shown in the GM's language; the spellbook
+translates them as it does the SRD's. A value from a JSON file that is not among them is offered as
+an extra first option. Range stays a text field (too many shapes to list).
