@@ -13,8 +13,9 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Deck of Many Things** (module 4) — needs a short design first: the standard SRD
-deck by default, own decks possible (asked for 2026-10-25). The spellbook (S1 tab, S2 German texts)
+**dnd5e-byLokianer · Deck of Many Things** (module 4) — design drafted
+(`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`), waiting for the maintainer's
+review; then the D1 plan. The spellbook (S1 tab, S2 German texts)
 is built and waits for the maintainer's check in Obsidian, as do NPC builder phases 2–4b and the
 faction world redesign; S3 (links, own spells) is proposed for later. Nothing is published for now.
 
@@ -124,8 +125,13 @@ the NPC builder is done; German distances in metres (5 ft = 1.5 m).
 ### Module 4 — Deck of Many Things (after the spellbook)
 
 Asked for 2026-10-25: the Deck of Many Things to draw from, the standard deck by default and the
-option to make one's own. The deck is in the SRD 5.1 (magic items), so its 22 cards can ship. Not
-designed yet; starting point: `examples/vault/Silverstadt/Decks/Omens of the River.md`.
+option to make one's own. The deck is in the SRD 5.1 (magic items), so its 22 cards can ship.
+Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md)
+(draft, waiting for review).
+
+- [ ] **D1 — Standard deck**: card data in both languages, the tab, drawing by the rules, the deck
+      note with its draw history
+- [ ] **D2 — Own decks**: `type: deck` task-list notes, command New deck
 
 ### Module 5 — Battle tracker
 

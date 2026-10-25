@@ -30,7 +30,9 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    German names in `src/spells/de.ts`, German texts in `src/spells/de-texts/level-N.ts`. S3 (links
    from stat blocks, own spells as notes) is proposed, not planned.
 4. Then the **Deck of Many Things** (module 4): the standard SRD deck by default, own decks
-   possible. Needs a short design first (ROADMAP "Module 4"). Data source checked: the 5e-bits
+   possible. Design drafted (`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`),
+   waiting for review; its §8 lists the calls to check. Note: the 5e-bits entry lacks six card
+   effects (Star, Sun, Talons, Throne, Vizier, The Void); D1 types them in from the SRD document. Data source checked: the 5e-bits
    SRD database has all 319 SRD spells (`src/2014/en/5e-SRD-Spells.json`, about 48,000 words of
    text); no German there — S2 translates.
 
