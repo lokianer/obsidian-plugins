@@ -217,3 +217,15 @@ replace the manual browser preview of earlier sessions as the check before a pus
 
 Left out: pixel screenshots (layout is not computed by happy-dom); tests of the Obsidian glue in
 `main.ts`, `card-view.ts` and `world-view.ts`, which need a real workspace.
+
+## 2026-10-25 · Own code, compatible formats; nothing published yet
+
+Revises "Scope: four modules, all our own code" after the concept of 2026-10-25 proposed
+integrating Dice Roller, Fantasy Statblocks and Initiative Tracker. The maintainer chose **own code,
+compatible**: modules 2–4 render and edit with our own code, but read and write the formats those
+plugins use, so notes move between them; the stat block gets **its own block name** so the two
+plugins never claim the same block. Next is the NPC builder (module 2), with all SRD 5.1 NPCs and a
+template builder for own archetypes. **Nothing is published for now** — no release, no BRAT beta.
+
+Left out: depending on those plugins at runtime; the release preparation (mirror repository, name
+check), which waits until the maintainer wants a release.

@@ -19,11 +19,12 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-1. `docs/2026-10-25-concept-next-steps.md`, from Step B (release 0.1.0 as a BRAT beta). Its §5
-   lists four decisions to get from the maintainer first: the order, integrate vs own code for
-   modules 2–4 (Dice Roller, Fantasy Statblocks, Initiative Tracker), `happy-dom` as a dev
-   dependency for UI smoke tests, release path and name.
-2. Step A's UI smoke tests in CI are still open (they wait on decision 3).
+1. The maintainer reviews the NPC builder spec
+   (`docs/superpowers/specs/2026-10-25-npc-builder-design.md`, especially §9 "calls I made") and the
+   phase 1 plan (`docs/superpowers/plans/2026-10-25-npc-phase-1-statblock.md`). Build phase 1 only
+   after their "passt".
+2. Task 1 of the plan starts by checking Fantasy Statblocks' current README for its 5e keys
+   (`plugins.javalent.com` did not resolve from the cloud; try its GitHub README).
 
 ## State of the working tree
 
@@ -55,6 +56,14 @@ From the maintainer's check in Obsidian, in order:
   command **Start next session**. DECISIONS 2026-10-25.
 - Docs: README, CHANGELOG, DECISIONS, `Home.md` rows, the package README; ROADMAP, the phase plans,
   the concept and `CLAUDE.md` mark phases 2–5 accepted.
+- The maintainer then answered the concept's §5: publish nothing yet, keep building; modules 2–4 as
+  own code compatible with the other plugins' formats, the stat block with its own block name;
+  `happy-dom` yes; NPC builder next with all SRD NPCs, a template builder for own archetypes, random
+  helpers, editing in place and AC · HP · CR on the card. DECISIONS 2026-10-25.
+- `be72b23` UI smoke tests: `test/ui/` renders card, graph, matrix, faction view, popover and
+  tension panel in happy-dom (stand-in `obsidian` module aliased in `vitest.config.ts`, DOM helpers
+  strict about class tokens); with the old graph bug put back two tests fail.
+- NPC builder spec and phase 1 plan written.
 
 ## Half-finished
 
@@ -70,7 +79,7 @@ boxes drag); label widths are estimated, not measured.
 
 ## Open questions for the maintainer
 
-- The four decisions in the concept's §5.
+- The NPC builder spec's §9 and the phase 1 plan.
 - The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
   the maintainer wants something changed.
 
@@ -90,13 +99,13 @@ boxes drag); label widths are estimated, not measured.
   contract; notes broken on purpose live in `plugins/dnd5e-bylokianer/test/fixtures/vault`.
 - `eslint-plugin-obsidianmd` forbids disabling its rules; settings implement both `display()` and
   `getSettingDefinitions()`.
-- The browser preview harness lived only in this session's scratchpad (stub `obsidian` module, DOM
-  shim, esbuild alias, Playwright); a new session rebuilds it, or Step A's `happy-dom` tests replace
-  it.
+- UI checks live in `test/ui/` (happy-dom). Add a test there for every new view; extend
+  `test/ui/obsidian.ts` when a renderer imports more of `obsidian`. Screenshots still need a browser
+  (Playwright is preinstalled in cloud sessions).
 - The private vault's daily reports and changelog for 2026-10-24 and 2026-10-25 still need writing
   by a local session.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 157 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 166 plugin tests (9 of them UI tests) and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

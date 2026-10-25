@@ -108,6 +108,10 @@ files first and no network; tables only), where NPC notes go, how the card shoul
 
 ## 5. Decisions needed from the maintainer
 
+**Answered on 2026-10-25:** keep building, publish nothing yet (1, 4); own code compatible with
+the other plugins' formats instead of integrating them (2); `happy-dom` UI tests yes (3), built the
+same day. Next: the NPC builder, `docs/superpowers/specs/2026-10-25-npc-builder-design.md`.
+
 1. The order A → B → C → D → E (or a different priority, e.g. NPC builder before the release).
 2. Integrate vs own code for modules 2–4 (Step C).
 3. `happy-dom` as a dev dependency for UI smoke tests (Step A).

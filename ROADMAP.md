@@ -13,14 +13,14 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · decide how to go on.** The factions module (phases 1–5) is **accepted**: the
-maintainer ran the whole `HANDOFF.md` checklist in Obsidian on 2026-10-25 and every point passed,
-after the fixes that first check turned up (see below). Next is
-[`docs/2026-10-25-concept-next-steps.md`](docs/2026-10-25-concept-next-steps.md) from Step B on —
-release 0.1.0 as a BRAT beta → decide integration with Dice Roller / Fantasy Statblocks /
-Initiative Tracker → NPC builder → the rest by play feedback. Its §5 lists the decisions to get from
-the maintainer first (order; integrate vs own code; `happy-dom` for UI smoke tests; release path and
-name).
+**dnd5e-byLokianer · Module 2, NPC builder — spec and phase 1 plan written, awaiting the
+maintainer's review.** Spec
+[`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpowers/specs/2026-10-25-npc-builder-design.md),
+plan `docs/superpowers/plans/2026-10-25-npc-phase-1-statblock.md`. The maintainer decided on
+2026-10-25: **nothing is published for now**; modules 2–4 are **own code, compatible** with
+Fantasy Statblocks / Dice Roller / Initiative Tracker formats; the stat block gets **its own block
+name**; all SRD NPCs plus a template builder; AC · HP · CR on the card. The factions module (phases
+1–5) is accepted. UI smoke tests run in happy-dom (`test/ui/`).
 
 ---
 
@@ -92,9 +92,16 @@ know (`known: N`), rumour mill, go-betweens.
 
 ### Module 2 — NPC builder (5e stat blocks)
 
-Not brainstormed yet. Starting points: the ` ```statblock ` fences already in the example vault
-(Fantasy Statblocks format, worth staying compatible with), `Sergeant Pell.md` as the note without a
-stat block, SRD 5.1 content only (CC-BY-4.0).
+Design: [`docs/superpowers/specs/2026-10-25-npc-builder-design.md`](docs/superpowers/specs/2026-10-25-npc-builder-design.md)
+(draft, awaiting review).
+
+- [ ] **Phase 1 — Stat block model and view** ← _plan written, awaiting approval_: parser and
+      derived values, the 21 SRD NPCs as data, rendering of `dnd5e-statblock`, AC · HP · CR on the
+      card, Convert command. Plan `docs/superpowers/plans/2026-10-25-npc-phase-1-statblock.md`
+- [ ] **Phase 2 — Builder**: archetypes (SRD + own notes), New NPC modal into the faction's folder,
+      Add stat block, random tables with overrides
+- [ ] **Phase 3 — Editing and template builder**: editing in the rendered block, the template
+      builder for own archetypes
 
 ### Module 3 — Battle tracker
 
@@ -128,7 +135,7 @@ whole vault.
 - Self-hosted sync (Self-Hosted Vault Sync server at `vault.home`) lives in the maintainer's
   HomeServer repository, never here.
 
-### Before the first release
+### Before the first release (not now: the maintainer decided on 2026-10-25 to publish nothing yet)
 
 - Read Obsidian's current plugin guidelines and submission checklist.
 - Check the name against Wizards of the Coast's trademark rules; ship SRD content only.
