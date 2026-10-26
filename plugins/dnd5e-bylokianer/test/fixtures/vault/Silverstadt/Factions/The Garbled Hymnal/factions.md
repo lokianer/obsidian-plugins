@@ -9,7 +9,7 @@ relations:
   # not a number: ignore, warn, never crash
   Order of the Lantern: hates
   # a number written as a string: accept
-  The Gutter Court: "-1"
+  The Gutter Court: '-1'
   # no such faction or character: show as dangling, warn
   The Salt Kings: -2
   # relation to itself: ignore, warn
@@ -18,7 +18,7 @@ relations:
   Sable:
   # structured form without a value: ignore, warn
   Elder Wren:
-    why: "[[Elder Wren]]"
+    why: '[[Elder Wren]]'
 tags:
   - faction
 ---

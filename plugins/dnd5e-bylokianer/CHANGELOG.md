@@ -114,6 +114,11 @@ Persuasion: d20+7 → 12 (5, +7)`).
 - The 3,900-line `styles.css` is split into one file per view under `styles/` and bundled into
   `styles.css` by the build; the rendered views are pixel-identical.
 
+### Fixed (log notice)
+
+- The log notice's button no longer runs out of the notice with a long session name or line: an
+  icon, **Log**, and the session's name under it, wrapping; the line above wraps too.
+
 ### Fixed (quality round after the dice module)
 
 - **iOS before 16.4**: no regular expression uses a lookbehind any more (the table readers of the

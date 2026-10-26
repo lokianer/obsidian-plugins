@@ -73,19 +73,47 @@
   display: flex;
   flex-direction: column;
   gap: var(--size-4-2);
-  min-width: 240px;
+  min-width: min(240px, 100%);
+  max-width: 100%;
   font-size: 16px;
 }
 
+/* A long line (a table row, a battle moment) wraps instead of running out of the notice. */
 .dnd5e-log-notice-change {
   font-weight: var(--font-semibold);
+  overflow-wrap: anywhere;
 }
 
+/* Icon left, "Log" and the session's name under it; the name wraps, the button grows with it. */
 .dnd5e-log-notice .dnd5e-log-button {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
   width: 100%;
   height: auto;
+  min-height: var(--input-height);
   padding: var(--size-4-2) var(--size-4-4);
   font-size: 16px;
-  font-weight: var(--font-semibold);
+  white-space: normal;
+  text-align: left;
   cursor: pointer;
+}
+
+.dnd5e-log-button-icon {
+  display: flex;
+  flex: none;
+}
+
+.dnd5e-log-button-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dnd5e-log-button-action {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-log-button-session {
+  overflow-wrap: anywhere;
 }

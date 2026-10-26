@@ -495,7 +495,7 @@ export const en = {
   'settings.threshold.outOfLine': 'Out of line: difference from the faction',
   'settings.threshold.publicTrue': 'Public vs. true: difference',
   'settings.threshold.splitAllies': 'Split allies: alliance and opposition from',
-  'log.notice': 'Log → {session}',
+  'log.button': 'Log',
   'log.logged': 'Logged to {session}',
   'log.noSession':
     'No session note to log to (a note with “type: session” and a “session:” number)',
@@ -1150,7 +1150,7 @@ export const de: Record<StringKey, string> = {
   'settings.threshold.outOfLine': 'Aus der Reihe: Unterschied zur Fraktion',
   'settings.threshold.publicTrue': 'Öffentlich vs. wahr: Unterschied',
   'settings.threshold.splitAllies': 'Gespaltene Verbündete: Bündnis und Gegnerschaft ab',
-  'log.notice': 'Loggen → {session}',
+  'log.button': 'Loggen',
   'log.logged': 'Geloggt in {session}',
   'log.noSession':
     'Keine Sitzungsnotiz zum Loggen (eine Notiz mit „type: session“ und einer „session:“-Nummer)',

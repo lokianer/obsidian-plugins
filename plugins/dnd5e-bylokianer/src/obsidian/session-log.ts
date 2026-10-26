@@ -18,7 +18,7 @@ import {
   sessionsOf,
   withLoot,
 } from '@obsidian-plugins/session';
-import { type App, Modal, normalizePath, Notice, type Plugin, TFile } from 'obsidian';
+import { type App, Modal, normalizePath, Notice, type Plugin, setIcon, TFile } from 'obsidian';
 
 import { inCampaign } from '../campaign/scope';
 import { buildHistory, historyFor, type HistoryEntry } from '../factions/history';
@@ -118,28 +118,37 @@ export class SessionLog {
     }
     const tonight = this.tonight();
     if (tonight === null) return;
-    // The change on one line, and below it a full-width call-to-action button to log it.
-    const fragment = createFragment();
-    const box = fragment.createDiv({ cls: 'dnd5e-log-notice' });
-    box.createDiv({
-      cls: 'dnd5e-log-notice-change',
-      text: `${merged.from} → ${merged.to}: ${this.value(merged.before)} → ${this.value(merged.after)}`,
+    const line = `${merged.from} → ${merged.to}: ${this.value(merged.before)} → ${this.value(merged.after)}`;
+    const notice = this.notice(line, tonight.path, () => {
+      this.pending.delete(key);
+      void this.log(merged);
     });
-    const button = box.createEl('button', {
-      cls: 'mod-cta dnd5e-log-button',
-      text: this.t('log.notice', { session: baseName(tonight.path) }),
-    });
-    const notice = new Notice(fragment, NOTICE_TIME);
     this.pending.set(key, { notice, change: merged });
     window.setTimeout(() => {
       if (this.pending.get(key)?.notice === notice) this.pending.delete(key);
     }, NOTICE_TIME);
+  }
+
+  /**
+   * The notice offering a line for the log: the line, and below it a full-width button — an icon,
+   * "Log" and tonight's session under it, wrapping however long its name.
+   */
+  private notice(text: string, session: string, log: () => void): Notice {
+    const fragment = createFragment();
+    const box = fragment.createDiv({ cls: 'dnd5e-log-notice' });
+    box.createDiv({ cls: 'dnd5e-log-notice-change', text });
+    const button = box.createEl('button', { cls: ['mod-cta', 'dnd5e-log-button'] });
+    setIcon(button.createSpan({ cls: 'dnd5e-log-button-icon' }), 'scroll-text');
+    const label = button.createSpan({ cls: 'dnd5e-log-button-label' });
+    label.createSpan({ cls: 'dnd5e-log-button-action', text: this.t('log.button') });
+    label.createSpan({ cls: 'dnd5e-log-button-session', text: baseName(session) });
+    const notice = new Notice(fragment, NOTICE_TIME);
     button.addEventListener('click', (event) => {
       event.preventDefault();
       notice.hide();
-      this.pending.delete(key);
-      void this.log(merged);
+      log();
     });
+    return notice;
   }
 
   /**
@@ -155,19 +164,7 @@ export class SessionLog {
       void this.write(`- ${time} ${text}`, false);
       return;
     }
-    const fragment = createFragment();
-    const box = fragment.createDiv({ cls: 'dnd5e-log-notice' });
-    box.createDiv({ cls: 'dnd5e-log-notice-change', text });
-    const button = box.createEl('button', {
-      cls: 'mod-cta dnd5e-log-button',
-      text: this.t('log.notice', { session: baseName(tonight.path) }),
-    });
-    const notice = new Notice(fragment, NOTICE_TIME);
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      notice.hide();
-      void this.write(`- ${time} ${text}`, false);
-    });
+    this.notice(text, tonight.path, () => void this.write(`- ${time} ${text}`, false));
   }
 
   private value(v: number | null): string {

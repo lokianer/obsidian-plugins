@@ -812,9 +812,9 @@ describe('spellbook', () => {
 
   it('finds an attack bonus after an italic label and leaves links alone', () => {
     const p = root.createEl('p');
-    p.createEl('em', { text: 'Melee Attack Roll:' });
+    p.createEl('em').setText('Melee Attack Roll:');
     p.appendText(' +4, reach 5 ft. ');
-    p.createEl('a', { text: '7 (2d6)' });
+    p.createEl('a').setText('7 (2d6)');
     p.appendText(' Hit: 5 (1d6 + 2) Piercing damage.');
     const rolled: string[] = [];
     linkEntryDice(p, 'Sable', 'Dagger', (check) => rolled.push(check.formula), t);

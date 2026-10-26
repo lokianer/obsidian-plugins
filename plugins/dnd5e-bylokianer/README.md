@@ -59,8 +59,8 @@ inherited value comes from, **Reset to inherited** and **Open card**. It always 
 own note — moving an inherited value gives the subject its own. Ctrl/Cmd-click a faction to open its
 note.
 
-**History.** After every change of a relation value (popover or card) a notice offers **Log →
-Session 14**; a click adds a line such as `- 20:31 Order of the Lantern → The Gutter Court: −2 → −3`
+**History.** After every change of a relation value (popover or card) a notice offers **Log**,
+with tonight's session (Session 14) named under it; a click adds a line such as `- 20:31 Order of the Lantern → The Gutter Court: −2 → −3`
 under `## Log` of tonight's session note (the one with the highest `session:` number; secret changes
 go into a `[!gm]` callout). If that note is from an earlier day, the plugin asks once a day whether to
 start the next session from your session template; **Start next session** does the same on demand.
@@ -348,7 +348,7 @@ milestone levelling) the builder shows no XP — the tiles say how dangerous eac
 the preview how much of the budget is used — and the log's end line carries none. Switched on, the
 builder shows the budgets and every monster's XP, and the end line sums the defeated enemies' XP by
 challenge rating. The setting **Battle log** offers
-each line in a notice with **Log → Session N** (the default), writes them automatically, or keeps
+each line in a notice with a **Log** button naming tonight's session (the default), writes them automatically, or keeps
 them out.
 
 Every change is written to the note's `## Combat` section, a plain table that reads without the
