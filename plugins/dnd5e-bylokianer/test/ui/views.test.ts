@@ -753,7 +753,25 @@ describe('spellbook', () => {
       roll: (check, edge) => rolled.push([check, edge]),
     });
     await new Promise((r) => window.setTimeout(r, 0));
-    const buttons = [...root.querySelectorAll<HTMLElement>('.dnd5e-sb-roll')];
+    expect(texts(root, '.dnd5e-sb-ability')).toEqual([
+      'STR20 (+5)',
+      'DEX12 (+1)',
+      'CON17 (+3)',
+      'INT3 (−4)',
+      'WIS12 (+1)',
+      'CHA7 (−2)',
+    ]);
+    const all = [...root.querySelectorAll<HTMLElement>('.dnd5e-sb-roll')];
+    // The six ability modifiers roll their checks.
+    expect(all.slice(0, 6).map((b) => b.textContent)).toEqual([
+      '(+5)',
+      '(+1)',
+      '(+3)',
+      '(−4)',
+      '(+1)',
+      '(−2)',
+    ]);
+    const buttons = all.slice(6);
     expect(buttons.map((b) => b.textContent)).toEqual([
       'Perception +3',
       '+7',
@@ -766,10 +784,29 @@ describe('spellbook', () => {
     buttons[2]?.dispatchEvent(new MouseEvent('click', { altKey: true }));
     buttons[0]?.dispatchEvent(new MouseEvent('contextmenu'));
     Menu.last?.items.find((i) => i.title === 'Disadvantage')?.click();
+    // A critical hit: Shift on damage, or its menu.
+    buttons[4]?.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+    buttons[2]?.dispatchEvent(new MouseEvent('contextmenu'));
+    expect(Menu.last?.items.map((i) => i.title)).toEqual(['Normal', 'Critical hit']);
+    Menu.last?.items[1]?.click();
+    all[3]?.dispatchEvent(new MouseEvent('click'));
     expect(rolled.map(([c, e]) => [c.label, c.subject, c.formula, e])).toEqual([
       ['Owlbear: Beak', 'Owlbear rolls Beak', 'd20+7', 'adv'],
       ['Owlbear: Beak · damage', 'Owlbear rolls Beak damage', '1d10+5', 'normal'],
       ['Owlbear: Perception', 'Owlbear rolls Perception', 'd20+3', 'dis'],
+      [
+        'Owlbear: Claws · damage · critical',
+        'Owlbear rolls Claws damage (critical)',
+        '4d8+5',
+        'normal',
+      ],
+      [
+        'Owlbear: Beak · damage · critical',
+        'Owlbear rolls Beak damage (critical)',
+        '2d10+5',
+        'normal',
+      ],
+      ['Owlbear: Intelligence check', 'Owlbear rolls Intelligence check', 'd20-4', 'normal'],
     ]);
   });
 

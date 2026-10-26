@@ -377,6 +377,14 @@ fields)
 74. Battle tab, Dagny's card: Strength save +7, Constitution save +6, Athletics +7 …; a roll from
     a stat block shows up in the Dice tab's list. Dice animation off: a notice with the result.
 
+**Dice R4**
+
+75. Owlbear's stat block: Shift-click on `10 (1d10 + 5)` → the stage with two d10 and "+5", label
+    "Owlbear: Beak · damage · critical"; right-click → Normal / Critical hit. Log:
+    `Owlbear rolls Beak damage (critical): 2d10+5 → …`.
+76. The modifiers beside the scores (`(+5)`, `(+1)` …) roll the ability checks ("Eulenbär:
+    Stärkewurf" in German); in a note's stat block a click on the score still edits it.
+
 **Battle tracker B3**
 
 57. **New encounter** (command, or + in the Battle tab header): chips Dagny · 6, Ilex · 6, Orrin
@@ -401,7 +409,7 @@ monsters in the plugin; an import for the GM's own", "The battle tracker keeps t
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
 hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
-syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters" (2026-10-26).
+syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters", "Quality round …", "Dice R4: critical hits and ability checks" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -441,5 +449,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 402 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 404 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

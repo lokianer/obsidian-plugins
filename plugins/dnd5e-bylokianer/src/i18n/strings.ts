@@ -402,6 +402,8 @@ export const en = {
   'dice.noChecks':
     'No saves or skills. Write saves: and skills: into the note, or give it a stat block.',
   'dice.damage': 'damage',
+  'dice.critical': 'critical',
+  'dice.criticalHit': 'Critical hit',
   'dice.noTable': 'No rollable table at {link}.',
   'dice.noRolls': 'No rolls yet. Type a formula like 2d6+3 or pick a die.',
   'dice.again': 'Roll again',
@@ -1054,6 +1056,8 @@ export const de: Record<StringKey, string> = {
   'dice.noChecks':
     'Keine Rettungswürfe oder Fertigkeiten. Schreibe saves: und skills: in die Notiz oder gib ihr einen Werteblock.',
   'dice.damage': 'Schaden',
+  'dice.critical': 'kritisch',
+  'dice.criticalHit': 'Kritischer Treffer',
   'dice.noTable': 'Keine Würfeltabelle unter {link}.',
   'dice.noRolls': 'Noch keine Würfe. Tippe eine Formel wie 2W6+3 oder wähle einen Würfel.',
   'dice.again': 'Nochmal würfeln',

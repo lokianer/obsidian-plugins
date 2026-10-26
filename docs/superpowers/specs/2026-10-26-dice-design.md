@@ -1,6 +1,6 @@
 # Dice — design
 
-Date: 2026-10-26. Status: **reviewed 2026-10-26 ("passt so"; every die on the stage; mind overlaps); R1, R2 and R3 built, awaiting the check**.
+Date: 2026-10-26. Status: **reviewed 2026-10-26 ("passt so"; every die on the stage; mind overlaps); R1–R4 built, awaiting the check**.
 Module 7 of `dnd5e-byLokianer`, the last of the planned modules.
 
 Asked for by the maintainer ("mach weiter" after the battle tracker and M2). Decided with them on
@@ -130,6 +130,10 @@ Log line as in the example vault: `- 20:10 Orrin rolls Persuasion: d20+7 → 12 
 2. **R2 — Rollable tables:** the table convention (§4), tables in the tab, `dice: [[Note#Heading]]`.
 3. **R3 — Stat blocks and characters:** clickable attacks, damage, saves and skills in every stat
    block view; party saves and skills (§5) in the Dice tab and on the Battle tab's character cards.
+4. **R4 — Critical hits and ability checks** (added 2026-10-26 after "mach weiter, ich teste
+   später", from what R3 left out): a damage button rolls a critical hit's damage — the dice twice,
+   the numbers once — on Shift-click or from its menu; the six abilities of a stat block roll their
+   checks.
 
 ## 8. Architecture
 

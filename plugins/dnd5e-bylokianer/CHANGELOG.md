@@ -8,6 +8,10 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Critical hits and ability checks** (dice, phase R4): Shift-click on a damage button (or Critical
+  hit in its menu) rolls the damage of a critical hit, dice doubled and numbers once; the modifier
+  beside each ability score in a stat block rolls the ability check.
+
 - **Rolls from stat blocks and characters** (dice, phase R3): attack bonuses, damage expressions,
   saves and skills are buttons in every stat block (notes, Monster Manual, Battle tab); Shift for
   advantage, Alt for disadvantage, a right-click or long press for the choice. Characters' `saves:`

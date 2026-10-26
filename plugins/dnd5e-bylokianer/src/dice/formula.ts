@@ -185,6 +185,32 @@ function formulaText(f: Formula): string {
   }
 }
 
+/**
+ * A critical hit's damage: every die rolled twice, the numbers once (`1d10+5` → `2d10+5`); null
+ * when the text is no formula.
+ */
+export function criticalFormula(text: string): string | null {
+  const double = (f: Formula): Formula => {
+    switch (f.kind) {
+      case 'dice':
+        return {
+          ...f,
+          count: f.count * 2,
+          keep: f.keep === null ? null : { ...f.keep, n: f.keep.n * 2 },
+        };
+      case 'op':
+        return { ...f, left: double(f.left), right: double(f.right) };
+      case 'neg':
+      case 'group':
+        return { ...f, inner: double(f.inner) };
+      default:
+        return f;
+    }
+  };
+  const f = parseFormula(text);
+  return f === null ? null : formulaText(double(f));
+}
+
 /** A die from 1 to `sides`. */
 export const rollDie = (sides: number, random: () => number): number =>
   Math.min(sides, Math.floor(random() * sides) + 1);

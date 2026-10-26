@@ -7,7 +7,8 @@
 
 import { setIcon } from 'obsidian';
 
-import { checks } from '../dice/checks';
+import { abilityCheckName, checks } from '../dice/checks';
+import { d20 } from '../dice/statblock';
 
 import { listsSpells } from '../spells/links';
 import type { EntryKey } from '../npc/block-edit';
@@ -171,7 +172,30 @@ export function renderStatblock(
     block.stats.forEach((score, i) => {
       const cell = grid.createDiv({ cls: 'dnd5e-sb-ability' });
       cell.createDiv({ cls: 'dnd5e-sb-ability-label', text: labels[i] ?? '' });
-      const value = cell.createDiv({ text: `${score} (${formatBonus(modifier(score))})` });
+      const mod = formatBonus(modifier(score));
+      const line = cell.createDiv();
+      // With rolls the score and its modifier part: the score stays editable, the modifier rolls.
+      const value = line.createSpan({
+        text: ctx.roll === undefined ? `${score} (${mod})` : String(score),
+      });
+      const { roll } = ctx;
+      if (roll !== undefined) {
+        const name = abilityCheckName(i, ctx.lang ?? 'en');
+        line.appendText(' ');
+        checkButton(
+          line,
+          `(${mod})`,
+          {
+            name,
+            label: [block.name, name].filter((p) => p !== null && p !== '').join(': '),
+            subject: `${block.name ?? ''} rolls ${abilityCheckName(i, 'en')}`.trim(),
+            formula: d20(modifier(score)),
+            d20: true,
+          },
+          roll,
+          t,
+        );
+      }
       if (edit !== undefined) {
         editable(value, String(score), (v) => {
           const n = Number(v);

@@ -713,3 +713,17 @@ Asked for by the maintainer ("Qualitätsrunde") before the check in Obsidian, wi
 
 Checked in Chromium at 360 px: the Battle tab, the Dice tab with party and tables, the encounter
 builder with and without XP — no horizontal overflow.
+
+## 2026-10-26 · Dice R4: critical hits and ability checks
+
+Plan `docs/superpowers/plans/2026-10-26-dice-r4.md`; what R3 left out, built after "mach weiter, ich
+teste später".
+
+- A critical hit doubles the dice and keeps the numbers once, as the SRD says (`1d10+5` → `2d10+5`;
+  a keep is doubled too: `4d6kh3` → `8d6kh6`). The GM chooses it: Shift-click on damage, or Critical
+  hit in the button's menu; a natural 20 on the attack does not roll it by itself.
+- Ability checks from the six scores of every stat block: the modifier is the button, so the score
+  stays editable on click in a note.
+- Characters' ability checks come only from a stat block in their note; no new frontmatter key.
+
+Left out: hidden GM rolls (not chosen), automatic critical damage after a natural 20.

@@ -406,7 +406,9 @@ pretending not to see you`. Dice Roller's block references (`[[Note^id]]`) are l
 tab — the attack bonuses (`+7 to hit`), the damage expressions (`10 (1d10 + 5)`) and every save and
 skill are buttons. A click rolls on the stage in a small window ("Owlbear: Beak"); Shift-click rolls
 with advantage, Alt-click with disadvantage, and a right-click or long press offers all three.
-Saving throw DCs stay text: the target rolls those. A character gives their bonuses in the note's
+Saving throw DCs stay text: the target rolls those. On a damage button Shift-click (or Critical hit
+in its menu) rolls a critical hit — the dice twice, the numbers once (`2d10+5`). The modifier beside
+each ability score rolls its check (`20 (+5)` → "Owlbear: Strength check"). A character gives their bonuses in the note's
 frontmatter, readable without the plugin:
 
 ```yaml

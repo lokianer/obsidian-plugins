@@ -3,8 +3,21 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { characterBonuses, checks, saveName, skillName } from '../src/dice/checks';
-import { keptD20, parseFormula, roll, rollDie, rollLine } from '../src/dice/formula';
+import {
+  abilityCheckName,
+  characterBonuses,
+  checks,
+  saveName,
+  skillName,
+} from '../src/dice/checks';
+import {
+  criticalFormula,
+  keptD20,
+  parseFormula,
+  roll,
+  rollDie,
+  rollLine,
+} from '../src/dice/formula';
 import { rollParts } from '../src/dice/statblock';
 import { tableCells } from '../src/markdown/table';
 import { findTable, rollableTables, rowFor, tableLine } from '../src/dice/tables';
@@ -210,5 +223,27 @@ describe('rollable tables, indented lists', () => {
   it('reads an indented list, its deeper lines belonging to the item above', () => {
     const text = '## Omens (d3)\n\n  - A crow\n    on the gate\n  - Rain\n  - Bells\n\nAfter.';
     expect(rollableTables(text)[0]?.rows.map((r) => r.text)).toEqual(['A crow', 'Rain', 'Bells']);
+  });
+});
+
+describe('critical hits and ability checks (R4)', () => {
+  it('doubles the dice of a critical hit, not the numbers', () => {
+    expect(criticalFormula('1d10+5')).toBe('2d10+5');
+    expect(criticalFormula('2d8 + 1d6 + 3')).toBe('4d8+2d6+3');
+    expect(criticalFormula('4d6kh3')).toBe('8d6kh6');
+    expect(criticalFormula('hello')).toBeNull();
+  });
+
+  it('names ability checks in English and German', () => {
+    expect([0, 1, 5].map((i) => abilityCheckName(i, 'en'))).toEqual([
+      'Strength check',
+      'Dexterity check',
+      'Charisma check',
+    ]);
+    expect([0, 1, 2].map((i) => abilityCheckName(i, 'de'))).toEqual([
+      'Stärkewurf',
+      'Geschicklichkeitswurf',
+      'Konstitutionswurf',
+    ]);
   });
 });

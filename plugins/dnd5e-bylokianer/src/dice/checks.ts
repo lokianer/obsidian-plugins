@@ -19,6 +19,8 @@ export interface Check {
   formula: string;
   /** Whether advantage and disadvantage apply (a d20 roll). */
   d20: boolean;
+  /** A damage roll, which a critical hit doubles. */
+  damage?: boolean;
 }
 
 const ABILITIES: Record<string, [string, string]> = {
@@ -37,6 +39,20 @@ const words = (key: string) =>
     .split(/[_\s]+/)
     .map((w) => (w === 'of' || w === 'and' ? w : w.charAt(0).toUpperCase() + w.slice(1)))
     .join(' ');
+
+const ABILITY_CHECKS: readonly [string, string][] = [
+  ['Strength check', 'Stärkewurf'],
+  ['Dexterity check', 'Geschicklichkeitswurf'],
+  ['Constitution check', 'Konstitutionswurf'],
+  ['Intelligence check', 'Intelligenzwurf'],
+  ['Wisdom check', 'Weisheitswurf'],
+  ['Charisma check', 'Charismawurf'],
+];
+
+/** An ability check's name: `Strength check` / `Stärkewurf`; by the ability's index (STR … CHA). */
+export function abilityCheckName(index: number, lang: Lang): string {
+  return ABILITY_CHECKS[index]?.[lang === 'de' ? 1 : 0] ?? '';
+}
 
 /** A save's name: `Dexterity save` / `Geschicklichkeitsrettungswurf`; unknown keys as written. */
 export function saveName(key: string, lang: Lang): string {
