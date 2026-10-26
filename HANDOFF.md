@@ -19,6 +19,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
+0. **Dice** (module 7): brainstormed 2026-10-26 (tab, `dice:` in notes, stat blocks; formulas,
+   tables, character rolls; log like the battle log; plain animation; no hidden rolls). Design
+   drafted in `docs/superpowers/specs/2026-10-26-dice-design.md`, waiting for review (§9 lists the
+   calls to check). After the review: the R1 plan, then R1 (engine, tab, `dice:` in notes, log),
+   R2 (tables), R3 (stat blocks, characters).
 1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
    `encounter.ts`, `fight.ts`, `table.ts`, tested in `test/battle.test.ts`), `battle-store.ts`
    (vault adapter), `battle-view.ts` (the tab). B2 built after "Mach weiter, ich teste später":
@@ -27,8 +32,7 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    Monster Manual. B3 built after "Weiter": `src/battle/budget.ts` (the SRD 5.2.1 XP budget,
    checked against a Markdown conversion of the SRD and its examples; the note text),
    `addMonsterEntry`, `encounter-builder.ts` (dialog and picker), the setting `encounterFolder`,
-   **Add to encounter** in the Monster Manual. Waiting for the check (points 47–60 below). Then
-   module 7 (dice, not brainstormed). M2 (German monster texts) built after B3 at the
+   **Add to encounter** in the Monster Manual. Waiting for the check (points 47–60 below). M2 (German monster texts) built after B3 at the
    maintainer's choice: `src/monsters/de-texts/` (by CR band), `germanTexts` in `meta.ts`; check
    points 61–63.
 2. Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
