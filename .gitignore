@@ -21,6 +21,9 @@ examples/vault/.obsidian/workspace*.json
 examples/vault/.obsidian/plugins/
 examples/vault/.trash/
 
+# The project page's screenshots: copied from plugins/<id>/screenshots/ when the page is deployed
+site/assets/
+
 # Plugin build output (styles.css is bundled from each plugin's styles/)
 plugins/*/main.js
 plugins/*/styles.css

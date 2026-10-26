@@ -1,20 +1,51 @@
 # dnd5e-byLokianer
 
-Game-master tools for D&D 5e in Obsidian, in seven modules:
+A game master's thinking tool for D&D 5e campaigns kept in Obsidian. It is not a rules engine: the
+plugin shows and suggests, the GM decides. Everything is plain Markdown and YAML in your notes.
 
-1. **Factions** — factions are folders holding a `factions.md`, relations are frontmatter values from
-   −5 (war) to +5 (sworn), and members inherit their faction's stance unless they state their own.
-2. **NPC builder** — 5e stat blocks in your notes and a New NPC dialog.
-3. **Spellbook** — the SRD's 319 spells in English and German, your own spells and a spell builder.
-4. **Deck of Many Things** — the SRD deck drawn by its rules, your own decks and a deck builder.
-5. **Monster Manual** — the SRD's 334 monsters, German traits and actions, your own monsters.
-6. **Battle tracker** — the fight kept in the encounter note, logged to the session, an encounter
-   builder with the SRD 5.2.1's XP budget.
-7. **Dice** — a dice stage modelled on Baldur's Gate 3, `dice:` in notes, rollable tables, rolls from
-   stat blocks and the party.
+**[Download 0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0)**
+· [Installing](#installing) · [Changelog](CHANGELOG.md) · [Decisions](DECISIONS.md) ·
+[Project page](https://lokianer.github.io/obsidian-plugins/)
 
-Status: all seven modules are accepted in Obsidian (the last three on 2026-10-26). See the repository's `ROADMAP.md` and the
-designs in `docs/superpowers/specs/`.
+<p align="center">
+  <img src="screenshots/graph.webp" alt="The faction world of the Silverstadt example campaign" width="720">
+</p>
+
+## Modules
+
+All seven are accepted in Obsidian (the last three on 2026-10-26).
+
+| Module                                                                                                       | In this README                                                 |
+| ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| ⚔️ **Factions:** factions as folders, relations −5 … +5, a colour-coded faction world, tensions, session log | [Faction card](#the-faction-card), [world](#the-faction-world) |
+| 📜 **NPC builder:** 5e stat blocks in notes, New NPC with races, classes, archetypes and dice tables         | [NPCs and stat blocks](#npcs-and-stat-blocks)                  |
+| ✨ **Spellbook:** the SRD's 319 spells in English and German, your own spells, a spell builder               | [The spellbook](#the-spellbook)                                |
+| 🃏 **Deck of Many Things:** the SRD deck drawn by its rules, your own decks, a deck builder                  | [The Deck of Many Things](#the-deck-of-many-things)            |
+| 🐉 **Monster Manual:** the SRD's 334 monsters, German traits and actions, your own monsters, import          | [The Monster Manual](#the-monster-manual)                      |
+| 🛡️ **Battle tracker:** the fight kept in the encounter note, logged to the session, an encounter builder     | [The battle tracker](#the-battle-tracker)                      |
+| 🎲 **Dice:** a stage modelled on Baldur's Gate 3, `dice:` in notes, rollable tables, stat block rolls        | [Dice](#dice)                                                  |
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/card.webp" alt="Faction card with relations as coloured rows" width="360">
+  <img src="screenshots/faction.webp" alt="Faction view of The Gutter Court in the faction colours" width="360">
+</p>
+<p align="center">
+  <img src="screenshots/npc-dialog.webp" alt="The New NPC dialog with tiles and a live preview" width="360">
+  <img src="screenshots/statblock.webp" alt="A stat block in a note" width="360">
+</p>
+<p align="center">
+  <img src="screenshots/spellbook.webp" alt="The spellbook tab" width="360">
+  <img src="screenshots/monsters.webp" alt="The Monster Manual tab in German" width="360">
+</p>
+<p align="center">
+  <img src="screenshots/battle.webp" alt="The Battle tab in round 2: the initiative order and the Owlbear's card" width="360">
+  <img src="screenshots/dice.webp" alt="The dice stage: Persuasion with advantage against DC 15, a success" width="360">
+</p>
+
+More on the [project page](https://lokianer.github.io/obsidian-plugins/); the screenshots live in
+[`screenshots/`](screenshots/) and the page takes them from there.
 
 ## The faction card
 
@@ -79,6 +110,8 @@ and the re-layout button in the tab's header puts everything back.
 **Tensions.** The lightning button in the tab's header (or **Show faction tensions**) opens a sidebar listing one-sided
 pairs, members out of line, public faces hiding a different truth (True mode only) and allies split
 over a third faction. It follows the world's Public / True toggle; thresholds are in the settings.
+
+## NPCs and stat blocks
 
 **Stat blocks.** A ` ```dnd5e-statblock ` block holds a 5e stat block in YAML — the keys Fantasy
 Statblocks uses (`name`, `size`, `type`, `ac`, `ac_class`, `hp`, `hit_dice`, `speed`, `stats`,

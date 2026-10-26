@@ -151,6 +151,9 @@ boxes drag); label widths are estimated, not measured.
   (Playwright is preinstalled in cloud sessions).
 - No lookbehind in regular expressions (iOS before 16.4): the lint rule catches literals; write
   `new RegExp` strings without one too (match the character before instead).
+- Screenshots live in `plugins/<id>/screenshots/` (each plugin's README shows them); the Pages
+  workflow copies them to `site/assets/<id>/`, which is git-ignored. To preview the page locally,
+  copy them there first (`cp plugins/dnd5e-bylokianer/screenshots/* site/assets/dnd5e-bylokianer/`).
 - Styles are edited in `plugins/dnd5e-bylokianer/styles/`; `styles.css` is built (`pnpm build`) and
   git-ignored. The screenshot harnesses link the built `styles.css`: build before rendering.
 - The phone-width screenshot harness for the Battle tab, the Dice tab and the encounter builder

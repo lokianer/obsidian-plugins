@@ -1,11 +1,13 @@
 # Publishes site/ (the project page) to GitHub Pages. Needs Settings → Pages → Source:
-# "GitHub Actions" once; afterwards every push to main that touches site/ deploys it.
+# "GitHub Actions" once; afterwards every push to main that touches site/ or a plugin's
+# screenshots deploys it. Each plugin keeps its screenshots in plugins/<id>/screenshots/; they are
+# copied to site/assets/<id>/ here (and git-ignored there).
 name: Pages
 
 on:
   push:
     branches: [main]
-    paths: ['site/**', '.github/workflows/pages.yml']
+    paths: ['site/**', 'plugins/*/screenshots/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
@@ -25,6 +27,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Screenshots from the plugins
+        run: |
+          for dir in plugins/*/screenshots; do
+            id=$(basename "$(dirname "$dir")")
+            mkdir -p "site/assets/$id"
+            cp "$dir"/* "site/assets/$id/"
+          done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
