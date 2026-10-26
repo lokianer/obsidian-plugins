@@ -6,16 +6,18 @@ Module 7 of `dnd5e-byLokianer`, the last of the planned modules.
 Asked for by the maintainer ("mach weiter" after the battle tracker and M2). Decided with them on
 2026-10-26: dice in **a Dice tab**, **in notes** and **in stat blocks**; **formulas**, **rollable
 tables** and **character rolls**; rolls reach the session log **like the battle log** (a setting:
-offer each line / write automatically / off); results are **plainly animated**. Hidden GM rolls
-were not chosen.
+offer each line / write automatically / off). Hidden GM rolls were not chosen. Asked for next
+(2026-10-26): **a d20 roll like Baldur's Gate 3's** — see §1a; it replaces the plain animation
+chosen first.
 
 ## 1. Goals
 
 - **A Dice tab** (command **Open dice**, a ribbon icon), laid out like the other tabs:
   - a formula field (`2d6+3`, `4d6kh3`, `d20 adv`; German `2W6+3` works too) with a Roll button;
   - quick buttons d4 d6 d8 d10 d12 d20 d100, and advantage / disadvantage toggles for the d20;
-  - the result large, the single dice as chips (kept and dropped ones told apart), a natural 20 or
-    1 on a d20 in colour; the number runs briefly before it settles (none with reduced motion);
+  - a d20 roll plays on **the dice stage** (§1a); other dice (damage, `4d6kh3`) show the total
+    large and the single dice as chips (kept and dropped ones told apart), the number running
+    briefly before it settles;
   - a history of this session's rolls (newest first, re-roll and log per row);
   - the campaign's rollable tables as a list (§4) and the party's rolls (§5).
 - **Dice in notes**: inline code `dice: 2d6+3` — the syntax of the Dice Roller plugin, so notes keep
@@ -32,6 +34,31 @@ on Lantern Quay (d20)]]` rolls that table.
   battle log.
 - **German too**: everything in the tab and the buttons follows the plugin's language; the log
   lines stay English like the battle log.
+
+## 1a. The dice stage
+
+Modelled on Baldur's Gate 3's ability checks, drawn by the plugin itself (SVG and CSS, no images
+or code from the game, no 3D library):
+
+- **What is rolled** on top ("Orrin: Persuasion"), below it the **difficulty class** in a diamond
+  when one is given (the GM types it in the tab, or leaves it empty);
+- **a d20** in the middle, inside a ring: on a click (or Space) it tumbles in 3D with its numbers
+  flickering, lands with a short wiggle and lights up;
+- **the bonuses** fly in as chips ("+7 Persuasion") and the total counts up from the die to the
+  sum;
+- **the verdict** with a DC: **Success** in gold or **Failure** in red; a natural 20 is a
+  **Critical Success** with golden rays, a natural 1 a **Critical Failure** in red; without a DC
+  only the total;
+- **advantage / disadvantage**: two d20 tumble, the one not kept fades to grey;
+- **a click or Space skips** to the result at any moment (the result is decided before the
+  animation; the stage only shows it) — the reliability BG3's players miss;
+- with reduced motion the result shows at once with a fade; a setting **Dice animation**: stage
+  (default), simple (the chips only), off.
+
+Where the stage plays: in the Dice tab over its result area; for rolls from a note or a stat block
+in a small window over the workspace that closes with a click outside, Esc, or after the verdict.
+Only Obsidian's theme colours are used (gold from its yellow, red from its red), so it fits every
+theme. A clickable prototype (`assets/2026-10-26-dice-stage-prototype.html`, open it in a browser) was shown to the maintainer on 2026-10-26.
 
 ## 2. Formulas
 
@@ -85,7 +112,7 @@ Log line as in the example vault: `- 20:10 Orrin rolls Persuasion: d20+7 → 12 
 
 ## 6. Non-goals
 
-- 3D dice, sounds; exploding dice and the rest of Dice Roller's grammar (it remains the tool for
+- A physical 3D dice simulation, sounds; exploding dice and the rest of Dice Roller's grammar (it remains the tool for
   that, and its `dice:` notes stay compatible).
 - Hidden GM rolls (not chosen; can come later with the `[!gm]` callout the log already uses).
 - Writing results into the note that holds the formula.
@@ -93,8 +120,9 @@ Log line as in the example vault: `- 20:10 Orrin rolls Persuasion: d20+7 → 12 
 
 ## 7. Phases
 
-1. **R1 — Dice engine, Dice tab, `dice:` in notes, log:** formulas (§2), the tab without tables
-   and party, inline `dice:` formulas in Reading view and Live Preview, the Dice log setting.
+1. **R1 — Dice engine, the dice stage, Dice tab, `dice:` in notes, log:** formulas (§2), the
+   stage (§1a) with DC and advantage, the tab without tables and party, inline `dice:` formulas in
+   Reading view and Live Preview, the Dice log and Dice animation settings.
 2. **R2 — Rollable tables:** the table convention (§4), tables in the tab, `dice: [[Note#Heading]]`.
 3. **R3 — Stat blocks and characters:** clickable attacks, damage, saves and skills in every stat
    block view; party saves and skills (§5) in the Dice tab and on the Battle tab's character cards.
@@ -105,6 +133,8 @@ Log line as in the example vault: `- 20:10 Orrin rolls Persuasion: d20+7 → 12 
 src/dice/formula.ts     pure: parse and roll formulas, the result's text
 src/dice/tables.ts      pure: find rollable headings in a note, read lists and tables, pick a row
 src/dice/statblock.ts   pure: find the rollable parts of a stat block entry
+src/obsidian/dice-stage.ts      the dice stage: the SVG d20, the animation (Web Animations API),
+                                skipping, the verdict
 src/obsidian/dice-view.ts       the Dice tab
 src/obsidian/dice-inline.ts     `dice:` in Reading view (post processor) and Live Preview (editor
                                 extension)
@@ -122,4 +152,11 @@ The battle tracker's and the factions' log share `SessionLog.offerLine`.
   long press offers both).
 - Character bonuses as `saves:` and `skills:` in the character note's frontmatter (or its stat
   block).
-- Three phases: engine, tab, notes and log first; tables second; stat blocks and characters last.
+- Three phases: engine, stage, tab, notes and log first; tables second; stat blocks and characters
+  last.
+- The stage plays for d20 rolls only (checks, saves, attacks, a plain d20); damage and other dice
+  get the quick chips, as in the game.
+- A DC is optional and typed by the GM; stat blocks give none (an attack's AC is the target's,
+  which the plugin does not know).
+- The stage's look is our own drawing in the theme's colours, not BG3's assets; its timing about
+  2 seconds to the verdict, skippable at any moment.

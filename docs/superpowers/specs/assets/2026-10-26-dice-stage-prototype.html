@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Würfelbühne · Prototyp</title>
+    <style>
+      /* Stand-ins for Obsidian's theme variables; the plugin uses the real ones. */
+      :root {
+        --background-primary: #1e1e1e;
+        --background-secondary: #262626;
+        --text-normal: #dadada;
+        --text-muted: #9a9a9a;
+        --text-faint: #6c6c6c;
+        --interactive-accent: #8a5cf5;
+        --color-yellow: #e0b04a;
+        --color-yellow-rgb: 224, 176, 74;
+        --color-red: #e5534b;
+        --color-red-rgb: 229, 83, 75;
+        --color-green: #57ab5a;
+        --font-interface: ui-sans-serif, system-ui, sans-serif;
+        --font-serif: Georgia, 'Times New Roman', serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--background-primary);
+        color: var(--text-normal);
+        font-family: var(--font-interface);
+        font-size: 16px;
+        display: grid;
+        place-items: center;
+        padding: 110px 0 24px;
+      }
+      .controls {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+      }
+      .controls label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-muted);
+      }
+      .controls input[type='number'] {
+        width: 4.5em;
+        font-size: 16px;
+        padding: 4px 6px;
+        background: var(--background-secondary);
+        color: var(--text-normal);
+        border: 1px solid #3a3a3a;
+        border-radius: 6px;
+      }
+      .controls select,
+      .controls button {
+        font-size: 16px;
+        padding: 6px 10px;
+        background: var(--background-secondary);
+        color: var(--text-normal);
+        border: 1px solid #3a3a3a;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      /* ── The stage ─────────────────────────────────────────────────────────── */
+      .stage {
+        position: relative;
+        width: min(560px, 100vw - 32px);
+        padding: 72px 16px 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        border-radius: 18px;
+        background:
+          radial-gradient(60% 50% at 50% 42%, rgba(var(--color-yellow-rgb), 0.1), transparent 70%),
+          radial-gradient(120% 90% at 50% 0%, #2b2618, var(--background-primary) 70%);
+        box-shadow:
+          inset 0 0 0 1px rgba(var(--color-yellow-rgb), 0.18),
+          0 30px 80px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        user-select: none;
+        cursor: pointer;
+      }
+      .what {
+        font-family: var(--font-serif);
+        font-size: 22px;
+        letter-spacing: 0.04em;
+        color: var(--text-normal);
+        text-align: center;
+      }
+      .dc {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        color: var(--color-yellow);
+      }
+      .dc-label {
+        font-size: 16px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .dc-value {
+        font-family: var(--font-serif);
+        font-size: 44px;
+        line-height: 1;
+        width: 78px;
+        height: 78px;
+        display: grid;
+        place-items: center;
+        border: 2px solid rgba(var(--color-yellow-rgb), 0.55);
+        transform: rotate(45deg);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.25);
+      }
+      .dc-value > span {
+        transform: rotate(-45deg);
+      }
+
+      .arena {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        display: grid;
+        place-items: center;
+        perspective: 700px;
+      }
+      .ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(var(--color-yellow-rgb), 0.35);
+        box-shadow: inset 0 0 40px rgba(var(--color-yellow-rgb), 0.08);
+      }
+      .ring::before {
+        content: '';
+        position: absolute;
+        inset: 14px;
+        border-radius: 50%;
+        border: 1px dashed rgba(var(--color-yellow-rgb), 0.3);
+        animation: turn 40s linear infinite;
+      }
+      @keyframes turn {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .dice {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+      }
+      .die {
+        width: 190px;
+        height: 190px;
+        transform-style: preserve-3d;
+        transition:
+          opacity 0.4s,
+          filter 0.4s;
+      }
+      .dice.two .die {
+        width: 140px;
+        height: 140px;
+      }
+      .die svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .face {
+        fill: #3a3121;
+        stroke: rgba(var(--color-yellow-rgb), 0.9);
+        stroke-width: 2;
+        stroke-linejoin: round;
+      }
+      .face.mid {
+        fill: #4a3f29;
+      }
+      .face.top {
+        fill: #5a4c30;
+      }
+      .num {
+        font-family: var(--font-serif);
+        font-size: 40px;
+        fill: #f3e2b5;
+        text-anchor: middle;
+        dominant-baseline: central;
+      }
+      .die.dropped {
+        opacity: 0.3;
+        filter: grayscale(1);
+      }
+      .die.glow svg {
+        filter: drop-shadow(0 0 18px rgba(var(--color-yellow-rgb), 0.85));
+      }
+      .die.crit-fail svg {
+        filter: drop-shadow(0 0 18px rgba(var(--color-red-rgb), 0.9));
+      }
+
+      .mods {
+        min-height: 40px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+      .mod {
+        padding: 4px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(var(--color-yellow-rgb), 0.45);
+        background: rgba(0, 0, 0, 0.3);
+        color: var(--text-normal);
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      .total {
+        font-family: var(--font-serif);
+        font-size: 64px;
+        line-height: 1;
+        color: #f3e2b5;
+        min-height: 64px;
+      }
+      .banner {
+        font-family: var(--font-serif);
+        font-size: 30px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        min-height: 40px;
+        opacity: 0;
+      }
+      .banner.success {
+        color: var(--color-yellow);
+        text-shadow: 0 0 24px rgba(var(--color-yellow-rgb), 0.6);
+      }
+      .banner.failure {
+        color: var(--color-red);
+        text-shadow: 0 0 24px rgba(var(--color-red-rgb), 0.5);
+      }
+      .hint {
+        color: var(--text-muted);
+        font-size: 16px;
+        min-height: 22px;
+      }
+      .rays {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 900px;
+        height: 900px;
+        margin: -450px 0 0 -450px;
+        background: repeating-conic-gradient(
+          rgba(var(--color-yellow-rgb), 0.16) 0 6deg,
+          transparent 6deg 18deg
+        );
+        mask: radial-gradient(circle, #000 0, transparent 60%);
+        opacity: 0;
+        pointer-events: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ring::before {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <label
+        >Probe
+        <select id="what">
+          <option value="Überzeugen|7">Orrin: Überzeugen (+7)</option>
+          <option value="Weisheitsrettungswurf|2">Dagny: Weisheitsrettungswurf (+2)</option>
+          <option value="Angriff: Zweihandaxt|8">Dagny: Zweihandaxt (+8)</option>
+        </select></label
+      >
+      <label>SG <input id="dc" type="number" min="1" max="40" value="15" /></label>
+      <label
+        >Wurf
+        <select id="mode">
+          <option value="normal">normal</option>
+          <option value="adv">Vorteil</option>
+          <option value="dis">Nachteil</option>
+        </select></label
+      >
+      <label
+        >erzwinge
+        <select id="force">
+          <option value="">zufällig</option>
+          <option value="20">natürliche 20</option>
+          <option value="1">natürliche 1</option>
+        </select></label
+      >
+    </div>
+
+    <div class="stage" id="stage" role="button" tabindex="0" aria-label="Würfeln">
+      <div class="rays" id="rays"></div>
+      <div class="what" id="label">Orrin: Überzeugen</div>
+      <div class="dc">
+        <span class="dc-label">Schwierigkeitsgrad</span
+        ><span class="dc-value"><span id="dcv">15</span></span>
+      </div>
+      <div class="arena">
+        <div class="ring"></div>
+        <div class="dice" id="dice"></div>
+      </div>
+      <div class="mods" id="mods"></div>
+      <div class="total" id="total"></div>
+      <div class="banner" id="banner"></div>
+      <div class="hint" id="hint">Klicken zum Würfeln</div>
+    </div>
+
+    <script>
+      // A d20 seen along a three-fold axis: the outer hexagon, the face in front, three faces on its
+      // edges and six on the rim — ten of the twenty faces.
+      function d20Svg() {
+        const R = 92,
+          r = 50,
+          c = 100;
+        const pt = (a, rad) => [
+          c + rad * Math.cos((a * Math.PI) / 180),
+          c + rad * Math.sin((a * Math.PI) / 180),
+        ];
+        const H = [-90, -30, 30, 90, 150, 210].map((a) => pt(a, R));
+        const T = [-90, 30, 150].map((a) => pt(a, r));
+        const poly = (ps, cls) =>
+          `<polygon class="face ${cls}" points="${ps.map((p) => p.join(',')).join(' ')}"/>`;
+        let s = '';
+        // rim faces: each hexagon edge with the nearest front vertex
+        const near = [0, 1, 1, 2, 2, 0];
+        for (let i = 0; i < 6; i++) s += poly([H[i], H[(i + 1) % 6], T[near[i]]], '');
+        // faces on the front face's edges
+        s +=
+          poly([T[0], T[1], H[1]], 'mid') +
+          poly([T[1], T[2], H[3]], 'mid') +
+          poly([T[2], T[0], H[5]], 'mid');
+        s += poly(T, 'top');
+        s += `<text class="num" x="${c}" y="${c + 6}">20</text>`;
+        return `<svg viewBox="0 0 200 200" aria-hidden="true">${s}</svg>`;
+      }
+
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const $ = (id) => document.getElementById(id);
+      let running = null;
+
+      function setup() {
+        // Clear what the last roll left (its rays, banner and dice), but not the ring's slow turn.
+        document.getAnimations().forEach((a) => {
+          if (!(a instanceof CSSAnimation)) a.cancel();
+        });
+        const [name, bonus] = $('what').value.split('|');
+        $('label').textContent = $('what').selectedOptions[0].textContent.replace(
+          / \(\+\d+\)$/,
+          '',
+        );
+        $('dcv').textContent = $('dc').value;
+        const two = $('mode').value !== 'normal';
+        $('dice').className = two ? 'dice two' : 'dice';
+        $('dice').innerHTML = (two ? [0, 1] : [0])
+          .map(() => `<div class="die">${d20Svg()}</div>`)
+          .join('');
+        $('mods').innerHTML = '';
+        $('total').textContent = '';
+        $('banner').textContent = '';
+        $('banner').className = 'banner';
+        $('banner').style.opacity = 0;
+        $('rays').style.opacity = 0;
+        $('hint').textContent = 'Klicken zum Würfeln';
+        return { name, bonus: Number(bonus), dc: Number($('dc').value), mode: $('mode').value };
+      }
+      ['what', 'dc', 'mode', 'force'].forEach((id) =>
+        $(id).addEventListener('change', () => {
+          finish();
+          setup();
+        }),
+      );
+
+      function roll() {
+        return 1 + Math.floor(Math.random() * 20);
+      }
+      const wait = (ms) =>
+        new Promise((res) => {
+          const t = setTimeout(res, ms);
+          running && running.timers.push(t);
+        });
+
+      async function play() {
+        const s = setup();
+        const forced = Number($('force').value) || null;
+        const faces = (s.mode === 'normal' ? [0] : [0, 1]).map(() => roll());
+        if (forced) faces[0] = forced;
+        const kept =
+          s.mode === 'adv' ? Math.max(...faces) : s.mode === 'dis' ? Math.min(...faces) : faces[0];
+        const keptAt = faces.indexOf(kept);
+        running = { timers: [], anims: [], skip: false, result: { faces, kept, keptAt, ...s } };
+        $('hint').textContent = 'Klicken zum Überspringen';
+        const dice = [...document.querySelectorAll('.die')];
+        if (!reduced) {
+          // The tumble: spin in 3D, flicker numbers, then land with a wiggle.
+          dice.forEach((die, i) => {
+            const a = die.animate(
+              [
+                {
+                  transform: 'translateY(-60px) rotateX(0) rotateY(0) rotateZ(0) scale(.6)',
+                  filter: 'blur(0)',
+                },
+                {
+                  transform:
+                    'translateY(10px) rotateX(540deg) rotateY(300deg) rotateZ(200deg) scale(1.05)',
+                  filter: 'blur(1.5px)',
+                  offset: 0.6,
+                },
+                {
+                  transform:
+                    'translateY(0) rotateX(720deg) rotateY(360deg) rotateZ(350deg) scale(1)',
+                  filter: 'blur(0)',
+                  offset: 0.85,
+                },
+                {
+                  transform:
+                    'translateY(0) rotateX(720deg) rotateY(360deg) rotateZ(365deg) scale(1)',
+                  offset: 0.93,
+                },
+                {
+                  transform:
+                    'translateY(0) rotateX(720deg) rotateY(360deg) rotateZ(360deg) scale(1)',
+                },
+              ],
+              { duration: 1400 + i * 120, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' },
+            );
+            running.anims.push(a);
+          });
+          const flicker = setInterval(
+            () => dice.forEach((d) => (d.querySelector('.num').textContent = roll())),
+            70,
+          );
+          running.timers.push(flicker);
+          await wait(1250);
+          clearInterval(flicker);
+        }
+        if (running.skip) return;
+        land();
+        await wait(reduced ? 0 : 450);
+        if (running.skip) return;
+        await addMods();
+        if (running.skip) return;
+        verdict();
+      }
+
+      function land() {
+        const { faces, keptAt } = running.result;
+        document.querySelectorAll('.die').forEach((d, i) => {
+          d.querySelector('.num').textContent = faces[i];
+          if (faces.length > 1 && i !== keptAt) d.classList.add('dropped');
+        });
+      }
+
+      async function addMods() {
+        const { kept, bonus, name } = running.result;
+        $('total').textContent = kept;
+        const chip = document.createElement('span');
+        chip.className = 'mod';
+        chip.textContent = `+${bonus} ${name}`;
+        $('mods').appendChild(chip);
+        if (reduced) {
+          chip.style.opacity = 1;
+          chip.style.transform = 'none';
+          $('total').textContent = kept + bonus;
+          return;
+        }
+        chip.animate(
+          [
+            { opacity: 0, transform: 'translateY(12px)' },
+            { opacity: 1, transform: 'none' },
+          ],
+          { duration: 300, fill: 'forwards' },
+        );
+        await wait(400);
+        // Count the total up from the die to die + bonus.
+        for (let v = kept + 1; v <= kept + bonus; v++) {
+          if (running.skip) return;
+          $('total').textContent = v;
+          await wait(60);
+        }
+        $('total').animate([{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }], {
+          duration: 300,
+        });
+        await wait(300);
+      }
+
+      function verdict() {
+        const { kept, bonus, dc, keptAt } = running.result;
+        const total = kept + bonus;
+        $('total').textContent = total;
+        const crit = kept === 20,
+          fumble = kept === 1;
+        const ok = crit || (!fumble && total >= dc);
+        const b = $('banner');
+        b.textContent = crit
+          ? 'Kritischer Erfolg'
+          : fumble
+            ? 'Kritischer Fehlschlag'
+            : ok
+              ? 'Erfolg'
+              : 'Fehlschlag';
+        b.className = `banner ${ok ? 'success' : 'failure'}`;
+        const die = document.querySelectorAll('.die')[keptAt];
+        if (fumble) die.classList.add('crit-fail');
+        else if (ok) die.classList.add('glow');
+        if (reduced) {
+          b.style.opacity = 1;
+        } else {
+          b.animate(
+            [
+              { opacity: 0, letterSpacing: '.8em' },
+              { opacity: 1, letterSpacing: '.3em' },
+            ],
+            { duration: 500, fill: 'forwards' },
+          );
+          if (crit)
+            $('rays').animate(
+              [
+                { opacity: 0, transform: 'rotate(0) scale(.6)' },
+                { opacity: 1, transform: 'rotate(30deg) scale(1)' },
+              ],
+              { duration: 900, fill: 'forwards' },
+            );
+        }
+        if (crit && reduced) $('rays').style.opacity = 1;
+        $('hint').textContent = 'Klicken für einen neuen Wurf';
+        running = null;
+      }
+
+      function finish() {
+        if (!running) return;
+        running.skip = true;
+        running.timers.forEach((t) => {
+          clearTimeout(t);
+          clearInterval(t);
+        });
+        running.anims.forEach((a) => a.finish());
+        const r = running.result;
+        land();
+        $('mods').innerHTML =
+          `<span class="mod" style="opacity:1;transform:none">+${r.bonus} ${r.name}</span>`;
+        verdict();
+      }
+
+      function click() {
+        if (running) finish();
+        else play();
+      }
+      $('stage').addEventListener('click', click);
+      $('stage').addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          click();
+        }
+      });
+      setup();
+    </script>
+  </body>
+</html>
