@@ -12,7 +12,7 @@ import type { Point } from '../factions/layout';
 import type { Lang } from '../npc/races';
 import { STEPS, signed, stepName } from '../factions/steps';
 import { DEFAULT_THRESHOLDS, type Thresholds } from '../factions/tension';
-import type { T } from '../i18n/strings';
+import type { StringKey, T } from '../i18n/strings';
 
 export interface Settings {
   /** Show Obsidian's Properties block on faction and character notes, beside the card. */
@@ -64,11 +64,25 @@ export interface Settings {
   /** The encounter note the Battle tab showed last. */
   battleSelected: string | null;
   /** The battle tracker's lines in tonight's session: offered in a notice, written, or none. */
-  battleLog: BattleLog;
+  battleLog: LogMode;
+  /** Rolls in tonight's session, the same way. */
+  diceLog: LogMode;
+  /** The dice stage animated, shown at once, or not at all. */
+  diceAnimation: DiceAnimation;
 }
 
-export type BattleLog = 'ask' | 'auto' | 'off';
-const BATTLE_LOGS: readonly BattleLog[] = ['ask', 'auto', 'off'];
+export type LogMode = 'ask' | 'auto' | 'off';
+export type DiceAnimation = 'stage' | 'simple' | 'off';
+
+/** The settings chosen from a dropdown, with their values. */
+const CHOICES = {
+  battleLog: ['ask', 'auto', 'off'],
+  diceLog: ['ask', 'auto', 'off'],
+  diceAnimation: ['stage', 'simple', 'off'],
+} as const;
+type ChoiceKey = keyof typeof CHOICES;
+const CHOICE_KEYS = Object.keys(CHOICES) as ChoiceKey[];
+const isChoice = (key: string): key is ChoiceKey => key in CHOICES;
 
 export const DEFAULT_SETTINGS: Settings = {
   showProperties: false,
@@ -96,6 +110,8 @@ export const DEFAULT_SETTINGS: Settings = {
   deckSelected: 'standard',
   battleSelected: null,
   battleLog: 'ask',
+  diceLog: 'ask',
+  diceAnimation: 'stage',
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */
@@ -183,17 +199,15 @@ export class SettingsTab extends PluginSettingTab {
           options: Object.fromEntries(DECK_SIZES.map((n) => [n, this.t(`settings.deckSize.${n}`)])),
         },
       },
-      {
-        name: this.t('settings.battleLog'),
-        desc: this.t('settings.battleLog.desc'),
+      ...CHOICE_KEYS.map((key) => ({
+        name: this.t(`settings.${key}`),
+        desc: this.t(`settings.${key}.desc`),
         control: {
-          type: 'dropdown',
-          key: 'battleLog',
-          options: Object.fromEntries(
-            BATTLE_LOGS.map((m) => [m, this.t(`settings.battleLog.${m}`)]),
-          ),
+          type: 'dropdown' as const,
+          key,
+          options: Object.fromEntries(CHOICES[key].map((m) => [m, this.choiceLabel(key, m)])),
         },
-      },
+      })),
       ...PATHS.map((key) => ({
         name: this.t(`settings.${key}`),
         desc: this.t(`settings.${key}.desc`),
@@ -234,7 +248,7 @@ export class SettingsTab extends PluginSettingTab {
     if (isPath(key)) return this.settings()[key];
     if (key === 'tableLanguage') return this.settings().tableLanguage;
     if (key === 'deckSize') return String(this.settings().deckSize);
-    if (key === 'battleLog') return this.settings().battleLog;
+    if (isChoice(key)) return this.settings()[key];
     if (key === 'experience') return this.settings().experience;
     return key === 'showProperties' ? this.settings().showProperties : undefined;
   }
@@ -249,7 +263,7 @@ export class SettingsTab extends PluginSettingTab {
     if (isPath(key) && typeof value === 'string') await this.setPath(key, value);
     if (key === 'tableLanguage') await this.setLanguage(value);
     if (key === 'deckSize') await this.setDeckSize(value);
-    if (key === 'battleLog') await this.setBattleLog(value);
+    if (isChoice(key)) await this.setChoice(key, value);
     if (key.startsWith(STEP_KEY) && typeof value === 'string') {
       await this.setStepName(Number(key.slice(STEP_KEY.length)), value);
     }
@@ -269,9 +283,13 @@ export class SettingsTab extends PluginSettingTab {
     }
   }
 
-  private async setBattleLog(value: unknown): Promise<void> {
-    const mode = BATTLE_LOGS.find((m) => m === value);
-    if (mode !== undefined) await this.save({ ...this.settings(), battleLog: mode });
+  private choiceLabel(key: ChoiceKey, value: string): string {
+    return this.t(`settings.${key}.${value}` as StringKey);
+  }
+
+  private async setChoice(key: ChoiceKey, value: unknown): Promise<void> {
+    const choice = (CHOICES[key] as readonly string[]).find((m) => m === value);
+    if (choice !== undefined) await this.save({ ...this.settings(), [key]: choice });
   }
 
   private async setPath(key: PathKey, value: string): Promise<void> {
@@ -329,13 +347,15 @@ export class SettingsTab extends PluginSettingTab {
           .setValue(String(this.settings().deckSize))
           .onChange((value) => this.setDeckSize(value));
       });
-    new Setting(containerEl)
-      .setName(t('settings.battleLog'))
-      .setDesc(t('settings.battleLog.desc'))
-      .addDropdown((dropdown) => {
-        for (const m of BATTLE_LOGS) dropdown.addOption(m, t(`settings.battleLog.${m}`));
-        dropdown.setValue(this.settings().battleLog).onChange((value) => this.setBattleLog(value));
-      });
+    for (const key of CHOICE_KEYS) {
+      new Setting(containerEl)
+        .setName(t(`settings.${key}`))
+        .setDesc(t(`settings.${key}.desc`))
+        .addDropdown((dropdown) => {
+          for (const m of CHOICES[key]) dropdown.addOption(m, this.choiceLabel(key, m));
+          dropdown.setValue(this.settings()[key]).onChange((value) => this.setChoice(key, value));
+        });
+    }
     for (const key of PATHS) {
       new Setting(containerEl)
         .setName(t(`settings.${key}`))

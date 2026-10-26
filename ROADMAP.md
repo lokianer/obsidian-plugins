@@ -13,8 +13,9 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Dice** (module 7) — brainstormed with the maintainer 2026-10-26, design drafted
-(`docs/superpowers/specs/2026-10-26-dice-design.md`), waiting for review; then the R1 plan.
+**dnd5e-byLokianer · Dice** (module 7) — design reviewed 2026-10-26 ("passt so"), **R1 built** (plan
+`docs/superpowers/plans/2026-10-26-dice-r1.md`), waiting for the check in Obsidian (HANDOFF points
+64–68); then R2 (rollable tables) and R3 (stat blocks and characters).
 
 **dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
 built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for
@@ -183,9 +184,10 @@ Design: [`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`](docs/supe
 Brainstormed with the maintainer 2026-10-26: a Dice tab, `dice:` in notes, rolls in stat blocks;
 formulas, rollable tables and character rolls; the log like the battle log; plain animation.
 Design: [`docs/superpowers/specs/2026-10-26-dice-design.md`](docs/superpowers/specs/2026-10-26-dice-design.md)
-(draft, waiting for review).
+(reviewed 2026-10-26: "passt so", every die on the stage, mind overlaps).
 
-- [ ] **R1 — Engine, Dice tab, `dice:` in notes, log**
+- [ ] **R1 — Engine, dice stage, Dice tab, `dice:` in notes, log** (built 2026-10-26, awaiting the
+      check). Plan `docs/superpowers/plans/2026-10-26-dice-r1.md`
 - [ ] **R2 — Rollable tables**
 - [ ] **R3 — Stat blocks and characters**
 

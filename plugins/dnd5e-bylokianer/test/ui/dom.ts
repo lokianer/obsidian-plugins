@@ -99,6 +99,7 @@ for (const [name, fn] of Object.entries(helpers)) {
 
 const globals: Record<string, unknown> = {
   createDiv: (info?: Info) => createEl.call(document.createDocumentFragment(), 'div', info),
+  createSpan: (info?: Info) => createEl.call(document.createDocumentFragment(), 'span', info),
   createFragment: () => document.createDocumentFragment(),
   activeDocument: document,
   activeWindow: window,

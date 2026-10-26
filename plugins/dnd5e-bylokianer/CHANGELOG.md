@@ -8,6 +8,17 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Dice** (module 7, phase R1): **Open dice** (command, or the dice in the ribbon) opens a Dice
+  tab — a formula (`2d6+3`, `4d6kh3`, `d20+5 adv`, German `2W6+3`), d4–d100 buttons, normal /
+  advantage / disadvantage, an optional difficulty class, and the rolls of this Obsidian session
+  with Roll again and Log. Every roll plays on **the dice stage**, modelled on Baldur's Gate 3:
+  each die in its own shape tumbles, lands and lights up, the numbers fly in as chips, the total
+  counts up, and the verdict follows (Success, Failure, a critical one with golden rays for a
+  natural 20); a click or Space skips. `dice:` inline code in notes (Dice Roller's syntax) becomes
+  a button in Reading view and Live Preview that plays the stage in a small window. Settings
+  **Dice log** (rolls offered for tonight's session, written automatically, or off) and **Dice
+  animation** (stage / result at once / no stage).
+
 - **German monster texts** (Monster Manual, phase M2): the traits, actions, bonus actions,
   reactions, legendary actions and the legendary paragraph of all 334 SRD monsters in German, with
   W-dice, metres and the spells of Spellcasting entries under their German names (linked to the

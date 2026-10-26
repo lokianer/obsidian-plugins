@@ -359,6 +359,36 @@ Round 3 · Turn: Court thug 2
 |    9 | Owlbear 1    |     0/59 |  13 | defeated                 |
 ```
 
+## Dice
+
+**Open dice** (command, or the dice in the left ribbon) opens the Dice tab. Type a formula and
+press **Roll**, or pick a die:
+
+| Written                       | Meaning                             |
+| ----------------------------- | ----------------------------------- |
+| `d20`, `W20`                  | one twenty-sided die                |
+| `2d6+3`, `1d8+2d6-1`          | sums; `*`, `/` and brackets too     |
+| `d%`, `d100`                  | percentile (two d10, tens and ones) |
+| `4d6kh3`, `2d20kl1`, `4d6dl1` | keep highest / keep lowest / drop   |
+| `d20+5 adv`, `d20 dis`        | advantage / disadvantage            |
+
+Normal / Advantage / Disadvantage applies to a single d20; a **DC** gives the verdict. Every roll
+plays on **the dice stage**, modelled on Baldur's Gate 3's checks: what is rolled and the DC on
+top, the dice — each in its own shape, d4 to d20, more of them in rows that wrap — tumbling,
+landing and lighting up, the numbers of the formula flying in, the total counting up, then
+**Success** or **Failure** (a natural 20 on a single d20 is a critical success with golden rays, a
+natural 1 a critical failure). A click or Space skips to the result. The rolls of this Obsidian
+session are listed below with Roll again and Log.
+
+In notes, inline code like `dice: 2d6+3` — the syntax of the Dice Roller plugin, so notes work in
+both — becomes a button in Reading view and Live Preview; a click plays the stage in a small
+window and shows the total beside the button. Nothing is written into the note. Formulas the
+plugin does not read (Dice Roller's exploding dice, rerolls) stay as they are.
+
+Settings: **Dice log** — offer each roll for tonight's session in a notice (the default), write it
+automatically, or not at all (`- 20:10 Rolled d20+7 → 19 (12, +7) against DC 15: success`);
+**Dice animation** — the stage animated, the stage with the result at once, or no stage.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
@@ -374,6 +404,7 @@ Round 3 · Turn: Court thug 2
 - **New monster** — the monster builder.
 - **Open battle tracker** — run a fight from an encounter note.
 - **New encounter** — the encounter builder.
+- **Open dice** — the Dice tab.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).

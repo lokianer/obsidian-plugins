@@ -19,11 +19,13 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
 
 ## Where to continue
 
-0. **Dice** (module 7): brainstormed 2026-10-26 (tab, `dice:` in notes, stat blocks; formulas,
-   tables, character rolls; log like the battle log; plain animation; no hidden rolls). Design
-   drafted in `docs/superpowers/specs/2026-10-26-dice-design.md`, waiting for review (§9 lists the
-   calls to check). After the review: the R1 plan, then R1 (engine, tab, `dice:` in notes, log),
-   R2 (tables), R3 (stat blocks, characters).
+0. **Dice** (module 7): design reviewed ("passt so"; the stage modelled on Baldur's Gate 3, every
+   die, no overlaps), R1 built — `src/dice/formula.ts` (engine), `src/dice/shapes.ts` (die
+   shapes), `dice-stage.ts`, `dice-view.ts`, `dice-inline.ts` (Reading view and Live Preview),
+   settings `diceLog` and `diceAnimation`, `SessionLog.offerLine(text, mode)`. Check points 64–68.
+   Next: R2 (rollable tables, the Street Rumours convention), R3 (stat blocks and characters).
+   The overlap check harness lives in the scratchpad (`preview/dice.ts`, `diceshot.cjs`): rebuild
+   it from the spec if the scratchpad is gone.
 1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
    `encounter.ts`, `fight.ts`, `table.ts`, tested in `test/battle.test.ts`), `battle-store.ts`
    (vault adapter), `battle-view.ts` (the tab). B2 built after "Mach weiter, ich teste später":
@@ -321,6 +323,22 @@ fields)
 63. Battle tab with German Obsidian: a Bridge rat's card shows "Scharfer Geruchssinn". New monster
     → pick Eulenbär: name and action rows in German, size still "Groß" (stored "Large").
 
+**Dice R1**
+
+64. The dice icon in the ribbon (or **Open dice**) opens the tab: formula, DC, Roll, d4–d100,
+    Normal / Advantage / Disadvantage, the stage with a d20, "No rolls yet".
+65. `d20+7`, DC 15, Advantage, **Roll**: two d20 tumble in the ring, land, the lower greys, "+7"
+    flies in, the total counts up, Success (gold) or Failure (red); click during the tumble skips.
+    Roll until a natural 20: Critical success with golden rays. German: Erfolg / Fehlschlag.
+66. `8d6`, `4d6kh3`, `d%`, `d4+d6+d8+d10+d12+d20`, `20d6`: every die in its shape, dropped dice
+    grey, d% as two d10, 20d6 as twelve dice and a "8 more dice" line — nothing overlaps, also in
+    a narrow sidebar and on the phone.
+67. [[Dice in notes]] in Reading view and Live Preview: every formula a button (the source shows
+    when the cursor is in it); a click plays the stage in a small window, `= total` beside it;
+    `1d6!` and the table link stay code.
+68. Settings: Dice log (ask → a notice "Rolled … → Log → Session N"; automatic; off), Dice
+    animation (result at once; no stage). Reduced motion in the system shows the result at once.
+
 **Battle tracker B3**
 
 57. **New encounter** (command, or + in the Battle tab header): chips Dagny · 6, Ilex · 6, Orrin
@@ -344,7 +362,8 @@ In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next ses
 monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
-hand" (all 2026-10-25).
+hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
+syntax" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -378,5 +397,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 385 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 393 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

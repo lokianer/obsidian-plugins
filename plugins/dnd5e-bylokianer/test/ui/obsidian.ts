@@ -229,3 +229,6 @@ class ButtonComponent {
     return this;
   }
 }
+
+/** The Live Preview state field; the dice editor extension only reads it. */
+export const editorLivePreviewField = {};

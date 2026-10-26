@@ -44,6 +44,10 @@ import type { SpellDraft } from '../../src/spells/draft';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
 import { BattleView } from '../../src/obsidian/battle-view';
+import { DiceStage } from '../../src/obsidian/dice-stage';
+import { type DiceRecord, DiceView } from '../../src/obsidian/dice-view';
+import { replaceInlineDice } from '../../src/obsidian/dice-inline';
+import { roll as rollDice, type Roll } from '../../src/dice/formula';
 import type { BattleSource } from '../../src/obsidian/battle-store';
 import type { Fight, Fighter } from '../../src/battle/fight';
 import { combatLines, readCombat } from '../../src/battle/table';
@@ -1798,5 +1802,134 @@ describe('encounter builder', () => {
       '700 EP von 3.000 EP (Mittel)',
     );
     expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Niedrige Schwierigkeit');
+  });
+});
+
+describe('dice', () => {
+  /** Random numbers giving these d20 faces (or d6 faces with sides 6), in order. */
+  const faces = (sides: number, ...values: number[]) => {
+    const queue = [...values];
+    return () => ((queue.shift() ?? 1) - 0.5) / sides;
+  };
+
+  it('shows a roll on the stage: dice, chips, total and a critical verdict', async () => {
+    const stage = new DiceStage(root, createT('en'), () => false);
+    const r = rollDice('d20+7', faces(20, 20));
+    if (r === null) throw new Error('no roll');
+    await stage.play({ label: 'Orrin: Persuasion', dc: 15, roll: r });
+    const el = stage.el;
+    expect(el.querySelector('.dnd5e-stage-label')?.textContent).toBe('Orrin: Persuasion');
+    expect(el.querySelector('.dnd5e-stage-dc-value')?.textContent).toBe('15');
+    expect(
+      [...el.querySelectorAll<HTMLElement>('.dnd5e-stage-die')].map((d) => d.dataset.value),
+    ).toEqual(['20']);
+    expect(texts(el, '.dnd5e-stage-mod')).toEqual(['+7']);
+    expect(el.querySelector('.dnd5e-stage-total')?.textContent).toBe('27');
+    expect(el.querySelector('.dnd5e-stage-banner')?.textContent).toBe('Critical success');
+    expect(el.classList.contains('is-critical')).toBe(true);
+    expect(stage.playing).toBe(false);
+  });
+
+  it('draws every kind of die, greys dropped ones and folds many into a chip', async () => {
+    const stage = new DiceStage(root, createT('de'), () => false);
+    const drop = rollDice('4d6kh3', faces(6, 6, 1, 4, 3));
+    if (drop === null) throw new Error('no roll');
+    await stage.play({ label: '4d6kh3', dc: 10, roll: drop });
+    const dice = () => [...stage.el.querySelectorAll<HTMLElement>('.dnd5e-stage-die')];
+    expect(dice().map((d) => d.classList.contains('is-dropped'))).toEqual([
+      false,
+      true,
+      false,
+      false,
+    ]);
+    expect(stage.el.querySelector('.dnd5e-stage-banner')?.textContent).toBe('Erfolg');
+    const pct = rollDice('d%', faces(100, 37));
+    if (pct === null) throw new Error('no roll');
+    await stage.play({ label: 'd100', dc: null, roll: pct });
+    expect(dice().map((d) => [d.dataset.sides, d.dataset.value])).toEqual([
+      ['100', '30'],
+      ['10', '7'],
+    ]);
+    expect(stage.el.querySelector('.dnd5e-stage-banner')?.textContent).toBe('');
+    const many = rollDice('20d6', Math.random);
+    if (many === null) throw new Error('no roll');
+    await stage.play({ label: '20d6', dc: null, roll: many });
+    expect(dice()).toHaveLength(12);
+    expect(stage.el.querySelector('.dnd5e-stage-rest')?.textContent).toMatch(/^8 weitere Würfel: /);
+    const mixed = rollDice('d4+d6+d8+d10+d12+d20', Math.random);
+    if (mixed === null) throw new Error('no roll');
+    await stage.play({ label: 'all', dc: null, roll: mixed });
+    expect(dice().map((d) => d.dataset.sides)).toEqual(['4', '6', '8', '10', '12', '20']);
+  });
+
+  it('rolls from the Dice tab with advantage and a DC, keeps the history and offers the log', async () => {
+    const history: DiceRecord[] = [];
+    const logged: DiceRecord[] = [];
+    const view = new DiceView({} as WorkspaceLeaf, {
+      t: createT('en'),
+      random: faces(20, 7, 16, 3),
+      motion: () => false,
+      history,
+      log: (r) => logged.push(r),
+    });
+    root.appendChild(view.contentEl);
+    await view.onOpen();
+    const el = view.contentEl;
+    const input = el.querySelector<HTMLInputElement>('.dnd5e-dice-formula');
+    const dc = el.querySelector<HTMLInputElement>('.dnd5e-dice-dc');
+    if (input === null || dc === null) throw new Error('no form');
+    input.value = 'd20+5';
+    input.dispatchEvent(new Event('input'));
+    dc.value = '20';
+    dc.dispatchEvent(new Event('input'));
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-dice-edge button')]
+      .find((b) => b.textContent === 'Advantage')
+      ?.dispatchEvent(new MouseEvent('click'));
+    el.querySelector('.dnd5e-dice-form')?.dispatchEvent(new Event('submit'));
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(history[0]?.roll.text).toBe('2d20kh1+5 → 21 ([7], 16, +5)');
+    expect(history[0]?.dc).toBe(20);
+    expect(texts(el, '.dnd5e-dice-verdict')).toEqual(['DC 20 · Success']);
+    expect(el.querySelector('.dnd5e-stage-banner')?.textContent).toBe('Success');
+    expect(logged).toHaveLength(1);
+    input.value = 'hello';
+    input.dispatchEvent(new Event('input'));
+    el.querySelector('.dnd5e-dice-form')?.dispatchEvent(new Event('submit'));
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(input.classList.contains('is-invalid')).toBe(true);
+    expect(history).toHaveLength(1);
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-dice-die')]
+      .find((b) => b.textContent === 'd6')
+      ?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(history[0]?.roll.formula).toBe('d6');
+    expect(texts(el, '.dnd5e-dice-label')).toEqual(['d6', '2d20kh1+5']);
+  });
+
+  it('turns dice: formulas in a note into buttons and leaves other code alone', () => {
+    const logged: Roll[] = [];
+    const el = root.createDiv();
+    // Note text as the markdown renderer leaves it: inline code in paragraphs, a code block.
+    for (const [tag, code] of [
+      ['p', 'dice: 2d6+3'],
+      ['p', 'dice: 1d6!'],
+      ['p', 'not dice'],
+      ['pre', 'dice: d20'],
+    ] as const) {
+      el.createEl(tag).createEl('code').setText(code);
+    }
+    replaceInlineDice(el, {
+      app,
+      t: createT('en'),
+      random: faces(6, 4, 3),
+      motion: () => null,
+      log: (r) => logged.push(r),
+    });
+    expect(texts(el, 'code')).toEqual(['dice: 1d6!', 'not dice', 'dice: d20']);
+    const button = el.querySelector<HTMLElement>('.dnd5e-dice-inline-button');
+    expect(button?.textContent).toBe('2d6+3');
+    button?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector('.dnd5e-dice-inline-result')?.textContent).toBe('= 10');
+    expect(logged.map((r) => r.text)).toEqual(['2d6+3 → 10 (4, 3, +3)']);
   });
 });

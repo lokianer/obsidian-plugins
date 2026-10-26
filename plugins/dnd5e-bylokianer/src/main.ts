@@ -14,6 +14,9 @@ import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
 import { encounterNoteText } from './battle/budget';
+import { rollLine } from './dice/formula';
+import { diceEditorExtension, type InlineDeps, replaceInlineDice } from './obsidian/dice-inline';
+import { DICE_VIEW, type DiceRecord, DiceView } from './obsidian/dice-view';
 import { battleLine } from './battle/log';
 import { EncounterBuilderModal, EncounterPicker } from './obsidian/encounter-builder';
 import { BattleStore, fromMonster } from './obsidian/battle-store';
@@ -441,11 +444,52 @@ export default class Dnd5ePlugin extends Plugin {
             if (file === null) return;
             const link = this.app.fileManager.generateMarkdownLink(file, '');
             for (const event of events) {
-              sessionLog.offerLine(battleLine(event, link, this.options.experience));
+              sessionLog.offerLine(
+                battleLine(event, link, this.options.experience),
+                this.options.battleLog,
+              );
             }
           },
         }),
     );
+    // Dice: the tab, `dice:` in notes, the stage, rolls offered for the session log.
+    const diceHistory: DiceRecord[] = [];
+    const diceMotion = (): boolean | null =>
+      this.options.diceAnimation === 'off'
+        ? null
+        : this.options.diceAnimation === 'stage' &&
+          !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const logRoll = (record: DiceRecord) =>
+      sessionLog.offerLine(rollLine(record.roll, record.dc), this.options.diceLog);
+    this.registerView(
+      DICE_VIEW,
+      (leaf) =>
+        new DiceView(leaf, {
+          t,
+          random: cryptoRandom,
+          motion: diceMotion,
+          history: diceHistory,
+          log: logRoll,
+        }),
+    );
+    const inline: InlineDeps = {
+      app: this.app,
+      t,
+      random: cryptoRandom,
+      motion: diceMotion,
+      log: (roll) => logRoll({ label: roll.formula, dc: null, roll }),
+    };
+    this.registerMarkdownPostProcessor((el) => replaceInlineDice(el, inline));
+    this.registerEditorExtension(diceEditorExtension(inline));
+    const openDice = async () => {
+      const { workspace } = this.app;
+      const leaf = workspace.getLeavesOfType(DICE_VIEW)[0] ?? workspace.getLeaf('tab');
+      await leaf.setViewState({ type: DICE_VIEW, active: true });
+      await workspace.revealLeaf(leaf);
+    };
+    this.addCommand({ id: 'open-dice', name: t('command.openDice'), callback: openDice });
+    this.addRibbonIcon('dices', t('command.openDice'), () => void openDice());
+
     const openBattle = async () => {
       const { workspace } = this.app;
       const leaf = workspace.getLeavesOfType(BATTLE_VIEW)[0] ?? workspace.getLeaf('tab');

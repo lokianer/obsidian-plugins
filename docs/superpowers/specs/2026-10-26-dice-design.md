@@ -1,6 +1,6 @@
 # Dice — design
 
-Date: 2026-10-26. Status: **draft, waiting for the maintainer's review** (§9 lists the calls to check).
+Date: 2026-10-26. Status: **reviewed 2026-10-26 ("passt so"; every die on the stage; mind overlaps); R1 built, awaiting the check**.
 Module 7 of `dnd5e-byLokianer`, the last of the planned modules.
 
 Asked for by the maintainer ("mach weiter" after the battle tracker and M2). Decided with them on
@@ -15,9 +15,7 @@ chosen first.
 - **A Dice tab** (command **Open dice**, a ribbon icon), laid out like the other tabs:
   - a formula field (`2d6+3`, `4d6kh3`, `d20 adv`; German `2W6+3` works too) with a Roll button;
   - quick buttons d4 d6 d8 d10 d12 d20 d100, and advantage / disadvantage toggles for the d20;
-  - a d20 roll plays on **the dice stage** (§1a); other dice (damage, `4d6kh3`) show the total
-    large and the single dice as chips (kept and dropped ones told apart), the number running
-    briefly before it settles;
+  - every roll plays on **the dice stage** (§1a), whatever its dice;
   - a history of this session's rolls (newest first, re-roll and log per row);
   - the campaign's rollable tables as a list (§4) and the party's rolls (§5).
 - **Dice in notes**: inline code `dice: 2d6+3` — the syntax of the Dice Roller plugin, so notes keep
@@ -42,14 +40,20 @@ or code from the game, no 3D library):
 
 - **What is rolled** on top ("Orrin: Persuasion"), below it the **difficulty class** in a diamond
   when one is given (the GM types it in the tab, or leaves it empty);
-- **a d20** in the middle, inside a ring: on a click (or Space) it tumbles in 3D with its numbers
-  flickering, lands with a short wiggle and lights up;
+- **the dice** in the middle — any of d4, d6, d8, d10, d12, d20 and d100 (two d10, tens and ones),
+  each drawn in its own shape; one or two dice inside a ring, more in rows that wrap and shrink so
+  that nothing overlaps (up to twelve drawn, the rest as chips); on a click (or Space) they tumble
+  in 3D with their numbers flickering, land with a short wiggle and light up;
 - **the bonuses** fly in as chips ("+7 Persuasion") and the total counts up from the die to the
   sum;
-- **the verdict** with a DC: **Success** in gold or **Failure** in red; a natural 20 is a
-  **Critical Success** with golden rays, a natural 1 a **Critical Failure** in red; without a DC
-  only the total;
-- **advantage / disadvantage**: two d20 tumble, the one not kept fades to grey;
+- **the verdict** with a DC: **Success** in gold or **Failure** in red; on a d20 roll a natural 20
+  is a **Critical Success** with golden rays, a natural 1 a **Critical Failure** in red; without a
+  DC only the total;
+- **kept and dropped dice**: advantage and disadvantage roll two d20, `4d6kh3` four d6 — the dice
+  not kept fade to grey;
+- **no overlaps**: the stage lays out from its own width — the DC, the dice, the chips, the total
+  and the banner each have their own row; the banner wraps and its letter spacing shrinks on narrow
+  widths; checked at tab and phone width;
 - **a click or Space skips** to the result at any moment (the result is decided before the
   animation; the stage only shows it) — the reliability BG3's players miss;
 - with reduced motion the result shows at once with a fade; a setting **Dice animation**: stage
@@ -154,8 +158,8 @@ The battle tracker's and the factions' log share `SessionLog.offerLine`.
   block).
 - Three phases: engine, stage, tab, notes and log first; tables second; stat blocks and characters
   last.
-- The stage plays for d20 rolls only (checks, saves, attacks, a plain d20); damage and other dice
-  get the quick chips, as in the game.
+- Every roll plays on the stage (the maintainer: "statt W20 kann es jeder beliebige Würfel
+  sein"); the golden rays and the critical verdicts belong to a kept d20 only.
 - A DC is optional and typed by the GM; stat blocks give none (an attack's AC is the target's,
   which the plugin does not know).
 - The stage's look is our own drawing in the theme's colours, not BG3's assets; its timing about

@@ -54,6 +54,9 @@ The campaign is **Silverstadt**, a city of tides, bells and records — see [[Ca
 | Encounter builder | command **New encounter** or + in the Battle tab | The four level 6 characters as chips: Low 2,400 · Moderate 4,000 · High 5,600 XP; two Owlbears = 1,400 XP (Low); writes `Silverstadt/Encounters/<name>.md` and opens it in the Battle tab |
 | Add to encounter | Monster Manual card | **Add to encounter** → pick [[Ambush under the second arch]]: `- monster: <name>` joins its `combatants`, again → `count: 2` |
 | Add to combat | the Battle tab while a fight runs | Type "Owlbear" (or "Eulenbär") under the order and **Add**, or **Add to combat** on a Monster Manual card; "Bell ringer" needs HP; **Remove from fight** on a card. Reopen the tab: the added owlbear keeps its stat block |
+| Dice tab | none needed | **Open dice** (ribbon dice): type `d20+7`, a DC of 15 and Advantage, **Roll**: two d20 tumble on the dice stage, the lower one greys, the +7 flies in, the total counts up, Success or Failure (a natural 20: Critical success with golden rays); d4–d100 buttons; the rolls below with Roll again and Log |
+| Dice in notes | [[Dice in notes]] | Every `dice:` formula is a button; a click plays the stage in a small window and shows `= total` beside it; `1d6!` and the table link stay plain code |
+| Dice log and animation | Settings | **Dice log** ask / automatic / off (tonight's session gets `- 20:10 Rolled d20+7 → 19 (12, +7) against DC 15: success`); **Dice animation** stage / result at once / no stage |
 | Spellbook | none needed | **Open spellbook** (ribbon book icon): the 319 SRD spells, German names and metres with German Obsidian |
 | Tonight's session | `Silverstadt/Sessions/` | Session 14 is dated in the past → the first "Log" of a day offers Session 15 from `Templates/Session.md`; its Loot table starts with Mira's calling card `(from [[Session 14 – Bell Square]])` (also via **Start next session**) |
 

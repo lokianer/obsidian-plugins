@@ -16,6 +16,8 @@
 		"install-example": "node scripts/install-example.mjs"
 	},
 	"devDependencies": {
+		"@codemirror/state": "6.7.6",
+		"@codemirror/view": "6.43.13",
 		"@eslint/js": "9.39.5",
 		"@types/d3-force": "3.0.10",
 		"@types/node": "24.19.2",

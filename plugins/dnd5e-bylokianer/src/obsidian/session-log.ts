@@ -25,7 +25,7 @@ import { buildHistory, historyFor, type HistoryEntry } from '../factions/history
 import type { FactionWorld, Mode } from '../factions/model';
 import { signed } from '../factions/steps';
 import type { T } from '../i18n/strings';
-import type { Settings } from './settings';
+import type { LogMode, Settings } from './settings';
 import type { WorldCache } from './world-cache';
 
 const NOTICE_TIME = 10000;
@@ -143,11 +143,10 @@ export class SessionLog {
   }
 
   /**
-   * Offers a line of the battle tracker, by the setting: a notice with the log button, written
-   * at once, or not at all.
+   * Offers a line of the battle tracker or the dice, by its setting: a notice with the log
+   * button, written at once, or not at all.
    */
-  offerLine(text: string): void {
-    const mode = this.settings().battleLog;
+  offerLine(text: string, mode: LogMode): void {
     if (mode === 'off') return;
     const tonight = this.tonight();
     if (tonight === null) return;

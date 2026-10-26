@@ -626,3 +626,29 @@ in `src/monsters/de-texts/` are the contract; the scripts stayed in the scratchp
   note and Make a note keep writing the SRD's English block.
 
 Left out: German texts inside notes the GM already made, and translating own monsters.
+
+## 2026-10-26 · Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:` syntax
+
+Module 7 (spec `docs/superpowers/specs/2026-10-26-dice-design.md`, plan
+`docs/superpowers/plans/2026-10-26-dice-r1.md`). Brainstormed with the maintainer: a Dice tab,
+dice in notes and in stat blocks; formulas, rollable tables and character rolls; the log like the
+battle log; then "Baldur's Gate 3's dice animations — I want that", a prototype approved ("passt
+so"), with every die on the stage instead of only the d20, and no overlaps.
+
+- Own formula engine (pure, tested): sums, `*` `/`, brackets, keep/drop, `adv`/`dis` (also
+  `Vorteil`/`Nachteil`), `W` for `d`. Anything else is no formula, so Dice Roller's grammar
+  (exploding dice, rerolls, tables) stays untouched in notes.
+- `dice:` inline code as in Dice Roller; buttons in Reading view and Live Preview; results shown,
+  never written into the note.
+- The stage is the plugin's own drawing (SVG shapes for d4–d20, a d100 as two d10, CSS and the Web
+  Animations API) in the theme's colours; nothing from the game. Each part has its own row, the
+  dice wrap with a minimum size, so nothing overlaps; checked in Chromium at 320, 480 and 900 px.
+- A click or Space skips at any moment; the result is decided before the stage plays it. Reduced
+  motion shows the result at once.
+- The tab's history lasts the Obsidian session; the session log is the record. Log lines are
+  English like the battle log's.
+- `@codemirror/view` and `@codemirror/state` as dev dependencies for the Live Preview extension:
+  Obsidian provides both at runtime and esbuild keeps them external.
+
+Left out for R1: rollable tables (R2), stat block and character rolls (R3), hidden rolls, 3D
+physics, sounds.
