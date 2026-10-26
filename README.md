@@ -27,7 +27,7 @@ example vault:
 | Plugin                                               | Status                                                                                       | What it does                                                                                                                       |
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | 🐉 [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | 📦 [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) | D&D 5e for game masters: factions, NPCs with stat blocks, spellbook, Deck of Many Things, Monster Manual, battle tracker and dice. |
-| 🗡️ **Daggerheart plugin** (name open)                | 🗺️ [Planned](ROADMAP.md#daggerheart-plugin-planned-2026-10-26), no code yet                  | The same tools for Daggerheart: factions, adversaries, duality dice, combat with Fear and the spotlight, domain cards.             |
+| 🗡️ **Daggerheart plugin** (name open)                | 🗺️ [Planned](ROADMAP.md#daggerheart-plugin-planned), no code yet                             | The same tools for Daggerheart: factions, adversaries, duality dice, combat with Fear and the spotlight, domain cards.             |
 
 Each plugin's README has its screenshots, conventions, commands and settings; its `CHANGELOG.md`
 and `DECISIONS.md` sit beside it. Releases are on the
