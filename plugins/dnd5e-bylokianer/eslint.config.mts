@@ -30,6 +30,20 @@ export default defineConfig(
   },
   ...obsidianmd.configs.recommended,
   {
+    // obsidianmd/regex-lookbehind catches `(?<=` only; iOS before 16.4 cannot parse `(?<!` either,
+    // and one such literal stops the whole plugin from loading there.
+    files: ['src/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[regex.pattern=/\\(\\?<[=!]/]',
+          message: 'No lookbehind: iOS before 16.4 cannot parse it.',
+        },
+      ],
+    },
+  },
+  {
     // Tests and tool configs run in Node, not in Obsidian.
     files: ['test/**/*.ts', 'vitest.config.ts', 'eslint.config.mts'],
     languageOptions: {

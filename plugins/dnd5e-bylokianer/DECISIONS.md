@@ -693,3 +693,23 @@ Plan `docs/superpowers/plans/2026-10-26-dice-r3.md`.
 
 Left out: critical-hit damage, ability checks, buttons in the monster builder's preview, hidden
 rolls.
+
+## 2026-10-26 · Quality round: no lookbehinds, death-save rules, code blocks
+
+Asked for by the maintainer ("Qualitätsrunde") before the check in Obsidian, without new features.
+
+- No regular expression with a lookbehind (`(?<=`, `(?<!`): iOS before 16.4 cannot parse one, and a
+  literal fails at load time. `eslint-plugin-obsidianmd` catches only `(?<=`, so a
+  `no-restricted-syntax` rule in the plugin's ESLint config refuses both in literals; `new RegExp`
+  strings are written without them by hand. Markdown table rows are split by one shared
+  `tableCells` (`src/markdown/table.ts`).
+- Death saves as the SRD has them: the dead are not healed; a stable character who takes damage
+  starts the saves again; massive damage (left over at 0 hit points, at least the maximum) kills.
+  A critical hit's two failures are not counted: the tracker does not know a hit was critical.
+- `dice:` stays code inside code blocks in Live Preview. That needs the syntax tree:
+  `@codemirror/language` joins `@codemirror/view` and `@codemirror/state` as a dev dependency;
+  Obsidian provides it at runtime and esbuild keeps it external.
+- On a phone (≤ 600 px) the encounter builder's difficulty tiles stack.
+
+Checked in Chromium at 360 px: the Battle tab, the Dice tab with party and tables, the encounter
+builder with and without XP — no horizontal overflow.

@@ -5,6 +5,7 @@
 // (by the setting) and shows the result beside the button. Nothing is written into the note.
 // Inline code that is neither (Dice Roller's own grammar, block references) stays as it is.
 
+import { syntaxTree } from '@codemirror/language';
 import { RangeSetBuilder } from '@codemirror/state';
 import {
   Decoration,
@@ -181,7 +182,21 @@ class DiceWidget extends WidgetType {
 
 const INLINE = /`(dice:\s*[^`\n]+)`/g;
 
-/** Live Preview: the same buttons, except where the cursor or a selection touches the code. */
+/** Whether a position lies in a code block: Obsidian names those nodes `hmd-codeblock`, CodeMirror's own Markdown `FencedCode`. */
+function inCodeBlock(view: EditorView, at: number): boolean {
+  type Node = ReturnType<ReturnType<typeof syntaxTree>['resolveInner']>;
+  let node: Node | null = syntaxTree(view.state).resolveInner(at, 1);
+  while (node !== null) {
+    if (/codeblock|fencedcode/i.test(node.name)) return true;
+    node = node.parent;
+  }
+  return false;
+}
+
+/**
+ * Live Preview: the same buttons, except where the cursor or a selection touches the code, and
+ * inside code blocks (shown as source there).
+ */
 export function diceEditorExtension(deps: InlineDeps): ViewPlugin<{ decorations: DecorationSet }> {
   const build = (view: EditorView): DecorationSet => {
     const builder = new RangeSetBuilder<Decoration>();
@@ -197,6 +212,7 @@ export function diceEditorExtension(deps: InlineDeps): ViewPlugin<{ decorations:
         const request = inlineRequest(code);
         if (request === null) continue;
         if (selection.some((r) => r.from <= end && r.to >= start)) continue;
+        if (inCodeBlock(view, start + 1)) continue;
         builder.add(
           start,
           end,

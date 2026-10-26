@@ -13,9 +13,12 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-25, cloud. The maintainer checked the factions module (phases 2–5) in Obsidian on their PC;
-this session fixed what the check turned up and added what they asked for along the way. At the end
-the maintainer reported **every checklist point passing**: phases 2–5 are accepted.
+2026-10-25 and 2026-10-26, cloud. Built after the accepted checks of 2026-10-25, all without a check
+in Obsidian yet (the maintainer: "Mach weiter, ich teste später"): the battle tracker (B1–B3, XP
+optional), German monster texts (M2), the dice module (R1–R3). Then, asked for ("Qualitätsrunde"),
+a quality round without new features: a review of everything since B1, fixes (iOS lookbehinds,
+death-save rules, indented table lists, `dice:` in code blocks, encounter tiles on a phone), a lint
+rule against lookbehinds, phone-width screenshots.
 
 ## Where to continue
 
@@ -425,10 +428,16 @@ boxes drag); label widths are estimated, not measured.
 - UI checks live in `test/ui/` (happy-dom). Add a test there for every new view; extend
   `test/ui/obsidian.ts` when a renderer imports more of `obsidian`. Screenshots still need a browser
   (Playwright is preinstalled in cloud sessions).
+- No lookbehind in regular expressions (iOS before 16.4): the lint rule catches literals; write
+  `new RegExp` strings without one too (match the character before instead).
+- The phone-width screenshot harness for the Battle tab, the Dice tab and the encounter builder
+  lives in the scratchpad (`preview/tabs.ts`, `tabshot.cjs`, bundled with the UI test stub
+  `test/ui/obsidian.ts` as `obsidian`); its page defines Obsidian's size variables, without them
+  spacing looks wrong.
 - The private vault's daily reports and changelog for 2026-10-24 and 2026-10-25 still need writing
   by a local session.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 398 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 402 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

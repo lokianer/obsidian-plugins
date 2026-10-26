@@ -69,6 +69,7 @@ import { parseOwnSpell } from '../../src/spells/own';
 import { SRD_SPELLS } from '../../src/spells/srd-spells';
 import { archetypeKind, NewFromBaseModal } from '../../src/obsidian/npc-modal';
 import { ValuePopover } from '../../src/obsidian/popover';
+import { linkEntryDice } from '../../src/obsidian/statblock-dice';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
 import type { WorldCache } from '../../src/obsidian/world-cache';
@@ -770,6 +771,23 @@ describe('spellbook', () => {
       ['Owlbear: Beak · damage', 'Owlbear rolls Beak damage', '1d10+5', 'normal'],
       ['Owlbear: Perception', 'Owlbear rolls Perception', 'd20+3', 'dis'],
     ]);
+  });
+
+  it('finds an attack bonus after an italic label and leaves links alone', () => {
+    const p = root.createEl('p');
+    p.createEl('em', { text: 'Melee Attack Roll:' });
+    p.appendText(' +4, reach 5 ft. ');
+    p.createEl('a', { text: '7 (2d6)' });
+    p.appendText(' Hit: 5 (1d6 + 2) Piercing damage.');
+    const rolled: string[] = [];
+    linkEntryDice(p, 'Sable', 'Dagger', (check) => rolled.push(check.formula), t);
+    const buttons = [...p.querySelectorAll<HTMLElement>('.dnd5e-sb-roll')];
+    expect(buttons.map((b) => b.textContent)).toEqual(['+4', '5 (1d6 + 2)']);
+    expect(p.textContent).toBe(
+      'Melee Attack Roll: +4, reach 5 ft. 7 (2d6) Hit: 5 (1d6 + 2) Piercing damage.',
+    );
+    buttons.forEach((b) => b.dispatchEvent(new MouseEvent('click')));
+    expect(rolled).toEqual(['d20+4', '1d6+2']);
   });
 
   it('links the spell names of a Spellcasting trait in a stat block', () => {

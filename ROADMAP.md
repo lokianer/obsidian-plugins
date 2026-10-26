@@ -16,6 +16,8 @@ plugin's `DECISIONS.md` once it exists.
 **dnd5e-byLokianer · Dice** (module 7) — design reviewed 2026-10-26 ("passt so"), **R1, R2 and R3
 built** (plans `docs/superpowers/plans/2026-10-26-dice-r1.md`, `…-r2.md`, `…-r3.md`), waiting for
 the check in Obsidian (HANDOFF points 64–74). Module 7 is the last planned module.
+A quality round followed on 2026-10-26 (review since B1, iOS and rule fixes, phone widths;
+`DECISIONS.md` "Quality round"); next is the maintainer's check, then their call.
 
 **dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
 built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for

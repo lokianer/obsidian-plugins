@@ -194,6 +194,19 @@ describe('a fight', () => {
     expect(byId(heal(up, 'Dagny', 500), 'Dagny').hp).toBe(71);
   });
 
+  it("kills at once by massive damage, restarts a stable character's saves, never heals the dead", () => {
+    const start = setUp(fighters, rolls(10, 6));
+    expect(isDead(byId(damage(start, 'Dagny', 142).fight, 'Dagny'))).toBe(true);
+    expect(isDead(byId(damage(start, 'Dagny', 141).fight, 'Dagny'))).toBe(false);
+    let f = damage(start, 'Dagny', 71).fight;
+    f = deathSave(deathSave(deathSave(f, 'Dagny', true), 'Dagny', true), 'Dagny', true);
+    f = damage(f, 'Dagny', 1).fight;
+    expect(byId(f, 'Dagny').saves).toEqual({ ok: 0, fail: 1 });
+    f = damage(damage(f, 'Dagny', 1).fight, 'Dagny', 1).fight;
+    expect(isDead(byId(f, 'Dagny'))).toBe(true);
+    expect(byId(heal(f, 'Dagny', 10), 'Dagny').hp).toBe(0);
+  });
+
   it('adds, changes and removes conditions', () => {
     let f = setUp(fighters, rolls(10, 6));
     f = addCondition(f, 'Sable', 'poisoned', null);

@@ -2,6 +2,7 @@
 // turn it is, then a Markdown table — initiative, combatant, hit points, armour class, conditions.
 // Written from the fight, read back into it; only this section of the note ever changes. Pure.
 
+import { tableCells } from '../markdown/table';
 import type { Combatant, Condition, Fight, Fighter } from './fight';
 
 export const HEADING = '## Combat';
@@ -86,15 +87,8 @@ export function withCombat(text: string, body: readonly string[]): string {
   return lines.join('\n');
 }
 
-const split = (row: string): string[] =>
-  row
-    .trim()
-    .replace(/^\||\|$/g, '')
-    .split(/(?<!\\)\|/)
-    .map((c) => c.trim().replace(/\\\|/g, '|'));
-
 function readRow(line: string): Row | null {
-  const [init = '', name = '', hp = '', ac = '', conds = ''] = split(line);
+  const [init = '', name = '', hp = '', ac = '', conds = ''] = tableCells(line);
   const hpMatch = /^(-?\d+)\s*\/\s*(\d+)(?:\s*\+\s*(\d+))?/.exec(hp);
   if (hpMatch === null) return null;
   const id = name.replace(/\[\[([^\]|]+)(?:\|[^\]]*)?\]\]/, '$1').trim();

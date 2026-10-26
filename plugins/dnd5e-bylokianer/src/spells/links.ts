@@ -25,15 +25,16 @@ export function spellFinder(spells: readonly SrdSpell[]): (text: string) => Spel
   const names = [...byName.keys()].sort((a, b) => b.length - a.length);
   if (names.length === 0) return () => [];
   const pattern = new RegExp(
-    `(?<![\\p{L}\\p{N}])(${names.map(escape).join('|')})(?![\\p{L}\\p{N}])`,
+    // The character before is matched, not looked behind: iOS before 16.4 has no lookbehind.
+    `(^|[^\\p{L}\\p{N}])(${names.map(escape).join('|')})(?![\\p{L}\\p{N}])`,
     'giu',
   );
   return (text) =>
-    [...text.matchAll(pattern)].map((m) => ({
-      start: m.index,
-      end: m.index + m[0].length,
-      index: byName.get(m[0].toLowerCase()) ?? '',
-    }));
+    [...text.matchAll(pattern)].map((m) => {
+      const [, before = '', name = ''] = m;
+      const start = m.index + before.length;
+      return { start, end: start + name.length, index: byName.get(name.toLowerCase()) ?? '' };
+    });
 }
 
 /** Whether an entry of a stat block lists spells: its name says Spellcasting (or Zauber…). */

@@ -16,6 +16,7 @@
 		"install-example": "node scripts/install-example.mjs"
 	},
 	"devDependencies": {
+		"@codemirror/language": "6.12.4",
 		"@codemirror/state": "6.7.6",
 		"@codemirror/view": "6.43.13",
 		"@eslint/js": "9.39.5",

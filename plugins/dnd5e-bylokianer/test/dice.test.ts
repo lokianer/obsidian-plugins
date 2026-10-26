@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { characterBonuses, checks, saveName, skillName } from '../src/dice/checks';
 import { keptD20, parseFormula, roll, rollDie, rollLine } from '../src/dice/formula';
 import { rollParts } from '../src/dice/statblock';
+import { tableCells } from '../src/markdown/table';
 import { findTable, rollableTables, rowFor, tableLine } from '../src/dice/tables';
 import type { Statblock } from '../src/npc/statblock';
 
@@ -155,6 +156,17 @@ describe('rollable tables', () => {
   });
 });
 
+describe('markdown table cells', () => {
+  it('splits a row, keeping escaped pipes inside a cell', () => {
+    expect(tableCells('| 1–6 | Fog \\| rain | [[Sable]] |')).toEqual([
+      '1–6',
+      'Fog | rain',
+      '[[Sable]]',
+    ]);
+    expect(tableCells('a | b')).toEqual(['a', 'b']);
+  });
+});
+
 describe('rolls from stat blocks and characters', () => {
   it('finds attack bonuses and damage in English and German entries, not DCs', () => {
     const en =
@@ -191,5 +203,12 @@ describe('rolls from stat blocks and characters', () => {
     expect(r && rollLine(r, null, 'Orrin Quill rolls Persuasion')).toBe(
       'Orrin Quill rolls Persuasion: d20+7 → 12 (5, +7)',
     );
+  });
+});
+
+describe('rollable tables, indented lists', () => {
+  it('reads an indented list, its deeper lines belonging to the item above', () => {
+    const text = '## Omens (d3)\n\n  - A crow\n    on the gate\n  - Rain\n  - Bells\n\nAfter.';
+    expect(rollableTables(text)[0]?.rows.map((r) => r.text)).toEqual(['A crow', 'Rain', 'Bells']);
   });
 });

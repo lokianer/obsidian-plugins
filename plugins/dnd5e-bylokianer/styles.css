@@ -3258,6 +3258,13 @@ a.dnd5e-tensions-name:hover {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* Three tiles side by side leave no room for their words on a phone: one under the other. */
+@media (max-width: 600px) {
+  .dnd5e-encounter-difficulty {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .dnd5e-encounter-pick {
   align-items: center;
 }

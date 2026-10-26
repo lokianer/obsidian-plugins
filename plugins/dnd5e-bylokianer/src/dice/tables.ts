@@ -3,6 +3,7 @@
 // table's first column holds numbers or ranges (`2–4`, `5-6`). A total on no row is a gap,
 // recorded as it fell. Pure.
 
+import { tableCells } from '../markdown/table';
 import { parseFormula } from './formula';
 
 export interface TableRow {
@@ -22,13 +23,6 @@ export interface RollTable {
 const HEADING = /^(#{1,6})\s+(.+?)\s*#*\s*$/;
 const DIE = /\((\d*[dDwW](?:\d+|%))\)$/;
 const RANGE = /^(\d+)\s*(?:[–—-]\s*(\d+))?$/;
-
-const cells = (line: string): string[] =>
-  line
-    .trim()
-    .replace(/^\||\|$/g, '')
-    .split(/(?<!\\)\|/)
-    .map((c) => c.trim().replace(/\\\|/g, '|'));
 
 /** Every rollable table of a note, in order. */
 export function rollableTables(text: string): RollTable[] {
@@ -59,11 +53,14 @@ function rowsUnder(lines: readonly string[], start: number): TableRow[] {
 
 function listRows(lines: readonly string[], start: number): TableRow[] {
   const rows: TableRow[] = [];
+  // The items sit at the first item's indent; deeper lines belong to the item above.
+  const indent = /^\s*/.exec(lines[start] ?? '')?.[0].length ?? 0;
   for (let i = start; i < lines.length; i++) {
-    const m = /^([-*+]|\d+[.)])\s+(.*)$/.exec(lines[i] ?? '');
+    const line = lines[i] ?? '';
+    const depth = /^\s*/.exec(line)?.[0].length ?? 0;
+    const m = depth === indent ? /^\s*([-*+]|\d+[.)])\s+(.*)$/.exec(line) : null;
     if (m === null) {
-      // Indented continuation lines belong to the item above; anything else ends the list.
-      if (/^\s+\S/.test(lines[i] ?? '') && rows.length > 0) continue;
+      if (depth > indent && line.trim() !== '' && rows.length > 0) continue;
       break;
     }
     const n = rows.length + 1;
@@ -77,7 +74,7 @@ function tableRows(lines: readonly string[], start: number): TableRow[] {
   for (let i = start; i < lines.length; i++) {
     const line = lines[i] ?? '';
     if (!line.trim().startsWith('|')) break;
-    const [first = '', ...rest] = cells(line);
+    const [first = '', ...rest] = tableCells(line);
     const m = RANGE.exec(first);
     // The header row and the separator row read as no range and are passed over.
     if (m === null) continue;

@@ -97,6 +97,20 @@ Persuasion: d20+7 → 12 (5, +7)`).
   by hand, or load a JSON file (own keys, 5e-bits or Open5e format); writes a `type: spell` note in
   the spell folder (new setting) and opens it in the spellbook.
 
+### Fixed (quality round after the dice module)
+
+- **iOS before 16.4**: no regular expression uses a lookbehind any more (the table readers of the
+  battle tracker and the dice tables, the German monster words, the spell links); one such literal
+  keeps the whole plugin from loading there. A lint rule now refuses them.
+- **Battle tracker rules**: healing no longer brings a dead character back; damage to a stable
+  character starts its death saves again; damage left over at 0 hit points that reaches the
+  character's maximum kills at once (massive damage).
+- **Rollable tables**: an indented list under a die heading is read (its deeper lines belong to the
+  item above).
+- **`dice:` in Live Preview** stays code inside a code block.
+- **Encounter builder on a phone**: the three difficulty tiles stand one under the other, so their
+  words are no longer cut off.
+
 ### Changed
 
 - The **deck builder** is laid out like the New NPC dialog: settings rows, source tiles, numbered

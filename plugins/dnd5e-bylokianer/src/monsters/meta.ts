@@ -98,8 +98,9 @@ function metres(text: string): string {
 function words(text: string, table: Record<string, string>): string {
   const keys = Object.keys(table).sort((a, b) => b.length - a.length);
   const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(`(?<![\\p{L}])(${keys.map(escape).join('|')})(?![\\p{L}])`, 'gu');
-  return text.replace(pattern, (m) => table[m] ?? m);
+  // The letter before is matched, not looked behind: iOS before 16.4 has no lookbehind.
+  const pattern = new RegExp(`(^|[^\\p{L}])(${keys.map(escape).join('|')})(?![\\p{L}])`, 'gu');
+  return text.replace(pattern, (_, before: string, word: string) => before + (table[word] ?? word));
 }
 
 const ALIGNMENTS: Record<string, string> = {

@@ -272,7 +272,8 @@ export function previousTurn(f: Fight): Fight {
 /**
  * Damage: temporary hit points first. Returns the fight and, when the combatant concentrates,
  * the DC of its Constitution save (10 or half the damage, whichever is higher). Damage to a
- * downed character is a failed death save.
+ * downed character is a failed death save (a stable one starts its saves again); a character
+ * whose damage left over at 0 hit points reaches its maximum dies at once.
  */
 export function damage(
   f: Fight,
@@ -285,11 +286,16 @@ export function damage(
   const rest = amount - fromTemp;
   const wasDown = isDown(c);
   const hp = Math.max(0, c.hp - rest);
+  const massive = c.pc && !wasDown && rest - c.hp >= c.maxHp;
   const fight = change(f, id, (x) => ({
     ...x,
     temp: x.temp - fromTemp,
     hp,
-    saves: wasDown ? { ...x.saves, fail: Math.min(3, x.saves.fail + 1) } : x.saves,
+    saves: massive
+      ? { ok: 0, fail: 3 }
+      : wasDown
+        ? { ok: x.saves.ok >= 3 ? 0 : x.saves.ok, fail: Math.min(3, x.saves.fail + 1) }
+        : x.saves,
     // Down or defeated, concentration ends.
     concentration: hp > 0 && x.concentration,
   }));
@@ -297,14 +303,18 @@ export function damage(
   return { fight, concentrationDc: dc };
 }
 
-/** Healing up to the maximum; a downed character is back up with fresh death saves. */
+/** Healing up to the maximum; a downed character is back up with fresh death saves; the dead stay. */
 export function heal(f: Fight, id: string, amount: number): Fight {
   if (amount <= 0) return f;
-  return change(f, id, (c) => ({
-    ...c,
-    hp: Math.min(c.maxHp, c.hp + amount),
-    saves: c.hp <= 0 ? { ok: 0, fail: 0 } : c.saves,
-  }));
+  return change(f, id, (c) =>
+    isDead(c)
+      ? c
+      : {
+          ...c,
+          hp: Math.min(c.maxHp, c.hp + amount),
+          saves: c.hp <= 0 ? { ok: 0, fail: 0 } : c.saves,
+        },
+  );
 }
 
 /** Temporary hit points don't stack: the higher amount stays. */
