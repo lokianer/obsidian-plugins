@@ -744,3 +744,19 @@ auf mehrere Dateien").
   stage's table row); a rule written twice (`.dnd5e-dice-section`) is one now.
 - Checked: screenshots of the Battle tab, the Dice tab, a stat block and the encounter builder at
   360 and 800 px are pixel-identical before and after.
+
+## 2026-10-26 · Reducing complexity, step 1: one function per rule or step
+
+Asked for by the maintainer after a complexity analysis ("wie reduzieren wir die Komplexität",
+"starte mit 1"). Measured with ESLint's `complexity` rule: 62 functions above 10, the worst
+`findTensions` (36) and `discoverEntities` (33).
+
+- `findTensions` runs four rule functions (`oneSided`, `outOfLine`, `publicTrue`, `splitAllies`)
+  from a `RULES` list over one shared `Scan`; each rule reads alone, a new rule is one more function.
+- `discoverEntities` is its steps: `factionCandidates`, `factionNotesOf`, `factionEntity`,
+  `characterEntity`; the Party and Unaffiliated groups come from one small table.
+- Behaviour, result order and the order of warnings are unchanged; the tests pass untouched. Both
+  functions are now at 12 or below; the highest in the plugin is `fromSrdApi` (32).
+
+Next steps (in the handoff): tables for the importers and `tokenize`, the big renderers in named
+parts, `main.ts` per module, complexity limits in the lint.

@@ -101,6 +101,11 @@ Persuasion: d20+7 → 12 (5, +7)`).
   by hand, or load a JSON file (own keys, 5e-bits or Open5e format); writes a `type: spell` note in
   the spell folder (new setting) and opens it in the spellbook.
 
+### Changed (code)
+
+- Tension finding and faction discovery are split into one function per rule or step (complexity
+  36 and 33 down to 12 or below); behaviour unchanged.
+
 ### Changed (stylesheet)
 
 - The 3,900-line `styles.css` is split into one file per view under `styles/` and bundled into

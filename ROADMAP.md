@@ -18,6 +18,9 @@ built** (plans `docs/superpowers/plans/2026-10-26-dice-r1.md`, `…-r2.md`, `…
 the check in Obsidian (HANDOFF points 64–76); R4 (critical hits, ability checks) followed. Module 7 is the last planned module.
 A quality round followed on 2026-10-26 (review since B1, iOS and rule fixes, phone widths;
 `DECISIONS.md` "Quality round"); next is the maintainer's check, then their call.
+Code quality (asked for 2026-10-26): the stylesheet split per view; a complexity analysis and step 1
+of 5 of reducing it — steps 2–5 and the start-up, vault-scan and installer proposals are in
+`HANDOFF.md` "Where to continue".
 
 **dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
 built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for

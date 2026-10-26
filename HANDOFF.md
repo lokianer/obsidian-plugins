@@ -13,179 +13,79 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-25 and 2026-10-26, cloud. Built after the accepted checks of 2026-10-25, all without a check
-in Obsidian yet (the maintainer: "Mach weiter, ich teste später"): the battle tracker (B1–B3, XP
-optional), German monster texts (M2), the dice module (R1–R3). Then, asked for ("Qualitätsrunde"),
-a quality round without new features: a review of everything since B1, fixes (iOS lookbehinds,
-death-save rules, indented table lists, `dice:` in code blocks, encounter tiles on a phone), a lint
-rule against lookbehinds, phone-width screenshots. Last, the READMEs and the Pages site were brought up to date (sections and
-screenshots for the battle tracker and the dice; the screenshots come from the scratchpad harness
-`preview/site.ts` with the UI test stub, `siteshot2.cjs`).
+2026-10-25 and 2026-10-26, cloud. Built without a check in Obsidian yet (the maintainer: "Mach
+weiter, ich teste später"): the battle tracker (B1–B3, XP optional), German monster texts (M2), the
+dice module (R1–R4). Asked for along the way: a quality round (review since B1 and its fixes), the
+READMEs and the Pages site, the stylesheet split into one file per view, a complexity analysis —
+and step 1 of reducing complexity. The maintainer then asked for this handoff.
 
 ## Where to continue
 
-0. **Dice** (module 7): design reviewed ("passt so"; the stage modelled on Baldur's Gate 3, every
-   die, no overlaps), R1 built — `src/dice/formula.ts` (engine), `src/dice/shapes.ts` (die
-   shapes), `dice-stage.ts`, `dice-view.ts`, `dice-inline.ts` (Reading view and Live Preview),
-   settings `diceLog` and `diceAnimation`, `SessionLog.offerLine(text, mode)`. Check points 64–68.
-   R2 built after "weiter": `src/dice/tables.ts` (pure: headings ending in a die, lists and ranged
-   tables, gaps), `dice-tables.ts` (the campaign's `type: table` notes, link resolution),
-   `inline-markdown.ts` (a row rendered with working links), Tables in the Dice tab,
-   `dice: [[Note#Heading]]` in notes. Check points 69–71. R3 built after "weiter":
-   `src/dice/statblock.ts` (attack bonuses and damage in an entry), `src/dice/checks.ts` (saves and
-   skills, names per language), `statblock-dice.ts` (the buttons, Shift / Alt / menu),
-   `dice-party.ts` (the party's checks), the roller in `main.ts`. Check points 72–74. Module 7 is
-   the last planned module; what comes next is the maintainer's call.
-   The overlap check harness lives in the scratchpad (`preview/dice.ts`, `diceshot.cjs`): rebuild
-   it from the spec if the scratchpad is gone.
-1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
-   `encounter.ts`, `fight.ts`, `table.ts`, tested in `test/battle.test.ts`), `battle-store.ts`
-   (vault adapter), `battle-view.ts` (the tab). B2 built after "Mach weiter, ich teste später":
-   `src/battle/log.ts` (moments → log lines), `addFighter` / `removeCombatant`, restore of rows
-   added mid-fight, `SessionLog.offerLine` with the setting `battleLog`, **Add to combat** in the
-   Monster Manual. B3 built after "Weiter": `src/battle/budget.ts` (the SRD 5.2.1 XP budget,
-   checked against a Markdown conversion of the SRD and its examples; the note text),
-   `addMonsterEntry`, `encounter-builder.ts` (dialog and picker), the setting `encounterFolder`,
-   **Add to encounter** in the Monster Manual. Waiting for the check (points 47–60 below). M2 (German monster texts) built after B3 at the
-   maintainer's choice: `src/monsters/de-texts/` (by CR band), `germanTexts` in `meta.ts`; check
-   points 61–63.
-2. Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
-   restyled deck builder, the Monster Manual (M1, M3 with the file import). Open for later: the
-   Monster Manual's German traits and actions (M2: about 48,500 words, in batches by challenge
-   rating, like the spells' S2); the faction world redesign's check (points 20–21).
+0. **The maintainer's check in Obsidian** of everything built since 2026-10-25: points 20–21 and
+   47–76 below. Fix what it turns up first.
+1. **Reducing complexity** — asked for ("wie reduzieren wir die Komplexität", "starte mit 1").
+   Measured with ESLint's `complexity` rule (cyclomatic complexity per function; data files not
+   counted) on 2026-10-26, before step 1: 108 source files, 62 functions above 10, the worst
+   `findTensions` 36, `discoverEntities` 33, `fromSrdApi` 32, `parseSpellJson` 29, popover
+   `render` 27, `fieldBlock` 26, `tokenize` 24, `drawPreview` 24; 18 functions above 80 lines,
+   `onload` in `main.ts` 587. Reproduce with
+   `pnpm exec eslint src --rule '{"complexity":["warn",10]}'` in the plugin folder.
+   - **Step 1 done:** split by rule or step — `findTensions` into its four rules (`oneSided`,
+     `outOfLine`, `publicTrue`, `splitAllies`, run from a `RULES` list), `discoverEntities` into
+     `factionCandidates`, `factionNotesOf`, `factionEntity`, `characterEntity`. Highest complexity
+     now 32 (`fromSrdApi`); the two are at 12 and below, behaviour and warning order unchanged
+     (all tests pass unchanged).
+   - **Step 2:** tables instead of `if` chains in the importers (`fromSrdApi`, `fromTools`,
+     `parseSpellJson`: a field map "source → target + conversion") and in `tokenize`. Add tests
+     first where the importers are thin.
+   - **Step 3:** split the big renderers into named parts: `renderStatblock` (head, lines,
+     abilities, sections), the Battle tab's `renderCard`, the popover's `render`. Check with the
+     screenshot comparison (pixel-identical) as for the stylesheet split.
+   - **Step 4:** `onload` in `main.ts` into one `register…(plugin, ctx)` per module under
+     `src/obsidian/register/`.
+   - **Step 5:** `complexity` (warn at 20) and `max-lines-per-function` (warn at 150) in the
+     plugin's ESLint config; tighten after the steps.
+2. **Also proposed, not started** (the maintainer has not said yes yet):
+   - Start-up time: `main.js` is 2 MB (480 KB gzipped), about 80 % SRD data (monsters 520 KB,
+     spells 393 KB, German texts about 700 KB), all evaluated at every start, phones too. Data as
+     JSON strings parsed on first use of a tab; measure before and after.
+   - Vault scans: `WorldCache` rebuilds the whole world 250 ms after any change; `OwnSpells` and
+     `OwnMonsters` re-read every `type: spell` / `type: monster` note on each `resolved`. Per-file
+     caches, as CLAUDE.md asks, matter only for large vaults.
+   - An installer for this plugin alone: (A) `pnpm install-to "<vault>"`, generalising
+     `scripts/install-example.mjs`; (B) a ZIP of `main.js`, `manifest.json`, `styles.css` as a CI
+     artifact; (C) BRAT would need a GitHub release and the mirror repository — a publication,
+     which the maintainer decided against on 2026-10-25, so only on their explicit choice.
+3. Module 7 was the last planned module. The GM gate ("Not placed yet" in the roadmap) and the
+   release preparation stay the maintainer's call.
 
 ## State of the working tree
 
 Branch `claude/roadmap-and-handoff-nb9sav`, pushed; `main` fast-forwarded to it after every slice, so
-`git pull` on `main` brings everything. Clean. `examples/vault/.obsidian/graph.json` may show as
-modified after opening the vault: never commit it as part of a task. After trying session creation
-in the example vault, delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
+`git pull` on `main` brings everything. Clean. After pulling, run `pnpm build` once: `styles.css` is
+build output now. `examples/vault/.obsidian/graph.json` may show as modified after opening the
+vault: never commit it as part of a task. After trying session creation in the example vault,
+delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
 
 ## Done this session
 
-From the maintainer's check in Obsidian, in order:
-
-- `4112e8c` The graph was fitted while the new tab had no size: `PanZoom.fit` now waits for a size
-  (ResizeObserver). The Log notice got a full-width accent button and stays ten seconds.
-- `8712c40` The graph then showed arrows but no nodes: `drawNode` passed two classes as one array
-  entry, which Obsidian's `createSvg` hands to `classList.add` (throws on a space), so drawing
-  stopped at the first node. All SVG classes are separate tokens now.
-- `65c3e9f` In a one-member faction view the title ran into "Power 5": frame, chips and boxes are
-  sized from an estimate of their labels (`textWidth`; measuring needs a laid-out SVG).
-- `7419811` Members with an arrow between them (Mira Voss ↔ Sable) stood edge to edge:
-  `memberRows` (pure, tested) puts linked members side by side with a wider gap; an arrow with a
-  reverse one runs beside it.
-- `389a3af` Asked for: move the cards in the faction view like in the graph. The frame (with its
-  chips) and each box can be dragged, offsets per faction in the setting `viewMoves`; re-layout in
-  a faction view resets them.
-- `681a70e` Asked for: loot travels into the new session so only one session needs watching.
-  `carriedLoot` / `withLoot` in `packages/session/src/loot.ts` (tested) copy the rows and items
-  under `## Loot` into session N+1, each with `(from [[Session N …]])`, an earlier origin kept; new
-  command **Start next session**. DECISIONS 2026-10-25.
-- Docs: README, CHANGELOG, DECISIONS, `Home.md` rows, the package README; ROADMAP, the phase plans,
-  the concept and `CLAUDE.md` mark phases 2–5 accepted.
-- The maintainer then answered the concept's §5: publish nothing yet, keep building; modules 2–4 as
-  own code compatible with the other plugins' formats, the stat block with its own block name;
-  `happy-dom` yes; NPC builder next with all SRD NPCs, a template builder for own archetypes, random
-  helpers, editing in place and AC · HP · CR on the card. DECISIONS 2026-10-25.
-- `be72b23` UI smoke tests: `test/ui/` renders card, graph, matrix, faction view, popover and
-  tension panel in happy-dom (stand-in `obsidian` module aliased in `vitest.config.ts`, DOM helpers
-  strict about class tokens); with the old graph bug put back two tests fail.
-- NPC builder spec and phase 1 plan written; the maintainer approved both ("passt").
-- Project page `site/` (static HTML/CSS, real screenshots from the renderers, dark and light, phone
-  width checked) and `.github/workflows/pages.yml`; root README rewritten to the current state. The
-  maintainer asked for it "with the brag skill" — no such skill exists in this environment, so it was
-  built by hand. **Needs once:** Settings → Pages → Source "GitHub Actions"; then it deploys from
-  `main` to https://lokianer.github.io/obsidian-plugins/. Screenshots were made in the scratchpad
-  harness (stub `obsidian` with Lucide-like icons, data from the clean example vault); redo them
-  when the views change.
-- NPC builder phase 1 built: `src/npc/statblock.ts` (model, derived values, blocks in a note,
-  Convert), `src/npc/srd.ts` (21 SRD NPCs from the 5e-bits database, checked against the SRD in
-  tests — which caught a wrong Cult Fanatic HP there — with `NOTICE.md`), `statblock-view.ts`
-  (rendering), `stat-summaries.ts` (the card's `AC · HP · CR`, read from the note's text), the
-  command Convert stat block, example vault notes on the new block (Ondine kept on `statblock`),
-  README attribution. Seen in Chromium at desktop and phone width.
-- A bug the maintainer found: links in the card's other fields (`leader: "[[Isolde Ferrant]]"`)
-  were plain text; fixed in `9f6287d` (rendered and opened via openLinkText).
-- Phase 4 asked for (races, German and more dice texts, fancier dialog); spec §10, plan 4a approved
-  ("ja") and built: `races.ts`, `srd-races.ts`, `text-tables.ts` (12 tables × ≥ 50 entries in
-  English and German), `tables.ts` by language, new fields in `note.ts`, the dialog's race field
-  and race-aware dice, the generic New archetype / New race dialog, settings for races folder and
-  dice language, `Templates/Races/Tideborn.md`.
-- Phase 3 plan written after the maintainer said "mach weiter" (they test phase 2 later); approved
-  with its deviation ("passt") and built: `src/npc/block-edit.ts` (scalars via the frontmatter line
-  editor on the block's lines, one ability, entries set/add/remove), `statblock-edits.ts` (writes,
-  block found by its fence line), editable rendering in `statblock-view.ts`, `write.ts` generalised
-  to text edits (with Undo), `archetypeNote` and the New archetype dialog/command.
-- NPC builder phase 1 accepted ("passt"); phase 2 planned, approved ("Ja") and built:
-  `src/npc/archetypes.ts` (own archetypes from notes, search, `withName`), `src/npc/tables.ts`
-  (default dice tables, note overrides), `src/npc/note.ts` (NPC note from template, Add stat block,
-  folder and free file name), `src/obsidian/npc-modal.ts` (New NPC dialog, archetype picker,
-  loaders), `src/obsidian/npc-builder.ts` (commands), the New NPC button on faction cards, four
-  path settings; example vault: `Templates/Archetypes/Lantern Warden.md`,
-  `Templates/Tables/NPC quirks.md`. The UI stand-in gained `Setting`, `FuzzySuggestModal`,
-  `parseYaml`.
+- `0c2d266` German traits and actions for all 334 SRD monsters (M2).
+- `ebb8f94`, `57259ef` Dice design and the clickable prototype of the stage; `5c9e37d` R1 (engine,
+  stage, Dice tab, `dice:` in notes, log); `ab3d0a9` README section on what is taken and what only
+  inspired; `9af709e` R2 (rollable tables); `0b5b67c` R3 (stat blocks and characters); `b6c668f`
+  R4 (critical hits, ability checks).
+- `9f2f57f` Quality round: no lookbehinds (iOS before 16.4) and a lint rule against them,
+  death-save rules, indented table lists, `dice:` stays code in code blocks (`@codemirror/language`
+  as an external dev dependency), encounter tiles on a phone.
+- `998029b` READMEs and Pages site: sections and screenshots for the battle tracker and the dice.
+- `5e8a63a` `styles.css` split into sixteen files under `styles/`, bundled by esbuild.
+- Reducing complexity, step 1 (see "Where to continue"), committed with this handoff.
+- Earlier, on 2026-10-25: the battle tracker B1–B3 and the optional XP (built, awaiting the check)
+  — the commits before `0c2d266`.
 
 ## Half-finished — check in Obsidian
 
 Rebuild and install (`pnpm --filter dnd5e-bylokianer build`, then `… install-example`), reload.
-
-1. **Button**: The Gutter Court's card shows **New NPC** in its top line; a character's card does
-   not. It opens the dialog with The Gutter Court chosen.
-2. **Dialog**: the dice fill name (first + family name), appearance, manner, wants, quirk; the quirk
-   die uses the vault's `Templates/Tables/NPC quirks.md` (Bell Square, Mira …), the others the
-   defaults. The archetype field suggests SRD NPCs and Lantern Warden (first, "own"), with CR.
-   Phone width: one column, dice stay.
-3. **Create** with archetype Guard into The Bench → `Silverstadt/Factions/The Gutter Court/The
-Bench/<name>.md` opens: frontmatter `type: npc`, race, alignment, `archetype: Guard`; the lines
-   under their headings; the stat block named after the NPC, folded; the card shows the short stats
-   and the NPC appears as a member in the faction world. Party → `Silverstadt/Party`, Unaffiliated
-   → `Silverstadt/NPCs`. Creating the same name again gives `<name> 2.md`.
-4. **Refusals**: no name → notice; an archetype typed that does not exist → notice, no note.
-5. **Add stat block** on Sergeant Pell → pick Lantern Warden → `## Stats` with a block named
-   "Sergeant Pell" at the end; the card shows AC 16 · HP 16 · CR 1/4; a second run says the note
-   has one. `git diff` shows only the added lines.
-6. **Settings**: NPC template, archetype folder, tables folder, folder for NPCs of no faction — in
-   both the settings search (1.13+) and the classic tab. German UI says "Neuer NSC".
-7. Revert the example vault afterwards (`git checkout examples/vault`, delete created notes).
-
-**Phase 3 — editing in the stat block**
-
-8. Open Aldric Thane's block: click Armor Class, type 19, Enter → `ac: 19` in the note (`git diff`:
-   one line); Esc cancels; click DEX 11 → 14 changes one number of `stats: [...]`; click the name.
-   In Live Preview the cursor must not jump into the block; the block stays open after the write.
-9. Actions: pencil on Lay on Hands → change name and text → Save writes them (a text with `:` gets
-   quoted); × removes it with an Undo notice that puts it back; **+ Add** under Bonus Actions starts
-   `bonus_actions:` with "New entry".
-10. **New archetype**: name "Archive Spy", start from Spy → `Templates/Archetypes/Archive Spy.md`
-    opens with the block unfolded and editable; it is offered in New NPC's archetype search.
-
-**Phase 4a — races and dice texts**
-
-11. New NPC: type "Zwerg" (or pick Dwarf) as race, roll name (dwarf names), appearance (beard,
-    eyes, skin + a detail, in German with German Obsidian), age (50–300); create with Guard → the
-    stat block shows speed 25 ft., darkvision 60 ft., Dwarvish, poison resistance, Dwarven
-    Resilience …; frontmatter `race: Dwarf`.
-12. The new fields (occupation, age, build, voice, ideal, bond, flaw, secret, hook) roll and land
-    in the note (labels "Ideal:", "Makel:" …; Secrets as its own section).
-13. Own race: pick Tideborn → its traits and names; **New race** from Elf writes a race note.
-14. Settings: language of the dice texts (As Obsidian / English / German), races folder.
-
-**Phase 4b — the fancier dialog** (points 2, 4 and 11 above now go through tiles instead of text
-fields)
-
-15. New NPC opens wide: form left, preview right ("Unnamed" and a hint until something is
-    chosen); phone width: the preview above the form, only name, tags and numbers.
-16. Race tiles: Tideborn first, then the nine SRD races with icons, size, speed, darkvision (German
-    Obsidian: "Mittelgroß · 7,5 m · Dunkelsicht 18 m"); search "Owl" → **Use “Owl”** writes
-    `race: Owl` with no traits. Clicking the chosen tile again clears it.
-17. Archetype tiles: No archetype (chosen), Lantern Warden ("own"), then the SRD NPCs from Commoner
-    (CR 0) to Archmage, each with AC · HP · CR; the preview shows the short stats.
-18. Class tiles: the twelve SRD classes (German: Barbar … Magier, "W10 · STÄ, GES"); Magier writes
-    `class: Wizard`; a typed class without a tile works as free text.
-19. **Roll everything** fills race, class, name, age, appearance and every table field; type a voice →
-    its lock closes and it survives the next Roll everything; a lock clicked by hand keeps an empty
-    field empty; the single dice still roll locked fields.
 
 **Faction world redesign** (asked for 2026-10-25)
 
@@ -195,97 +95,6 @@ fields)
     Check a light theme and one community theme too.
 21. Matrix: card with colour dots and initials, hovering a cell colours its row and column names;
     self cells hatched; the faction view (drill-down) keeps working with the dot grid.
-
-**Spellbook S1**
-
-22. The book icon in the left ribbon (and **Open spellbook**) opens the tab; with German Obsidian
-    the list shows German names ("Feuerball"), German meta ("1 Aktion · 45 m") and "Zaubertrick",
-    "Grad 1" … chips with counts.
-23. Search "feuerb", "fireb" and "säurepfeil"/"saurepfeil" find the spells; level, school chips,
-    the dropdowns, Ritual and Concentration combine; the reset button clears them; closing and
-    reopening keeps the filters and the picked spell.
-24. Card: school colour band, both names, level line, the four meta boxes, material, badges, the
-    English description with the note that the German follows, tables (Animate Objects) as
-    tables, EN / DE switch. ↑ ↓ in the list, Enter opens.
-25. Narrow tab or phone: chips scroll sideways, a tap opens the card, the back arrow returns.
-26. German texts: with German Obsidian every card reads German (description, "Auf höheren Graden",
-    material) with W-dice and metres; tables (Verwirrung, Gegenstände beleben, Teleportieren,
-    Wetterkontrolle) render as tables. Spot-read a few for wording; corrections go into
-    `src/spells/de-texts/`.
-
-**Deck of Many Things D1**
-
-27. The layers icon (and **Open Deck of Many Things**) opens the tab; in the example vault it finds
-    `Silverstadt/Decks/Deck of Many Things.md`: the Fool struck through, three draws in the history.
-28. Who draws suggests the party; declare 2, Declare and draw, Draw a card: the card turns over
-    (no turn with reduced motion), the history and the note get a line with the drawer linked.
-29. Fool → "draw again" without using a draw, ticked in the note; Jester → the two buttons; Idiot →
-    one more; The Void / Donjon → "The drawing has ended". Hard to force by hand: untick the Fool
-    first, or trust the tests.
-30. Without a deck note (rename the example one): the first draw makes `Deck of Many Things.md` in
-    the campaign folder with a notice; the setting 13 cards makes a 13-card note. Tick a card in
-    the note by hand: the tab strikes it through. German Obsidian: German names, D/B ranks, texts.
-
-**Deck of Many Things D2**
-
-31. The Deck tab's list shows the standard deck, "Fortunes of Bell Square" and "Omens of the
-    River"; picking one shows its cards numbered; the pick survives closing the tab.
-32. Bell Square: drawn cards return, the Cracked Bell gets ticked and the "Leaves the deck" badge,
-    Midnight ends the drawing; its two-line effect shows whole. Omens: every card drawn stays out;
-    once all are out, Declare and draw is greyed until a reset.
-33. - (or **New deck**): the builder; "The standard deck" fills 22 rows in your language; "Pasted
-      text" takes `Name — effect` lines and tables; "JSON file" opens the file dialog — pick
-      `Silverstadt/Decks/Omens of the Road.json` (also on the phone). Create deck writes
-      `Silverstadt/Decks/<name>.md` and opens it in the tab. ↺ asks: history only, or history and every
-      card back.
-
-**Spellbook S3**
-
-34. Open Ondine Vale's stat block: counterspell, dispel magic, wall of force, hold monster, mislead
-    are dotted links; a click opens the spellbook on the spell, even with filters set; German
-    Obsidian shows the same. "Spellcasting" itself and the Quill-knife stay plain.
-35. `Silverstadt/Spells/Lantern Ward.md` is in the spellbook under Level 2, marked "own",
-    abjuration colour; the card shows its meta (German: 9 m), the text, "At Higher Levels" and the
-    note button. Edit its level to 3: the list follows without reopening the tab.
-36. A note with `type: spell` but no school stays out of the list.
-
-**Spell builder and deck builder restyle**
-
-37. - in the spellbook (or **New spell**): the dialog looks like New NPC — search "feuerb", pick
-      Feuerball: every field and the preview fill in German (Hervorrufung des 3. Grades, 45 m, 8W6);
-      change level and school (tile colours follow), toggle classes, create: the note lands in
-      `Silverstadt/Spells/` and the spellbook opens on it. A 5e-bits spell JSON fills it too.
-38. **New deck**: settings rows, three source tiles, numbered rows; editing a row shows that card
-    in the preview as it will turn over; the count sits beside "Cards".
-
-**Monster Manual M1**
-
-39. The skull in the ribbon (or **Open Monster Manual**) opens the tab: 334 monsters, CR bands with
-    counts, type chips in colours, size and movement dropdowns, Legendary, Spellcaster; the list by
-    challenge rating; keyboard ↑ ↓ Enter; narrow tab: the card replaces the list.
-40. Pick Adult Red Dragon: the full stat block, legendary actions with their paragraph; Lich: the
-    spell names link to the spellbook.
-41. German Obsidian: "Eulenbär", "Große Monstrosität, gesinnungslos", 12 m, Dunkelsicht 18 m,
-    passive Wahrnehmung, Str/Ges … saves; traits and actions German since M2. EN / DE switches.
-42. **Insert into note**: the block appears below the cursor of the last note; **Make a note**:
-    `Silverstadt/Monsters/<name>.md` with `type: monster`, opened with the block unfolded.
-
-**Monster Manual M3**
-
-43. `Silverstadt/Monsters/Bell-Tower Gargoyle.md` is in the Monster Manual under CR 3, marked "own",
-    with ✈; its card opens the note instead of Make a note.
-44. - in the Monster Manual (or **New monster**): search "eulenb", pick it: every field fills in;
-      the dropdowns read German, the preview shows "Große Monstrosität"; change a score, the
-      modifier follows; add an action and a legendary action (the paragraph fills itself in).
-45. Create monster: the note lands in `Silverstadt/Monsters/` and the Monster Manual shows it.
-
-**Monster import**
-
-46. **New monster** → **Import from a file** → `Silverstadt/Monsters/Import example (5etools).json`:
-    two tiles (Tide Lantern Wisp, Bell Square Footpad); one loads into the form with its 5etools
-    tags turned into text; **Create all 2** writes both into `Silverstadt/Monsters/`. A Fantasy
-    Statblocks export or a note with stat blocks works the same. Non-SRD monsters (demon lords,
-    beholders) are not shipped — licence; see DECISIONS.
 
 **Battle tracker B1**
 
@@ -409,13 +218,16 @@ monsters in the plugin; an import for the GM's own", "The battle tracker keeps t
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
 hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
-syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters", "Quality round …", "Dice R4: critical hits and ability checks" (2026-10-26).
+syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters", "Quality round …", "Dice R4: critical hits and ability checks", "The stylesheet in one file per view", "Reducing
+complexity, step 1" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
 ## Open questions for the maintainer
 
-- None beyond the check in Obsidian.
+- The check in Obsidian (points 20–21, 47–76).
+- Go-ahead for the proposals under "Where to continue" 2 (start-up time, vault scans, installer A/B)
+  and for complexity steps 2–5.
 - The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
   the maintainer wants something changed.
 
