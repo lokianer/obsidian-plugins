@@ -1,12 +1,15 @@
 // The Dice tab: a formula with Roll, buttons for d4 to d100, normal / advantage / disadvantage for
-// the d20, an optional difficulty class, the dice stage, and the rolls of this Obsidian session
-// with Roll again and Log. Rolls are offered for tonight's session log by the dice log setting.
+// the d20, an optional difficulty class, the dice stage, the campaign's rollable tables, and the
+// rolls of this Obsidian session with Roll again and Log. Rolls are offered for tonight's session
+// log by the dice log setting.
 
 import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
 
 import { parseFormula, type Roll, rollFormula, verdict } from '../dice/formula';
+import { type RollTable, rowFor, type TableRow } from '../dice/tables';
 import type { StringKey, T } from '../i18n/strings';
-import { DiceStage, VERDICT_KEYS } from './dice-stage';
+import { DiceStage, type RenderText, VERDICT_KEYS } from './dice-stage';
+import type { TableSource } from './dice-tables';
 
 export const DICE_VIEW = 'dnd5e-dice';
 
@@ -16,6 +19,9 @@ export interface DiceRecord {
   label: string;
   dc: number | null;
   roll: Roll;
+  /** For a table roll: the table and the row the total landed on (null for a gap). */
+  table?: RollTable;
+  row?: TableRow | null;
 }
 
 export interface DiceDeps {
@@ -27,6 +33,9 @@ export interface DiceDeps {
   history: DiceRecord[];
   /** Offers a roll for the session log. */
   log: (record: DiceRecord) => void;
+  tables: TableSource;
+  /** Renders a table row's Markdown (links work). */
+  render: RenderText;
 }
 
 const QUICK = [4, 6, 8, 10, 12, 20, 100];
@@ -47,6 +56,7 @@ export class DiceView extends ItemView {
   private edge: Edge = 'normal';
   private stage: DiceStage | null = null;
   private historyEl!: HTMLElement;
+  private tablesEl!: HTMLElement;
   private inputEl!: HTMLInputElement;
 
   constructor(
@@ -160,14 +170,75 @@ export class DiceView extends ItemView {
         () => this.deps.motion() === true,
         () => {
           const last = this.deps.history[0];
-          if (last !== undefined) void this.rollText(last.roll.formula, last.label, last.dc);
+          if (last !== undefined) void this.again(last);
         },
+        this.deps.render,
       );
     } else this.stage = null;
+
+    const tablesHead = root.createDiv({ cls: 'dnd5e-dice-section' });
+    tablesHead.createSpan({ text: t('dice.tables') });
+    const refresh = tablesHead.createEl('button', {
+      cls: 'clickable-icon',
+      attr: { 'aria-label': t('dice.refresh') },
+    });
+    setIcon(refresh, 'refresh-cw');
+    refresh.addEventListener('click', () => void this.loadTables());
+    this.tablesEl = root.createDiv({ cls: 'dnd5e-dice-tables' });
+    void this.loadTables();
 
     root.createDiv({ cls: 'dnd5e-dice-section', text: t('dice.history') });
     this.historyEl = root.createDiv({ cls: 'dnd5e-dice-history' });
     this.renderHistory();
+  }
+
+  /** The campaign's table notes, each with its rollable headings as buttons. */
+  async loadTables(): Promise<void> {
+    const { t } = this.deps;
+    const notes = await this.deps.tables.notes();
+    const el = this.tablesEl;
+    el.empty();
+    if (notes.length === 0) {
+      el.createDiv({ cls: 'dnd5e-dice-empty', text: t('dice.noTables') });
+      return;
+    }
+    for (const note of notes) {
+      const group = el.createDiv({ cls: 'dnd5e-dice-table-note' });
+      group.createDiv({ cls: 'dnd5e-dice-table-title', text: note.title });
+      const buttons = group.createDiv({ cls: 'dnd5e-dice-table-buttons' });
+      for (const table of note.tables) {
+        const b = buttons.createEl('button', { cls: 'dnd5e-dice-table', text: table.heading });
+        b.addEventListener('click', () => void this.rollTable(table));
+      }
+    }
+  }
+
+  /** Rolls a table's die and shows the row it lands on. */
+  async rollTable(table: RollTable): Promise<void> {
+    const f = parseFormula(table.formula);
+    if (f === null) return;
+    const roll = rollFormula(f, this.deps.random);
+    const row = rowFor(table, roll.total);
+    await this.record({ label: table.heading, dc: null, roll, table, row });
+  }
+
+  private again(record: DiceRecord): Promise<unknown> {
+    return record.table !== undefined
+      ? this.rollTable(record.table)
+      : this.rollText(record.roll.formula, record.label, record.dc);
+  }
+
+  private async record(record: DiceRecord): Promise<void> {
+    if (this.stage !== null) {
+      await this.stage.play({
+        ...record,
+        ...(record.table !== undefined ? { result: record.row?.text ?? null } : {}),
+      });
+    }
+    this.deps.history.unshift(record);
+    this.deps.history.splice(HISTORY);
+    this.renderHistory();
+    this.deps.log(record);
   }
 
   /** Rolls a formula (with the chosen edge); false when it is none. */
@@ -179,16 +250,11 @@ export class DiceView extends ItemView {
     }
     const roll = rollFormula(f, this.deps.random);
     const n = Math.floor(Number(this.dc));
-    const record: DiceRecord = {
+    await this.record({
       label: label ?? roll.formula,
       dc: dc !== undefined ? dc : this.dc.trim() !== '' && Number.isFinite(n) && n > 0 ? n : null,
       roll,
-    };
-    if (this.stage !== null) await this.stage.play(record);
-    this.deps.history.unshift(record);
-    this.deps.history.splice(HISTORY);
-    this.renderHistory();
-    this.deps.log(record);
+    });
     return true;
   }
 
@@ -205,6 +271,11 @@ export class DiceView extends ItemView {
       row.createDiv({ cls: 'dnd5e-dice-total', text: String(record.roll.total) });
       const main = row.createDiv({ cls: 'dnd5e-dice-main' });
       main.createDiv({ cls: 'dnd5e-dice-label', text: record.label });
+      if (record.table !== undefined) {
+        const result = main.createDiv({ cls: 'dnd5e-dice-result' });
+        if (record.row === null || record.row === undefined) result.setText(t('dice.noRow'));
+        else this.deps.render(record.row.text, result);
+      }
       main.createDiv({ cls: 'dnd5e-dice-text', text: record.roll.text });
       const v = verdict(record.roll, record.dc);
       if (v !== null) {
@@ -219,10 +290,7 @@ export class DiceView extends ItemView {
         attr: { 'aria-label': t('dice.again') },
       });
       setIcon(again, 'rotate-ccw');
-      again.addEventListener(
-        'click',
-        () => void this.rollText(record.roll.formula, record.label, record.dc),
-      );
+      again.addEventListener('click', () => void this.again(record));
       const log = row.createEl('button', {
         cls: ['clickable-icon', 'dnd5e-dice-log'],
         attr: { 'aria-label': t('dice.log') },

@@ -232,3 +232,6 @@ class ButtonComponent {
 
 /** The Live Preview state field; the dice editor extension only reads it. */
 export const editorLivePreviewField = {};
+
+/** The editor's file state field; the dice editor extension only reads it. */
+export const editorInfoField = {};

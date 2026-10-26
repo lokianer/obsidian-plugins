@@ -14,7 +14,12 @@ export interface StageRoll {
   label: string;
   dc: number | null;
   roll: Roll;
+  /** A table roll's row (Markdown with links); null for a gap; absent for a plain roll. */
+  result?: string | null;
 }
+
+/** Writes a table row's Markdown into an element (Obsidian's renderer, so links work). */
+export type RenderText = (markdown: string, el: HTMLElement) => void;
 
 /** Dice drawn at most; the rest show as one chip. */
 const MAX_DRAWN = 12;
@@ -52,6 +57,7 @@ export class DiceStage {
     private readonly motion: () => boolean,
     /** A click on the stage while nothing plays (roll again, close …). */
     private readonly onIdleClick: () => void = () => undefined,
+    private readonly render: RenderText = (md, el) => el.setText(md),
   ) {
     this.el = parent.createDiv({
       cls: 'dnd5e-stage',
@@ -158,6 +164,7 @@ export class DiceStage {
     }
     el.createDiv({ cls: 'dnd5e-stage-mods' });
     el.createDiv({ cls: 'dnd5e-stage-total' });
+    el.createDiv({ cls: 'dnd5e-stage-result' });
     el.createDiv({ cls: 'dnd5e-stage-banner' });
     el.createDiv({ cls: 'dnd5e-stage-hint' });
   }
@@ -307,6 +314,14 @@ export class DiceStage {
         mods.createSpan({ cls: ['dnd5e-stage-mod', 'is-in'], text: n });
     }
     this.part('total')?.setText(String(r.roll.total));
+    const result = this.part('result');
+    if (result !== null && r.result !== undefined) {
+      result.empty();
+      if (r.result === null) {
+        result.addClass('is-gap');
+        result.setText(this.t('dice.noRow'));
+      } else this.render(r.result, result);
+    }
     const v = verdict(r.roll, r.dc);
     const banner = this.part('banner');
     if (banner !== null && v !== null) {

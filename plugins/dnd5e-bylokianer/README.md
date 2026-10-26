@@ -385,6 +385,16 @@ both — becomes a button in Reading view and Live Preview; a click plays the st
 window and shows the total beside the button. Nothing is written into the note. Formulas the
 plugin does not read (Dice Roller's exploding dice, rerolls) stay as they are.
 
+**Rollable tables.** A heading that ends in a die in brackets — `## Weather on the estuary (1d8)`
+— makes the first list or table under it rollable. A list is numbered by its order; a table's
+first column holds numbers or ranges (`1`, `2–4`, `5-6`), the other cells are the row's text. A
+total that lands on no row is recorded as it fell ("no row"), never re-rolled. Every `type: table`
+note of the campaign shows its tables in the Dice tab as buttons (refresh after editing); in notes,
+`dice: [[Street Rumours#Night on Lantern Quay (d20)]]` rolls that table and `dice: [[Street
+Rumours]]` the note's first. The row shows on the stage and beside the button with its links
+working; the log line is `- 21:05 Rolled Night on Lantern Quay (d20): 11 → [[Sable]] on a rooftop,
+pretending not to see you`. Dice Roller's block references (`[[Note^id]]`) are left to it.
+
 Settings: **Dice log** — offer each roll for tonight's session in a notice (the default), write it
 automatically, or not at all (`- 20:10 Rolled d20+7 → 19 (12, +7) against DC 15: success`);
 **Dice animation** — the stage animated, the stage with the result at once, or no stage.

@@ -15,6 +15,9 @@ import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
 import { encounterNoteText } from './battle/budget';
 import { rollLine } from './dice/formula';
+import { tableLine } from './dice/tables';
+import { DiceTables } from './obsidian/dice-tables';
+import { inlineMarkdown } from './obsidian/inline-markdown';
 import { diceEditorExtension, type InlineDeps, replaceInlineDice } from './obsidian/dice-inline';
 import { DICE_VIEW, type DiceRecord, DiceView } from './obsidian/dice-view';
 import { battleLine } from './battle/log';
@@ -460,7 +463,14 @@ export default class Dnd5ePlugin extends Plugin {
         : this.options.diceAnimation === 'stage' &&
           !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const logRoll = (record: DiceRecord) =>
-      sessionLog.offerLine(rollLine(record.roll, record.dc), this.options.diceLog);
+      sessionLog.offerLine(
+        record.table !== undefined
+          ? tableLine(record.table, record.roll.total, record.row ?? null)
+          : rollLine(record.roll, record.dc),
+        this.options.diceLog,
+      );
+    const diceTables = new DiceTables(this, cache);
+    const renderRow = inlineMarkdown(this.app, this);
     this.registerView(
       DICE_VIEW,
       (leaf) =>
@@ -470,6 +480,8 @@ export default class Dnd5ePlugin extends Plugin {
           motion: diceMotion,
           history: diceHistory,
           log: logRoll,
+          tables: diceTables,
+          render: renderRow,
         }),
     );
     const inline: InlineDeps = {
@@ -477,9 +489,11 @@ export default class Dnd5ePlugin extends Plugin {
       t,
       random: cryptoRandom,
       motion: diceMotion,
-      log: (roll) => logRoll({ label: roll.formula, dc: null, roll }),
+      log: logRoll,
+      table: (link, from) => diceTables.resolve(link, from),
+      render: renderRow,
     };
-    this.registerMarkdownPostProcessor((el) => replaceInlineDice(el, inline));
+    this.registerMarkdownPostProcessor((el, ctx) => replaceInlineDice(el, ctx.sourcePath, inline));
     this.registerEditorExtension(diceEditorExtension(inline));
     const openDice = async () => {
       const { workspace } = this.app;

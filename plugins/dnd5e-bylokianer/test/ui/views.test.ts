@@ -48,6 +48,7 @@ import { DiceStage } from '../../src/obsidian/dice-stage';
 import { type DiceRecord, DiceView } from '../../src/obsidian/dice-view';
 import { replaceInlineDice } from '../../src/obsidian/dice-inline';
 import { roll as rollDice, type Roll } from '../../src/dice/formula';
+import { rollableTables } from '../../src/dice/tables';
 import type { BattleSource } from '../../src/obsidian/battle-store';
 import type { Fight, Fighter } from '../../src/battle/fight';
 import { combatLines, readCombat } from '../../src/battle/table';
@@ -1862,15 +1863,26 @@ describe('dice', () => {
     expect(dice().map((d) => d.dataset.sides)).toEqual(['4', '6', '8', '10', '12', '20']);
   });
 
+  const tableNotes = [
+    {
+      title: 'Street Rumours',
+      tables: rollableTables(
+        readFileSync(join(vault, 'Silverstadt/Tables/Street Rumours.md'), 'utf8'),
+      ),
+    },
+  ];
+
   it('rolls from the Dice tab with advantage and a DC, keeps the history and offers the log', async () => {
     const history: DiceRecord[] = [];
     const logged: DiceRecord[] = [];
     const view = new DiceView({} as WorkspaceLeaf, {
       t: createT('en'),
-      random: faces(20, 7, 16, 3),
+      random: faces(20, 7, 16, 3, 3),
       motion: () => false,
       history,
       log: (r) => logged.push(r),
+      tables: { notes: () => Promise.resolve(tableNotes), resolve: () => Promise.resolve(null) },
+      render: (md, target) => target.setText(md),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1904,9 +1916,24 @@ describe('dice', () => {
     await new Promise((r) => window.setTimeout(r, 0));
     expect(history[0]?.roll.formula).toBe('d6');
     expect(texts(el, '.dnd5e-dice-label')).toEqual(['d6', '2d20kh1+5']);
+    // The tables of the campaign as buttons; a roll shows its row on the stage and in the list.
+    expect(texts(el, '.dnd5e-dice-table')).toEqual([
+      'Rumours on Lantern Quay (d6)',
+      'Weather on the estuary (1d8)',
+      'Night on Lantern Quay (d20)',
+    ]);
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-dice-table')]
+      .find((b) => b.textContent === 'Night on Lantern Quay (d20)')
+      ?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(history[0]?.label).toBe('Night on Lantern Quay (d20)');
+    expect(history[0]?.roll.total).toBe(3);
+    expect(el.querySelector('.dnd5e-stage-result')?.textContent).toBe('Nothing but the tide');
+    expect(el.querySelector('.dnd5e-dice-result')?.textContent).toBe('Nothing but the tide');
+    expect(logged[logged.length - 1]?.row?.text).toBe('Nothing but the tide');
   });
 
-  it('turns dice: formulas in a note into buttons and leaves other code alone', () => {
+  it('turns dice: formulas and table links in a note into buttons and leaves other code alone', async () => {
     const logged: Roll[] = [];
     const el = root.createDiv();
     // Note text as the markdown renderer leaves it: inline code in paragraphs, a code block.
@@ -1918,17 +1945,30 @@ describe('dice', () => {
     ] as const) {
       el.createEl(tag).createEl('code').setText(code);
     }
-    replaceInlineDice(el, {
+    el.createEl('p')
+      .createEl('code')
+      .setText('dice: [[Street Rumours#Night on Lantern Quay (d20)]]');
+    el.createEl('p').createEl('code').setText('dice: [[Street Rumours^block]]');
+    const night = tableNotes[0]?.tables[2];
+    replaceInlineDice(el, 'Session.md', {
       app,
       t: createT('en'),
       random: faces(6, 4, 3),
       motion: () => null,
-      log: (r) => logged.push(r),
+      log: (r) => logged.push(r.roll),
+      table: (link) => Promise.resolve(link.endsWith('(d20)') ? (night ?? null) : null),
+      render: (md, target) => target.setText(md),
     });
-    expect(texts(el, 'code')).toEqual(['dice: 1d6!', 'not dice', 'dice: d20']);
-    const button = el.querySelector<HTMLElement>('.dnd5e-dice-inline-button');
-    expect(button?.textContent).toBe('2d6+3');
-    button?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(el, 'code')).toEqual([
+      'dice: 1d6!',
+      'not dice',
+      'dice: d20',
+      'dice: [[Street Rumours^block]]',
+    ]);
+    const buttons = [...el.querySelectorAll<HTMLElement>('.dnd5e-dice-inline-button')];
+    expect(buttons.map((b) => b.textContent)).toEqual(['2d6+3', 'Night on Lantern Quay (d20)']);
+    buttons[0]?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((r) => window.setTimeout(r, 0));
     expect(el.querySelector('.dnd5e-dice-inline-result')?.textContent).toBe('= 10');
     expect(logged.map((r) => r.text)).toEqual(['2d6+3 → 10 (4, 3, +3)']);
   });

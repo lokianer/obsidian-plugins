@@ -8,6 +8,14 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Rollable tables** (dice, phase R2): a heading ending in a die in brackets (`## Weather (1d8)`)
+  makes the first list or table under it rollable — lists by order, tables by the numbers or
+  ranges in their first column; a total on no row is kept as "no row". The Dice tab lists the
+  campaign's `type: table` notes with a button per table; `dice: [[Note#Heading]]` (or
+  `[[Note]]` for its first table) is a button in notes. The row shows on the stage and beside the
+  button with working links and goes to the session log (`Rolled Night on Lantern Quay (d20): 11
+→ [[Sable]] on a rooftop, …`).
+
 - **Dice** (module 7, phase R1): **Open dice** (command, or the dice in the ribbon) opens a Dice
   tab — a formula (`2d6+3`, `4d6kh3`, `d20+5 adv`, German `2W6+3`), d4–d100 buttons, normal /
   advantage / disadvantage, an optional difficulty class, and the rolls of this Obsidian session

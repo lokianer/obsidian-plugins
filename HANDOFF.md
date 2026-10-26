@@ -23,7 +23,10 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    die, no overlaps), R1 built — `src/dice/formula.ts` (engine), `src/dice/shapes.ts` (die
    shapes), `dice-stage.ts`, `dice-view.ts`, `dice-inline.ts` (Reading view and Live Preview),
    settings `diceLog` and `diceAnimation`, `SessionLog.offerLine(text, mode)`. Check points 64–68.
-   Next: R2 (rollable tables, the Street Rumours convention), R3 (stat blocks and characters).
+   R2 built after "weiter": `src/dice/tables.ts` (pure: headings ending in a die, lists and ranged
+   tables, gaps), `dice-tables.ts` (the campaign's `type: table` notes, link resolution),
+   `inline-markdown.ts` (a row rendered with working links), Tables in the Dice tab,
+   `dice: [[Note#Heading]]` in notes. Check points 69–71. Next: R3 (stat blocks and characters).
    The overlap check harness lives in the scratchpad (`preview/dice.ts`, `diceshot.cjs`): rebuild
    it from the spec if the scratchpad is gone.
 1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
@@ -335,9 +338,21 @@ fields)
     a narrow sidebar and on the phone.
 67. [[Dice in notes]] in Reading view and Live Preview: every formula a button (the source shows
     when the cursor is in it); a click plays the stage in a small window, `= total` beside it;
-    `1d6!` and the table link stay code.
+    `1d6!` and the block reference stay code (the table links: point 71).
 68. Settings: Dice log (ask → a notice "Rolled … → Log → Session N"; automatic; off), Dice
     animation (result at once; no stage). Reduced motion in the system shows the result at once.
+
+**Dice R2**
+
+69. Dice tab → Tables: Street Rumours with three buttons (Rumours on Lantern Quay (d6), Weather on
+    the estuary (1d8), Night on Lantern Quay (d20)); a click plays the stage with the heading on
+    top and the row under the total; the row's link (Sable, Lantern Bridge) opens its note. Edit
+    the note, press the refresh button: the change shows.
+70. Night on Lantern Quay until a 13–16: "no row" on the stage and in the list, the log offers
+    `Rolled Night on Lantern Quay (d20): 14 → no row`; an 11 logs `… → [[Sable]] on a rooftop, …`.
+71. [[Dice in notes]]: the two table links are buttons with the heading (or "Street Rumours");
+    a click plays the stage and writes `11 → Sable on a rooftop…` beside the button; the
+    `#Markets (d6)` link shows a notice; the block reference stays code. Live Preview too.
 
 **Battle tracker B3**
 
@@ -363,7 +378,7 @@ monsters in the plugin; an import for the GM's own", "The battle tracker keeps t
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
 hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
-syntax" (2026-10-26).
+syntax", "Dice R2: rollable tables by a die in the heading" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -397,5 +412,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 393 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 395 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

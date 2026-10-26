@@ -652,3 +652,23 @@ so"), with every die on the stage instead of only the d20, and no overlaps.
 
 Left out for R1: rollable tables (R2), stat block and character rolls (R3), hidden rolls, 3D
 physics, sounds.
+
+## 2026-10-26 · Dice R2: rollable tables by a die in the heading
+
+Plan `docs/superpowers/plans/2026-10-26-dice-r2.md`; the convention the example vault's `Street
+Rumours` already used.
+
+- A heading is a table only when it ends in a die in brackets (`(d6)`, `(1d8)`, `(W20)`); the
+  first list or table before the next heading holds the rows.
+- Lists count by their order; a table's first column is a number or a range (`–`, `—` or `-`), the
+  other non-empty cells are joined with " — " into the row's text.
+- A gap is recorded as it fell ("no row" on the stage, `→ no row` in the log), never re-rolled.
+- Only headings: Dice Roller's block references (`[[Note^id]]`) stay plain code for it.
+- A `dice: [[…]]` link is a button even before its table is known (the target note may still be
+  loading); a click on a link to nothing rollable shows a notice.
+- The Dice tab reads the tables when it opens and on its refresh button, not on every change.
+- A row is rendered as Markdown (links open their note); the log line keeps the row's Markdown as
+  written.
+
+Left out: block references, nested tables, rolling on a table from another table's row, R3's stat
+block and character rolls.

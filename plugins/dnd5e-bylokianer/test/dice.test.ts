@@ -1,6 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { keptD20, parseFormula, roll, rollDie } from '../src/dice/formula';
+import { findTable, rollableTables, rowFor, tableLine } from '../src/dice/tables';
 
 /** Random numbers giving these faces on the dice rolled, in order (any number of sides). */
 const faces = (...values: number[]) => {
@@ -85,5 +89,65 @@ describe('dice formulas', () => {
     expect(keptD20(two)).toBeNull();
     expect(rollDie(6, () => 0.9999999)).toBe(6);
     expect(rollDie(6, () => 0)).toBe(1);
+  });
+});
+
+describe('rollable tables', () => {
+  const rumours = readFileSync(
+    join(import.meta.dirname, '../../../examples/vault/Silverstadt/Tables/Street Rumours.md'),
+    'utf8',
+  );
+
+  it('reads the example vault’s three tables: a list, ranges with both dashes, a gap', () => {
+    const tables = rollableTables(rumours);
+    expect(tables.map((t) => [t.heading, t.formula, t.rows.length])).toEqual([
+      ['Rumours on Lantern Quay (d6)', 'd6', 6],
+      ['Weather on the estuary (1d8)', '1d8', 5],
+      ['Night on Lantern Quay (d20)', 'd20', 5],
+    ]);
+    const [list, weather, night] = tables;
+    if (list === undefined || weather === undefined || night === undefined)
+      throw new Error('tables');
+    expect(rowFor(list, 2)?.text).toBe(
+      "[[Mira Voss]] bought the burnt Archive's east wing for one silver",
+    );
+    expect(rowFor(weather, 3)).toEqual({ from: 2, to: 4, text: 'Grey and dry' });
+    expect(rowFor(weather, 6)?.text).toBe('Rain, and the [[Lantern Bridge]] slick');
+    expect(rowFor(night, 11)?.text).toBe('[[Sable]] on a rooftop, pretending not to see you');
+    expect(rowFor(night, 14)).toBeNull();
+    expect(tableLine(night, 14, null)).toBe('Rolled Night on Lantern Quay (d20): 14 → no row');
+    expect(tableLine(night, 20, rowFor(night, 20))).toBe(
+      'Rolled Night on Lantern Quay (d20): 20 → The bridge bell rings',
+    );
+  });
+
+  it('finds a table by heading or takes the first, and ignores headings without a die', () => {
+    const text = [
+      '# Loot',
+      '- not rollable',
+      '## Coins (2d6)',
+      'Some words first.',
+      '',
+      '1. A copper',
+      '2. A silver',
+      '   (worn thin)',
+      '3. A gold',
+      '### Gems (W4)',
+      '| W4 | Gem | Worth |',
+      '| --- | --- | --- |',
+      '| 1-2 | Agate | 10 gp |',
+      '| 3–4 | Pearl | 100 gp |',
+      '## Empty (d6)',
+      '## Bad (d1)',
+      '- x',
+    ].join('\n');
+    const tables = rollableTables(text);
+    expect(tables.map((t) => t.heading)).toEqual(['Coins (2d6)', 'Gems (W4)']);
+    expect(tables[0]?.rows.map((r) => r.text)).toEqual(['A copper', 'A silver', 'A gold']);
+    expect(tables[1]?.formula).toBe('d4');
+    expect(tables[1]?.rows[1]).toEqual({ from: 3, to: 4, text: 'Pearl — 100 gp' });
+    expect(findTable(tables, 'gems  (w4)')?.heading).toBe('Gems (W4)');
+    expect(findTable(tables, null)?.heading).toBe('Coins (2d6)');
+    expect(findTable(tables, 'Nothing')).toBeNull();
   });
 });
