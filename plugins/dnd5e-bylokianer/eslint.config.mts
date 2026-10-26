@@ -34,6 +34,11 @@ export default defineConfig(
     // and one such literal stops the whole plugin from loading there.
     files: ['src/**/*.ts'],
     rules: {
+      // Complexity limits (asked for 2026-10-26): warnings, so the functions above them stay a
+      // visible to-do list (steps 2 and 3 of reducing complexity, HANDOFF.md) and new code does not
+      // grow past them unnoticed. Tighten once the list is empty.
+      complexity: ['warn', 20],
+      'max-lines-per-function': ['warn', { max: 150, skipBlankLines: true, skipComments: true }],
       'no-restricted-syntax': [
         'error',
         {
