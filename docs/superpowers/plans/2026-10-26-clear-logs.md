@@ -1,6 +1,6 @@
 # Clearing Battle and Dice Logs — Implementation Plan
 
-**Status:** built 2026-10-26, awaiting the check in Obsidian.
+**Status:** built 2026-10-26, accepted in Obsidian on 2026-10-26 ("es läuft alles").
 
 **Asked for** by the maintainer ("Ich brauche auch einen Button löschen von battle logs und
 würfellogs"); asked what to clear, they chose all three: the Dice tab's list, the lines in tonight's

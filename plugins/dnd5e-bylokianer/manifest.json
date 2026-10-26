@@ -3,7 +3,7 @@
 	"name": "dnd5e-byLokianer",
 	"version": "0.1.0",
 	"minAppVersion": "1.8.7",
-	"description": "Game-master tools for D&D 5e: factions and their relations.",
+	"description": "Game-master tools for D&D 5e: factions, NPCs with stat blocks, spellbook, Deck of Many Things, Monster Manual, battle tracker and dice.",
 	"author": "Lokianer",
 	"authorUrl": "https://github.com/lokianer",
 	"isDesktopOnly": false

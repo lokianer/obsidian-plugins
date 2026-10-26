@@ -800,3 +800,19 @@ session, the fight in the encounter note. Plan `docs/superpowers/plans/2026-10-2
 
 Left out: removing lines from earlier sessions, an undo (Obsidian's file history and the note's
 own undo cover it).
+
+## 2026-10-26 · Accepted, and release 0.1.0 as a ZIP on GitHub
+
+The maintainer checked everything built since 2026-10-25 in Obsidian: "es läuft alles". Then:
+"Mach einen release 0.1.0 als zip auf github" — which replaces the decision of 2026-10-25 to
+publish nothing, for a GitHub release of this repository (not Obsidian's directory).
+
+- A tag `dnd5e-bylokianer-<version>` (the plugin's id in front, since the repository will hold more
+  plugins) starts `.github/workflows/release.yml`: `pnpm check`, the tag compared with
+  `manifest.json`, then a release with `dnd5e-bylokianer-<version>.zip` (a `dnd5e-bylokianer/`
+  folder with `main.js`, `manifest.json`, `styles.css`, to unpack into `.obsidian/plugins/`) and
+  the three files on their own.
+- The CHANGELOG's Unreleased became `[0.1.0] - 2026-10-26`; the manifest's description names all
+  seven modules.
+
+Left out: the mirror repository and BRAT, Obsidian's directory, signing or checksums.

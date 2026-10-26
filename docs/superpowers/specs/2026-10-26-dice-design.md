@@ -1,6 +1,6 @@
 # Dice — design
 
-Date: 2026-10-26. Status: **reviewed 2026-10-26 ("passt so"; every die on the stage; mind overlaps); R1–R4 built, awaiting the check**.
+Date: 2026-10-26. Status: **reviewed 2026-10-26 ("passt so"; every die on the stage; mind overlaps); R1–R4 built and accepted in Obsidian on 2026-10-26**.
 Module 7 of `dnd5e-byLokianer`, the last of the planned modules.
 
 Asked for by the maintainer ("mach weiter" after the battle tracker and M2). Decided with them on

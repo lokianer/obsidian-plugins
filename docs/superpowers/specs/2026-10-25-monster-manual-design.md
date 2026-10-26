@@ -1,6 +1,6 @@
 # Monster Manual — design
 
-Date: 2026-10-25. Status: **M1 and M3 (with a file import) built and accepted on 2026-10-25; M2 (German traits and actions) built 2026-10-25, awaiting the check**. Module 5 of
+Date: 2026-10-25. Status: **M1 and M3 (with a file import) built and accepted on 2026-10-25; M2 (German traits and actions) built 2026-10-25, accepted on 2026-10-26**. Module 5 of
 `dnd5e-byLokianer`, before the battle tracker.
 
 Asked for by the maintainer: "beside the spellbook a Monster Manual, built like the spellbook,

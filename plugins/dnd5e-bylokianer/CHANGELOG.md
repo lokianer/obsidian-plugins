@@ -6,6 +6,10 @@ All notable changes to this plugin are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-26
+
+The first release: all seven modules, accepted in Obsidian.
+
 ### Added
 
 - **Clearing logs**: the Battle tab's ⋮ menu resets the fight (its `## Combat` table leaves the

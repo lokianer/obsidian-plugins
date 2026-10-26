@@ -1,0 +1,64 @@
+name: Release
+
+# A tag `dnd5e-bylokianer-<version>` builds the plugin, checks the tag against manifest.json, and
+# publishes a GitHub release with a ZIP to unpack into a vault's `.obsidian/plugins/` and the three
+# files Obsidian loads.
+
+on:
+  push:
+    tags:
+      - 'dnd5e-bylokianer-*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - name: Tag matches manifest.json
+        id: version
+        working-directory: plugins/dnd5e-bylokianer
+        run: |
+          version=$(node -p "require('./manifest.json').version")
+          if [ "${GITHUB_REF_NAME}" != "dnd5e-bylokianer-${version}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match manifest version ${version}" >&2
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+      - name: ZIP
+        working-directory: plugins/dnd5e-bylokianer
+        run: |
+          mkdir -p release/dnd5e-bylokianer
+          cp main.js manifest.json styles.css release/dnd5e-bylokianer/
+          cd release && zip -r "dnd5e-bylokianer-${{ steps.version.outputs.version }}.zip" dnd5e-bylokianer
+      - name: Release notes
+        working-directory: plugins/dnd5e-bylokianer
+        run: |
+          version='${{ steps.version.outputs.version }}'
+          {
+            echo "Game-master tools for D&D 5e in Obsidian: factions, NPC builder, spellbook, Deck of Many Things, Monster Manual, battle tracker and dice."
+            echo
+            echo "**Install:** unpack \`dnd5e-bylokianer-${version}.zip\` into your vault's \`.obsidian/plugins/\` folder (it holds \`dnd5e-bylokianer/\` with \`main.js\`, \`manifest.json\`, \`styles.css\`), then enable **dnd5e-byLokianer** under Settings → Community plugins."
+            echo
+            echo "What is in it: [README](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/plugins/dnd5e-bylokianer/README.md) · changes: [CHANGELOG](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/plugins/dnd5e-bylokianer/CHANGELOG.md)."
+          } > release/notes.md
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: plugins/dnd5e-bylokianer/release
+        run: |
+          version='${{ steps.version.outputs.version }}'
+          gh release create "${GITHUB_REF_NAME}" \
+            "dnd5e-bylokianer-${version}.zip" \
+            dnd5e-bylokianer/main.js dnd5e-bylokianer/manifest.json dnd5e-bylokianer/styles.css \
+            --title "dnd5e-byLokianer ${version}" \
+            --notes-file notes.md

@@ -1,6 +1,6 @@
 # Monster Manual M2 — German Texts — Implementation Plan
 
-**Status:** built 2026-10-25, awaiting the check in Obsidian (the maintainer chose M2 after B3).
+**Status:** built 2026-10-25, accepted in Obsidian on 2026-10-26 ("es läuft alles") (the maintainer chose M2 after B3).
 
 **Goal:** The traits, actions, bonus actions, reactions, legendary actions and the legendary
 paragraph of all 334 SRD monsters in German, shown wherever an SRD monster's stat block is shown in

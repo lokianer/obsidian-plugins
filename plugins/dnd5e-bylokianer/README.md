@@ -13,8 +13,7 @@ Game-master tools for D&D 5e in Obsidian, in seven modules:
 7. **Dice** — a dice stage modelled on Baldur's Gate 3, `dice:` in notes, rollable tables, rolls from
    stat blocks and the party.
 
-Status: modules 1–5 are accepted in Obsidian; the Monster Manual's German texts, the battle tracker
-and the dice are built and wait for the check in Obsidian. See the repository's `ROADMAP.md` and the
+Status: all seven modules are accepted in Obsidian (the last three on 2026-10-26). See the repository's `ROADMAP.md` and the
 designs in `docs/superpowers/specs/`.
 
 ## The faction card
@@ -468,6 +467,14 @@ secret_relations: # the true stance, GM only
 ```
 
 A note with `type: campaign` switches the plugin on for its folder and everything below it.
+
+## Installing
+
+Download `dnd5e-bylokianer-<version>.zip` from the
+[releases](https://github.com/lokianer/obsidian-plugins/releases) (tags `dnd5e-bylokianer-…`),
+unpack it into your vault's `.obsidian/plugins/` folder — it holds `dnd5e-bylokianer/` with
+`main.js`, `manifest.json` and `styles.css` — and enable **dnd5e-byLokianer** under Settings →
+Community plugins. The plugin is not in Obsidian's community directory yet.
 
 ## Development
 

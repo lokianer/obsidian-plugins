@@ -13,23 +13,19 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Dice** (module 7) — design reviewed 2026-10-26 ("passt so"), **R1, R2 and R3
-built** (plans `docs/superpowers/plans/2026-10-26-dice-r1.md`, `…-r2.md`, `…-r3.md`), waiting for
-the check in Obsidian (HANDOFF points 64–76); R4 (critical hits, ability checks) followed. Module 7 is the last planned module.
-A quality round followed on 2026-10-26 (review since B1, iOS and rule fixes, phone widths;
-`DECISIONS.md` "Quality round"); next is the maintainer's check, then their call.
-Code quality (asked for 2026-10-26): the stylesheet split per view; a complexity analysis and steps 1,
-4 and 5 of reducing it. Also built: clearing battle and dice logs, a log button that wraps. The full
-list of what can still be done — complexity steps 2 and 3, start-up time, vault scans, an
-installer, the GM gate, release preparation — is in `HANDOFF.md` "Where to continue".
+**All seven modules of dnd5e-byLokianer are accepted** — the maintainer checked everything built
+since 2026-10-25 in Obsidian on 2026-10-26: "es läuft alles". That covers the battle tracker
+(B1–B3, optional XP), the Monster Manual's German texts (M2), the dice (R1–R4), clearing battle and
+dice logs, the wrapping log button, the faction world redesign, and the quality and code work of
+2026-10-26 (quality round, stylesheet per view, complexity steps 1, 4, 5).
 
-**dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
-built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for
-the check in Obsidian (HANDOFF points 47–60; the maintainer tests later). M2 (German monster texts) built 2026-10-25 too, awaiting the check
-(HANDOFF points 61–63).
-Accepted on 2026-10-25 ("passt alles, sieht gut aus"): spellbook S3 and the spell builder, the
-restyled deck builder, the Monster Manual (M1, M3 with the import). Open for later: the Monster
-Manual's German traits and actions (M2, now built); the faction world redesign's check. Nothing is published.
+What comes next is the maintainer's call. The full list of what can still be done — complexity
+steps 2 and 3, start-up time, vault scans, an installer, screenshots, small extras, the GM gate,
+release preparation — is in `HANDOFF.md` "Where to continue".
+
+**Release 0.1.0** (asked for 2026-10-26): a GitHub release with a ZIP, built by
+`.github/workflows/release.yml` from the tag `dnd5e-bylokianer-0.1.0`. Not in Obsidian's plugin
+directory: that needs the mirror repository and the release preparation below.
 
 ---
 
@@ -153,7 +149,7 @@ Design: [`docs/superpowers/specs/2026-10-25-deck-of-many-things-design.md`](docs
       text, a JSON file), reset of the history (and the cards). Plan
       `docs/superpowers/plans/2026-10-25-deck-d2.md`
 
-### Module 5 — Monster Manual ✅ accepted 2026-10-25 (German traits and actions later)
+### Module 5 — Monster Manual ✅ done (accepted 2026-10-25, German texts 2026-10-26)
 
 Asked for 2026-10-25: "a Monster Manual beside the spellbook, built like the spellbook, before the
 battle tracker". The SRD 5.1's monsters (about 330, CC-BY-4.0) in their own tab: search, filters
@@ -165,12 +161,12 @@ Design: [`docs/superpowers/specs/2026-10-25-monster-manual-design.md`](docs/supe
 - [x] **M1 — Monster Manual tab** (built and accepted 2026-10-25): the 334
       monsters as data, German names and meta, search, filters, list, stat block card, Insert into
       note, Make a note. Plan `docs/superpowers/plans/2026-10-25-monster-manual-m1.md`
-- [ ] **M2 — German texts** of all traits and actions (built 2026-10-25, awaiting the check).
+- [x] **M2 — German texts** of all traits and actions (built 2026-10-25, accepted 2026-10-26).
       Plan `docs/superpowers/plans/2026-10-25-monster-manual-m2.md`
 - [x] **M3 — Own monsters, a monster builder and a file import** (built ahead of M2 on request,
       accepted 2026-10-25). Plan `docs/superpowers/plans/2026-10-25-monster-manual-m3.md`
 
-### Module 6 — Battle tracker
+### Module 6 — Battle tracker ✅ done (accepted 2026-10-26)
 
 Brainstormed with the maintainer 2026-10-25: its own tab; initiative, rounds, hit points and
 conditions; the session log; an encounter builder; combatants from encounter notes, the Monster
@@ -178,27 +174,27 @@ Manual and the party; the fight's state in the encounter note.
 Design: [`docs/superpowers/specs/2026-10-25-battle-tracker-design.md`](docs/superpowers/specs/2026-10-25-battle-tracker-design.md)
 (reviewed 2026-10-25).
 
-- [ ] **B1 — The tracker** (built 2026-10-25, awaiting the check): encounter notes, initiative,
+- [x] **B1 — The tracker** (built 2026-10-25, accepted 2026-10-26): encounter notes, initiative,
       rounds, HP, conditions, `## Combat` state. Plan `docs/superpowers/plans/2026-10-25-battle-b1.md`
-- [ ] **B2 — Log and Monster Manual** (built 2026-10-25, awaiting the check): session log lines,
+- [x] **B2 — Log and Monster Manual** (built 2026-10-25, accepted 2026-10-26): session log lines,
       Add to combat, adding and removing mid-fight. Plan `docs/superpowers/plans/2026-10-25-battle-b2.md`
-- [ ] **B3 — Encounter builder** (built 2026-10-25, awaiting the check): New encounter with the
+- [x] **B3 — Encounter builder** (built 2026-10-25, accepted 2026-10-26): New encounter with the
       SRD 5.2.1 XP budget, Add to encounter. Plan `docs/superpowers/plans/2026-10-25-battle-b3.md`
 
-### Module 7 — Dice
+### Module 7 — Dice ✅ done (accepted 2026-10-26)
 
 Brainstormed with the maintainer 2026-10-26: a Dice tab, `dice:` in notes, rolls in stat blocks;
 formulas, rollable tables and character rolls; the log like the battle log; plain animation.
 Design: [`docs/superpowers/specs/2026-10-26-dice-design.md`](docs/superpowers/specs/2026-10-26-dice-design.md)
 (reviewed 2026-10-26: "passt so", every die on the stage, mind overlaps).
 
-- [ ] **R1 — Engine, dice stage, Dice tab, `dice:` in notes, log** (built 2026-10-26, awaiting the
-      check). Plan `docs/superpowers/plans/2026-10-26-dice-r1.md`
-- [ ] **R2 — Rollable tables** (built 2026-10-26, awaiting the check). Plan
+- [x] **R1 — Engine, dice stage, Dice tab, `dice:` in notes, log** (built and accepted
+      2026-10-26). Plan `docs/superpowers/plans/2026-10-26-dice-r1.md`
+- [x] **R2 — Rollable tables** (built and accepted 2026-10-26). Plan
       `docs/superpowers/plans/2026-10-26-dice-r2.md`
-- [ ] **R3 — Stat blocks and characters** (built 2026-10-26, awaiting the check). Plan
+- [x] **R3 — Stat blocks and characters** (built and accepted 2026-10-26). Plan
       `docs/superpowers/plans/2026-10-26-dice-r3.md`
-- [ ] **R4 — Critical hits and ability checks** (built 2026-10-26, awaiting the check). Plan
+- [x] **R4 — Critical hits and ability checks** (built and accepted 2026-10-26). Plan
       `docs/superpowers/plans/2026-10-26-dice-r4.md`
 
 ### Not placed yet
