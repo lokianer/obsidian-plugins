@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Daggerheart plugin · Obsidian Plugins by Lokianer</title>
+    <meta
+      name="description"
+      content="A planned Obsidian plugin for Daggerheart game masters: factions and the session log, adversaries and environments, duality dice, combat with Fear and the spotlight, domain cards."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0f0f13" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f6fb" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="../style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4 58 19v26L32 60 6 45V19z' fill='%237f6df2'/%3E%3Cpath d='M32 4v56M6 19l26 15 26-15' stroke='%23fff' stroke-opacity='.5' fill='none' stroke-width='3'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+
+    <header class="nav">
+      <a class="brand" href="../" aria-label="Lokianer · Obsidian plugins, home">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M32 4 58 19v26L32 60 6 45V19z" />
+          <path class="facet" d="M32 4v56M6 19l26 15 26-15" />
+        </svg>
+        <span translate="no">Lokianer<span class="dim"> · Obsidian plugins</span></span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="../#plugins">All plugins</a>
+        <a href="#content">The plan</a>
+        <a href="#phases">Phases</a>
+        <a href="#licence">Licence</a>
+        <a class="button small" href="https://github.com/lokianer/obsidian-plugins">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section id="content" class="plugin-intro page-head" tabindex="-1">
+        <p class="eyebrow"><a href="../#plugins">All plugins</a> · Plugin 02 · planned</p>
+        <h2>
+          The same table, a different game.
+          <span class="grad">Daggerheart, next in the workshop.</span>
+        </h2>
+        <p class="lead">
+          A second plugin with the tools of <span translate="no">dnd5e-byLokianer</span>, made for
+          Daggerheart: factions and the session log as they are, and the rest rebuilt for the game’s
+          own rules — Hope and Fear, the spotlight, damage thresholds, domain cards. So far it is a
+          roadmap; no code is written yet.
+        </p>
+        <div class="cta">
+          <a
+            class="button"
+            href="https://github.com/lokianer/obsidian-plugins/blob/main/ROADMAP.md#daggerheart-plugin-planned-2026-10-26"
+            >Read the roadmap</a
+          >
+          <a class="button ghost" href="../dnd5e-bylokianer/">See the D&amp;D 5e plugin</a>
+        </div>
+      </section>
+
+      <section class="principles" aria-label="Planned modules">
+        <div>
+          <strong>Factions and the log.</strong> Folders, relations −5 … +5, the faction world,
+          tensions, tonight’s session with loot — shared with the D&amp;D plugin.
+        </div>
+        <div>
+          <strong>Adversaries and environments.</strong> The SRD’s stat blocks in a tab, in your
+          notes with HP and stress slots, thresholds, features and countdowns.
+        </div>
+        <div>
+          <strong>Duality dice.</strong> Two d12 for Hope and Fear on the dice stage, doubles as a
+          critical success, rolls from every stat block.
+        </div>
+        <div>
+          <strong>Combat and domain cards.</strong> The spotlight and the GM’s Fear instead of
+          initiative, encounters by Battle Points, the nine domains as a card tab.
+        </div>
+      </section>
+
+      <section id="phases" class="roadmap">
+        <p class="eyebrow">Phases</p>
+        <h2>From the licence to a release</h2>
+        <ol>
+          <li>
+            <span>H0 · Preparation</span>the licence read in full, the name, the data source, the
+            existing plugins tried
+          </li>
+          <li>
+            <span>H1 · Shared packages</span>factions, session log and dice engine moved into
+            <code>packages/</code> for both plugins
+          </li>
+          <li>
+            <span>H2 · Skeleton</span>the plugin, factions and the session log, an example campaign
+          </li>
+          <li>
+            <span>H3 · Adversaries</span>adversaries and environments: tab, stat blocks, builder,
+            import
+          </li>
+          <li><span>H4 · Dice</span>duality dice on the stage, tables, rolls from stat blocks</li>
+          <li>
+            <span>H5 · Combat</span>spotlight, Fear, HP and stress, thresholds, an encounter builder
+            with Battle Points
+          </li>
+          <li><span>H6 · Domain cards</span>the nine domains as a tab, own cards, a builder</li>
+          <li><span>H7 · Release</span>docs, this page, a release like dnd5e-byLokianer’s</li>
+        </ol>
+        <p class="note">
+          Each phase gets a short design, a plan and a check inside Obsidian before it counts — the
+          way <a href="../dnd5e-bylokianer/">dnd5e-byLokianer</a> was built.
+        </p>
+      </section>
+
+      <section id="licence" class="band single">
+        <div>
+          <p class="eyebrow">Licence and neighbours</p>
+          <h2>Built on the SRD, next to the plugins that exist.</h2>
+          <p>
+            Daggerheart’s System Reference Document 1.0 is Public Game Content under the Darrington
+            Press Community Gaming License: the plugin will ship SRD content only — nothing
+            exclusive to the rulebook, no card art or logos — with the licence’s notice. Plugins
+            like BeastVault and DaggerForge already show adversaries in Obsidian; this one aims to
+            read their stat blocks where it can and to add what they leave out: the faction world,
+            the session log and everything in one place, in English and German.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        © 2026 Lokianer · MIT licence ·
+        <a href="https://github.com/lokianer/obsidian-plugins" translate="no"
+          >github.com/lokianer/obsidian-plugins</a
+        >
+      </p>
+      <p class="small">
+        Daggerheart is a game by Darrington Press. This planned plugin is not affiliated with or
+        endorsed by Darrington Press or Critical Role; once built, it will include material from the
+        Daggerheart System Reference Document 1.0 under the Darrington Press Community Gaming
+        License.
+      </p>
+    </footer>
+  </body>
+</html>

@@ -151,6 +151,9 @@ boxes drag); label widths are estimated, not measured.
   (Playwright is preinstalled in cloud sessions).
 - No lookbehind in regular expressions (iOS before 16.4): the lint rule catches literals; write
   `new RegExp` strings without one too (match the character before instead).
+- The Pages site has one page per plugin: `site/index.html` (overview), `site/<id>/index.html`
+  (dnd5e-bylokianer, daggerheart); all share `site/style.css`. Sections fade in by scroll
+  (`animation-timeline: view()`): render screenshots with reduced motion or they look empty.
 - Screenshots live in `plugins/<id>/screenshots/` (each plugin's README shows them); the Pages
   workflow copies them to `site/assets/<id>/`, which is git-ignored. To preview the page locally,
   copy them there first (`cp plugins/dnd5e-bylokianer/screenshots/* site/assets/dnd5e-bylokianer/`).

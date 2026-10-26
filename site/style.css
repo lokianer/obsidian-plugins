@@ -937,6 +937,26 @@ pre .h {
   max-width: 860px;
 }
 
+/* A plugin's own page opens with its intro: no rule above it, the buttons apart from what follows. */
+.plugin-intro.page-head {
+  margin-top: 0;
+  padding-top: 64px;
+  border-top: 0;
+}
+
+.plugin-intro .cta {
+  margin-bottom: 40px;
+}
+
+/* A band with text only spans the full width. */
+.band.single {
+  grid-template-columns: 1fr;
+}
+
+.band.single p {
+  max-width: 860px;
+}
+
 /* ── session band ────────────────────────────────────────────────────────────────────────────── */
 
 .band {
