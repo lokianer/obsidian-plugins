@@ -1,0 +1,319 @@
+/* The Deck of Many Things: the tab, the card with its flip, draws. */
+
+.dnd5e-deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-4);
+  padding: var(--size-4-4) var(--size-4-6) var(--size-4-6);
+  font-size: 16px;
+}
+
+.dnd5e-deck-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-deck-titles {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-2);
+}
+
+.dnd5e-deck-title {
+  font-size: 22px;
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-deck-rules,
+.dnd5e-deck-empty,
+.dnd5e-deck-history-meta,
+.dnd5e-deck-source {
+  color: var(--text-muted);
+}
+
+.dnd5e-deck-size {
+  padding: var(--size-2-1) var(--size-4-2);
+  border-radius: var(--radius-l);
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.dnd5e-deck-body {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: var(--size-4-8);
+  align-items: start;
+}
+
+.dnd5e-deck-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-4-4);
+}
+
+/* The card: a face down back and a face, turned with a 3D flip. */
+.dnd5e-deck-card {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 5 / 7;
+  perspective: 1200px;
+  --dnd5e-suit: var(--text-normal);
+}
+
+.dnd5e-deck-card.is-red {
+  --dnd5e-suit: var(--color-red);
+}
+
+.dnd5e-deck-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.dnd5e-deck-card.is-turned .dnd5e-deck-card-inner {
+  transform: rotateY(180deg);
+}
+
+.dnd5e-deck-card-back,
+.dnd5e-deck-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--background-modifier-border);
+  box-shadow: var(--shadow-s);
+}
+
+.dnd5e-deck-card-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--color-purple-rgb), 0.35), transparent 60%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(var(--color-purple-rgb), 0.12) 0 10px,
+      transparent 10px 20px
+    ),
+    var(--background-secondary);
+}
+
+.dnd5e-deck-card-sigil {
+  color: var(--color-purple);
+}
+
+.dnd5e-deck-card-sigil svg {
+  width: 64px;
+  height: 64px;
+}
+
+.dnd5e-deck-card-face {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  padding: var(--size-4-8) var(--size-4-5) var(--size-4-8);
+  overflow-y: auto;
+  background:
+    linear-gradient(180deg, var(--background-modifier-hover), transparent 120px),
+    var(--background-primary);
+  border-top: 3px solid var(--dnd5e-suit);
+}
+
+.dnd5e-deck-corner {
+  position: absolute;
+  top: var(--size-4-2);
+  left: var(--size-4-3);
+  color: var(--dnd5e-suit);
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-deck-corner.is-bottom {
+  top: auto;
+  left: auto;
+  bottom: var(--size-4-2);
+  right: var(--size-4-3);
+  transform: rotate(180deg);
+}
+
+.dnd5e-deck-card-name {
+  text-align: center;
+  font-size: 22px;
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-deck-card-other {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.dnd5e-deck-badge {
+  align-self: center;
+  padding: var(--size-2-1) var(--size-4-2);
+  border-radius: var(--radius-l);
+  background: rgba(var(--color-orange-rgb), 0.18);
+  color: var(--color-orange);
+}
+
+.dnd5e-deck-card-text p {
+  margin: var(--size-2-2) 0;
+}
+
+.dnd5e-deck-controls {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-deck-setup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-deck-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-2-2);
+}
+
+.dnd5e-deck-field input {
+  width: 100%;
+}
+
+.dnd5e-deck-label,
+.dnd5e-deck-section {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-deck-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-deck-count {
+  min-width: 2ch;
+  text-align: center;
+  font-size: 22px;
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-deck-status {
+  text-align: center;
+}
+
+.dnd5e-deck-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  justify-content: center;
+}
+
+.dnd5e-deck-actions button {
+  flex: 1;
+}
+
+.dnd5e-deck-drawn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-2-3);
+}
+
+.dnd5e-deck-chip.is-red,
+.dnd5e-deck-tile.is-red .dnd5e-deck-tile-corner,
+.dnd5e-deck-history-card.is-red {
+  color: var(--color-red);
+}
+
+.dnd5e-deck-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+  min-width: 0;
+}
+
+.dnd5e-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+  gap: var(--size-4-2);
+}
+
+.dnd5e-deck-tile {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--size-2-1);
+  padding: var(--size-4-2);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  box-shadow: none;
+  text-align: left;
+  white-space: normal;
+}
+
+.dnd5e-deck-tile:hover {
+  border-color: var(--interactive-accent);
+}
+
+.dnd5e-deck-tile.is-shown {
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 1px var(--interactive-accent);
+}
+
+.dnd5e-deck-tile-name {
+  hyphens: auto;
+}
+
+.dnd5e-deck-drawn .dnd5e-deck-label {
+  margin-right: var(--size-4-1);
+}
+
+.dnd5e-deck-tile-corner {
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-deck-tile.is-out {
+  opacity: 0.45;
+}
+
+.dnd5e-deck-tile.is-out .dnd5e-deck-tile-name {
+  text-decoration: line-through;
+}
+
+.dnd5e-deck-history {
+  display: flex;
+  flex-direction: column;
+}
+
+.dnd5e-deck-history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--size-4-3);
+  padding: var(--size-4-1) 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.dnd5e-deck-history-card {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-deck-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+}

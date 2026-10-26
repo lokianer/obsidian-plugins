@@ -21,5 +21,6 @@ examples/vault/.obsidian/workspace*.json
 examples/vault/.obsidian/plugins/
 examples/vault/.trash/
 
-# Plugin build output
+# Plugin build output (styles.css is bundled from each plugin's styles/)
 plugins/*/main.js
+plugins/*/styles.css

@@ -1,0 +1,93 @@
+/* dnd5e-byLokianer — styles. Only Obsidian CSS variables, so every theme works.
+
+   One visual language for every view:
+   - values: a soft tint of the value's colour behind normal text (`--dnd5e-soft`); full colour only
+     for arrows and small accents;
+   - sections: plain muted headings in normal case, like Obsidian's own "Properties";
+   - rows: no boxes, a hover background, icon buttons that appear on hover (always on phones);
+   - text at least 16 px. */
+
+.dnd5e-card,
+.dnd5e-world,
+.dnd5e-tensions,
+.dnd5e-warnings {
+  font-size: 16px;
+}
+
+/* Elements that carry a value set --dnd5e-value-colour inline; the soft tint is derived on the same
+   element, since a custom property resolves where it is declared. */
+.dnd5e-card-row,
+.dnd5e-world-edge,
+.dnd5e-world-matrix td,
+.dnd5e-tensions-value {
+  --dnd5e-soft: color-mix(in srgb, var(--dnd5e-value-colour, var(--color-yellow)) 24%, transparent);
+}
+
+.dnd5e-hidden {
+  display: none !important;
+}
+
+.dnd5e-card-icon,
+.dnd5e-warnings-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.dnd5e-card-icon svg,
+.dnd5e-warnings-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* A plain heading for a group of things. */
+.dnd5e-card-section-title {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+/* A small neutral pill: "unknown", "secret", the mode in the tension panel. */
+.dnd5e-card-tag {
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  font-weight: var(--font-normal);
+  white-space: nowrap;
+}
+
+.dnd5e-card-tag.is-secret {
+  color: var(--text-accent);
+}
+
+/* A text button without chrome, like Obsidian's "Add property". */
+.dnd5e-card .dnd5e-card-add,
+.dnd5e-card .dnd5e-card-source,
+.dnd5e-card .dnd5e-card-write,
+.dnd5e-card .dnd5e-card-badge,
+.dnd5e-world-header .dnd5e-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  height: auto;
+  padding: var(--size-4-1) var(--size-4-2);
+  border: none;
+  border-radius: var(--radius-s);
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dnd5e-card .dnd5e-card-add:hover,
+.dnd5e-card .dnd5e-card-source:hover,
+.dnd5e-card .dnd5e-card-write:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.dnd5e-card .dnd5e-card-badge,
+.dnd5e-world-header .dnd5e-card-badge {
+  color: var(--text-warning);
+}

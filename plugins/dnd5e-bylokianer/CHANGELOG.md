@@ -101,6 +101,11 @@ Persuasion: d20+7 → 12 (5, +7)`).
   by hand, or load a JSON file (own keys, 5e-bits or Open5e format); writes a `type: spell` note in
   the spell folder (new setting) and opens it in the spellbook.
 
+### Changed (stylesheet)
+
+- The 3,900-line `styles.css` is split into one file per view under `styles/` and bundled into
+  `styles.css` by the build; the rendered views are pixel-identical.
+
 ### Fixed (quality round after the dice module)
 
 - **iOS before 16.4**: no regular expression uses a lookbehind any more (the table readers of the

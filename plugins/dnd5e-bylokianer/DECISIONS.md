@@ -727,3 +727,20 @@ teste später".
 - Characters' ability checks come only from a stat block in their note; no new frontmatter key.
 
 Left out: hidden GM rolls (not chosen), automatic critical damage after a natural 20.
+
+## 2026-10-26 · The stylesheet in one file per view
+
+Asked for by the maintainer ("die styles.css ist zu lang, bitte mache sie lesbarer und verteile sie
+auf mehrere Dateien").
+
+- `styles/` holds one file per view or part (base, faction card, warnings, faction world, popover,
+  tensions, stat block, NPC builder, spellbook, deck, builders, monsters, battle, encounter builder,
+  dice stage, Dice tab), each opening with what it styles. `styles/index.css` imports them in the
+  order the single file had, so the cascade is unchanged.
+- esbuild bundles `styles/index.css` into `styles.css` next to `main.js` (no minifying), in
+  production and in watch mode; Obsidian still loads one stylesheet. `styles.css` is build output,
+  git-ignored like `main.js`.
+- Pieces appended at the end over time moved to their view (the stat block's dice buttons, the
+  stage's table row); a rule written twice (`.dnd5e-dice-section`) is one now.
+- Checked: screenshots of the Battle tab, the Dice tab, a stat block and the encounter builder at
+  360 and 800 px are pixel-identical before and after.

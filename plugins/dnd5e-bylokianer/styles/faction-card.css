@@ -1,0 +1,363 @@
+/* The faction card: the head, relation rows with sliders and tinted values, fields, warnings.
+   Replaces Obsidian's Properties block on faction and character notes. */
+
+.dnd5e-entity-view:not(.dnd5e-show-properties) .markdown-preview-sizer .metadata-container,
+.dnd5e-entity-view:not(.dnd5e-show-properties) .cm-sizer > .metadata-container {
+  display: none;
+}
+
+.dnd5e-card {
+  margin: var(--size-4-2) 0 var(--size-4-8);
+  padding: var(--size-4-3) var(--size-4-3) var(--size-4-2);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+  color: var(--text-normal);
+  line-height: 1.5;
+}
+
+/* Head: kind and place, then the name with power on the right. */
+
+.dnd5e-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1) var(--size-4-2);
+  padding: 0 var(--size-4-1);
+  color: var(--text-muted);
+}
+
+.dnd5e-card-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+}
+
+.dnd5e-card-place::before {
+  content: '·';
+  margin-right: var(--size-4-2);
+  color: var(--text-faint);
+}
+
+.dnd5e-card-meta .dnd5e-card-badge {
+  margin-left: auto;
+}
+
+.dnd5e-card-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-4-2) var(--size-4-4);
+  padding: var(--size-4-1) var(--size-4-1) 0;
+}
+
+.dnd5e-card-name {
+  font-size: var(--h2-size, 1.5em);
+  font-weight: var(--h2-weight, var(--font-bold));
+  line-height: 1.25;
+}
+
+.dnd5e-card-name.is-editable,
+.dnd5e-card-field-value.is-editable {
+  margin-left: calc(-1 * var(--size-4-1));
+  padding: 0 var(--size-4-1);
+  border-radius: var(--radius-s);
+  cursor: text;
+}
+
+.dnd5e-card-name.is-editable:hover,
+.dnd5e-card-field-value.is-editable:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-card-power {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  color: var(--text-muted);
+}
+
+.dnd5e-card-pips {
+  display: flex;
+  gap: 3px;
+}
+
+.dnd5e-card .dnd5e-card-pip {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 1.5px solid var(--text-faint);
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.dnd5e-card .dnd5e-card-pip:hover {
+  border-color: var(--interactive-accent);
+}
+
+.dnd5e-card .dnd5e-card-pip.is-on {
+  border-color: var(--interactive-accent);
+  background: var(--interactive-accent);
+}
+
+.dnd5e-card-number {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sections: relations open, secret relations and other fields collapsible. */
+
+.dnd5e-card-section,
+.dnd5e-card-collapsible {
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-card-section > .dnd5e-card-section-title {
+  padding: 0 var(--size-4-1) var(--size-4-1);
+}
+
+.dnd5e-card .dnd5e-card-section-title.is-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  width: 100%;
+  height: auto;
+  padding: var(--size-4-1);
+  border: none;
+  border-radius: var(--radius-s);
+  background: transparent;
+  box-shadow: none;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dnd5e-card .dnd5e-card-section-title.is-toggle:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.dnd5e-card-section-detail {
+  overflow: hidden;
+  margin-left: var(--size-4-2);
+  color: var(--text-faint);
+  font-weight: var(--font-normal);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dnd5e-card-collapsible-body .dnd5e-card-section {
+  margin-top: 0;
+}
+
+.dnd5e-card-empty,
+.dnd5e-card-readonly {
+  padding: var(--size-4-1) var(--size-4-2);
+  color: var(--text-faint);
+}
+
+/* Relation rows. */
+
+.dnd5e-card-row {
+  padding: var(--size-4-1) var(--size-4-2);
+  border-radius: var(--radius-s);
+}
+
+.dnd5e-card-row:hover,
+.dnd5e-card-row:focus-within {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-card-row.is-highlighted {
+  box-shadow: inset 0 0 0 2px var(--interactive-accent);
+}
+
+.dnd5e-card-row-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1) var(--size-4-3);
+}
+
+.dnd5e-card-target {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  flex: 1 1 11em;
+  min-width: 0;
+}
+
+.dnd5e-card-target a.internal-link,
+.dnd5e-card-target-name {
+  min-width: 0;
+  font-weight: var(--font-medium, var(--font-semibold));
+  overflow-wrap: anywhere;
+}
+
+.dnd5e-card-value {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  flex: 2 1 15em;
+}
+
+.dnd5e-card-slider {
+  flex: 1;
+  min-width: 4em;
+}
+
+.dnd5e-card-row.is-unset .dnd5e-card-slider::-webkit-slider-thumb {
+  opacity: 0.25;
+}
+
+.dnd5e-card-row.is-unset .dnd5e-card-slider::-moz-range-thumb {
+  opacity: 0.25;
+}
+
+/* The value: a soft tint of its colour behind the signed number. */
+.dnd5e-card-chip {
+  min-width: 2.6em;
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--dnd5e-soft);
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-card-row.is-unset .dnd5e-card-chip {
+  background: transparent;
+  color: var(--text-faint);
+}
+
+.dnd5e-card-chip.is-invalid {
+  color: var(--text-warning);
+  text-decoration: line-through;
+}
+
+.dnd5e-card-step {
+  flex: none;
+  min-width: 5.5em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Icon buttons appear on hover or focus, always on phones. */
+.dnd5e-card-row .clickable-icon {
+  opacity: 0;
+}
+
+.dnd5e-card-row:hover .clickable-icon,
+.dnd5e-card-row:focus-within .clickable-icon,
+.is-mobile .dnd5e-card-row .clickable-icon {
+  opacity: 1;
+}
+
+.dnd5e-card-why {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  color: var(--text-muted);
+}
+
+.dnd5e-card-why.is-empty {
+  display: none;
+}
+
+.dnd5e-card-why-text p {
+  margin: 0;
+}
+
+.dnd5e-card-warning {
+  position: relative;
+  margin-top: 2px;
+  padding-left: 22px;
+  color: var(--text-warning);
+}
+
+/* The icon hangs in the margin, so a long message wraps under its own first line. */
+.dnd5e-card-warning > .dnd5e-card-icon {
+  position: absolute;
+  top: 0.25em;
+  left: 0;
+}
+
+.dnd5e-card .dnd5e-card-warning > .dnd5e-card-write {
+  margin-left: var(--size-4-1);
+  padding: 0 var(--size-4-1);
+  color: var(--text-accent);
+}
+
+.dnd5e-card-head > .dnd5e-card-warning,
+.dnd5e-card > .dnd5e-card-warning {
+  margin-left: var(--size-4-1);
+}
+
+.dnd5e-card-input {
+  flex: 1;
+  min-width: 10em;
+  font-size: 16px;
+}
+
+/* Other fields: key and value side by side, like Properties. */
+
+.dnd5e-card-fields {
+  display: grid;
+  grid-template-columns: minmax(7em, max-content) 1fr;
+  gap: 2px var(--size-4-4);
+  padding: var(--size-4-1) var(--size-4-2);
+}
+
+.dnd5e-card-field {
+  display: contents;
+}
+
+.dnd5e-card-field-key {
+  color: var(--text-muted);
+}
+
+.dnd5e-card-field-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-1);
+}
+
+/* List values look like the theme's tags. */
+.dnd5e-card-field-value .dnd5e-card-tag {
+  background: var(--tag-background, var(--background-modifier-hover));
+  color: var(--tag-color, var(--text-accent));
+  border-radius: var(--tag-radius, 2em);
+}
+
+.dnd5e-card-fields .dnd5e-card-source {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.dnd5e-suggestion-detail {
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  .dnd5e-card {
+    padding: var(--size-4-2);
+  }
+
+  /* Target and remove on one line, the slider on its own line below. */
+  .dnd5e-card-remove {
+    order: 1;
+  }
+
+  .dnd5e-card-value {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .dnd5e-card-fields {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,91 @@
+/* The value popover and the log notice after a change. */
+
+/* Value popover */
+
+.dnd5e-popover {
+  position: absolute;
+  z-index: var(--layer-popover, 30);
+  width: min(380px, calc(100% - 16px));
+  padding: var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+  background: var(--background-primary);
+  box-shadow: var(--shadow-l);
+  font-size: 16px;
+}
+
+/* On narrow views the popover docks at the bottom, full width. */
+.dnd5e-popover.is-docked {
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  width: auto;
+}
+
+.dnd5e-popover-head {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-2);
+}
+
+.dnd5e-popover-title {
+  flex: 1;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-popover-value {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) 0;
+}
+
+.dnd5e-popover-value:hover {
+  background: transparent;
+}
+
+.dnd5e-popover-why {
+  width: 100%;
+  margin-top: var(--size-4-2);
+}
+
+.dnd5e-popover-fallback {
+  margin-top: var(--size-4-2);
+  color: var(--text-muted);
+}
+
+.dnd5e-popover-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-popover-buttons button {
+  font-size: 16px;
+}
+
+/* Log notice: the change, and a prominent button to log it */
+
+.dnd5e-log-notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  min-width: 240px;
+  font-size: 16px;
+}
+
+.dnd5e-log-notice-change {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-log-notice .dnd5e-log-button {
+  width: 100%;
+  height: auto;
+  padding: var(--size-4-2) var(--size-4-4);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+}

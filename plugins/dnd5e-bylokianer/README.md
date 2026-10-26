@@ -468,7 +468,7 @@ Requires Node 24 and pnpm 12.
 
 ```bash
 pnpm install
-pnpm build                 # main.js
+pnpm build                 # main.js, and styles.css bundled from styles/
 pnpm test                  # Vitest: pure modules in Node, the views in happy-dom (test/ui)
 pnpm lint && pnpm typecheck
 pnpm install-example       # copies the build into examples/vault/.obsidian/plugins/
@@ -476,6 +476,10 @@ pnpm install-example       # copies the build into examples/vault/.obsidian/plug
 
 Then open `examples/vault` as a vault in Obsidian and enable **dnd5e-byLokianer** under Community
 plugins.
+
+The styles live in `styles/`, one file per view (`statblock.css`, `battle.css`, `dice-stage.css` …);
+`styles/index.css` imports them in order, and the build bundles them into the `styles.css` Obsidian
+loads. Edit the files in `styles/`; `styles.css` is build output and not committed.
 
 ## Licence
 

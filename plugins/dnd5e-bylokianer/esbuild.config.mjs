@@ -41,9 +41,22 @@ const context = await esbuild.context({
 	minify: prod,
 });
 
+// Obsidian loads one stylesheet from the plugin's folder: styles/index.css and the files it imports,
+// bundled in their order into styles.css (not minified, so it stays readable in the vault).
+const styles = await esbuild.context({
+	banner: {
+		css: '/* Built from styles/ by esbuild: edit those files, not this one. */',
+	},
+	entryPoints: ['styles/index.css'],
+	bundle: true,
+	logLevel: 'info',
+	outfile: 'styles.css',
+});
+
 if (prod) {
 	await context.rebuild();
+	await styles.rebuild();
 	process.exit(0);
 } else {
-	await context.watch();
+	await Promise.all([context.watch(), styles.watch()]);
 }

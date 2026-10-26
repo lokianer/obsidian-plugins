@@ -440,6 +440,8 @@ boxes drag); label widths are estimated, not measured.
   (Playwright is preinstalled in cloud sessions).
 - No lookbehind in regular expressions (iOS before 16.4): the lint rule catches literals; write
   `new RegExp` strings without one too (match the character before instead).
+- Styles are edited in `plugins/dnd5e-bylokianer/styles/`; `styles.css` is built (`pnpm build`) and
+  git-ignored. The screenshot harnesses link the built `styles.css`: build before rendering.
 - The phone-width screenshot harness for the Battle tab, the Dice tab and the encounter builder
   lives in the scratchpad (`preview/tabs.ts`, `tabshot.cjs`, bundled with the UI test stub
   `test/ui/obsidian.ts` as `obsidian`); its page defines Obsidian's size variables, without them

@@ -1,0 +1,53 @@
+/* The tension panel. */
+
+.dnd5e-tensions-head {
+  margin-bottom: var(--size-4-2);
+}
+
+.dnd5e-tensions-group {
+  margin-top: var(--size-4-4);
+}
+
+.dnd5e-tensions-group > .dnd5e-card-section-title {
+  margin-bottom: var(--size-4-1);
+}
+
+.dnd5e-tensions-line {
+  padding: var(--size-4-2) 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  line-height: 1.6;
+}
+
+.dnd5e-tensions-line:last-child {
+  border-bottom: none;
+}
+
+.dnd5e-tensions-name {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
+}
+
+a.dnd5e-tensions-name:hover {
+  color: var(--text-accent);
+}
+
+.dnd5e-tensions-value {
+  padding: 0 var(--size-4-1);
+  border-radius: var(--radius-s);
+  background: var(--dnd5e-soft);
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-tensions-value:hover {
+  box-shadow: inset 0 0 0 1.5px var(--dnd5e-value-colour, var(--color-yellow));
+}
+
+.dnd5e-tensions-empty,
+.dnd5e-tensions-note {
+  margin-top: var(--size-4-3);
+  color: var(--text-muted);
+}

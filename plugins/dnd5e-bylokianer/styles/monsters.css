@@ -1,0 +1,77 @@
+/* The Monster Manual (the spellbook layout, the stat block as the card) and the monster builder. */
+
+.dnd5e-monsters-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-monsters-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  font-size: 16px;
+}
+
+.dnd5e-monsters-insert {
+  color: var(--text-on-accent);
+  background-color: var(--interactive-accent);
+}
+
+.dnd5e-monsters-insert:hover {
+  background-color: var(--interactive-accent-hover);
+}
+
+.dnd5e-monsters-card .dnd5e-statblock {
+  margin: 0;
+  border-color: rgba(var(--dnd5e-school-rgb), 0.35);
+}
+
+/* ── Monster builder: abilities as six number boxes, entry lists, the stat block preview ── */
+
+.dnd5e-monster-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--size-4-2);
+  padding: var(--size-4-2) 0 var(--size-4-3);
+}
+
+.dnd5e-monster-ability {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-2-2);
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-monster-ability input {
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-monster-entries {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  padding-bottom: var(--size-4-2);
+}
+
+.dnd5e-monster-legendary {
+  width: 100%;
+  resize: vertical;
+  font-size: 16px;
+}
+
+.dnd5e-monster-preview .dnd5e-statblock {
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .dnd5e-monster-abilities {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

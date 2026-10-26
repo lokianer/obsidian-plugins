@@ -1,0 +1,168 @@
+/* The stat block (`dnd5e-statblock`), the short stats on the card, the dice buttons in it.
+   Obsidian's look rather than the printed book's: an accent rule between parts, muted labels,
+   the six abilities in a grid that wraps to three columns on phones. */
+
+.dnd5e-statblock {
+  font-size: 16px;
+  padding: var(--size-4-3) var(--size-4-4);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  line-height: 1.5;
+}
+
+.dnd5e-sb-name {
+  font-size: var(--h3-size);
+  font-weight: var(--font-bold);
+  color: var(--text-normal);
+}
+
+.dnd5e-sb-meta {
+  color: var(--text-muted);
+}
+
+.dnd5e-sb-lines,
+.dnd5e-sb-abilities,
+.dnd5e-sb-section {
+  margin-top: var(--size-4-2);
+  padding-top: var(--size-4-2);
+  border-top: 2px solid color-mix(in srgb, var(--interactive-accent) 45%, transparent);
+}
+
+.dnd5e-sb-line {
+  overflow-wrap: anywhere;
+}
+
+.dnd5e-sb-label {
+  margin-right: var(--size-4-2);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--size-4-1);
+  text-align: center;
+}
+
+.dnd5e-sb-ability-label {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-section-title {
+  margin-bottom: var(--size-4-1);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-entry > p,
+.dnd5e-sb-entry > ul {
+  margin: 0 0 var(--size-4-2);
+}
+
+.dnd5e-sb-warning {
+  margin-top: var(--size-4-2);
+  color: var(--text-error);
+}
+
+.dnd5e-statblock pre {
+  white-space: pre-wrap;
+}
+
+.dnd5e-sb-fold-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+  width: 100%;
+  height: auto;
+  padding: var(--size-4-2) var(--size-4-3);
+  font-size: 16px;
+  text-align: left;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.dnd5e-sb-fold-head:hover {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-sb-fold-title {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-fold-detail {
+  color: var(--text-muted);
+}
+
+.dnd5e-sb-fold .dnd5e-statblock {
+  margin-top: var(--size-4-2);
+}
+
+/* Short stats on the faction card, under the title. */
+.dnd5e-sb-short {
+  margin-top: var(--size-4-2);
+}
+
+.dnd5e-sb-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-sb-pill {
+  padding: 2px var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-sb-short-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  max-width: 420px;
+  margin-top: var(--size-4-2);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .dnd5e-sb-abilities {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dnd5e-sb-roll {
+  display: inline;
+  height: auto;
+  padding: 0 var(--size-2-2);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-accent);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dnd5e-sb-roll:hover {
+  border-color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  margin: var(--size-4-2) 0;
+}
+
+.dnd5e-checks .dnd5e-sb-roll {
+  padding: var(--size-2-2) var(--size-4-2);
+  white-space: normal;
+}

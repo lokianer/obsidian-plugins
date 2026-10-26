@@ -1,0 +1,328 @@
+/* The NPC builder: the New NPC dialog, its tiles and preview, editing in an opened stat block. */
+
+.dnd5e-card-new-npc {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  margin-left: auto;
+  font-size: 16px;
+}
+
+.dnd5e-npc-modal .setting-item-name {
+  font-size: 16px;
+}
+
+/* The New NPC dialog: form and tiles on the left, the preview card on the right. */
+.modal.dnd5e-npc-dialog {
+  width: min(1080px, 94vw);
+}
+
+.dnd5e-npc-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--size-4-3);
+}
+
+.dnd5e-npc-roll-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  font-size: 16px;
+  color: var(--text-on-accent);
+  background-color: var(--interactive-accent);
+}
+
+.dnd5e-npc-roll-all:hover {
+  background-color: var(--interactive-accent-hover);
+}
+
+.dnd5e-npc-roll-all .svg-icon {
+  transition: transform 0.3s ease;
+}
+
+.dnd5e-npc-roll-all:hover .svg-icon {
+  transform: rotate(-20deg);
+}
+
+.dnd5e-npc-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--size-4-6);
+  align-items: start;
+}
+
+.dnd5e-npc-form .setting-item.is-locked .setting-item-control .clickable-icon:last-child {
+  color: var(--text-accent);
+}
+
+.dnd5e-npc-form .setting-item-heading .setting-item-name {
+  font-size: var(--font-ui-medium);
+}
+
+.dnd5e-npc-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  padding-bottom: var(--size-4-3);
+}
+
+.dnd5e-npc-search {
+  width: 100%;
+  font-size: 16px;
+}
+
+.dnd5e-npc-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--size-4-2);
+  max-height: 290px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.dnd5e-npc-tile {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
+  height: auto;
+  padding: var(--size-4-2) var(--size-4-3);
+  text-align: left;
+  white-space: normal;
+  font-size: 16px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background-color: var(--background-primary);
+  box-shadow: none;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.dnd5e-npc-tile:hover {
+  border-color: var(--interactive-accent);
+  background-color: var(--background-modifier-hover);
+}
+
+.dnd5e-npc-tile.is-selected {
+  border-color: var(--interactive-accent);
+  background-color: hsla(var(--interactive-accent-hsl), 0.15);
+}
+
+.dnd5e-npc-tile-icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-m);
+  color: var(--text-muted);
+  background-color: var(--background-secondary);
+}
+
+.dnd5e-npc-tile.is-selected .dnd5e-npc-tile-icon {
+  color: var(--text-on-accent);
+  background-color: var(--interactive-accent);
+}
+
+.dnd5e-npc-tile-text {
+  min-width: 0;
+}
+
+.dnd5e-npc-tile-name {
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-npc-tile-line {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.dnd5e-npc-preview {
+  position: sticky;
+  top: 0;
+}
+
+.dnd5e-npc-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+  padding: var(--size-4-5);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-l);
+  background-color: var(--background-secondary);
+}
+
+.dnd5e-npc-card-eyebrow {
+  color: var(--text-accent);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-npc-card-name {
+  color: var(--text-normal);
+  font-size: var(--h2-size);
+  font-weight: var(--font-bold);
+  line-height: 1.2;
+}
+
+.dnd5e-npc-card-name.is-empty {
+  color: var(--text-faint);
+}
+
+.dnd5e-npc-card-sub,
+.dnd5e-npc-card-traits,
+.dnd5e-npc-card-hint {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.dnd5e-npc-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-1);
+}
+
+.dnd5e-npc-card-tags:empty {
+  display: none;
+}
+
+.dnd5e-npc-card-tag {
+  padding: 2px var(--size-4-2);
+  border-radius: var(--tag-radius);
+  color: var(--tag-color);
+  background-color: var(--tag-background);
+  font-size: 16px;
+}
+
+.dnd5e-npc-card-archetype,
+.dnd5e-npc-card-line {
+  padding-top: var(--size-4-3);
+  border-top: 1px solid var(--background-modifier-border);
+  font-size: 16px;
+}
+
+.dnd5e-npc-card-label {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-npc-card-line.is-secret {
+  padding: var(--size-4-2) var(--size-4-3);
+  border: none;
+  border-radius: var(--radius-m);
+  background-color: rgba(var(--color-purple-rgb), 0.12);
+}
+
+.dnd5e-npc-card-line.is-secret .dnd5e-npc-card-label {
+  color: var(--color-purple);
+}
+
+@media (max-width: 760px) {
+  .dnd5e-npc-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dnd5e-npc-preview {
+    position: static;
+    order: -1;
+  }
+
+  /* Compact on phones: who, and the numbers; the lines are in the form below. */
+  .dnd5e-npc-card-traits,
+  .dnd5e-npc-card-line {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .dnd5e-npc-modal .setting-item {
+    flex-wrap: wrap;
+  }
+
+  .dnd5e-npc-modal .setting-item-control {
+    width: 100%;
+  }
+}
+
+/* Editing in the opened stat block: values on hover, entry tools on hover (always on phones). */
+.dnd5e-statblock .is-editable {
+  border-radius: var(--radius-s);
+  cursor: text;
+}
+
+.dnd5e-statblock .is-editable:hover,
+.dnd5e-statblock .is-editable:focus-visible {
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-sb-input,
+.dnd5e-sb-textarea {
+  width: 100%;
+  font-size: 16px;
+}
+
+.dnd5e-sb-line .dnd5e-sb-input {
+  width: auto;
+  min-width: 10em;
+  max-width: 100%;
+}
+
+.dnd5e-sb-ability .dnd5e-sb-input {
+  text-align: center;
+}
+
+.dnd5e-sb-textarea {
+  min-height: 6em;
+  margin-top: var(--size-4-1);
+  resize: vertical;
+}
+
+.dnd5e-sb-entry {
+  position: relative;
+}
+
+.dnd5e-sb-tools {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: var(--size-4-1);
+  opacity: 0;
+  background: var(--background-secondary);
+}
+
+.dnd5e-sb-entry:hover > .dnd5e-sb-tools,
+.dnd5e-sb-tools:focus-within,
+.is-mobile .dnd5e-sb-tools {
+  opacity: 1;
+}
+
+.is-mobile .dnd5e-sb-tools {
+  position: static;
+  justify-content: flex-end;
+}
+
+.dnd5e-sb-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin: var(--size-4-2) 0;
+}
+
+.dnd5e-sb-add {
+  margin-top: var(--size-4-1);
+  font-size: 16px;
+  color: var(--text-muted);
+  background: transparent;
+  box-shadow: none;
+}
+
+.dnd5e-sb-add:hover {
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
+}
