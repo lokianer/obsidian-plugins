@@ -672,3 +672,24 @@ Rumours` already used.
 
 Left out: block references, nested tables, rolling on a table from another table's row, R3's stat
 block and character rolls.
+
+## 2026-10-26 · Dice R3: rolls from stat blocks and characters
+
+Plan `docs/superpowers/plans/2026-10-26-dice-r3.md`.
+
+- Attack bonuses (`+7 to hit`, `Attack Roll: +7`, German `+7 auf Treffer`) and damage expressions
+  (`10 (1d10 + 5)`) are found in an entry's whole rendered text, so an italic `*Melee Attack Roll:*`
+  before the bonus still counts; only parts inside one text node outside links become buttons.
+- Saving throw DCs are not buttons: the target rolls them, often a player.
+- Shift-click advantage, Alt-click disadvantage, a right-click or long press offers Normal /
+  Advantage / Disadvantage (on a phone the long press is the way). Damage has no edge.
+- A character's `saves:` and `skills:` (maps of key and bonus, English keys) win over the note's
+  stat block; with neither the Dice tab says how to add them.
+- In the Dice tab the party rolls with the tab's own Advantage and DC; elsewhere there is no DC
+  (an attack's target AC is the target's, which the plugin does not know).
+- Names on the stage follow the plugin's language ("Überzeugen"); the log's verb and structure stay
+  English, the monster and entry names are written as the block shows them.
+- Rolls from stat blocks join the Dice tab's history; with the stage off a notice shows the result.
+
+Left out: critical-hit damage, ability checks, buttons in the monster builder's preview, hidden
+rolls.

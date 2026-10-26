@@ -395,6 +395,23 @@ Rumours]]` the note's first. The row shows on the stage and beside the button wi
 working; the log line is `- 21:05 Rolled Night on Lantern Quay (d20): 11 → [[Sable]] on a rooftop,
 pretending not to see you`. Dice Roller's block references (`[[Note^id]]`) are left to it.
 
+**Stat blocks and characters.** In every stat block — in notes, the Monster Manual and the Battle
+tab — the attack bonuses (`+7 to hit`), the damage expressions (`10 (1d10 + 5)`) and every save and
+skill are buttons. A click rolls on the stage in a small window ("Owlbear: Beak"); Shift-click rolls
+with advantage, Alt-click with disadvantage, and a right-click or long press offers all three.
+Saving throw DCs stay text: the target rolls those. A character gives their bonuses in the note's
+frontmatter, readable without the plugin:
+
+```yaml
+saves: { dex: 6, cha: 7 }
+skills: { persuasion: 7, perception: 5 }
+```
+
+(or a stat block in the note). The Dice tab's **Party** section shows each character of the party
+with these as buttons — they roll with the tab's Advantage and DC — and the Battle tab's card for a
+character shows them too. Log lines: `Orrin Quill rolls Persuasion: d20+7 → 12 (5, +7)`, `Owlbear
+rolls Beak damage: 1d10+5 → 9 (4, +5)`. Rolls from stat blocks also appear in the Dice tab's list.
+
 Settings: **Dice log** — offer each roll for tonight's session in a notice (the default), write it
 automatically, or not at all (`- 20:10 Rolled d20+7 → 19 (12, +7) against DC 15: success`);
 **Dice animation** — the stage animated, the stage with the result at once, or no stage.

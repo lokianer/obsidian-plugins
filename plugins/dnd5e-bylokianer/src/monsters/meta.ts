@@ -290,7 +290,8 @@ const SAVES: Record<string, string> = {
   cha: 'Cha',
 };
 
-const SKILLS: Record<string, string> = {
+/** The SRD skills' German names, by the key a stat block uses. */
+export const GERMAN_SKILLS: Record<string, string> = {
   acrobatics: 'Akrobatik',
   animal_handling: 'Mit Tieren umgehen',
   arcana: 'Arkane Kunde',
@@ -369,6 +370,6 @@ export function germanBlock(block: Statblock, name: string): Statblock {
     damageImmunities: or(block.damageImmunities, (d) => words(d, DAMAGE)),
     conditionImmunities: or(block.conditionImmunities, (c) => words(c, CONDITIONS)),
     saves: renamed(block.saves, SAVES),
-    skills: renamed(block.skills, SKILLS),
+    skills: renamed(block.skills, GERMAN_SKILLS),
   };
 }

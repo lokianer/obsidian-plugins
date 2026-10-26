@@ -3,8 +3,11 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { keptD20, parseFormula, roll, rollDie } from '../src/dice/formula';
+import { characterBonuses, checks, saveName, skillName } from '../src/dice/checks';
+import { keptD20, parseFormula, roll, rollDie, rollLine } from '../src/dice/formula';
+import { rollParts } from '../src/dice/statblock';
 import { findTable, rollableTables, rowFor, tableLine } from '../src/dice/tables';
+import type { Statblock } from '../src/npc/statblock';
 
 /** Random numbers giving these faces on the dice rolled, in order (any number of sides). */
 const faces = (...values: number[]) => {
@@ -149,5 +152,44 @@ describe('rollable tables', () => {
     expect(findTable(tables, 'gems  (w4)')?.heading).toBe('Gems (W4)');
     expect(findTable(tables, null)?.heading).toBe('Coins (2d6)');
     expect(findTable(tables, 'Nothing')).toBeNull();
+  });
+});
+
+describe('rolls from stat blocks and characters', () => {
+  it('finds attack bonuses and damage in English and German entries, not DCs', () => {
+    const en =
+      'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 10 (1d10 + 5) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 18 (4d8) poison damage.';
+    expect(rollParts(en).map((p) => [p.kind, p.formula, en.slice(p.start, p.end)])).toEqual([
+      ['attack', 'd20+7', '+7'],
+      ['damage', '1d10+5', '10 (1d10 + 5)'],
+      ['damage', '4d8', '18 (4d8)'],
+    ]);
+    const de =
+      'Nahkampf-Waffenangriff: −1 auf Treffer, Reichweite 1,5 m. Treffer: 3 (1W6 − 1) Wuchtschaden.';
+    expect(rollParts(de).map((p) => p.formula)).toEqual(['d20-1', '1d6-1']);
+    expect(
+      rollParts('Melee Attack Roll: +4, reach 5 ft. Hit: 1 piercing damage.').map((p) => p.formula),
+    ).toEqual(['d20+4']);
+  });
+
+  it('reads a character from frontmatter, else its stat block, with names per language', () => {
+    const fm = { saves: { dex: 5, wis: 2 }, skills: { persuasion: 7, sleight_of_hand: 4 } };
+    const bonuses = characterBonuses(fm, null);
+    expect(
+      checks('Orrin Quill', bonuses, 'de').map((c) => [c.label, c.subject, c.formula]),
+    ).toEqual([
+      ['Orrin Quill: Geschicklichkeitsrettungswurf', 'Orrin Quill rolls Dexterity save', 'd20+5'],
+      ['Orrin Quill: Weisheitsrettungswurf', 'Orrin Quill rolls Wisdom save', 'd20+2'],
+      ['Orrin Quill: Überzeugen', 'Orrin Quill rolls Persuasion', 'd20+7'],
+      ['Orrin Quill: Fingerfertigkeit', 'Orrin Quill rolls Sleight of Hand', 'd20+4'],
+    ]);
+    const block = { saves: [{ key: 'con', bonus: 4 }], skills: [] } as unknown as Statblock;
+    expect(characterBonuses({}, block).saves).toEqual([{ key: 'con', bonus: 4 }]);
+    expect(saveName('Ges', 'de')).toBe('Geschicklichkeitsrettungswurf');
+    expect(skillName('Wahrnehmung', 'en')).toBe('Wahrnehmung');
+    const r = roll('d20+7', of(20, 5));
+    expect(r && rollLine(r, null, 'Orrin Quill rolls Persuasion')).toBe(
+      'Orrin Quill rolls Persuasion: d20+7 → 12 (5, +7)',
+    );
   });
 });

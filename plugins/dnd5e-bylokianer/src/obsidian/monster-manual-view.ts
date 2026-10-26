@@ -41,6 +41,7 @@ import type { SrdMonster } from '../monsters/model';
 import { SRD_MONSTERS } from '../monsters/srd-monsters';
 import type { Lang } from '../npc/races';
 import { parseStatblock } from '../npc/statblock';
+import type { RollCheck } from './statblock-dice';
 import { renderStatblock } from './statblock-view';
 
 export const MONSTER_VIEW = 'dnd5e-monster-manual';
@@ -91,6 +92,8 @@ export interface MonsterManualDeps {
   addToCombat: (monster: SrdMonster) => void;
   /** Puts the monster into an encounter note. */
   addToEncounter: (monster: SrdMonster) => void;
+  /** Rolls an attack, damage, save or skill of the card. */
+  roll?: RollCheck;
 }
 
 function hue(el: HTMLElement, type: string): void {
@@ -501,6 +504,8 @@ export class MonsterManualView extends ItemView {
       t: lang === this.lang ? t : createT(lang),
       markdown: (md, el) => MarkdownRenderer.render(this.app, md, el, '', text),
       spells: this.deps.spells,
+      roll: this.deps.roll,
+      lang,
     });
     card.createDiv({
       cls: 'dnd5e-spells-source',

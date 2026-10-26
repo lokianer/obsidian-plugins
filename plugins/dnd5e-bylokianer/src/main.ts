@@ -14,12 +14,19 @@ import { createT } from './i18n/strings';
 import { BLOCK, convertBlocks, parseStatblock } from './npc/statblock';
 import { CardManager } from './obsidian/card-view';
 import { encounterNoteText } from './battle/budget';
-import { rollLine } from './dice/formula';
+import { parseWithEdge, rollFormula, rollLine } from './dice/formula';
 import { tableLine } from './dice/tables';
 import { DiceTables } from './obsidian/dice-tables';
 import { inlineMarkdown } from './obsidian/inline-markdown';
-import { diceEditorExtension, type InlineDeps, replaceInlineDice } from './obsidian/dice-inline';
-import { DICE_VIEW, type DiceRecord, DiceView } from './obsidian/dice-view';
+import {
+  DiceModal,
+  diceEditorExtension,
+  type InlineDeps,
+  replaceInlineDice,
+} from './obsidian/dice-inline';
+import { PartyChecks } from './obsidian/dice-party';
+import { DICE_VIEW, type DiceRecord, DiceView, remember } from './obsidian/dice-view';
+import type { RollCheck } from './obsidian/statblock-dice';
 import { battleLine } from './battle/log';
 import { EncounterBuilderModal, EncounterPicker } from './obsidian/encounter-builder';
 import { BattleStore, fromMonster } from './obsidian/battle-store';
@@ -61,11 +68,16 @@ export default class Dnd5ePlugin extends Plugin {
 
   async onload(): Promise<void> {
     const t = createT(getLanguage());
+    const uiLang = getLanguage() === 'de' ? 'de' : 'en';
+    // Set up with the dice below; the views registered before them call it only on a click.
+    let rollCheck: RollCheck = () => undefined;
+    const roll: RollCheck = (check, edge) => rollCheck(check, edge);
     this.options = {
       ...DEFAULT_SETTINGS,
       ...((await this.loadData()) as Partial<Settings> | null),
     };
     const cache = new WorldCache(this);
+    const partyChecks = new PartyChecks(this, cache, () => uiLang);
     const statblocks = new NoteStatblocks(this);
     const cards = new CardManager(
       this,
@@ -291,6 +303,7 @@ export default class Dnd5ePlugin extends Plugin {
               );
             if (!running) new Notice(t('battle.noFight'));
           },
+          roll,
           addToEncounter: (monster) =>
             void battleStore.encounters().then((encounters) => {
               if (encounters.length === 0) {
@@ -442,6 +455,8 @@ export default class Dnd5ePlugin extends Plugin {
           openNote: (path) => openNote(path, false),
           spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
           newEncounter: () => void newEncounter(),
+          roll,
+          checks: (path) => partyChecks.checks(path),
           log: (path, events) => {
             const file = this.app.vault.getFileByPath(path);
             if (file === null) return;
@@ -466,7 +481,7 @@ export default class Dnd5ePlugin extends Plugin {
       sessionLog.offerLine(
         record.table !== undefined
           ? tableLine(record.table, record.roll.total, record.row ?? null)
-          : rollLine(record.roll, record.dc),
+          : rollLine(record.roll, record.dc, record.subject),
         this.options.diceLog,
       );
     const diceTables = new DiceTables(this, cache);
@@ -482,6 +497,7 @@ export default class Dnd5ePlugin extends Plugin {
           log: logRoll,
           tables: diceTables,
           render: renderRow,
+          party: partyChecks,
         }),
     );
     const inline: InlineDeps = {
@@ -494,6 +510,21 @@ export default class Dnd5ePlugin extends Plugin {
       render: renderRow,
     };
     this.registerMarkdownPostProcessor((el, ctx) => replaceInlineDice(el, ctx.sourcePath, inline));
+    // A roll from a stat block or a character: the stage in a small window (or a notice), the Dice
+    // tab's history, the log.
+    rollCheck = (check, edge) => {
+      const f = parseWithEdge(check.formula, check.d20 ? edge : 'normal');
+      if (f === null) return;
+      const roll = rollFormula(f, cryptoRandom);
+      const record: DiceRecord = { label: check.label, dc: null, roll, subject: check.subject };
+      remember(diceHistory, record);
+      for (const leaf of this.app.workspace.getLeavesOfType(DICE_VIEW)) {
+        if (leaf.view instanceof DiceView) leaf.view.renderHistory();
+      }
+      if (diceMotion() === null) new Notice(`${check.label}: ${roll.text}`);
+      else new DiceModal(inline, { label: check.label, dc: null, roll }).open();
+      logRoll(record);
+    };
     this.registerEditorExtension(diceEditorExtension(inline));
     const openDice = async () => {
       const { workspace } = this.app;
@@ -566,6 +597,8 @@ export default class Dnd5ePlugin extends Plugin {
         markdown: (markdown, target) =>
           MarkdownRenderer.render(this.app, markdown, target, ctx.sourcePath, child),
         spells: (target) => linkSpells(target, findSpells, (index) => void openSpell(index)),
+        roll,
+        lang: uiLang,
         // Open or folded per note, for as long as Obsidian runs.
         open: openStatblocks.has(ctx.sourcePath),
         toggle: (open) => {

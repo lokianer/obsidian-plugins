@@ -10,6 +10,8 @@ hp: 50
 # gloom stalkers add WIS to initiative: +3 DEX, +2 WIS
 initiative: 5
 passive_perception: 17
+saves: { str: 2, dex: 6 }
+skills: { stealth: 6, perception: 7, survival: 5, animal_handling: 5 }
 relations:
   Sable: 1
   # the archivists pay for the party's ledger of favours: shown in the world view's Party frame

@@ -393,10 +393,15 @@ export const en = {
   'dice.disadvantage': 'Disadvantage',
   'dice.history': 'Rolls',
   'dice.tables': 'Tables',
-  'dice.refresh': 'Read the tables again',
+  'dice.refresh': 'Read the notes again',
   'dice.noTables':
     'No rollable tables yet. A note with type: table and a heading ending in a die, like "## Weather (d8)", shows up here.',
   'dice.noRow': 'no row',
+  'dice.party': 'Party',
+  'dice.noParty': "No party yet. The characters of the campaign's party show up here.",
+  'dice.noChecks':
+    'No saves or skills. Write saves: and skills: into the note, or give it a stat block.',
+  'dice.damage': 'damage',
   'dice.noTable': 'No rollable table at {link}.',
   'dice.noRolls': 'No rolls yet. Type a formula like 2d6+3 or pick a die.',
   'dice.again': 'Roll again',
@@ -1040,10 +1045,15 @@ export const de: Record<StringKey, string> = {
   'dice.disadvantage': 'Nachteil',
   'dice.history': 'Würfe',
   'dice.tables': 'Tabellen',
-  'dice.refresh': 'Tabellen neu einlesen',
+  'dice.refresh': 'Neu einlesen',
   'dice.noTables':
     'Noch keine Würfeltabellen. Eine Notiz mit type: table und einer Überschrift, die auf einen Würfel endet, wie „## Wetter (d8)“, erscheint hier.',
   'dice.noRow': 'keine Zeile',
+  'dice.party': 'Gruppe',
+  'dice.noParty': 'Noch keine Gruppe. Die Charaktere der Gruppe der Kampagne erscheinen hier.',
+  'dice.noChecks':
+    'Keine Rettungswürfe oder Fertigkeiten. Schreibe saves: und skills: in die Notiz oder gib ihr einen Werteblock.',
+  'dice.damage': 'Schaden',
   'dice.noTable': 'Keine Würfeltabelle unter {link}.',
   'dice.noRolls': 'Noch keine Würfe. Tippe eine Formel wie 2W6+3 oder wähle einen Würfel.',
   'dice.again': 'Nochmal würfeln',

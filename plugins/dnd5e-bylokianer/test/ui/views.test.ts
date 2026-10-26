@@ -47,7 +47,8 @@ import { BattleView } from '../../src/obsidian/battle-view';
 import { DiceStage } from '../../src/obsidian/dice-stage';
 import { type DiceRecord, DiceView } from '../../src/obsidian/dice-view';
 import { replaceInlineDice } from '../../src/obsidian/dice-inline';
-import { roll as rollDice, type Roll } from '../../src/dice/formula';
+import { type Check, characterBonuses, checks } from '../../src/dice/checks';
+import { type Edge, roll as rollDice, type Roll } from '../../src/dice/formula';
 import { rollableTables } from '../../src/dice/tables';
 import type { BattleSource } from '../../src/obsidian/battle-store';
 import type { Fight, Fighter } from '../../src/battle/fight';
@@ -75,7 +76,7 @@ import { WorldGraphSvg } from '../../src/obsidian/world-graph-svg';
 import { renderMatrix } from '../../src/obsidian/world-matrix';
 import { factionHues } from '../../src/factions/hues';
 import { loadExampleVault } from '../fixture';
-import { notices } from './obsidian';
+import { Menu, notices } from './obsidian';
 
 const vault = join(import.meta.dirname, '../../../../examples/vault');
 const notes = loadExampleVault();
@@ -738,6 +739,37 @@ describe('spellbook', () => {
     view.show('fireball');
     expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Fireball']);
     expect(el.querySelectorAll('.dnd5e-spells-row').length).toBe(319);
+  });
+
+  it('rolls attacks, damage, saves and skills from a stat block; Shift and the menu add an edge', async () => {
+    const owlbear = SRD_MONSTERS.find((m) => m.index === 'owlbear');
+    const rolled: [Check, Edge][] = [];
+    renderStatblock(root, parseStatblock(parse(owlbear?.yaml ?? '')), {
+      t,
+      markdown: (md, target) => {
+        target.createEl('p', { text: md });
+      },
+      roll: (check, edge) => rolled.push([check, edge]),
+    });
+    await new Promise((r) => window.setTimeout(r, 0));
+    const buttons = [...root.querySelectorAll<HTMLElement>('.dnd5e-sb-roll')];
+    expect(buttons.map((b) => b.textContent)).toEqual([
+      'Perception +3',
+      '+7',
+      '10 (1d10 + 5)',
+      '+7',
+      '14 (2d8 + 5)',
+    ]);
+    expect(root.textContent).toContain('Melee Weapon Attack: +7 to hit, reach 5 ft.');
+    buttons[1]?.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+    buttons[2]?.dispatchEvent(new MouseEvent('click', { altKey: true }));
+    buttons[0]?.dispatchEvent(new MouseEvent('contextmenu'));
+    Menu.last?.items.find((i) => i.title === 'Disadvantage')?.click();
+    expect(rolled.map(([c, e]) => [c.label, c.subject, c.formula, e])).toEqual([
+      ['Owlbear: Beak', 'Owlbear rolls Beak', 'd20+7', 'adv'],
+      ['Owlbear: Beak · damage', 'Owlbear rolls Beak damage', '1d10+5', 'normal'],
+      ['Owlbear: Perception', 'Owlbear rolls Perception', 'd20+3', 'dis'],
+    ]);
   });
 
   it('links the spell names of a Spellcasting trait in a stat block', () => {
@@ -1481,6 +1513,7 @@ describe('battle tab', () => {
       fighter: (name) => Promise.resolve(name === 'Owlbear' ? (fighters[3] ?? null) : null),
     };
     const logged: BattleEvent[] = [];
+    const rolledChecks: string[] = [];
     let selected: string | null = null;
     // Monsters roll a 10 (d20 → 11 for 0.5).
     const view = new BattleView({} as WorkspaceLeaf, {
@@ -1493,6 +1526,13 @@ describe('battle tab', () => {
       openNote: () => undefined,
       log: (_path, events) => logged.push(...events),
       newEncounter: () => undefined,
+      roll: (check) => rolledChecks.push(check.subject),
+      checks: (path) =>
+        Promise.resolve(
+          path === 'Dagny.md'
+            ? checks('Dagny', { saves: [{ key: 'str', bonus: 6 }], skills: [] }, lang)
+            : [],
+        ),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1526,6 +1566,7 @@ describe('battle tab', () => {
       note: () => note,
       selected: () => selected,
       logged,
+      rolledChecks,
       type,
       submit,
       view,
@@ -1533,7 +1574,7 @@ describe('battle tab', () => {
   }
 
   it('starts a fight, orders it, runs turns and writes the note', async () => {
-    const { el, click, names, saves, note, selected } = await open('en');
+    const { el, click, names, saves, note, selected, rolledChecks } = await open('en');
     expect(selected()).toBe('Ambush.md');
     expect(texts(el, '.dnd5e-battle-section')).toEqual(['Combatants (4)']);
     await click('.dnd5e-battle-start');
@@ -1548,6 +1589,12 @@ describe('battle tab', () => {
     expect(el.querySelector('.dnd5e-battle-round')?.textContent).toBe('Round 1');
     expect(el.querySelector('.is-turn .dnd5e-battle-name')?.textContent).toBe('Dagny');
     expect(note()).toContain('Round 1 · Turn: Dagny');
+    // Dagny's card: her saves and skills as buttons.
+    await new Promise((r) => window.setTimeout(r, 0));
+    const save = el.querySelector<HTMLElement>('.dnd5e-checks .dnd5e-sb-roll');
+    expect(save?.textContent).toBe('Strength save +6');
+    save?.dispatchEvent(new MouseEvent('click'));
+    expect(rolledChecks).toEqual(['Dagny rolls Strength save']);
     await click('.dnd5e-battle-next');
     expect(el.querySelector('.is-turn .dnd5e-battle-name')?.textContent).toBe('Owlbear');
     // The owlbear's card shows its stat block; damage it down to defeated.
@@ -1877,12 +1924,27 @@ describe('dice', () => {
     const logged: DiceRecord[] = [];
     const view = new DiceView({} as WorkspaceLeaf, {
       t: createT('en'),
-      random: faces(20, 7, 16, 3, 3),
+      random: faces(20, 7, 16, 3, 3, 5, 5, 12),
       motion: () => false,
       history,
       log: (r) => logged.push(r),
       tables: { notes: () => Promise.resolve(tableNotes), resolve: () => Promise.resolve(null) },
       render: (md, target) => target.setText(md),
+      party: {
+        party: () =>
+          Promise.resolve([
+            {
+              name: 'Orrin Quill',
+              checks: checks(
+                'Orrin Quill',
+                characterBonuses({ skills: { persuasion: 7 } }, null),
+                'en',
+              ),
+            },
+            { name: 'Ilex', checks: [] },
+          ]),
+        checks: () => Promise.resolve([]),
+      },
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -1931,6 +1993,15 @@ describe('dice', () => {
     expect(el.querySelector('.dnd5e-stage-result')?.textContent).toBe('Nothing but the tide');
     expect(el.querySelector('.dnd5e-dice-result')?.textContent).toBe('Nothing but the tide');
     expect(logged[logged.length - 1]?.row?.text).toBe('Nothing but the tide');
+    // The party's skills roll in the tab (its Advantage still chosen), Shift-click too.
+    expect(texts(el, '.dnd5e-dice-table-title')).toEqual(['Orrin Quill', 'Ilex', 'Street Rumours']);
+    const persuasion = el.querySelector<HTMLElement>('.dnd5e-checks .dnd5e-sb-roll');
+    expect(persuasion?.textContent).toBe('Persuasion +7');
+    persuasion?.dispatchEvent(new MouseEvent('click'));
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(history[0]?.label).toBe('Orrin Quill: Persuasion');
+    expect(history[0]?.roll.text).toBe('2d20kh1+7 → 12 (5, [5], +7)');
+    expect(logged[logged.length - 1]?.subject).toBe('Orrin Quill rolls Persuasion');
   });
 
   it('turns dice: formulas and table links in a note into buttons and leaves other code alone', async () => {

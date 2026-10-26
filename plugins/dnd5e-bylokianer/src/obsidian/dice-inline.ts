@@ -56,7 +56,7 @@ export interface InlineDeps {
 }
 
 /** The stage in a small window over the workspace; a click after the verdict or Esc closes it. */
-class DiceModal extends Modal {
+export class DiceModal extends Modal {
   constructor(
     private readonly deps: InlineDeps,
     private readonly roll: StageRoll,

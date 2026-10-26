@@ -8,6 +8,13 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Rolls from stat blocks and characters** (dice, phase R3): attack bonuses, damage expressions,
+  saves and skills are buttons in every stat block (notes, Monster Manual, Battle tab); Shift for
+  advantage, Alt for disadvantage, a right-click or long press for the choice. Characters' `saves:`
+  and `skills:` in frontmatter (or their stat block) as buttons in the Dice tab's new Party section
+  and on the Battle tab's character cards. Log lines name who rolled what (`Orrin Quill rolls
+Persuasion: d20+7 → 12 (5, +7)`).
+
 - **Rollable tables** (dice, phase R2): a heading ending in a die in brackets (`## Weather (1d8)`)
   makes the first list or table under it rollable — lists by order, tables by the numbers or
   ranges in their first column; a total on no row is kept as "no row". The Dice tab lists the

@@ -7,11 +7,15 @@
 
 import { setIcon } from 'obsidian';
 
+import { checks } from '../dice/checks';
+
 import { listsSpells } from '../spells/links';
 import type { EntryKey } from '../npc/block-edit';
+import type { Lang } from '../npc/races';
 import type { Bonus, Entry, Statblock } from '../npc/statblock';
 import { experience, formatBonus, modifier, proficiencyBonus, summary } from '../npc/statblock';
 import type { StringKey, T } from '../i18n/strings';
+import { checkButton, linkEntryDice, type RollCheck } from './statblock-dice';
 
 /** Writes from the rendered block into the note; each resolves when the write is done or refused. */
 export interface StatblockEdits {
@@ -36,6 +40,10 @@ export interface StatblockContext {
   spells?: (el: HTMLElement) => void;
   /** Present when the block can be edited in place. */
   edit?: StatblockEdits;
+  /** Present when attacks, damage, saves and skills roll on a click. */
+  roll?: RollCheck;
+  /** The language of the rolls' names on the stage (default English). */
+  lang?: Lang;
 }
 
 /** A value written as a number when it is one (AC, HP, a whole CR), else as text. */
@@ -119,8 +127,15 @@ export function renderStatblock(
   ].filter((p) => p !== null && p !== '');
   if (meta.length > 0) head.createDiv({ cls: 'dnd5e-sb-meta', text: meta.join(', ') });
 
-  /** A row: label, shown text, and the key and raw value an edit writes (none: read-only). */
-  type Row = [StringKey, string | null, [string, string | number | null]?];
+  /**
+   * A row: label, shown text, and the key and raw value an edit writes (none: read-only), or what
+   * fills the value instead of the text.
+   */
+  type Row = [
+    StringKey,
+    string | null,
+    ([string, string | number | null] | ((span: HTMLElement) => void))?,
+  ];
   const lines = (rows: readonly Row[]) => {
     const shown = rows.filter((row) => row[1] !== null && row[1] !== '');
     if (shown.length === 0) return;
@@ -128,6 +143,10 @@ export function renderStatblock(
     for (const [label, value, target] of shown) {
       const line = box.createDiv({ cls: 'dnd5e-sb-line' });
       line.createSpan({ cls: 'dnd5e-sb-label', text: t(label) });
+      if (typeof target === 'function') {
+        target(line.createSpan());
+        continue;
+      }
       const span = line.createSpan({ text: value ?? '' });
       if (edit !== undefined && target !== undefined) {
         const [key, raw] = target;
@@ -164,9 +183,30 @@ export function renderStatblock(
 
   const xp = block.cr === null ? null : experience(block.cr);
   const pb = block.cr === null ? null : proficiencyBonus(block.cr);
+  const who = block.name ?? '';
+  const { roll } = ctx;
+  /** Saves or skills as buttons (`Dex +7`), each rolling its check. */
+  const rolling = (list: readonly Bonus[], kind: 'saves' | 'skills') =>
+    roll === undefined
+      ? undefined
+      : (span: HTMLElement) => {
+          const lang = ctx.lang ?? 'en';
+          const all = checks(
+            who,
+            kind === 'saves' ? { saves: list, skills: [] } : { saves: [], skills: list },
+            lang,
+          );
+          list.forEach((b, i) => {
+            if (i > 0) span.appendText(', ');
+            const check = all[i];
+            if (check !== undefined) {
+              checkButton(span, `${capitalise(b.key)} ${formatBonus(b.bonus)}`, check, roll, t);
+            }
+          });
+        };
   lines([
-    ['statblock.saves', bonuses(block.saves)],
-    ['statblock.skills', bonuses(block.skills)],
+    ['statblock.saves', bonuses(block.saves), rolling(block.saves, 'saves')],
+    ['statblock.skills', bonuses(block.skills), rolling(block.skills, 'skills')],
     ['statblock.vulnerabilities', block.damageVulnerabilities],
     ['statblock.resistances', block.damageResistances],
     ['statblock.immunities', block.damageImmunities],
@@ -212,6 +252,9 @@ export function renderStatblock(
         const { spells } = ctx;
         if (spells !== undefined && listsSpells(name)) {
           void Promise.resolve(rendered).then(() => spells(row));
+        }
+        if (roll !== undefined) {
+          void Promise.resolve(rendered).then(() => linkEntryDice(row, who, name, roll, t));
         }
         if (edit !== undefined) entryTools(row, key, index, entry, edit, t, draw);
       };

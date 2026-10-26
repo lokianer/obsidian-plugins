@@ -5,15 +5,23 @@
 
 import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
 
-import { parseFormula, type Roll, rollFormula, verdict } from '../dice/formula';
+import type { Check } from '../dice/checks';
+import {
+  type Edge,
+  parseFormula,
+  parseWithEdge,
+  type Roll,
+  rollFormula,
+  verdict,
+} from '../dice/formula';
 import { type RollTable, rowFor, type TableRow } from '../dice/tables';
 import type { StringKey, T } from '../i18n/strings';
 import { DiceStage, type RenderText, VERDICT_KEYS } from './dice-stage';
+import type { PartySource } from './dice-party';
 import type { TableSource } from './dice-tables';
+import { renderChecks } from './statblock-dice';
 
 export const DICE_VIEW = 'dnd5e-dice';
-
-type Edge = 'normal' | 'adv' | 'dis';
 
 export interface DiceRecord {
   label: string;
@@ -22,6 +30,8 @@ export interface DiceRecord {
   /** For a table roll: the table and the row the total landed on (null for a gap). */
   table?: RollTable;
   row?: TableRow | null;
+  /** Who rolled what, for the log: `Orrin Quill rolls Persuasion`. */
+  subject?: string;
 }
 
 export interface DiceDeps {
@@ -36,18 +46,15 @@ export interface DiceDeps {
   tables: TableSource;
   /** Renders a table row's Markdown (links work). */
   render: RenderText;
+  party: PartySource;
 }
 
 const QUICK = [4, 6, 8, 10, 12, 20, 100];
-const HISTORY = 50;
 
-/** A formula with advantage or disadvantage when it has a single d20, else as written. */
-function withEdge(text: string, edge: Edge): ReturnType<typeof parseFormula> {
-  if (edge !== 'normal') {
-    const f = parseFormula(`${text} ${edge}`);
-    if (f !== null) return f;
-  }
-  return parseFormula(text);
+/** Puts a roll on top of the history, which keeps the last fifty. */
+export function remember(history: DiceRecord[], record: DiceRecord): void {
+  history.unshift(record);
+  history.splice(50);
 }
 
 export class DiceView extends ItemView {
@@ -57,6 +64,7 @@ export class DiceView extends ItemView {
   private stage: DiceStage | null = null;
   private historyEl!: HTMLElement;
   private tablesEl!: HTMLElement;
+  private partyEl!: HTMLElement;
   private inputEl!: HTMLInputElement;
 
   constructor(
@@ -176,20 +184,49 @@ export class DiceView extends ItemView {
       );
     } else this.stage = null;
 
-    const tablesHead = root.createDiv({ cls: 'dnd5e-dice-section' });
-    tablesHead.createSpan({ text: t('dice.tables') });
-    const refresh = tablesHead.createEl('button', {
-      cls: 'clickable-icon',
-      attr: { 'aria-label': t('dice.refresh') },
-    });
-    setIcon(refresh, 'refresh-cw');
-    refresh.addEventListener('click', () => void this.loadTables());
-    this.tablesEl = root.createDiv({ cls: 'dnd5e-dice-tables' });
+    const section = (key: StringKey, load: () => Promise<void>) => {
+      const head = root.createDiv({ cls: 'dnd5e-dice-section' });
+      head.createSpan({ text: t(key) });
+      const refresh = head.createEl('button', {
+        cls: 'clickable-icon',
+        attr: { 'aria-label': t('dice.refresh') },
+      });
+      setIcon(refresh, 'refresh-cw');
+      refresh.addEventListener('click', () => void load());
+      return root.createDiv({ cls: 'dnd5e-dice-tables' });
+    };
+    this.partyEl = section('dice.party', () => this.loadParty());
+    void this.loadParty();
+    this.tablesEl = section('dice.tables', () => this.loadTables());
     void this.loadTables();
 
     root.createDiv({ cls: 'dnd5e-dice-section', text: t('dice.history') });
     this.historyEl = root.createDiv({ cls: 'dnd5e-dice-history' });
     this.renderHistory();
+  }
+
+  /** The party's saves and skills; they roll here with the tab's edge and DC. */
+  async loadParty(): Promise<void> {
+    const { t } = this.deps;
+    const party = await this.deps.party.party();
+    const el = this.partyEl;
+    el.empty();
+    if (party.length === 0) {
+      el.createDiv({ cls: 'dnd5e-dice-empty', text: t('dice.noParty') });
+      return;
+    }
+    for (const member of party) {
+      const group = el.createDiv({ cls: 'dnd5e-dice-table-note' });
+      group.createDiv({ cls: 'dnd5e-dice-table-title', text: member.name });
+      if (member.checks.length === 0) {
+        group.createDiv({ cls: 'dnd5e-dice-empty', text: t('dice.noChecks') });
+        continue;
+      }
+      // Shift, Alt or the menu choose the edge for this roll; else the tab's choice applies.
+      const roll = (check: Check, edge: Edge) =>
+        void this.rollText(check.formula, check.label, undefined, check.subject, edge);
+      renderChecks(group, member.checks, roll, t);
+    }
   }
 
   /** The campaign's table notes, each with its rollable headings as buttons. */
@@ -225,7 +262,7 @@ export class DiceView extends ItemView {
   private again(record: DiceRecord): Promise<unknown> {
     return record.table !== undefined
       ? this.rollTable(record.table)
-      : this.rollText(record.roll.formula, record.label, record.dc);
+      : this.rollText(record.roll.formula, record.label, record.dc, record.subject);
   }
 
   private async record(record: DiceRecord): Promise<void> {
@@ -235,15 +272,20 @@ export class DiceView extends ItemView {
         ...(record.table !== undefined ? { result: record.row?.text ?? null } : {}),
       });
     }
-    this.deps.history.unshift(record);
-    this.deps.history.splice(HISTORY);
+    remember(this.deps.history, record);
     this.renderHistory();
     this.deps.log(record);
   }
 
   /** Rolls a formula (with the chosen edge); false when it is none. */
-  async rollText(text: string, label?: string, dc?: number | null): Promise<boolean> {
-    const f = withEdge(text, this.edge);
+  async rollText(
+    text: string,
+    label?: string,
+    dc?: number | null,
+    subject?: string,
+    edge: Edge = 'normal',
+  ): Promise<boolean> {
+    const f = parseWithEdge(text, edge === 'normal' ? this.edge : edge);
     if (f === null) {
       this.inputEl.addClass('is-invalid');
       return false;
@@ -254,11 +296,13 @@ export class DiceView extends ItemView {
       label: label ?? roll.formula,
       dc: dc !== undefined ? dc : this.dc.trim() !== '' && Number.isFinite(n) && n > 0 ? n : null,
       roll,
+      ...(subject !== undefined ? { subject } : {}),
     });
     return true;
   }
 
-  private renderHistory(): void {
+  /** Shows the history again; rolls from stat blocks join it from outside the tab. */
+  renderHistory(): void {
     const { t } = this.deps;
     const list = this.historyEl;
     list.empty();

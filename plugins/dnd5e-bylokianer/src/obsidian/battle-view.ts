@@ -41,10 +41,12 @@ import {
   setUp,
 } from '../battle/fight';
 import { baseName, restore, type Table } from '../battle/table';
+import type { Check } from '../dice/checks';
 import type { StringKey, T } from '../i18n/strings';
 import { germanBlock, germanTexts } from '../monsters/meta';
 import type { Lang } from '../npc/races';
 import type { BattleSource, EncounterInfo } from './battle-store';
+import { renderChecks, type RollCheck } from './statblock-dice';
 import { renderStatblock } from './statblock-view';
 
 export const BATTLE_VIEW = 'dnd5e-battle';
@@ -65,6 +67,10 @@ export interface BattleDeps {
   log?: (path: string, events: BattleEvent[]) => void;
   /** Opens the encounter builder. */
   newEncounter: () => void;
+  /** Rolls an attack, damage, save or skill from a card. */
+  roll?: RollCheck;
+  /** A character note's saves and skills, for its card. */
+  checks?: (path: string) => Promise<Check[]>;
 }
 
 export class BattleView extends ItemView {
@@ -629,6 +635,14 @@ export class BattleView extends ItemView {
       chip.addEventListener('click', () => this.apply(removeCondition(f, c.id, k.name)));
     }
 
+    const { roll, checks } = this.deps;
+    if (c.pc && c.path !== null && roll !== undefined && checks !== undefined) {
+      const box = card.createDiv();
+      void checks(c.path).then((list) => {
+        if (list.length > 0) renderChecks(box, list, roll, t);
+      });
+    }
+
     const block = card.createDiv({ cls: 'dnd5e-battle-statblock' });
     const component = this.text;
     void this.deps.source.statblock(c).then((sb) => {
@@ -641,6 +655,8 @@ export class BattleView extends ItemView {
         t,
         markdown: (md, el) => MarkdownRenderer.render(this.app, md, el, c.path ?? '', component),
         spells: this.deps.spells,
+        roll,
+        lang: this.lang,
       });
     });
   }

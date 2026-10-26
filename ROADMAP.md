@@ -13,9 +13,9 @@ plugin's `DECISIONS.md` once it exists.
 
 ## Next step
 
-**dnd5e-byLokianer · Dice** (module 7) — design reviewed 2026-10-26 ("passt so"), **R1 and R2 built**
-(plans `docs/superpowers/plans/2026-10-26-dice-r1.md`, `…-r2.md`), waiting for the check in
-Obsidian (HANDOFF points 64–71); then R3 (stat blocks and characters).
+**dnd5e-byLokianer · Dice** (module 7) — design reviewed 2026-10-26 ("passt so"), **R1, R2 and R3
+built** (plans `docs/superpowers/plans/2026-10-26-dice-r1.md`, `…-r2.md`, `…-r3.md`), waiting for
+the check in Obsidian (HANDOFF points 64–74). Module 7 is the last planned module.
 
 **dnd5e-byLokianer · Battle tracker** (module 6) — design reviewed ("passt"), **B1, B2 and B3
 built** (plans `docs/superpowers/plans/2026-10-25-battle-b1.md`, `…-b2.md`, `…-b3.md`), waiting for
@@ -190,7 +190,8 @@ Design: [`docs/superpowers/specs/2026-10-26-dice-design.md`](docs/superpowers/sp
       check). Plan `docs/superpowers/plans/2026-10-26-dice-r1.md`
 - [ ] **R2 — Rollable tables** (built 2026-10-26, awaiting the check). Plan
       `docs/superpowers/plans/2026-10-26-dice-r2.md`
-- [ ] **R3 — Stat blocks and characters**
+- [ ] **R3 — Stat blocks and characters** (built 2026-10-26, awaiting the check). Plan
+      `docs/superpowers/plans/2026-10-26-dice-r3.md`
 
 ### Not placed yet
 

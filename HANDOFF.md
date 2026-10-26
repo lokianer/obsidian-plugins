@@ -26,7 +26,11 @@ the maintainer reported **every checklist point passing**: phases 2–5 are acce
    R2 built after "weiter": `src/dice/tables.ts` (pure: headings ending in a die, lists and ranged
    tables, gaps), `dice-tables.ts` (the campaign's `type: table` notes, link resolution),
    `inline-markdown.ts` (a row rendered with working links), Tables in the Dice tab,
-   `dice: [[Note#Heading]]` in notes. Check points 69–71. Next: R3 (stat blocks and characters).
+   `dice: [[Note#Heading]]` in notes. Check points 69–71. R3 built after "weiter":
+   `src/dice/statblock.ts` (attack bonuses and damage in an entry), `src/dice/checks.ts` (saves and
+   skills, names per language), `statblock-dice.ts` (the buttons, Shift / Alt / menu),
+   `dice-party.ts` (the party's checks), the roller in `main.ts`. Check points 72–74. Module 7 is
+   the last planned module; what comes next is the maintainer's call.
    The overlap check harness lives in the scratchpad (`preview/dice.ts`, `diceshot.cjs`): rebuild
    it from the spec if the scratchpad is gone.
 1. **Battle tracker** (module 6): design reviewed ("passt"), B1 built — `src/battle/` (pure:
@@ -354,6 +358,20 @@ fields)
     a click plays the stage and writes `11 → Sable on a rooftop…` beside the button; the
     `#Markets (d6)` link shows a notice; the block reference stays code. Live Preview too.
 
+**Dice R3**
+
+72. Monster Manual → Owlbear (and the Battle tab's owlbear card, and a note's stat block): `+7`,
+    `10 (1d10 + 5)`, `14 (2d8 + 5)` and Perception +3 are buttons; a click plays the stage in a
+    small window ("Owlbear: Beak", damage "Owlbear: Beak · damage"); Shift → two d20, the higher
+    kept; Alt → the lower; right-click (or a long press on the phone) → Normal / Advantage /
+    Disadvantage. DCs ("DC 11 Constitution") stay text. German Obsidian: "+7 auf Treffer" and
+    "10 (1W10 + 5)" work the same.
+73. Dice tab → Party: Dagny, Ilex, Orrin Quill with their saves and skills, Tessaly Vane with "No
+    saves or skills …"; Orrin's Persuasion +7 with the tab's Advantage and DC 15 → verdict; the
+    log offers `Orrin Quill rolls Persuasion: 2d20kh1+7 → … against DC 15: success`.
+74. Battle tab, Dagny's card: Strength save +7, Constitution save +6, Athletics +7 …; a roll from
+    a stat block shows up in the Dice tab's list. Dice animation off: a notice with the result.
+
 **Battle tracker B3**
 
 57. **New encounter** (command, or + in the Battle tab header): chips Dagny · 6, Ilex · 6, Orrin
@@ -378,7 +396,7 @@ monsters in the plugin; an import for the GM's own", "The battle tracker keeps t
 encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
 hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
-syntax", "Dice R2: rollable tables by a die in the heading" (2026-10-26).
+syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -412,5 +430,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 395 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 398 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

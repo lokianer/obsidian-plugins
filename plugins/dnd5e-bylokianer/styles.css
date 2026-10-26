@@ -3833,3 +3833,34 @@ a.dnd5e-tensions-name:hover {
 .dnd5e-dice-result {
   overflow-wrap: anywhere;
 }
+
+.dnd5e-sb-roll {
+  display: inline;
+  height: auto;
+  padding: 0 var(--size-2-2);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+  box-shadow: none;
+  color: var(--text-accent);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dnd5e-sb-roll:hover {
+  border-color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+}
+
+.dnd5e-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  margin: var(--size-4-2) 0;
+}
+
+.dnd5e-checks .dnd5e-sb-roll {
+  padding: var(--size-2-2) var(--size-4-2);
+  white-space: normal;
+}

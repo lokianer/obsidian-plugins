@@ -235,3 +235,26 @@ export const editorLivePreviewField = {};
 
 /** The editor's file state field; the dice editor extension only reads it. */
 export const editorInfoField = {};
+
+/** Context menus: the items are kept so a test can pick one. */
+export class Menu {
+  static last: Menu | null = null;
+  items: { title: string; click: () => void }[] = [];
+  addItem(build: (item: MenuItem) => void): this {
+    const entry = { title: '', click: () => undefined as void };
+    const item: MenuItem = {
+      setTitle: (title) => ((entry.title = title), item),
+      onClick: (click) => ((entry.click = click), item),
+    };
+    build(item);
+    this.items.push(entry);
+    return this;
+  }
+  showAtMouseEvent(): void {
+    Menu.last = this;
+  }
+}
+interface MenuItem {
+  setTitle(title: string): MenuItem;
+  onClick(click: () => void): MenuItem;
+}

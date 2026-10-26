@@ -280,9 +280,24 @@ const VERDICT_WORDS: Record<Verdict, string> = {
   failure: 'failure',
 };
 
-/** The session log's line for a roll: `Rolled 2d6+3 → 10 (4, 3, +3)`, with a DC its verdict. */
-export function rollLine(r: Roll, dc: number | null): string {
+/**
+ * The session log's line for a roll: `Rolled 2d6+3 → 10 (4, 3, +3)`, with a DC its verdict; with a
+ * subject `Orrin Quill rolls Persuasion: d20+7 → 12 (5, +7)`.
+ */
+export function rollLine(r: Roll, dc: number | null, subject?: string): string {
   const v = verdict(r, dc);
   const against = dc === null ? '' : ` against DC ${dc}`;
-  return `Rolled ${r.text}${against}${v === null ? '' : `: ${VERDICT_WORDS[v]}`}`;
+  const head = subject === undefined ? 'Rolled ' : `${subject}: `;
+  return `${head}${r.text}${against}${v === null ? '' : `: ${VERDICT_WORDS[v]}`}`;
+}
+
+export type Edge = 'normal' | 'adv' | 'dis';
+
+/** A formula with advantage or disadvantage when it has a single d20, else as written. */
+export function parseWithEdge(text: string, edge: Edge): Formula | null {
+  if (edge !== 'normal') {
+    const f = parseFormula(`${text} ${edge}`);
+    if (f !== null) return f;
+  }
+  return parseFormula(text);
 }
