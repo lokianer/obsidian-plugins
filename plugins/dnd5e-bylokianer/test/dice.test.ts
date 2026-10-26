@@ -12,6 +12,7 @@ import {
 } from '../src/dice/checks';
 import {
   criticalFormula,
+  isDiceLine,
   keptD20,
   parseFormula,
   roll,
@@ -245,5 +246,18 @@ describe('critical hits and ability checks (R4)', () => {
       'Geschicklichkeitswurf',
       'Konstitutionswurf',
     ]);
+  });
+});
+
+describe('dice lines in the log', () => {
+  it('tells roll lines from other log lines', () => {
+    expect(isDiceLine('Rolled d20+7 → 19 (12, +7) against DC 15: success')).toBe(true);
+    expect(isDiceLine('Rolled Night on Lantern Quay (d20): 11 → [[Sable]] on a rooftop')).toBe(
+      true,
+    );
+    expect(isDiceLine('Orrin Quill rolls Persuasion: d20+7 → 12 (5, +7)')).toBe(true);
+    expect(isDiceLine('Owlbear rolls Beak damage (critical): 2d10+5 → 17 (4, 8, +5)')).toBe(true);
+    expect(isDiceLine('Order of the Lantern → The Gutter Court: −2 → −3')).toBe(false);
+    expect(isDiceLine('Combat begins: [[Ambush]]')).toBe(false);
   });
 });

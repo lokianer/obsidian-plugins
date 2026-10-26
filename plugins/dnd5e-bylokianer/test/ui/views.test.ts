@@ -1559,6 +1559,10 @@ describe('battle tab', () => {
         note = combatLines(fight, ended).join('\n');
         return Promise.resolve();
       },
+      clear: () => {
+        note = '';
+        return Promise.resolve();
+      },
       statblock: (f) =>
         Promise.resolve(
           f.monster === 'owlbear'
@@ -1569,6 +1573,7 @@ describe('battle tab', () => {
     };
     const logged: BattleEvent[] = [];
     const rolledChecks: string[] = [];
+    const removals: string[] = [];
     let selected: string | null = null;
     // Monsters roll a 10 (d20 → 11 for 0.5).
     const view = new BattleView({} as WorkspaceLeaf, {
@@ -1582,6 +1587,8 @@ describe('battle tab', () => {
       log: (_path, events) => logged.push(...events),
       newEncounter: () => undefined,
       roll: (check) => rolledChecks.push(check.subject),
+      confirm: () => Promise.resolve(true),
+      removeLog: () => removals.push('battle'),
       checks: (path) =>
         Promise.resolve(
           path === 'Dagny.md'
@@ -1622,6 +1629,7 @@ describe('battle tab', () => {
       selected: () => selected,
       logged,
       rolledChecks,
+      removals,
       type,
       submit,
       view,
@@ -1678,6 +1686,23 @@ describe('battle tab', () => {
     expect(el.querySelector('.dnd5e-battle-round')?.textContent).toBe('Ended after 1 round');
     expect(el.querySelector('.dnd5e-battle-start')?.textContent).toBe('Start again');
     expect(saves.length).toBeGreaterThan(5);
+  });
+
+  it('resets the fight from the ⋮ menu and offers to remove the battle lines', async () => {
+    const { el, click, note, removals } = await open('en');
+    await click('.dnd5e-battle-start');
+    expect(note()).toContain('Rolling initiative');
+    el.querySelector<HTMLElement>('.dnd5e-battle-more')?.dispatchEvent(new MouseEvent('click'));
+    expect(Menu.last?.items.map((i) => i.title)).toEqual([
+      'Reset the fight',
+      "Remove battle lines from tonight's session",
+    ]);
+    Menu.last?.items[1]?.click();
+    expect(removals).toEqual(['battle']);
+    Menu.last?.items[0]?.click();
+    await new Promise((r) => window.setTimeout(r, 0));
+    expect(note()).toBe('');
+    expect(el.querySelector('.dnd5e-battle-start')?.textContent).toBe('Start');
   });
 
   it('adds and removes combatants mid-fight and reports the moments for the log', async () => {
@@ -2000,6 +2025,7 @@ describe('dice', () => {
           ]),
         checks: () => Promise.resolve([]),
       },
+      removeLog: () => logged.push({ label: 'removed' } as DiceRecord),
     });
     root.appendChild(view.contentEl);
     await view.onOpen();
@@ -2057,6 +2083,19 @@ describe('dice', () => {
     expect(history[0]?.label).toBe('Orrin Quill: Persuasion');
     expect(history[0]?.roll.text).toBe('2d20kh1+7 → 12 (5, [5], +7)');
     expect(logged[logged.length - 1]?.subject).toBe('Orrin Quill rolls Persuasion');
+    // The ⋮ menu: clear the list, or remove the dice lines from tonight's log.
+    el.querySelector<HTMLElement>('.dnd5e-dice-more')?.dispatchEvent(new MouseEvent('click'));
+    expect(Menu.last?.items.map((i) => i.title)).toEqual([
+      'Clear the list',
+      "Remove dice lines from tonight's session",
+    ]);
+    Menu.last?.items[1]?.click();
+    expect(logged[logged.length - 1]?.label).toBe('removed');
+    Menu.last?.items[0]?.click();
+    expect(history).toEqual([]);
+    expect(texts(el, '.dnd5e-dice-empty')).toContain(
+      'No rolls yet. Type a formula like 2d6+3 or pick a die.',
+    );
   });
 
   it('turns dice: formulas and table links in a note into buttons and leaves other code alone', async () => {

@@ -425,6 +425,13 @@ Settings: **Dice log** — offer each roll for tonight's session in a notice (th
 automatically, or not at all (`- 20:10 Rolled d20+7 → 19 (12, +7) against DC 15: success`);
 **Dice animation** — the stage animated, the stage with the result at once, or no stage.
 
+**Clearing.** The Battle tab's ⋮ menu offers **Reset the fight** — the `## Combat` table leaves the
+encounter note and the line-up shows again — and **Remove battle lines from tonight's session**. The
+Dice tab's ⋮ menu (beside "Rolls") offers **Clear the list** and **Remove dice lines from tonight's
+session**. Removing lines asks first and touches only the lines the battle tracker or the dice wrote
+under `## Log`; relation changes, your own lines and `[!gm]` callouts stay. Both removals are
+commands too.
+
 ## Commands
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button

@@ -74,3 +74,29 @@ export function appendToLog(
   lines.splice(after, 0, ...block);
   return fromLines(note);
 }
+
+const LOG_LINE = /^- \d{1,2}:\d{2} (.*)$/;
+
+/**
+ * Tonight's `## Log` without the plain lines `- HH:MM …` whose text `drop` picks (lines inside a
+ * `> [!gm]` callout and anything else stay); a blank line left doubled is dropped too. Returns the
+ * text and how many lines went.
+ */
+export function removeFromLog(
+  text: string,
+  drop: (line: string) => boolean,
+): { text: string; removed: number } {
+  const note = toLines(text);
+  const section = logSection(note.lines);
+  if (section === null) return { text, removed: 0 };
+  const body = note.lines.slice(section.heading + 1, section.end);
+  const kept = body.filter((line) => {
+    const m = LOG_LINE.exec(line);
+    return m === null || !drop(m[1] ?? '');
+  });
+  const removed = body.length - kept.length;
+  if (removed === 0) return { text, removed: 0 };
+  const tidy = kept.filter((line, i) => line.trim() !== '' || (kept[i - 1] ?? 'x').trim() !== '');
+  note.lines.splice(section.heading + 1, body.length, ...tidy);
+  return { text: fromLines(note), removed };
+}

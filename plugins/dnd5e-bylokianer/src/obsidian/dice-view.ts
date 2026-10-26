@@ -3,7 +3,7 @@
 // rolls of this Obsidian session with Roll again and Log. Rolls are offered for tonight's session
 // log by the dice log setting.
 
-import { ItemView, setIcon, type WorkspaceLeaf } from 'obsidian';
+import { ItemView, Menu, setIcon, type WorkspaceLeaf } from 'obsidian';
 
 import type { Check } from '../dice/checks';
 import {
@@ -47,6 +47,8 @@ export interface DiceDeps {
   /** Renders a table row's Markdown (links work). */
   render: RenderText;
   party: PartySource;
+  /** Removes the dice lines from tonight's session log (asking first). */
+  removeLog?: () => void;
 }
 
 const QUICK = [4, 6, 8, 10, 12, 20, 100];
@@ -200,7 +202,27 @@ export class DiceView extends ItemView {
     this.tablesEl = section('dice.tables', () => this.loadTables());
     void this.loadTables();
 
-    root.createDiv({ cls: 'dnd5e-dice-section', text: t('dice.history') });
+    const historyHead = root.createDiv({ cls: 'dnd5e-dice-section' });
+    historyHead.createSpan({ text: t('dice.history') });
+    const more = historyHead.createEl('button', {
+      cls: ['clickable-icon', 'dnd5e-dice-more'],
+      attr: { 'aria-label': t('menu.more') },
+    });
+    setIcon(more, 'more-vertical');
+    more.addEventListener('click', (e) => {
+      const menu = new Menu();
+      menu.addItem((item) =>
+        item.setTitle(t('dice.clear')).onClick(() => {
+          this.deps.history.length = 0;
+          this.renderHistory();
+        }),
+      );
+      const { removeLog } = this.deps;
+      if (removeLog !== undefined) {
+        menu.addItem((item) => item.setTitle(t('log.removeDice')).onClick(removeLog));
+      }
+      menu.showAtMouseEvent(e);
+    });
     this.historyEl = root.createDiv({ cls: 'dnd5e-dice-history' });
     this.renderHistory();
   }

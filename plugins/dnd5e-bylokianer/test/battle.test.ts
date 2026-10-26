@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { readEncounter } from '../src/battle/encounter';
-import { battleEvents, battleLine } from '../src/battle/log';
+import { battleEvents, battleLine, isBattleLine } from '../src/battle/log';
 import {
   addCondition,
   addFighter,
@@ -25,7 +25,14 @@ import {
   setTemp,
   setUp,
 } from '../src/battle/fight';
-import { baseName, combatLines, readCombat, restore, withCombat } from '../src/battle/table';
+import {
+  baseName,
+  combatLines,
+  readCombat,
+  restore,
+  withCombat,
+  withoutCombat,
+} from '../src/battle/table';
 import { loadExampleVault } from './fixture';
 
 const fighter = (name: string, more: Partial<Fighter> = {}): Fighter => ({
@@ -389,5 +396,28 @@ describe('a fight changing mid-way (B2)', () => {
       xp: 700,
       group: 'Owlbear',
     });
+  });
+});
+
+describe('clearing (B4)', () => {
+  it('tells battle lines from other log lines', () => {
+    expect(isBattleLine('Combat begins: [[Ambush under the second arch]]')).toBe(true);
+    expect(isBattleLine('Round 2: Owlbear defeated')).toBe(true);
+    expect(isBattleLine('Round 3: Dagny is down')).toBe(true);
+    expect(isBattleLine('Round 4: Dagny dies')).toBe(true);
+    expect(isBattleLine('Combat ends after 4 rounds — 700 XP')).toBe(true);
+    expect(isBattleLine('Rolled d20 → 4')).toBe(false);
+    expect(isBattleLine('The party now knows [[Lady Vermillion]].')).toBe(false);
+  });
+
+  it('removes the Combat section from an encounter note, nothing else', () => {
+    const note =
+      '---\ntype: encounter\n---\n\n# Ambush\n\n## Combat\n\nRound 1\n\n| a |\n\n## Tactics\n\nHide.\n';
+    expect(withoutCombat(note)).toBe(
+      '---\ntype: encounter\n---\n\n# Ambush\n\n## Tactics\n\nHide.\n',
+    );
+    const last = '# Ambush\n\n## Combat\n\nRound 1\n';
+    expect(withoutCombat(last)).toBe('# Ambush\n');
+    expect(withoutCombat('# No fight\n')).toBe('# No fight\n');
   });
 });

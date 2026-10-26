@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   appendToLog,
+  removeFromLog,
   carriedLoot,
   findTonight,
   formatLogLine,
@@ -181,5 +182,48 @@ describe('loot', () => {
 
   it('leaves the note alone when there is nothing to carry', () => {
     expect(withLoot(next, carriedLoot('# S\n', S14))).toBe(next);
+  });
+});
+
+describe('removeFromLog', () => {
+  const note = [
+    '# Session 15',
+    '',
+    '## Log',
+    '',
+    '- 20:05 Combat begins: [[Ambush]]',
+    '- 20:06 Order of the Lantern → The Gutter Court: −2 → −3',
+    '- 20:10 Rolled d20+7 → 19 (12, +7)',
+    '',
+    '> [!gm]',
+    '> - 20:12 Rolled d20 → 4',
+    '',
+    '- 20:20 Combat ends after 3 rounds',
+    '',
+    '## Loot',
+    '- 20:30 Rolled not a log line here',
+  ].join('\n');
+
+  it('removes the picked plain lines of ## Log only, tidying blank lines', () => {
+    const { text, removed } = removeFromLog(note, (line) => line.startsWith('Combat'));
+    expect(removed).toBe(2);
+    expect(text).toBe(
+      [
+        '# Session 15',
+        '',
+        '## Log',
+        '',
+        '- 20:06 Order of the Lantern → The Gutter Court: −2 → −3',
+        '- 20:10 Rolled d20+7 → 19 (12, +7)',
+        '',
+        '> [!gm]',
+        '> - 20:12 Rolled d20 → 4',
+        '',
+        '## Loot',
+        '- 20:30 Rolled not a log line here',
+      ].join('\n'),
+    );
+    expect(removeFromLog(note, (line) => line.startsWith('Rolled')).removed).toBe(1);
+    expect(removeFromLog('# No log', () => true)).toEqual({ text: '# No log', removed: 0 });
   });
 });

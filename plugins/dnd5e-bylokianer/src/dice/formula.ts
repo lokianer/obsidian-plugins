@@ -327,3 +327,8 @@ export function parseWithEdge(text: string, edge: Edge): Formula | null {
   }
   return parseFormula(text);
 }
+
+/** Whether a log line's text (after its time) is a roll: `Rolled …` or `Orrin Quill rolls …: … → …`. */
+export function isDiceLine(text: string): boolean {
+  return /^Rolled .+ → /.test(text) || /^.+ rolls [^:]+: .+ → /.test(text);
+}

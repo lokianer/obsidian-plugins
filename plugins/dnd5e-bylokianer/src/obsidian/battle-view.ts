@@ -9,6 +9,7 @@ import {
   Component,
   ItemView,
   MarkdownRenderer,
+  Menu,
   Notice,
   setIcon,
   type WorkspaceLeaf,
@@ -71,6 +72,10 @@ export interface BattleDeps {
   roll?: RollCheck;
   /** A character note's saves and skills, for its card. */
   checks?: (path: string) => Promise<Check[]>;
+  /** Asks before something is removed from a note; resolves true on yes. */
+  confirm?: (title: string, text: string, ok: string) => Promise<boolean>;
+  /** Removes the battle lines from tonight's session log (asking first). */
+  removeLog?: () => void;
 }
 
 export class BattleView extends ItemView {
@@ -240,6 +245,7 @@ export class BattleView extends ItemView {
     });
     setIcon(add, 'plus');
     add.addEventListener('click', () => this.deps.newEncounter());
+    if (path !== null) this.renderMore(header, path);
     header.createDiv({ cls: 'dnd5e-battle-spacer' });
     const f = this.fight;
     const button = (text: StringKey, cls: string, run: () => void, cta = false, icon = '') => {
@@ -291,6 +297,45 @@ export class BattleView extends ItemView {
       );
     }
     button('battle.end', 'dnd5e-battle-end', () => this.apply(f, true), false, 'flag');
+  }
+
+  /** The ⋮ menu: reset the fight in the note, remove the battle lines from tonight's log. */
+  private renderMore(header: HTMLElement, path: string): void {
+    const { t, confirm, removeLog } = this.deps;
+    const more = header.createEl('button', {
+      cls: ['clickable-icon', 'dnd5e-battle-more'],
+      attr: { 'aria-label': t('menu.more') },
+    });
+    setIcon(more, 'more-vertical');
+    more.addEventListener('click', (e) => {
+      const menu = new Menu();
+      if (this.fight !== null && confirm !== undefined) {
+        menu.addItem((item) =>
+          item.setTitle(t('battle.reset')).onClick(() => void this.reset(path, confirm)),
+        );
+      }
+      if (removeLog !== undefined) {
+        menu.addItem((item) => item.setTitle(t('log.removeBattle')).onClick(removeLog));
+      }
+      menu.showAtMouseEvent(e);
+    });
+  }
+
+  /** Removes the fight from the encounter note, after asking; the line-up shows again. */
+  private async reset(
+    path: string,
+    confirm: (title: string, text: string, ok: string) => Promise<boolean>,
+  ): Promise<void> {
+    const { t } = this.deps;
+    const note = this.encounters.find((e) => e.path === path)?.title ?? path;
+    if (!(await confirm(t('battle.reset'), t('battle.resetText', { note }), t('log.remove')))) {
+      return;
+    }
+    await this.deps.source.clear(path);
+    this.fight = null;
+    this.ended = false;
+    this.picked = null;
+    this.render();
   }
 
   /** Before the fight: who will be in it. */

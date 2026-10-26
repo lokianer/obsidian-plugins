@@ -8,6 +8,7 @@ import { battleLine } from '../../battle/log';
 import { SRD_MONSTERS } from '../../monsters/srd-monsters';
 import { BattleStore, fromMonster } from '../battle-store';
 import { BATTLE_VIEW, BattleView } from '../battle-view';
+import { confirm } from '../confirm';
 import { cryptoRandom } from '../deck-view';
 import type { PartyChecks } from '../dice-party';
 import { EncounterBuilderModal, EncounterPicker } from '../encounter-builder';
@@ -47,6 +48,8 @@ export function registerBattle(
         newEncounter: () => void newEncounter(),
         roll: (check, edge) => ctx.later.roll(check, edge),
         checks: (path) => party.checks(path),
+        confirm: (title, text, ok) => confirm(app, t, title, text, ok),
+        removeLog: () => void ctx.sessionLog.removeLines('battle'),
         log: (path, events) => {
           const file = app.vault.getFileByPath(path);
           if (file === null) return;
@@ -82,6 +85,11 @@ export function registerBattle(
         for (const view of views()) await view.show(path);
       },
     }).open();
+  plugin.addCommand({
+    id: 'remove-battle-lines',
+    name: t('log.removeBattle'),
+    callback: () => void ctx.sessionLog.removeLines('battle'),
+  });
   plugin.addCommand({
     id: 'new-encounter',
     name: t('command.newEncounter'),

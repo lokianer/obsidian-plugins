@@ -14,17 +14,21 @@ import {
   nextSessionPath,
   nextSessionText,
   parseLog,
+  removeFromLog,
   type SessionNote,
   sessionsOf,
   withLoot,
 } from '@obsidian-plugins/session';
 import { type App, Modal, normalizePath, Notice, type Plugin, setIcon, TFile } from 'obsidian';
 
+import { isBattleLine } from '../battle/log';
 import { inCampaign } from '../campaign/scope';
+import { isDiceLine } from '../dice/formula';
 import { buildHistory, historyFor, type HistoryEntry } from '../factions/history';
 import type { FactionWorld, Mode } from '../factions/model';
 import { signed } from '../factions/steps';
 import type { T } from '../i18n/strings';
+import { confirm } from './confirm';
 import type { LogMode, Settings } from './settings';
 import type { WorldCache } from './world-cache';
 
@@ -165,6 +169,37 @@ export class SessionLog {
       return;
     }
     this.notice(text, tonight.path, () => void this.write(`- ${time} ${text}`, false));
+  }
+
+  /**
+   * Removes the battle tracker's or the dice's lines from tonight's `## Log`, after asking; the
+   * relation changes, the GM's own lines and the `[!gm]` callouts stay.
+   */
+  async removeLines(kind: 'battle' | 'dice'): Promise<void> {
+    const { t } = this;
+    const { app } = this.plugin;
+    const tonight = this.tonight();
+    const file = tonight === null ? null : app.vault.getFileByPath(tonight.path);
+    if (file === null) {
+      new Notice(t('log.noSession'));
+      return;
+    }
+    const session = file.basename;
+    const drop = kind === 'battle' ? isBattleLine : isDiceLine;
+    const { removed } = removeFromLog(await app.vault.cachedRead(file), drop);
+    if (removed === 0) {
+      new Notice(t('log.removeNone', { session }));
+      return;
+    }
+    const text = t('log.removeText', { count: removed, session });
+    if (!(await confirm(app, t, t('log.removeTitle'), text, t('log.remove')))) return;
+    let count = 0;
+    await app.vault.process(file, (note) => {
+      const result = removeFromLog(note, drop);
+      count = result.removed;
+      return result.text;
+    });
+    new Notice(t('log.removed', { count, session }));
   }
 
   private value(v: number | null): string {

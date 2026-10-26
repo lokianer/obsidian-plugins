@@ -7,7 +7,7 @@ import { parseYaml, type Plugin, TFile } from 'obsidian';
 
 import { addMonsterEntry, type CombatantSpec, readEncounter, type Side } from '../battle/encounter';
 import type { Fight, Fighter } from '../battle/fight';
-import { combatLines, readCombat, type Table, withCombat } from '../battle/table';
+import { combatLines, readCombat, type Table, withCombat, withoutCombat } from '../battle/table';
 import { inCampaign, typeOf } from '../campaign/scope';
 import { PARTY } from '../factions/discover';
 import { monsterName } from '../monsters/meta';
@@ -38,6 +38,8 @@ export interface BattleSource {
   /** The fighters an encounter lists (with the party), and the fight its note holds, if any. */
   load(path: string): Promise<{ fighters: Fighter[]; table: Table | null }>;
   save(path: string, fight: Fight, ended: boolean): Promise<void>;
+  /** Removes the fight (its `## Combat` section) from the encounter note. */
+  clear(path: string): Promise<void>;
   /** The stat block shown on a combatant's card: its monster's, or its note's first. */
   statblock(fighter: Fighter): Promise<Statblock | null>;
   /**
@@ -123,6 +125,11 @@ export class BattleStore implements BattleSource {
     await this.plugin.app.vault.process(file, (text) =>
       withCombat(text, combatLines(fight, ended)),
     );
+  }
+
+  async clear(path: string): Promise<void> {
+    const file = this.plugin.app.vault.getFileByPath(path);
+    if (file !== null) await this.plugin.app.vault.process(file, withoutCombat);
   }
 
   async statblock(fighter: Fighter): Promise<Statblock | null> {

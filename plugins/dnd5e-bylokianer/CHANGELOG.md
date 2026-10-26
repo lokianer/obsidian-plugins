@@ -8,6 +8,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Clearing logs**: the Battle tab's ⋮ menu resets the fight (its `## Combat` table leaves the
+  encounter note) and removes the battle lines from tonight's session; the Dice tab's ⋮ menu clears
+  its list and removes the dice lines from tonight's session. Both removals ask first and leave the
+  relation changes, the GM's own lines and `[!gm]` callouts alone; also as commands.
+
 - **Critical hits and ability checks** (dice, phase R4): Shift-click on a damage button (or Critical
   hit in its menu) rolls the damage of a critical hit, dice doubled and numbers once; the modifier
   beside each ability score in a stat block rolls the ability check.

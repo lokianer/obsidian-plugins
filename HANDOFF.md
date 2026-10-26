@@ -13,55 +13,58 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-25 and 2026-10-26, cloud. Last: complexity steps 1 and 4 (asked for one after the other). Built without a check in Obsidian yet (the maintainer: "Mach
+2026-10-25 and 2026-10-26, cloud. Built without a check in Obsidian yet (the maintainer: "Mach
 weiter, ich teste später"): the battle tracker (B1–B3, XP optional), German monster texts (M2), the
-dice module (R1–R4). Asked for along the way: a quality round (review since B1 and its fixes), the
-READMEs and the Pages site, the stylesheet split into one file per view, a complexity analysis —
-and step 1 of reducing complexity. The maintainer then asked for this handoff.
+dice module (R1–R4), clearing battle and dice logs. Asked for along the way: a quality round, the
+READMEs and the Pages site, the stylesheet split per view, a complexity analysis and steps 1, 4 and
+5 of reducing it, a log button that wraps. Last request: step 5, this handoff, and a full list of
+what can still be done (below, "Where to continue").
 
 ## Where to continue
 
-0. **The maintainer's check in Obsidian** of everything built since 2026-10-25: points 20–21 and
-   47–76 below. Fix what it turns up first.
-1. **Reducing complexity** — asked for ("wie reduzieren wir die Komplexität", "starte mit 1").
-   Measured with ESLint's `complexity` rule (cyclomatic complexity per function; data files not
-   counted) on 2026-10-26, before step 1: 108 source files, 62 functions above 10, the worst
-   `findTensions` 36, `discoverEntities` 33, `fromSrdApi` 32, `parseSpellJson` 29, popover
-   `render` 27, `fieldBlock` 26, `tokenize` 24, `drawPreview` 24; 18 functions above 80 lines,
-   `onload` in `main.ts` 587. Reproduce with
-   `pnpm exec eslint src --rule '{"complexity":["warn",10]}'` in the plugin folder.
-   - **Step 1 done:** split by rule or step — `findTensions` into its four rules (`oneSided`,
-     `outOfLine`, `publicTrue`, `splitAllies`, run from a `RULES` list), `discoverEntities` into
-     `factionCandidates`, `factionNotesOf`, `factionEntity`, `characterEntity`. Highest complexity
-     now 32 (`fromSrdApi`); the two are at 12 and below, behaviour and warning order unchanged
-     (all tests pass unchanged).
-   - **Step 2:** tables instead of `if` chains in the importers (`fromSrdApi`, `fromTools`,
-     `parseSpellJson`: a field map "source → target + conversion") and in `tokenize`. Add tests
-     first where the importers are thin.
-   - **Step 3:** split the big renderers into named parts: `renderStatblock` (head, lines,
-     abilities, sections), the Battle tab's `renderCard`, the popover's `render`. Check with the
-     screenshot comparison (pixel-identical) as for the stylesheet split.
-   - **Step 4 done:** `src/obsidian/register/` with `context.ts` (shared: strings, settings, world
-     cache, session log, cards, `openNote`, `revealView`, `indexed`, and `later` for the modules
-     registered afterwards) and one `register…(ctx)` per module; `main.ts` is 42 lines. Guarded by
-     `test/ui/plugin.test.ts` (an inline snapshot of every command, view, ribbon icon and
-     processor). Three registrations are slightly over 80 lines (battle 88, monsters 92, factions
-     81).
-   - **Step 5:** `complexity` (warn at 20) and `max-lines-per-function` (warn at 150) in the
-     plugin's ESLint config; tighten after the steps.
-2. **Also proposed, not started** (the maintainer has not said yes yet):
-   - Start-up time: `main.js` is 2 MB (480 KB gzipped), about 80 % SRD data (monsters 520 KB,
-     spells 393 KB, German texts about 700 KB), all evaluated at every start, phones too. Data as
-     JSON strings parsed on first use of a tab; measure before and after.
-   - Vault scans: `WorldCache` rebuilds the whole world 250 ms after any change; `OwnSpells` and
-     `OwnMonsters` re-read every `type: spell` / `type: monster` note on each `resolved`. Per-file
-     caches, as CLAUDE.md asks, matter only for large vaults.
-   - An installer for this plugin alone: (A) `pnpm install-to "<vault>"`, generalising
-     `scripts/install-example.mjs`; (B) a ZIP of `main.js`, `manifest.json`, `styles.css` as a CI
-     artifact; (C) BRAT would need a GitHub release and the mirror repository — a publication,
-     which the maintainer decided against on 2026-10-25, so only on their explicit choice.
-3. Module 7 was the last planned module. The GM gate ("Not placed yet" in the roadmap) and the
-   release preparation stay the maintainer's call.
+Everything that can still be done, in the order I would take it. Items marked _(needs a yes)_ wait
+for the maintainer's go-ahead; the rest follow from what they already asked for.
+
+1. **The maintainer's check in Obsidian** of everything built since 2026-10-25: points 20–21 and
+   47–79 below. Fix what it turns up first. Nothing after it is accepted until then.
+2. **Reducing complexity, steps 2 and 3** (asked for; steps 1, 4, 5 done). Measured with ESLint's
+   `complexity` rule on 2026-10-26: 62 functions above 10 before step 1. Since step 5 the lint
+   warns at complexity 20 and 150 lines per function; its eleven warnings are the list:
+   - **Step 2:** tables instead of `if` chains — `fromSrdApi` (32), `fromTools`, `parseSpellJson`
+     (29), `tokenize` (24), `readRow` (22), `fieldBlock` (26), `entries` (21). Tests first where
+     the importers are thin.
+   - **Step 3:** the big renderers in named parts — `renderStatblock` (199 lines), the Battle tab's
+     `renderCard` (163), the popover's `render` (27), `drawPreview` (24), the stage's `finish`
+     (22). Check views with the pixel comparison used for the stylesheet split.
+   - Then make the two rules errors and tighten them (e.g. 15 and 100).
+   - Done: step 1 (`findTensions` into four rules, `discoverEntities` into its steps), step 4
+     (`src/obsidian/register/`, `main.ts` 42 lines, guarded by `test/ui/plugin.test.ts`), step 5
+     (the lint limits).
+3. **Start-up time** _(needs a yes)_: `main.js` is 2 MB (480 KB gzipped), about 80 % SRD data
+   (monsters 520 KB, spells 393 KB, German texts about 700 KB), evaluated at every start, phones
+   too. Data as JSON strings parsed on first use of a tab; measure before and after.
+4. **Vault scans** _(needs a yes)_: `WorldCache` rebuilds the whole world 250 ms after any change;
+   `OwnSpells` and `OwnMonsters` re-read every own spell / monster note on each `resolved`.
+   Per-file caches, as CLAUDE.md asks; they matter for large vaults.
+5. **Installer for this plugin alone** _(needs a yes)_: (A) `pnpm install-to "<vault>"`,
+   generalising `scripts/install-example.mjs`; (B) a ZIP of `main.js`, `manifest.json`,
+   `styles.css` as a CI artifact. (C) BRAT needs a GitHub release and the mirror repository — a
+   publication, against the decision of 2026-10-25, so only on an explicit choice.
+6. **Screenshots** for the Pages site once the check has passed: the encounter builder, the Monster
+   Manual with German texts (the current one shows English traits), from real Obsidian.
+7. **Dice, left out so far** _(needs a yes)_: hidden GM rolls (in a `[!gm]` callout; not chosen in
+   the brainstorm), critical damage rolled by itself after a natural 20, ability checks for
+   characters without a stat block (a frontmatter key), removing log lines from earlier sessions.
+8. **Battle tracker, left out so far** _(needs a yes)_: a critical hit's two failed death saves,
+   re-reading a fight the GM edits by hand while the tab is open.
+9. **New module: the GM gate** _(needs a yes, then brainstorm and spec)_: `[!gm]` callouts with
+   `revealed:`, `%%comments%%`, which notes the players have met, a player export (roadmap "Not
+   placed yet").
+10. **Release preparation** _(needs a yes)_: Obsidian's plugin guidelines and submission checklist,
+    the name against Wizards of the Coast's trademark rules, the release mirror repository, a
+    versioning and release workflow.
+11. **Housekeeping:** the private vault's daily reports and changelog for 2026-10-24 to 2026-10-26
+    (a local session; a cloud session cannot reach the vault).
 
 ## State of the working tree
 
@@ -84,8 +87,11 @@ delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
 - `998029b` READMEs and Pages site: sections and screenshots for the battle tracker and the dice.
 - `5e8a63a` `styles.css` split into sixteen files under `styles/`, bundled by esbuild.
 - `63a40ee` Reducing complexity, step 1: tension rules and faction discovery split.
-- Reducing complexity, step 4: `main.ts` per module (see "Where to continue"), committed with this
-  handoff.
+- `2199eab` Reducing complexity, step 4: `main.ts` per module, `test/ui/plugin.test.ts`.
+- `0eb45e8` Step 5: complexity and function length limits as lint warnings.
+- `4f302b4` The log notice's button wraps (icon, **Log**, the session's name under it).
+- Clearing battle and dice logs (Battle and Dice tab ⋮ menus, two commands, `removeFromLog` in
+  `packages/session`), committed with this handoff.
 - Earlier, on 2026-10-25: the battle tracker B1–B3 and the optional XP (built, awaiting the check)
   — the commits before `0c2d266`.
 
@@ -200,6 +206,19 @@ Rebuild and install (`pnpm --filter dnd5e-bylokianer build`, then `… install-e
 76. The modifiers beside the scores (`(+5)`, `(+1)` …) roll the ability checks ("Eulenbär:
     Stärkewurf" in German); in a note's stat block a click on the score still edits it.
 
+**Log notice and clearing**
+
+77. Change a relation, or roll with Dice log "ask": the notice's button shows an icon, **Log** and
+    the session's name under it; rename tonight's session to something long — the button wraps
+    and grows, nothing runs out of the notice (phone width too).
+78. Battle tab ⋮ → **Reset the fight** → a question naming the encounter → Remove: the `## Combat`
+    table leaves the note, the line-up and **Start** show again. ⋮ → **Remove battle lines from
+    tonight's session** → "Remove N lines from the log of Session 15?" → only `Combat begins …`,
+    `Round N: …` and `Combat ends …` lines go; relation changes and `[!gm]` lines stay.
+79. Dice tab ⋮ beside "Rolls" → **Clear the list** (no question, the list is empty) and **Remove
+    dice lines from tonight's session** (asks, removes `Rolled …` and `… rolls …` lines). Both
+    removals also from the command palette.
+
 **Battle tracker B3**
 
 57. **New encounter** (command, or + in the Battle tab header): chips Dagny · 6, Ilex · 6, Orrin
@@ -225,15 +244,14 @@ encounter note", "The battle tracker logs moments, not blows; the line-up can ch
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
 hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
 syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters", "Quality round …", "Dice R4: critical hits and ability checks", "The stylesheet in one file per view", "Reducing
-complexity, step 1", "Reducing complexity, step 4" (2026-10-26).
+complexity, step 1", "Reducing complexity, step 4", "Clearing battle and dice logs" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
 ## Open questions for the maintainer
 
 - The check in Obsidian (points 20–21, 47–76).
-- Go-ahead for the proposals under "Where to continue" 2 (start-up time, vault scans, installer A/B)
-  and for complexity steps 2, 3 and 5.
+- A yes or no for the items marked _(needs a yes)_ under "Where to continue" (3–10).
 - The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
   the maintainer wants something changed.
 
@@ -269,5 +287,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 405 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 409 plugin tests and 15 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

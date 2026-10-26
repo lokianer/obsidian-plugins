@@ -55,3 +55,10 @@ export function battleLine(event: BattleEvent, encounter: string, withXp = true)
     }
   }
 }
+
+/** Whether a log line's text (after its time) is one `battleLine` writes. */
+export function isBattleLine(text: string): boolean {
+  return /^Combat begins: |^Combat ends after |^Round \d+: .+ (?:defeated|is down|dies)$/.test(
+    text,
+  );
+}

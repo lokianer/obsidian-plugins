@@ -783,3 +783,20 @@ seven modules in one function.
 
 Left out: the three registration functions slightly over 80 lines (battle, monsters, factions)
 stay as they are; steps 2, 3 and 5.
+
+## 2026-10-26 · Clearing battle and dice logs
+
+Asked for by the maintainer; they chose all three of: the Dice tab's list, the lines in tonight's
+session, the fight in the encounter note. Plan `docs/superpowers/plans/2026-10-26-clear-logs.md`.
+
+- Lines are removed from tonight's session only, and only those the plugin wrote for the battle
+  tracker (`Combat begins`, `Round N: … defeated / is down / dies`, `Combat ends after`) or the dice
+  (`Rolled …`, `… rolls …: … → …`). `removeFromLog` lives beside `appendToLog` in
+  `packages/session`.
+- Removing from a note asks first (a confirm dialog naming the count and the session); clearing the
+  Dice tab's in-memory list does not.
+- The actions sit in a ⋮ menu in each tab and, for the two removals, in the command palette; no new
+  buttons in the header row, which is full on a phone.
+
+Left out: removing lines from earlier sessions, an undo (Obsidian's file history and the note's
+own undo cover it).

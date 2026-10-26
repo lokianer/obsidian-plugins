@@ -195,3 +195,17 @@ export function restore(
   });
   return { round: table.round, turn: table.turn, combatants };
 }
+
+/** The note without its `## Combat` section (the heading, its lines and the blank line before). */
+export function withoutCombat(text: string): string {
+  const lines = text.split('\n');
+  const at = section(lines);
+  if (at === null) return text;
+  // The last section takes the blank lines before it along; between sections one blank stays.
+  let start = at.start;
+  if (at.end === lines.length) {
+    while (start > 0 && (lines[start - 1] ?? '').trim() === '') start--;
+  }
+  lines.splice(start, at.end - start);
+  return lines.join('\n').replace(/\n*$/, '\n');
+}

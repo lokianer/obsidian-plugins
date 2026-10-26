@@ -36,7 +36,17 @@ export function registerDice(ctx: Context): PartyChecks {
   plugin.registerView(
     DICE_VIEW,
     (leaf) =>
-      new DiceView(leaf, { t, random: cryptoRandom, motion, history, log, tables, render, party }),
+      new DiceView(leaf, {
+        t,
+        random: cryptoRandom,
+        motion,
+        history,
+        log,
+        tables,
+        render,
+        party,
+        removeLog: () => void ctx.sessionLog.removeLines('dice'),
+      }),
   );
 
   const inline: InlineDeps = {
@@ -71,6 +81,11 @@ export function registerDice(ctx: Context): PartyChecks {
 
   const openDice = () => ctx.revealView(DICE_VIEW);
   plugin.addCommand({ id: 'open-dice', name: t('command.openDice'), callback: openDice });
+  plugin.addCommand({
+    id: 'remove-dice-lines',
+    name: t('log.removeDice'),
+    callback: () => void ctx.sessionLog.removeLines('dice'),
+  });
   plugin.addRibbonIcon('dices', t('command.openDice'), () => void openDice());
   return party;
 }
