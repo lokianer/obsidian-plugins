@@ -145,3 +145,8 @@ MIT, see [LICENSE](LICENSE). © 2026 Lokianer.
 dnd5e-byLokianer's NPC stat blocks, races and spells include material from the System Reference Document 5.1 by Wizards of the Coast
 LLC, licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/legalcode) — see
 [`plugins/dnd5e-bylokianer/src/npc/NOTICE.md`](plugins/dnd5e-bylokianer/src/npc/NOTICE.md).
+
+What is taken from other projects (Rhizom's campaign code, Obsidian's sample plugin scaffold, the
+5e-bits SRD data, d3-force) and what only inspired the plugin or is compatible with it (Fantasy
+Statblocks, Dice Roller, Initiative Tracker, Baldur's Gate 3's dice rolls) is listed in
+[dnd5e-byLokianer's README](plugins/dnd5e-bylokianer/README.md#origins-what-is-taken-what-is-only-inspired).

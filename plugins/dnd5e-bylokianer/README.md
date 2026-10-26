@@ -445,6 +445,42 @@ plugins.
 
 MIT — see [LICENSE](LICENSE).
 
+## Origins: what is taken, what is only inspired
+
+**Taken** — code, data or a template from another project, with its licence:
+
+- **Rhizom** (the maintainer's own earlier project): `src/campaign/scope.ts` is ported from
+  Rhizom's `packages/core/src/vault/campaign.ts`; the campaign note, tonight's session and the
+  session log follow Rhizom's conventions. Rhizom's sole author relicensed that code to MIT for
+  this plugin.
+- **Obsidian's sample plugin** (`obsidianmd/obsidian-sample-plugin`, 0BSD): the starting scaffold —
+  build script, manifest and project layout.
+- **5e-bits SRD database** (`5e-bits/5e-database`, MIT): the SRD 5.1 spells, monsters and NPC stat
+  blocks were extracted from it by `scripts/spells-from-srd.mjs` and `scripts/monsters-from-srd.mjs`
+  (and transcribed for the NPCs); the texts are the SRD's (see Attribution below).
+- **SRD 5.2.1** (Wizards of the Coast, CC-BY-4.0): the encounter builder's XP Budget per Character
+  table; it was read from `downfallx/dnd-5e-srd-markdown` (a CC-BY-4.0 Markdown conversion of the
+  SRD 5.2.1) to check the numbers.
+- **d3-force** (ISC licence): bundled as a library for the faction graph's layout.
+
+**Only inspired or compatible** — no code taken; the plugin reads or writes their formats, or
+borrows an idea, with its own implementation:
+
+- **Fantasy Statblocks** (javalent): the stat block keys are compatible, so blocks move between
+  the two; rendering, editing and **Convert stat block** are our own code.
+- **Dice Roller** (javalent): the `dice:` inline syntax and the `kh` / `kl` notation, so notes work
+  in both; the formula engine, the Dice tab and the stage are our own code.
+- **Initiative Tracker** (javalent): the idea of a battle tracker inside Obsidian; the tracker is
+  our own code and keeps its state in the encounter note.
+- **Baldur's Gate 3** (Larian Studios): the look and the sequence of the dice stage — difficulty
+  class on top, the die in a ring, bonuses flying in, Success / Failure. The stage is drawn by the
+  plugin (SVG and CSS); no images, sounds or code from the game. This plugin is not affiliated with
+  Larian Studios.
+- **Open5e, 5etools, 5e-bits JSON**: the monster and spell import reads these file shapes; no code
+  from those projects.
+- The German texts (spell and monster names and texts, the German stat block lines) are this
+  plugin's own translation, under CC-BY-4.0 like the SRD.
+
 ## Attribution
 
 This plugin includes material from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the
