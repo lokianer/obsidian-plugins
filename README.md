@@ -30,9 +30,9 @@ the same principles, tooling, CI and example vault. Every plugin follows the sam
 
 ## 🧩 Plugins
 
-| Plugin                                            | Id                 | Status                                 | Description                                                                                                                                                       |
-| ------------------------------------------------- | ------------------ | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, a spellbook, the Deck of Many Things, a Monster Manual, next battles and dice. |
+| Plugin                                            | Id                 | Status                                 | Description                                                                                                                                                           |
+| ------------------------------------------------- | ------------------ | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 🚧 In development (v0.1.0, unreleased) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, a spellbook, the Deck of Many Things, a Monster Manual, a battle tracker and dice. |
 
 More plugins will join the collection. Each plugin has its own `README.md`, `CHANGELOG.md` and
 `DECISIONS.md` in its folder; a plugin that is ready for Obsidian's directory gets its own release
@@ -43,15 +43,15 @@ repository, pushed by CI from its subfolder (Obsidian reads `manifest.json` from
 A game master's thinking tool for D&D 5e campaigns kept in Obsidian. It is not a rules engine: the
 plugin shows and suggests, the GM decides. It grows in modules, one after another:
 
-| Module                                                                                                              | Status                                                             |
-| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log     | ✅ Built and accepted in Obsidian                                  |
-| 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks | ✅ Accepted in Obsidian                                            |
-| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                           | ✅ Accepted in Obsidian (tab and German texts)                     |
-| 🃏 **Deck of Many Things:** the standard deck or your own, a deck builder with import                               | ✅ Accepted in Obsidian                                            |
-| 🐉 **Monster Manual:** the SRD's monsters in their own tab, like the spellbook                                      | ✅ Accepted in Obsidian (German texts of traits and actions later) |
-| 🛡️ **Battle tracker**                                                                                               | 🗓️ Planned                                                         |
-| 🎲 **Dice**                                                                                                         | 🗓️ Planned                                                         |
+| Module                                                                                                                | Status                                                   |
+| --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| ⚔️ **Factions:** factions as folders, relations as numbers, a colour-coded faction world, tensions, session log       | ✅ Built and accepted in Obsidian                        |
+| 📜 **NPC builder:** 5e stat blocks, New NPC with races, classes, archetypes, dice tables (EN/DE), preview and locks   | ✅ Accepted in Obsidian                                  |
+| ✨ **Spellbook:** the SRD's 319 spells in their own tab, with filters, English and German                             | ✅ Accepted in Obsidian (tab and German texts)           |
+| 🃏 **Deck of Many Things:** the standard deck or your own, a deck builder with import                                 | ✅ Accepted in Obsidian                                  |
+| 🐉 **Monster Manual:** the SRD's monsters in their own tab, like the spellbook; German traits and actions too         | ✅ Accepted in Obsidian (German texts built, in testing) |
+| 🛡️ **Battle tracker:** initiative, hit points, conditions, the fight kept in the encounter note, an encounter builder | 🧪 Built, in testing                                     |
+| 🎲 **Dice:** a stage like Baldur's Gate 3, `dice:` in notes, rollable tables, rolls from stat blocks and the party    | 🧪 Built, in testing                                     |
 
 <p align="center">
   <img src="site/assets/card.webp" alt="Faction card" width="360">
@@ -61,6 +61,11 @@ plugin shows and suggests, the GM decides. It grows in modules, one after anothe
 <p align="center">
   <img src="site/assets/faction.webp" alt="Faction view of The Gutter Court in the faction colours" width="360">
   <img src="site/assets/npc-dialog.webp" alt="The New NPC dialog with tiles and a live preview" width="360">
+</p>
+
+<p align="center">
+  <img src="site/assets/battle.webp" alt="The Battle tab in round 2: the initiative order and the Owlbear's card" width="360">
+  <img src="site/assets/dice.webp" alt="The dice stage: Persuasion with advantage against DC 15, a success" width="360">
 </p>
 
 Everything about it — conventions, views, commands, settings — is in its

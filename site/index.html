@@ -131,8 +131,8 @@
             <p>
               A game master’s thinking tool for D&amp;D&nbsp;5e: factions and how they stand towards
               each other, NPCs with 5e stat blocks, a spellbook with your own spells, the Deck of
-              Many Things, a Monster Manual, a battle tracker — next dice. It shows and suggests;
-              the GM decides.
+              Many Things, a Monster Manual, a battle tracker and dice that roll like Baldur’s
+              Gate&nbsp;3. It shows and suggests; the GM decides.
             </p>
             <ul class="modules" aria-label="Modules">
               <li class="done"><b>Factions</b> accepted</li>
@@ -140,8 +140,8 @@
               <li class="done"><b>Spellbook</b> accepted</li>
               <li class="done"><b>Deck of Many Things</b> accepted</li>
               <li class="done"><b>Monster Manual</b> accepted</li>
-              <li class="now"><b>Battle tracker</b> in progress</li>
-              <li><b>Dice</b> planned</li>
+              <li class="now"><b>Battle tracker</b> built, in testing</li>
+              <li class="now"><b>Dice</b> built, in testing</li>
             </ul>
             <div class="plugin-links">
               <a class="button small" href="#modules">Take the tour</a>
@@ -206,6 +206,10 @@
           <a href="#monsters"
             ><span aria-hidden="true">🐉</span><b>Monster Manual</b>334 SRD monsters</a
           >
+          <a href="#battle"
+            ><span aria-hidden="true">🛡️</span><b>Battle tracker</b>the fight in your note</a
+          >
+          <a href="#dice"><span aria-hidden="true">🎲</span><b>Dice</b>a stage like BG3</a>
         </nav>
       </section>
 
@@ -501,7 +505,10 @@
             <li>
               <b>Into your notes.</b> Insert the stat block below your cursor, or make it a note.
             </li>
-            <li><b>German too.</b> Names, sizes, types, metres — “Große Monstrosität”.</li>
+            <li>
+              <b>German too.</b> Names, sizes, types, metres — and every trait and action:
+              “Nahkampf-Waffenangriff: +7 auf Treffer”.
+            </li>
             <li>
               <b>Your own.</b> A monster builder like New NPC — start from any SRD monster, or
               import from Fantasy Statblocks, 5etools or Open5e files.
@@ -518,6 +525,115 @@
             loading="lazy"
             decoding="async"
             alt="The Monster Manual tab in German: challenge rating bands and type chips in colours, the list grouped by challenge rating, and the Owlbear’s (Eulenbär) stat block with German meta."
+          />
+        </figure>
+      </section>
+
+      <section id="battle" class="feature reverse">
+        <div class="feature-copy">
+          <p class="eyebrow">Module 6 · Battle tracker · built, in testing</p>
+          <h2>The fight lives in the encounter note.</h2>
+          <p>
+            An encounter note lists who fights — characters, notes, monsters from the Monster
+            Manual, with a count. The Battle tab rolls initiative (one roll per group), runs the
+            turns, tracks hit points, temporary hit points, death saves, conditions with their
+            rounds and concentration — and writes it all to a plain <code>## Combat</code> table in
+            the note, so the fight survives a restart and reads fine without the plugin.
+          </p>
+          <ul class="ticks">
+            <li>
+              <b>An encounter builder.</b> Pick the party and monsters; the SRD&nbsp;5.2.1’s XP
+              budget says Low, Moderate or High.
+            </li>
+            <li>
+              <b>Logged, not narrated.</b> Begin, defeated, down, dead and the end go to tonight’s
+              session; experience points only if you want them.
+            </li>
+            <li>
+              <b>Mid-fight changes.</b> Add to combat from the Monster Manual, or a name typed in.
+            </li>
+          </ul>
+        </div>
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>Kampf</span></div>
+          <img
+            src="assets/battle.webp"
+            width="1600"
+            height="1108"
+            loading="lazy"
+            decoding="async"
+            alt="The Battle tab in German, round 2: the initiative order with Ilex, the prone Owlbear whose turn it is, Dagny frightened, a defeated Court thug and a poisoned one; on the right the Owlbear’s card with hit points, damage and healing, and the conditions."
+          />
+        </figure>
+      </section>
+
+      <section id="dice" class="feature">
+        <div class="feature-copy">
+          <p class="eyebrow">Module 7 · Dice · built, in testing</p>
+          <h2>Every roll gets its moment.</h2>
+          <p>
+            A dice stage modelled on Baldur’s Gate&nbsp;3’s checks, drawn by the plugin itself: the
+            difficulty class in its diamond, each die in its own shape tumbling and landing, the
+            bonuses flying in, the total counting up, then <b>Success</b> or <b>Failure</b> — a
+            natural 20 with golden rays. A click or Space skips straight to the result.
+          </p>
+          <ul class="ticks">
+            <li>
+              <b>Formulas.</b> <code>2d6+3</code>, <code>4d6kh3</code>, <code>d20+5 adv</code>,
+              German <code>2W6+3</code>.
+            </li>
+            <li>
+              <b>In your notes.</b> <code>dice: 2d6+3</code> — Dice Roller’s syntax — and
+              <code>dice: [[Rumours#Night (d20)]]</code> for a table.
+            </li>
+            <li>
+              <b>Rollable tables.</b> A heading ending in a die makes the list or table below it
+              rollable; the row shows with its links.
+            </li>
+            <li>
+              <b>Stat blocks and the party.</b> Every <code>+7</code> and
+              <code>10 (1d10 + 5)</code> is a button; characters roll their saves and skills.
+            </li>
+          </ul>
+        </div>
+        <figure class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>Würfel</span></div>
+          <img
+            src="assets/dice.webp"
+            width="1600"
+            height="1600"
+            loading="lazy"
+            decoding="async"
+            alt="The Dice tab in German: Orrin Quill rolls Persuasion with advantage against a difficulty class of 15; two d20 landed, the 17 kept and glowing, the 6 greyed, +7 added, total 24 and the verdict Erfolg in gold."
+          />
+        </figure>
+      </section>
+
+      <section class="feature reverse">
+        <div class="feature-copy">
+          <p class="eyebrow">Dice in every stat block</p>
+          <h2>Click the +7. Shift for advantage.</h2>
+          <p>
+            In your notes, the Monster Manual and the Battle tab, attack bonuses, damage and every
+            save and skill are buttons. A click plays the stage in a small window; Shift rolls with
+            advantage, Alt with disadvantage, a long press offers both on a phone. Saving throw DCs
+            stay text — the target rolls those.
+          </p>
+          <pre class="log"><code><span class="h">## Log</span>
+- 21:14 Owlbear rolls Beak: d20+7 → 19 (12, +7)
+- 21:14 Owlbear rolls Beak damage: 1d10+5 → 11
+- 21:15 Orrin Quill rolls Persuasion:
+  2d20kh1+7 → 24 against DC 15: success</code></pre>
+        </div>
+        <figure class="window narrow">
+          <div class="window-bar"><i></i><i></i><i></i><span>Eulenbär</span></div>
+          <img
+            src="assets/statblock-dice.webp"
+            width="858"
+            height="1556"
+            loading="lazy"
+            decoding="async"
+            alt="The Owlbear’s stat block in German with buttons on Wahrnehmung +3, both +7 attack bonuses and the damage 10 (1W10 + 5) and 14 (2W8 + 5)."
           />
         </figure>
       </section>
@@ -572,9 +688,12 @@
           </li>
           <li class="now">
             <span>Battle tracker</span>initiative, hit points and conditions, the fight kept in the
-            encounter note, logged to the session, an encounter builder
+            encounter note, logged to the session, an encounter builder — built, in testing
           </li>
-          <li><span>Dice</span>rolls and rollable tables logged to tonight’s session</li>
+          <li class="now">
+            <span>Dice</span>a stage like Baldur’s Gate&nbsp;3, <code>dice:</code> in notes,
+            rollable tables, rolls from stat blocks and the party — built, in testing
+          </li>
         </ol>
         <p class="note">
           In development, not released yet. Built in small, tested phases; every phase is checked
@@ -628,7 +747,7 @@ pnpm --filter dnd5e-bylokianer install-example
       </p>
       <p class="small">
         <span translate="no">dnd5e-byLokianer</span> includes material from the System Reference
-        Document 5.1 by Wizards of the Coast LLC, licensed under
+        Documents 5.1 and 5.2.1 by Wizards of the Coast LLC, licensed under
         <a href="https://creativecommons.org/licenses/by/4.0/legalcode">CC-BY-4.0</a>. Not
         affiliated with or endorsed by Wizards of the Coast or Obsidian.
       </p>

@@ -1,14 +1,21 @@
 # dnd5e-byLokianer
 
-Game-master tools for D&D 5e in Obsidian. The first module covers **factions and their relations**:
-factions are folders holding a `factions.md`, relations are frontmatter values from −5 (war) to +5
-(sworn), and members inherit their faction's stance unless they state their own. The second, the NPC
-builder, brings 5e stat blocks and a New NPC dialog; then a spellbook, the Deck of Many Things, a Monster Manual and a
-battle tracker; dice follow.
+Game-master tools for D&D 5e in Obsidian, in seven modules:
 
-Status: the factions module is built and accepted in Obsidian (phases 1–5: data model, faction card, world view, faction view and tensions, in-view editing and history). See the repository's
-`ROADMAP.md`, the design in `docs/superpowers/specs/2026-10-24-factions-design.md` and the card's
-design in `docs/superpowers/specs/2026-10-24-faction-editor-design.md`.
+1. **Factions** — factions are folders holding a `factions.md`, relations are frontmatter values from
+   −5 (war) to +5 (sworn), and members inherit their faction's stance unless they state their own.
+2. **NPC builder** — 5e stat blocks in your notes and a New NPC dialog.
+3. **Spellbook** — the SRD's 319 spells in English and German, your own spells and a spell builder.
+4. **Deck of Many Things** — the SRD deck drawn by its rules, your own decks and a deck builder.
+5. **Monster Manual** — the SRD's 334 monsters, German traits and actions, your own monsters.
+6. **Battle tracker** — the fight kept in the encounter note, logged to the session, an encounter
+   builder with the SRD 5.2.1's XP budget.
+7. **Dice** — a dice stage modelled on Baldur's Gate 3, `dice:` in notes, rollable tables, rolls from
+   stat blocks and the party.
+
+Status: modules 1–5 are accepted in Obsidian; the Monster Manual's German texts, the battle tracker
+and the dice are built and wait for the check in Obsidian. See the repository's `ROADMAP.md` and the
+designs in `docs/superpowers/specs/`.
 
 ## The faction card
 

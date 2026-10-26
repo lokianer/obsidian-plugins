@@ -18,7 +18,9 @@ in Obsidian yet (the maintainer: "Mach weiter, ich teste später"): the battle t
 optional), German monster texts (M2), the dice module (R1–R3). Then, asked for ("Qualitätsrunde"),
 a quality round without new features: a review of everything since B1, fixes (iOS lookbehinds,
 death-save rules, indented table lists, `dice:` in code blocks, encounter tiles on a phone), a lint
-rule against lookbehinds, phone-width screenshots.
+rule against lookbehinds, phone-width screenshots. Last, the READMEs and the Pages site were brought up to date (sections and
+screenshots for the battle tracker and the dice; the screenshots come from the scratchpad harness
+`preview/site.ts` with the UI test stub, `siteshot2.cjs`).
 
 ## Where to continue
 
