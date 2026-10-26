@@ -258,3 +258,67 @@ interface MenuItem {
   setTitle(title: string): MenuItem;
   onClick(click: () => void): MenuItem;
 }
+
+export function getLanguage(): string {
+  return 'en';
+}
+
+export class MarkdownView {}
+
+export class MarkdownRenderChild extends Component {
+  constructor(readonly containerEl: HTMLElement) {
+    super();
+  }
+}
+
+export class PluginSettingTab {
+  containerEl: HTMLElement = document.createElement('div');
+  constructor(
+    readonly app: unknown,
+    readonly plugin: unknown,
+  ) {}
+}
+
+/** The plugin base: what `onload` registers is recorded, so a test can read the wiring. */
+export class Plugin extends Component {
+  registered = {
+    commands: [] as string[],
+    ribbon: [] as string[],
+    views: [] as string[],
+    codeBlocks: [] as string[],
+    postProcessors: 0,
+    editorExtensions: 0,
+    settingTabs: 0,
+  };
+  constructor(readonly app: unknown) {
+    super();
+  }
+  loadData(): Promise<unknown> {
+    return Promise.resolve(null);
+  }
+  saveData(): Promise<void> {
+    return Promise.resolve();
+  }
+  addCommand(command: { id: string }): void {
+    this.registered.commands.push(command.id);
+  }
+  addRibbonIcon(icon: string): void {
+    this.registered.ribbon.push(icon);
+  }
+  registerView(type: string): void {
+    this.registered.views.push(type);
+  }
+  registerMarkdownCodeBlockProcessor(language: string): void {
+    this.registered.codeBlocks.push(language);
+  }
+  registerMarkdownPostProcessor(): void {
+    this.registered.postProcessors++;
+  }
+  registerEditorExtension(): void {
+    this.registered.editorExtensions++;
+  }
+  addSettingTab(): void {
+    this.registered.settingTabs++;
+  }
+  registerEvent(): void {}
+}

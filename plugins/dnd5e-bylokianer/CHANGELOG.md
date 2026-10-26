@@ -105,6 +105,9 @@ Persuasion: d20+7 → 12 (5, +7)`).
 
 - Tension finding and faction discovery are split into one function per rule or step (complexity
   36 and 33 down to 12 or below); behaviour unchanged.
+- `main.ts` (678 lines) is split into one registration per module under `src/obsidian/register/`
+  (main.ts now 42 lines); a UI test checks that the same commands, views and ribbon icons are
+  registered.
 
 ### Changed (stylesheet)
 

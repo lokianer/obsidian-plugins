@@ -13,7 +13,7 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-25 and 2026-10-26, cloud. Built without a check in Obsidian yet (the maintainer: "Mach
+2026-10-25 and 2026-10-26, cloud. Last: complexity steps 1 and 4 (asked for one after the other). Built without a check in Obsidian yet (the maintainer: "Mach
 weiter, ich teste später"): the battle tracker (B1–B3, XP optional), German monster texts (M2), the
 dice module (R1–R4). Asked for along the way: a quality round (review since B1 and its fixes), the
 READMEs and the Pages site, the stylesheet split into one file per view, a complexity analysis —
@@ -41,8 +41,12 @@ and step 1 of reducing complexity. The maintainer then asked for this handoff.
    - **Step 3:** split the big renderers into named parts: `renderStatblock` (head, lines,
      abilities, sections), the Battle tab's `renderCard`, the popover's `render`. Check with the
      screenshot comparison (pixel-identical) as for the stylesheet split.
-   - **Step 4:** `onload` in `main.ts` into one `register…(plugin, ctx)` per module under
-     `src/obsidian/register/`.
+   - **Step 4 done:** `src/obsidian/register/` with `context.ts` (shared: strings, settings, world
+     cache, session log, cards, `openNote`, `revealView`, `indexed`, and `later` for the modules
+     registered afterwards) and one `register…(ctx)` per module; `main.ts` is 42 lines. Guarded by
+     `test/ui/plugin.test.ts` (an inline snapshot of every command, view, ribbon icon and
+     processor). Three registrations are slightly over 80 lines (battle 88, monsters 92, factions
+     81).
    - **Step 5:** `complexity` (warn at 20) and `max-lines-per-function` (warn at 150) in the
      plugin's ESLint config; tighten after the steps.
 2. **Also proposed, not started** (the maintainer has not said yes yet):
@@ -79,7 +83,9 @@ delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
   as an external dev dependency), encounter tiles on a phone.
 - `998029b` READMEs and Pages site: sections and screenshots for the battle tracker and the dice.
 - `5e8a63a` `styles.css` split into sixteen files under `styles/`, bundled by esbuild.
-- Reducing complexity, step 1 (see "Where to continue"), committed with this handoff.
+- `63a40ee` Reducing complexity, step 1: tension rules and faction discovery split.
+- Reducing complexity, step 4: `main.ts` per module (see "Where to continue"), committed with this
+  handoff.
 - Earlier, on 2026-10-25: the battle tracker B1–B3 and the optional XP (built, awaiting the check)
   — the commits before `0c2d266`.
 
@@ -219,7 +225,7 @@ encounter note", "The battle tracker logs moments, not blows; the line-up can ch
 builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
 hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
 syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters", "Quality round …", "Dice R4: critical hits and ability checks", "The stylesheet in one file per view", "Reducing
-complexity, step 1" (2026-10-26).
+complexity, step 1", "Reducing complexity, step 4" (2026-10-26).
 Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
 boxes drag); label widths are estimated, not measured.
 
@@ -227,7 +233,7 @@ boxes drag); label widths are estimated, not measured.
 
 - The check in Obsidian (points 20–21, 47–76).
 - Go-ahead for the proposals under "Where to continue" 2 (start-up time, vault scans, installer A/B)
-  and for complexity steps 2–5.
+  and for complexity steps 2, 3 and 5.
 - The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
   the maintainer wants something changed.
 
@@ -263,5 +269,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 404 plugin tests and 14 package tests pass. CI green on Linux,
+`pnpm check` at the root: exit 0; 405 plugin tests and 14 package tests pass. CI green on Linux,
 macOS and Windows for every push to `main` this session.

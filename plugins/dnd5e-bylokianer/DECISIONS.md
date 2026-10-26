@@ -760,3 +760,26 @@ Asked for by the maintainer after a complexity analysis ("wie reduzieren wir die
 
 Next steps (in the handoff): tables for the importers and `tokenize`, the big renderers in named
 parts, `main.ts` per module, complexity limits in the lint.
+
+## 2026-10-26 · Reducing complexity, step 4: one registration per module
+
+Asked for by the maintainer ("jetzt Schritt 4"). `onload` in `main.ts` was 587 lines wiring all
+seven modules in one function.
+
+- `src/obsidian/register/` holds one `register…(ctx)` per module: `factions`, `spells`, `monsters`,
+  `deck`, `dice`, `battle`, `statblocks`, `npcs`. `main.ts` (42 lines) loads the settings, builds
+  the context and calls them in the order that keeps the ribbon as it was (world, spellbook, Monster
+  Manual, deck, dice, battle).
+- `context.ts` builds what all share: interface strings, settings and saving, the faction world,
+  the session log, the cards, `openNote`, `revealView` (the "open this tab" code written six times
+  before) and `indexed`.
+- A module that needs one registered after it reaches it through `ctx.later` (`roll`, `newNpc`,
+  `addToCombat`, `addToEncounter`), which the owning module fills in; until then a call does
+  nothing — as the forward reference to the dice did before.
+- A new UI test loads the plugin against a stand-in app and records what it registers: 19 commands,
+  7 views, the ribbon's order, the stat block processor, two post processors, one editor
+  extension, the settings tab. Run against the old `main.ts` it records the same, in a slightly
+  different registration order for two commands and one view (which Obsidian does not show).
+
+Left out: the three registration functions slightly over 80 lines (battle, monsters, factions)
+stay as they are; steps 2, 3 and 5.
