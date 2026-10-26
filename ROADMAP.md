@@ -23,8 +23,8 @@ What comes next is the maintainer's call. The full list of what can still be don
 steps 2 and 3, start-up time, vault scans, an installer, screenshots, small extras, the GM gate,
 release preparation — is in `HANDOFF.md` "Where to continue".
 
-**Release 0.1.0** (asked for 2026-10-26): a GitHub release with a ZIP, built by
-`.github/workflows/release.yml` from the tag `dnd5e-bylokianer-0.1.0`. Not in Obsidian's plugin
+**Release 0.1.0** (asked for 2026-10-26): a GitHub release `dnd5e-bylokianer-0.1.0` with a ZIP,
+built by `.github/workflows/release.yml`. Not in Obsidian's plugin
 directory: that needs the mirror repository and the release preparation below.
 
 ---

@@ -25,11 +25,12 @@ Last, asked for: **release 0.1.0 as a ZIP on GitHub** (`.github/workflows/releas
 Everything that can still be done, in the order I would take it. Items marked _(needs a yes)_ wait
 for the maintainer's go-ahead; the rest follow from what they already asked for.
 
-1. **Release 0.1.0** — pushed as tag `dnd5e-bylokianer-0.1.0`; the Release workflow checks,
-   builds, compares the tag with `manifest.json` and publishes the release with the ZIP and the
-   three files. Check that the run went green and the release is there. Next releases: raise the
-   version in `manifest.json` and `versions.json`, move CHANGELOG's Unreleased into a new version
-   section, tag `dnd5e-bylokianer-<version>`.
+1. **Release 0.1.0** — the Release workflow (`.github/workflows/release.yml`) was started by hand
+   on `main` (a cloud session may not push tags: the proxy refuses them with 403); it runs
+   `pnpm check`, builds, and publishes the release `dnd5e-bylokianer-0.1.0` with the ZIP and the
+   three files, creating the tag. Next releases: raise the version in `manifest.json` and
+   `versions.json`, move CHANGELOG's Unreleased into a new version section, then Actions →
+   Release → Run workflow (or push the tag `dnd5e-bylokianer-<version>` from a local clone).
 2. **Reducing complexity, steps 2 and 3** (asked for; steps 1, 4, 5 done). Measured with ESLint's
    `complexity` rule on 2026-10-26: 62 functions above 10 before step 1. Since step 5 the lint
    warns at complexity 20 and 150 lines per function; its eleven warnings are the list:

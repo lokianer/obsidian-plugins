@@ -807,9 +807,10 @@ The maintainer checked everything built since 2026-10-25 in Obsidian: "es läuft
 "Mach einen release 0.1.0 als zip auf github" — which replaces the decision of 2026-10-25 to
 publish nothing, for a GitHub release of this repository (not Obsidian's directory).
 
-- A tag `dnd5e-bylokianer-<version>` (the plugin's id in front, since the repository will hold more
-  plugins) starts `.github/workflows/release.yml`: `pnpm check`, the tag compared with
-  `manifest.json`, then a release with `dnd5e-bylokianer-<version>.zip` (a `dnd5e-bylokianer/`
+- `.github/workflows/release.yml`, started by hand (Run workflow) or by pushing a tag
+  `dnd5e-bylokianer-<version>` (the plugin's id in front, since the repository will hold more
+  plugins): `pnpm check`, the version from `manifest.json` (a pushed tag must match it), then a
+  release named and tagged `dnd5e-bylokianer-<version>` with `dnd5e-bylokianer-<version>.zip` (a `dnd5e-bylokianer/`
   folder with `main.js`, `manifest.json`, `styles.css`, to unpack into `.obsidian/plugins/`) and
   the three files on their own.
 - The CHANGELOG's Unreleased became `[0.1.0] - 2026-10-26`; the manifest's description names all
