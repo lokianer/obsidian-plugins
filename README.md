@@ -33,6 +33,12 @@ the same principles, tooling, CI and example vault. Every plugin follows the sam
 | Plugin                                            | Id                 | Status                                                                                                                                          | Description                                                                                                                                                           |
 | ------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [**dnd5e-byLokianer**](plugins/dnd5e-bylokianer/) | `dnd5e-bylokianer` | 📦 [v0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) (GitHub release, not in Obsidian's directory yet) | Game-master tools for D&D 5e: factions and their relations, NPCs with stat blocks, a spellbook, the Deck of Many Things, a Monster Manual, a battle tracker and dice. |
+| **Daggerheart plugin** (name open)                | —                  | 🗺️ Planned: [roadmap](ROADMAP.md#daggerheart-plugin-planned-2026-10-26), no code yet                                                            | Game-master tools for Daggerheart: factions and the session log, adversaries and environments, duality dice, combat with Fear and the spotlight, domain cards.        |
+
+Next in the workshop is a **Daggerheart plugin** — the same tools for Darrington Press's game, built
+on its SRD 1.0 under the Darrington Press Community Gaming License, sharing factions, the session
+log and the dice engine with dnd5e-byLokianer through `packages/`. Only its
+[roadmap](ROADMAP.md#daggerheart-plugin-planned-2026-10-26) exists so far.
 
 More plugins will join the collection. Each plugin has its own `README.md`, `CHANGELOG.md` and
 `DECISIONS.md` in its folder; a plugin that is ready for Obsidian's directory gets its own release

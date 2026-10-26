@@ -60,13 +60,18 @@ for the maintainer's go-ahead; the rest follow from what they already asked for.
    characters without a stat block (a frontmatter key), removing log lines from earlier sessions.
 8. **Battle tracker, left out so far** _(needs a yes)_: a critical hit's two failed death saves,
    re-reading a fight the GM edits by hand while the tab is open.
-9. **New module: the GM gate** _(needs a yes, then brainstorm and spec)_: `[!gm]` callouts with
-   `revealed:`, `%%comments%%`, which notes the players have met, a player export (roadmap "Not
-   placed yet").
-10. **Release preparation** _(needs a yes)_: Obsidian's plugin guidelines and submission checklist,
+9. **Daggerheart plugin** — asked for on 2026-10-26, **roadmap only, no code** ("Mache nur eine
+   Roadmap, keinen Code"): `ROADMAP.md` "Daggerheart plugin" with the research (DPCGL, BeastVault's
+   `daggerheart` block, DaggerForge, the tracker, SRD data sources), phases H0–H7 and the open
+   questions. H0 needs a local session: darringtonpress.com and codeberg.org are blocked in the
+   cloud. README and Pages show it as planned.
+10. **New module: the GM gate** _(needs a yes, then brainstorm and spec)_: `[!gm]` callouts with
+    `revealed:`, `%%comments%%`, which notes the players have met, a player export (roadmap "Not
+    placed yet").
+11. **Release preparation** _(needs a yes)_: Obsidian's plugin guidelines and submission checklist,
     the name against Wizards of the Coast's trademark rules, the release mirror repository, a
     versioning and release workflow.
-11. **Housekeeping:** the private vault's daily reports and changelog for 2026-10-24 to 2026-10-26
+12. **Housekeeping:** the private vault's daily reports and changelog for 2026-10-24 to 2026-10-26
     (a local session; a cloud session cannot reach the vault).
 
 ## State of the working tree
@@ -120,7 +125,8 @@ boxes drag); label widths are estimated, not measured.
 ## Open questions for the maintainer
 
 - The check in Obsidian (points 20–21, 47–76).
-- A yes or no for the items marked _(needs a yes)_ under "Where to continue" (3–10).
+- A yes or no for the items marked _(needs a yes)_ under "Where to continue" (3–11), and the Daggerheart
+  plugin's open questions in the roadmap.
 - The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
   the maintainer wants something changed.
 

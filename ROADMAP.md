@@ -19,7 +19,8 @@ since 2026-10-25 in Obsidian on 2026-10-26: "es läuft alles". That covers the b
 dice logs, the wrapping log button, the faction world redesign, and the quality and code work of
 2026-10-26 (quality round, stylesheet per view, complexity steps 1, 4, 5).
 
-What comes next is the maintainer's call. The full list of what can still be done — complexity
+Next asked for: **a Daggerheart plugin** — so far only its roadmap (section "Daggerheart plugin"
+below), no code. What else comes next is the maintainer's call. The full list of what can still be done — complexity
 steps 2 and 3, start-up time, vault scans, an installer, screenshots, small extras, the GM gate,
 release preparation — is in `HANDOFF.md` "Where to continue".
 
@@ -226,6 +227,79 @@ whole vault.
 - Release mirror repository for the plugin (Obsidian reads `manifest.json` from a repo root).
 
 ---
+
+## Daggerheart plugin (planned, 2026-10-26)
+
+Asked for by the maintainer ("können wir dasselbe für Daggerheart machen?"), then "Mache nur eine
+Roadmap, keinen Code". Decided with them on 2026-10-26: **a plugin of its own** under `plugins/`
+(own version and release), with all four module groups below, and **research before the spec**.
+Nothing is built yet; every phase gets a spec section, a plan and a review stop, as for dnd5e.
+
+### What is known (research of 2026-10-26)
+
+- **Licence.** Daggerheart's SRD 1.0 is Public Game Content under the **Darrington Press Community
+  Gaming License (DPCGL)**, not CC-BY: free use without fees, our own code stays ours (MIT), but
+  only SRD 1.0 content — nothing exclusive to the rulebook, no scanned cards, art or logos — and a
+  copyright notice. The notice other plugins ship (BeastVault): "This plugin includes materials from
+  the Daggerheart System Reference Document 1.0, © Critical Role, LLC. All rights reserved. Public
+  Game Content created and owned by Darrington Press, LLC. Available at https://www.daggerheart.com.
+  Licensed under the Darrington Press Community Gaming License:
+  https://darringtonpress.com/license/." The full licence text could not be read from the cloud
+  session (darringtonpress.com is blocked there): **read it in full before any data goes in**,
+  above all on using "Daggerheart" in a plugin's name and on translations.
+- **Existing Obsidian plugins** (CLAUDE.md: do not duplicate, integrate):
+  - **BeastVault** (`ly0va/beastvault`): SRD adversaries and environments, a `daggerheart` code
+    block in YAML (`name`, `tier`, `type`, `difficulty`, `weapon`, `range`, `damage`, `hp`,
+    `stress`, `thresholds: 9/17`, `attack`, `xp`, `motives`, `features` with `name`, `type`,
+    `desc`, `uses`, `countdown`; environments with `impulses`, `adversaries`, `tone`), HP and stress
+    tracking, battle points in the status bar, a library folder, Fantasy Statblocks layouts
+    `Daggerheart Adversary` / `Daggerheart Environment`.
+  - **DaggerForge** (Torutu, about 3,000 downloads): adversaries and environments, own content, HP
+    and stress trackers, dice, a battle calculator after the rulebook's Battle Guide; characters and
+    items planned.
+  - **daggerheart-tracker** (Codeberg, Batres): a combat tracker with difficulty, HP, stress and
+    battle points; reads Fantasy Statblocks creatures.
+  - What none of them has, and this plugin would add: factions and their relations, the session
+    log with loot, a dice stage, everything in one plugin with English and German.
+- **SRD as data:** markdown of the SRD 1.0 on GitHub (`seansbox/daggerheart-srd`, credited by
+  other tools; one file per adversary, domain cards in `abilities/`) and JSON (Katari, SRD data
+  under the DPCGL). Both still to be checked against the SRD itself.
+
+### Phases
+
+- [ ] **H0 — Preparation** (local session for the licence): read the DPCGL in full; choose the
+      name (with or without "Daggerheart" — the licence decides); choose and check the data
+      source; try BeastVault, DaggerForge and the tracker in Obsidian and write down what to be
+      compatible with (BeastVault's `daggerheart` block is the likely format to read).
+- [ ] **H1 — Shared packages**: move what both plugins need out of dnd5e-byLokianer into
+      `packages/` — the faction model, stances and tensions, the session log (already
+      `packages/session`), the dice engine. dnd5e's tests must pass unchanged. Decide whether the
+      dice stage (DOM) may become a shared UI package; CLAUDE.md allows only pure packages today.
+- [ ] **H2 — Plugin skeleton, factions and session log**: `plugins/<id>/`, the faction card,
+      world and tensions, the session log, settings, English and German, an example campaign in
+      `examples/vault/` beside Silverstadt.
+- [ ] **H3 — Adversaries and environments**: the SRD's adversaries and environments as data, a tab
+      like the Monster Manual (tier, type, search), a stat block in notes (read BeastVault's
+      `daggerheart` block; own block name or the same — to decide), HP and stress slots, damage
+      thresholds, features with uses and countdowns, own adversaries, a builder, import.
+- [ ] **H4 — Dice**: duality dice (2d12, Hope and Fear; doubles are a critical success),
+      advantage and disadvantage as a d6, the stage with Hope / Fear verdicts, `dice:` in notes,
+      rollable tables, rolls from stat blocks; the log like dnd5e's.
+- [ ] **H5 — Combat and encounters**: no initiative — the spotlight, the GM's Fear, HP and
+      stress, thresholds (minor / major / severe), conditions, countdowns; the fight kept in the
+      encounter note; an encounter builder with Battle Points.
+- [ ] **H6 — Domain cards**: the nine SRD domains as a tab like the spellbook, filters by domain
+      and level, own cards and a builder.
+- [ ] **H7 — Release**: README, CHANGELOG, DECISIONS, the Pages card and sections, the release
+      workflow generalised to a second plugin (tag `<id>-<version>`).
+
+### Open questions for the maintainer
+
+- The plugin's name and id (depends on the licence's rules for "Daggerheart").
+- German: only the interface, or the SRD texts too (does the DPCGL allow translations)?
+- Compatibility: read BeastVault's `daggerheart` blocks, or our own format with a converter (as
+  dnd5e does for Fantasy Statblocks)?
+- Characters (sheets, Hope, stress, armour): out of scope for now, or a later module?
 
 ## Repository
 
