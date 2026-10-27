@@ -147,4 +147,5 @@ boxes drag); label widths are estimated, not measured.
 ## Verification
 
 Focused battle and dice tests: 32 passed. Plugin typecheck and build passed; lint completed with 15
-existing warnings and no errors. Prettier passed for the changed TypeScript files.
+existing warnings and no errors. Prettier passed for all changed files. Post-commit CodeQL review found
+no alerts.
