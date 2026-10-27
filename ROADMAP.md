@@ -142,6 +142,7 @@ A complexity analysis (ESLint `complexity`, 2026-10-26) found 62 functions above
 - [x] Step 1: tension rules and faction discovery split by rule and step.
 - [x] Step 4: one registration per module under `src/obsidian/register/`; `main.ts` 42 lines.
 - [x] Step 5: complexity (20) and function length (150) as lint warnings.
+- [x] Code scanning alert #8: escape backslashes and pipes in combat-table cells.
 - [ ] Step 2: tables instead of `if` chains in the importers, `tokenize`, `readRow`, `fieldBlock`.
 - [ ] Step 3: the largest renderers in named parts (stat block, battle card, popover, NPC preview,
       dice stage).

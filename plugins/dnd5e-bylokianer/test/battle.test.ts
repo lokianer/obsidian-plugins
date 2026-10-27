@@ -254,6 +254,15 @@ describe('the combat table', () => {
     expect(back).toEqual(f);
   });
 
+  it('escapes backslashes and pipes in combatant names', () => {
+    const name = 'Grit\\|thug';
+    const fight = setUp([fighter(name)], rolls(1));
+    const lines = combatLines(fight);
+
+    expect(lines[5]).toContain('Grit\\\\\\|thug');
+    expect(readCombat(withCombat('', lines))?.rows[0]?.id).toBe(name);
+  });
+
   it('changes only its own section and keeps what follows', () => {
     const before = '# Ambush\n\n## Combat\n\nold\n\n## Aftermath\n\nLoot.\n';
     const after = withCombat(before, combatLines(f, true));

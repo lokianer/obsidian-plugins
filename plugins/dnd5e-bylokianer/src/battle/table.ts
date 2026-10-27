@@ -26,12 +26,12 @@ export interface Table {
   rows: Row[];
 }
 
-const cell = (s: string) => s.replace(/\|/g, '\\|');
+const cell = (s: string) => s.replace(/[\\|]/g, '\\$&');
 
 /** The combatant's cell: its note linked (`[[Sable]] 2`), else its id. */
 function who(c: Combatant): string {
   if (c.path === null) return cell(c.id);
-  return `[[${c.name}]]${c.id.slice(c.name.length)}`;
+  return cell(`[[${c.name}]]${c.id.slice(c.name.length)}`);
 }
 
 function marks(c: Combatant): string {

@@ -13,12 +13,9 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-25 and 2026-10-26, cloud. Built: the battle tracker (B1–B3, XP optional), German monster
-texts (M2), the dice module (R1–R4), clearing battle and dice logs; a quality round, the READMEs and
-the Pages site, the stylesheet per view, complexity steps 1, 4 and 5, a log button that wraps. The
-maintainer then checked everything in Obsidian: **"es läuft alles" — all accepted on 2026-10-26.**
-Last, asked for: **release 0.1.0 as a ZIP on GitHub** (`.github/workflows/release.yml`, tag
-`dnd5e-bylokianer-0.1.0`).
+2026-10-27, cloud. Fixed CodeQL alert #8: combat-table cells now escape backslashes as well as pipes,
+and the table reader decodes both escapes. Added regression tests for round-tripping names containing
+both characters.
 
 ## Where to continue
 
@@ -76,34 +73,15 @@ for the maintainer's go-ahead; the rest follow from what they already asked for.
 
 ## State of the working tree
 
-Branch `claude/roadmap-and-handoff-nb9sav`, pushed; `main` fast-forwarded to it after every slice, so
-`git pull` on `main` brings everything. Clean. After pulling, run `pnpm build` once: `styles.css` is
-build output now. `examples/vault/.obsidian/graph.json` may show as modified after opening the
-vault: never commit it as part of a task. After trying session creation in the example vault,
-delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
+Branch `agentic-autofix/fix-code-scanning-alert-8`. After this session's commit, the working tree
+should be clean. `styles.css` is build output. `examples/vault/.obsidian/graph.json` may show as
+modified after opening the vault: never commit it as part of a task. After trying session creation in
+the example vault, delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
 
 ## Done this session
 
-- `0c2d266` German traits and actions for all 334 SRD monsters (M2).
-- `ebb8f94`, `57259ef` Dice design and the clickable prototype of the stage; `5c9e37d` R1 (engine,
-  stage, Dice tab, `dice:` in notes, log); `ab3d0a9` README section on what is taken and what only
-  inspired; `9af709e` R2 (rollable tables); `0b5b67c` R3 (stat blocks and characters); `b6c668f`
-  R4 (critical hits, ability checks).
-- `9f2f57f` Quality round: no lookbehinds (iOS before 16.4) and a lint rule against them,
-  death-save rules, indented table lists, `dice:` stays code in code blocks (`@codemirror/language`
-  as an external dev dependency), encounter tiles on a phone.
-- `998029b` READMEs and Pages site: sections and screenshots for the battle tracker and the dice.
-- `5e8a63a` `styles.css` split into sixteen files under `styles/`, bundled by esbuild.
-- `63a40ee` Reducing complexity, step 1: tension rules and faction discovery split.
-- `2199eab` Reducing complexity, step 4: `main.ts` per module, `test/ui/plugin.test.ts`.
-- `0eb45e8` Step 5: complexity and function length limits as lint warnings.
-- `4f302b4` The log notice's button wraps (icon, **Log**, the session's name under it).
-- `d2ef529` Clearing battle and dice logs (Battle and Dice tab ⋮ menus, two commands,
-  `removeFromLog` in `packages/session`).
-- Everything accepted in Obsidian; release 0.1.0 (workflow, CHANGELOG section, manifest
-  description), committed with this handoff.
-- Earlier, on 2026-10-25: the battle tracker B1–B3 and the optional XP (built, awaiting the check)
-  — the commits before `0c2d266`.
+- CodeQL alert #8: escaped table-cell output and matching backslash decoding; regression tests cover
+  the escape format and combatant-name round-trip.
 
 ## Half-finished — check in Obsidian
 
@@ -168,5 +146,5 @@ boxes drag); label widths are estimated, not measured.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 409 plugin tests and 15 package tests pass. CI green on Linux,
-macOS and Windows for every push to `main` this session.
+Focused battle and dice tests: 32 passed. Plugin typecheck and build passed; lint completed with 15
+existing warnings and no errors. Prettier passed for the changed TypeScript files.

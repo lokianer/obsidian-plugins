@@ -179,6 +179,10 @@ describe('markdown table cells', () => {
     ]);
     expect(tableCells('a | b')).toEqual(['a', 'b']);
   });
+
+  it('unescapes backslashes without treating the following pipe as a delimiter', () => {
+    expect(tableCells('| one \\\\ two | three \\| four |')).toEqual(['one \\ two', 'three | four']);
+  });
 });
 
 describe('rolls from stat blocks and characters', () => {
