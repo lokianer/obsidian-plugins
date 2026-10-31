@@ -1,0 +1,319 @@
+/* Documentation page of dnd5e-byLokianer. Builds on ../style.css (tokens, nav, buttons, pre,
+   .window); adds the two-column docs layout, tables, callouts and the table of contents. */
+
+.docs {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 56px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
+}
+
+/* Table of contents: sticky beside the text on wide screens, a fold above it on narrow ones. */
+.toc {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+  align-self: start;
+  max-height: calc(100vh - var(--nav-h) - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 8px;
+}
+
+.toc summary {
+  display: none;
+}
+
+.toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc li ol {
+  margin: 2px 0 8px 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+
+.toc a {
+  display: block;
+  padding: 5px 8px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.toc a:hover {
+  color: var(--text);
+  background: var(--bg-2);
+  text-decoration: none;
+}
+
+.toc > ol > li > a {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.toc .eyebrow {
+  margin-bottom: 10px;
+}
+
+/* The text column. */
+.doc {
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.doc:focus {
+  outline: none;
+}
+
+.doc-head {
+  padding-bottom: 32px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.doc-head h1 {
+  font-size: clamp(36px, 5vw, 52px);
+  margin: 6px 0 12px;
+}
+
+.doc-head .chips {
+  margin-top: 18px;
+}
+
+.doc section {
+  padding-top: 40px;
+}
+
+.doc h2 {
+  font-size: clamp(28px, 3.4vw, 36px);
+  margin: 0 0 14px;
+}
+
+.doc h3 {
+  font-size: 22px;
+  margin: 34px 0 10px;
+}
+
+.doc h4 {
+  font-size: 18px;
+  margin: 24px 0 8px;
+}
+
+.doc p,
+.doc li {
+  max-width: 72ch;
+}
+
+.doc ul,
+.doc ol {
+  padding-left: 22px;
+}
+
+.doc li + li {
+  margin-top: 6px;
+}
+
+.doc :not(pre) > code {
+  font-size: 0.88em;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.doc pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.doc kbd {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  padding: 1px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  background: var(--panel);
+}
+
+.doc .window {
+  margin: 24px 0;
+}
+
+/* Tables scroll inside their own box so the page never scrolls sideways. */
+.table-wrap {
+  overflow-x: auto;
+  margin: 18px 0 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.doc table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.doc th,
+.doc td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.doc tr:last-child td {
+  border-bottom: 0;
+}
+
+.doc th {
+  background: var(--bg-2);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.doc td:first-child {
+  white-space: nowrap;
+}
+
+/* Callouts: a tip, a caution, how it works inside. */
+.callout {
+  margin: 22px 0;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+}
+
+.callout.warn {
+  border-left-color: var(--mid);
+  background: color-mix(in srgb, var(--mid) 8%, var(--panel));
+}
+
+.callout.inside {
+  border-left-color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent-2) 8%, var(--panel));
+}
+
+.callout > b:first-child {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.callout p {
+  margin: 6px 0 0;
+}
+
+/* The relation scale, −5 … +5. */
+.scale {
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 4px;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+.scale span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 2px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--c) 22%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+}
+
+.scale b {
+  font-family: var(--mono);
+}
+
+/* Steps of a flow. */
+.steps {
+  counter-reset: step;
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 44px;
+}
+
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.steps > li + li {
+  margin-top: 14px;
+}
+
+.next-prev {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 960px) {
+  .docs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 24px 16px 72px;
+  }
+
+  .toc {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel);
+  }
+
+  .toc summary {
+    display: block;
+    cursor: pointer;
+    font-weight: 650;
+    min-height: 32px;
+  }
+
+  .toc .eyebrow {
+    display: none;
+  }
+
+  .scale {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .doc td:first-child {
+    white-space: normal;
+  }
+}

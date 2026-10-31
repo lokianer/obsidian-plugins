@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>dnd5e-byLokianer · Documentation</title>
+    <meta
+      name="description"
+      content="How dnd5e-byLokianer works: the campaign note, factions and relations, stat blocks and New NPC, spellbook, Deck of Many Things, Monster Manual, battle tracker, dice, the session log, every setting and command."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0f0f13" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f6fb" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="../../style.css" />
+    <link rel="stylesheet" href="docs.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4 58 19v26L32 60 6 45V19z' fill='%237f6df2'/%3E%3Cpath d='M32 4v56M6 19l26 15 26-15' stroke='%23fff' stroke-opacity='.5' fill='none' stroke-width='3'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+
+    <header class="nav">
+      <a class="brand" href="../../" aria-label="Lokianer · Obsidian plugins, project page">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M32 4 58 19v26L32 60 6 45V19z" />
+          <path class="facet" d="M32 4v56M6 19l26 15 26-15" />
+        </svg>
+        <span translate="no">Lokianer<span class="dim"> · dnd5e docs</span></span>
+      </a>
+      <nav aria-label="Site">
+        <a href="../">Plugin page</a>
+        <a href="#reference">Reference</a>
+        <a
+          href="https://github.com/lokianer/obsidian-plugins/blob/main/plugins/dnd5e-bylokianer/CHANGELOG.md"
+          >Changelog</a
+        >
+        <a
+          class="button small"
+          href="https://github.com/lokianer/obsidian-plugins/tree/main/plugins/dnd5e-bylokianer"
+          >GitHub</a
+        >
+      </nav>
+    </header>
+
+    <div class="docs">
+      <details class="toc" id="toc">
+        <summary>On this page</summary>
+        <p class="eyebrow">On this page</p>
+        <ol>
+          <li><a href="#overview">Overview</a></li>
+          <li>
+            <a href="#start">Getting started</a>
+            <ol>
+              <li><a href="#install">Install</a></li>
+              <li><a href="#campaign">The campaign note</a></li>
+              <li><a href="#layout">A campaign folder</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#concepts">Core concepts</a>
+            <ol>
+              <li><a href="#types">Note types</a></li>
+              <li><a href="#party">Party and characters</a></li>
+              <li><a href="#tonight">Tonight’s session</a></li>
+              <li><a href="#writes">How edits are written</a></li>
+              <li><a href="#language">Languages</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#factions">Factions</a>
+            <ol>
+              <li><a href="#faction-model">Folders and members</a></li>
+              <li><a href="#relations">Relations</a></li>
+              <li><a href="#card">The faction card</a></li>
+              <li><a href="#world">Faction world</a></li>
+              <li><a href="#faction-view">Faction view</a></li>
+              <li><a href="#tensions">Tensions</a></li>
+              <li><a href="#warnings">Warnings</a></li>
+              <li><a href="#history">History and loot</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#npcs">Stat blocks and NPCs</a>
+            <ol>
+              <li><a href="#statblock">The stat block</a></li>
+              <li><a href="#statblock-edit">Editing a block</a></li>
+              <li><a href="#new-npc">New NPC</a></li>
+              <li><a href="#own-npc">Archetypes, races, tables</a></li>
+            </ol>
+          </li>
+          <li><a href="#spells">Spellbook</a></li>
+          <li><a href="#deck">Deck of Many Things</a></li>
+          <li><a href="#monsters">Monster Manual</a></li>
+          <li>
+            <a href="#battle">Battle tracker</a>
+            <ol>
+              <li><a href="#encounter-note">The encounter note</a></li>
+              <li><a href="#running">Running a fight</a></li>
+              <li><a href="#encounter-builder">Encounter builder</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#dice">Dice</a>
+            <ol>
+              <li><a href="#formulas">Formulas</a></li>
+              <li><a href="#dice-notes">Dice in notes</a></li>
+              <li><a href="#tables">Rollable tables</a></li>
+              <li><a href="#dice-statblocks">Stat blocks and the party</a></li>
+            </ol>
+          </li>
+          <li><a href="#log">The session log</a></li>
+          <li>
+            <a href="#reference">Reference</a>
+            <ol>
+              <li><a href="#commands">Commands</a></li>
+              <li><a href="#settings">Settings</a></li>
+              <li><a href="#keys">Frontmatter keys</a></li>
+            </ol>
+          </li>
+          <li><a href="#inside">How it works inside</a></li>
+          <li><a href="#faq">Troubleshooting</a></li>
+          <li><a href="#credits">Credits and licence</a></li>
+        </ol>
+      </details>
+
+      <main class="doc" id="content" tabindex="-1">
+        <header class="doc-head" id="overview">
+          <p class="eyebrow">Plugin 01 · Documentation</p>
+          <h1><span translate="no">dnd5e-byLokianer</span>, explained</h1>
+          <p class="lead">
+            A game master’s toolkit for D&amp;D&nbsp;5e in Obsidian. It reads the notes you already
+            keep — factions, characters, sessions, encounters — shows what is in them at a glance
+            and lets you change them in place. This page walks through every module, the conventions
+            it reads and how it works underneath.
+          </p>
+          <ul class="chips" aria-label="At a glance">
+            <li>7 modules</li>
+            <li>Plain Markdown</li>
+            <li>No network</li>
+            <li>Desktop &amp; mobile</li>
+            <li>English &amp; German</li>
+          </ul>
+        </header>
+
+        <section aria-labelledby="overview-h">
+          <h2 id="overview-h">Overview</h2>
+          <p>
+            The plugin is one Obsidian plugin with seven modules. They share one idea:
+            <b>your notes are the truth</b>. Everything the plugin shows — a graph, a stat block,
+            the state of a fight — is built from Markdown files and their frontmatter, and every
+            change it makes is a small edit to one of those files. Switch the plugin off and the
+            notes still read sensibly in any editor.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Module</th>
+                  <th>What it does</th>
+                  <th>Where you find it</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="#factions">Factions</a></td>
+                  <td>
+                    Factions as folders, relations from −5 to +5, a card replacing Properties, a
+                    world graph and matrix, tensions, a session history
+                  </td>
+                  <td>Faction and character notes; <b>Open faction world</b></td>
+                </tr>
+                <tr>
+                  <td><a href="#npcs">NPC builder</a></td>
+                  <td>
+                    5e stat blocks in notes, editable in place; the New NPC dialog with races,
+                    archetypes and dice tables
+                  </td>
+                  <td><code>dnd5e-statblock</code> blocks; <b>New NPC</b></td>
+                </tr>
+                <tr>
+                  <td><a href="#spells">Spellbook</a></td>
+                  <td>The SRD’s 319 spells in English and German, own spells, a spell builder</td>
+                  <td><b>Open spellbook</b>, <b>New spell</b></td>
+                </tr>
+                <tr>
+                  <td><a href="#deck">Deck of Many Things</a></td>
+                  <td>The SRD deck drawn by its rules, own decks, a deck builder</td>
+                  <td><b>Open Deck of Many Things</b>, <b>New deck</b></td>
+                </tr>
+                <tr>
+                  <td><a href="#monsters">Monster Manual</a></td>
+                  <td>334 SRD monsters as stat blocks, German texts, own monsters, file import</td>
+                  <td><b>Open Monster Manual</b>, <b>New monster</b></td>
+                </tr>
+                <tr>
+                  <td><a href="#battle">Battle tracker</a></td>
+                  <td>
+                    Initiative, hit points, conditions, the fight stored in the encounter note, an
+                    encounter builder with the SRD&nbsp;5.2.1 XP budget
+                  </td>
+                  <td><b>Open battle tracker</b>, <b>New encounter</b></td>
+                </tr>
+                <tr>
+                  <td><a href="#dice">Dice</a></td>
+                  <td>
+                    A dice stage like Baldur’s Gate&nbsp;3, <code>dice:</code> in notes, rollable
+                    tables, rolls from stat blocks and the party
+                  </td>
+                  <td><b>Open dice</b>; buttons in notes and stat blocks</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <b>Status: 0.1.0</b>
+            All seven modules are released in 0.1.0, each checked inside Obsidian before it counted.
+            The plugin is not in Obsidian’s community directory yet; install it from the release
+            ZIP.
+          </div>
+        </section>
+
+        <section id="start" aria-labelledby="start-h">
+          <h2 id="start-h">Getting started</h2>
+
+          <h3 id="install">Install</h3>
+          <ol class="steps">
+            <li>
+              Download <code>dnd5e-bylokianer-0.1.0.zip</code> from the
+              <a
+                href="https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0"
+                >release on GitHub</a
+              >.
+            </li>
+            <li>
+              Unpack it into your vault’s <code>.obsidian/plugins/</code> folder. It holds
+              <code>dnd5e-bylokianer/</code> with <code>main.js</code>,
+              <code>manifest.json</code> and <code>styles.css</code>.
+            </li>
+            <li>
+              Enable <b>dnd5e-byLokianer</b> under <i>Settings → Community plugins</i>, then add a
+              <a href="#campaign">campaign note</a>.
+            </li>
+          </ol>
+          <p>To build from the repository instead (Node&nbsp;24 and pnpm):</p>
+          <pre><code>git clone https://github.com/lokianer/obsidian-plugins
+cd obsidian-plugins
+pnpm install
+pnpm --filter dnd5e-bylokianer build
+pnpm --filter dnd5e-bylokianer install-example
+<span class="c"># open examples/vault in Obsidian, enable dnd5e-byLokianer</span></code></pre>
+          <p>
+            <code>install-example</code> copies <code>main.js</code>, <code>manifest.json</code> and
+            <code>styles.css</code> into the example vault’s <code>.obsidian/plugins/</code>.
+          </p>
+          <div class="callout">
+            <b>Try it on Silverstadt first</b>
+            The example vault holds a whole campaign — five factions with secret stances, a party of
+            four, stat blocks, own spells, monsters and decks, encounters, rollable tables and
+            session notes. Its <code>Home.md</code> maps every feature to the notes that show it.
+          </div>
+
+          <h3 id="campaign">The campaign note</h3>
+          <p>
+            The plugin does nothing until it finds a <b>campaign note</b>: any note whose
+            frontmatter says <code>type: campaign</code>. That note switches the plugin on for
+            <b>its own folder and everything below it</b>; notes outside stay untouched. A campaign
+            note at the vault root covers the whole vault.
+          </p>
+          <pre><code><span class="c"># Silverstadt/Campaign.md</span>
+<span class="k">type</span>: campaign
+<span class="k">title</span>: Silverstadt
+<span class="k">system</span>: D&amp;D 5e (2014 rules)</code></pre>
+          <p>
+            One campaign per vault for now. With several campaign notes the one with the
+            alphabetically smallest path wins, the others are listed as warnings (“another campaign
+            note is in use”).
+          </p>
+
+          <h3 id="layout">A campaign folder</h3>
+          <p>
+            Only <code>factions.md</code> files and the <code>type:</code> of a note carry meaning;
+            folder names are yours. The folders below are the defaults the builders write into (each
+            one can be changed in the settings):
+          </p>
+          <pre><code>Silverstadt/
+├── Campaign.md              <span class="c"># type: campaign</span>
+├── Factions/
+│   ├── The Gutter Court/
+│   │   ├── factions.md      <span class="c"># the faction</span>
+│   │   ├── Mira Voss.md     <span class="c"># type: npc → a member</span>
+│   │   └── The Bench/
+│   │       └── factions.md  <span class="c"># a sub-faction</span>
+│   └── …
+├── Party/                   <span class="c"># type: character → the Party</span>
+├── NPCs/                    <span class="c"># type: npc outside factions → Unaffiliated</span>
+├── Sessions/                <span class="c"># type: session, session: 14</span>
+├── Encounters/              <span class="c"># type: encounter</span>
+├── Monsters/  Spells/  Decks/  Tables/
+Templates/
+├── Session.md  NPC.md       <span class="c"># templates for new notes</span>
+├── Archetypes/  Races/  Tables/</code></pre>
+        </section>
+
+        <section id="concepts" aria-labelledby="concepts-h">
+          <h2 id="concepts-h">Core concepts</h2>
+
+          <h3 id="types">Note types</h3>
+          <p>
+            The plugin recognises a note by its <code>type:</code> key (case does not matter). Every
+            key and value it reads is English, also in a German vault; German is only a translation
+            of the interface.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><code>type:</code></th>
+                  <th>Meaning</th>
+                  <th>Used by</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>campaign</code></td>
+                  <td>Switches the plugin on for its folder</td>
+                  <td>everything</td>
+                </tr>
+                <tr>
+                  <td><code>faction</code></td>
+                  <td>
+                    A faction (the folder’s <code>factions.md</code>, or a note named like its
+                    folder)
+                  </td>
+                  <td>Factions</td>
+                </tr>
+                <tr>
+                  <td><code>npc</code></td>
+                  <td>A non-player character; member of the faction whose folder holds it</td>
+                  <td>Factions, NPC builder</td>
+                </tr>
+                <tr>
+                  <td><code>character</code></td>
+                  <td>A player character; outside a faction folder it belongs to the Party</td>
+                  <td>Factions, Battle, Dice, Deck</td>
+                </tr>
+                <tr>
+                  <td><code>session</code></td>
+                  <td>A session note with a whole <code>session:</code> number and a date</td>
+                  <td>the session log</td>
+                </tr>
+                <tr>
+                  <td><code>encounter</code></td>
+                  <td>A prepared fight</td>
+                  <td>Battle tracker</td>
+                </tr>
+                <tr>
+                  <td><code>spell</code> · <code>monster</code> · <code>deck</code></td>
+                  <td>Your own spells, monsters and decks</td>
+                  <td>Spellbook, Monster Manual, Deck</td>
+                </tr>
+                <tr>
+                  <td><code>table</code></td>
+                  <td>A note of rollable tables, listed in the Dice tab</td>
+                  <td>Dice</td>
+                </tr>
+                <tr>
+                  <td><code>archetype</code> · <code>race</code></td>
+                  <td>Starting points for New NPC</td>
+                  <td>NPC builder</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="party">Party and characters</h3>
+          <p>
+            Every <code>type: character</code> note in the campaign that is not inside a faction
+            folder belongs to <b>the Party</b>. The Party appears as a frame in the faction world,
+            joins encounters (unless <code>party: false</code>), is suggested as the drawer of the
+            Deck of Many Things and gets its own section in the Dice tab. Characters give the plugin
+            what it needs in their frontmatter:
+          </p>
+          <pre><code><span class="k">type</span>: character
+<span class="k">level</span>: 6            <span class="c"># encounter builder budget</span>
+<span class="k">ac</span>: 15
+<span class="k">hp</span>: 71
+<span class="k">initiative</span>: 2       <span class="c"># battle tracker</span>
+<span class="k">saves</span>: { str: 7, con: 6 }
+<span class="k">skills</span>: { athletics: 7, perception: 2 }   <span class="c"># dice buttons</span>
+<span class="k">relations</span>:
+  The Archivists: 2</code></pre>
+          <p>
+            <code>type: npc</code> notes outside every faction folder are grouped as
+            <b>Unaffiliated</b>.
+          </p>
+
+          <h3 id="tonight">Tonight’s session</h3>
+          <p>
+            Several modules write into the session you are playing. <b>Tonight’s session</b> is the
+            <code>type: session</code> note with the <b>highest <code>session:</code> number</b>.
+            Changes are offered — or written, depending on the settings — as lines under its
+            <code>## Log</code> heading. If that note’s <code>date:</code> lies before today, the
+            plugin asks once a day whether to start the next session from your session template
+            (default <code>Templates/Session.md</code>, where <code>{{session}}</code> and
+            <code>{{date}}</code> are filled in). See <a href="#log">The session log</a>.
+          </p>
+
+          <h3 id="writes">How edits are written</h3>
+          <p>
+            Every change the plugin makes is a <b>line edit</b>: it rewrites only the characters it
+            changes and leaves comments, order, quoting and the rest of the note alone. Two rules
+            keep your writing safe:
+          </p>
+          <ul>
+            <li>
+              <b>It checks first.</b> Each edit carries the value you saw. If the note says
+              something else now — you edited it elsewhere, sync changed it — nothing is written and
+              a notice says so.
+            </li>
+            <li>
+              <b>It refuses what it cannot edit safely.</b> YAML written in flow style (<code
+                >{ … }</code
+              >), with anchors or tabs is shown but not edited; the notice offers
+              <b>Edit in source</b>, which jumps to the line.
+            </li>
+          </ul>
+
+          <h3 id="language">Languages</h3>
+          <p>
+            The interface follows Obsidian’s language: German Obsidian, German plugin; everything
+            else is English. The setting <b>Language of the dice texts</b> can pin the content —
+            dice tables, spell and monster texts, the Deck’s effects — to English or German
+            independently. German texts use metres (5&nbsp;ft. = 1.5&nbsp;m) and German dice
+            (<code>2W6</code>). Spellbook, Monster Manual and the deck have an EN&nbsp;/&nbsp;DE
+            switch on each card.
+          </p>
+        </section>
+
+        <section id="factions" aria-labelledby="factions-h">
+          <p class="eyebrow">Module 1</p>
+          <h2 id="factions-h">Factions</h2>
+
+          <h3 id="faction-model">Folders and members</h3>
+          <ul>
+            <li>
+              A <b>faction</b> is a folder holding a <code>factions.md</code> (or a note named like
+              the folder with <code>type: faction</code>; <code>factions.md</code> wins if both
+              exist).
+            </li>
+            <li>
+              Its <b>members</b> are the <code>npc</code> and <code>character</code> notes in that
+              folder and in its plain subfolders.
+            </li>
+            <li>
+              A faction folder inside another faction folder is a <b>sub-faction</b>. Members belong
+              to the nearest faction above them.
+            </li>
+            <li>
+              The faction’s name is its folder name, unless <code>factions.md</code> sets
+              <code>name:</code>.
+            </li>
+          </ul>
+          <pre><code><span class="c"># Factions/The Gutter Court/factions.md</span>
+<span class="k">type</span>: faction
+<span class="k">power</span>: 3                 <span class="c"># 1–5, the size of its circle</span>
+<span class="k">relations</span>:               <span class="c"># the public face</span>
+  Order of the Lantern: -4
+  The Archivists:
+    value: 1
+    why: "[[Mira Voss]]"   <span class="c"># an optional reason</span>
+<span class="k">secret_relations</span>:        <span class="c"># the true stance, GM only</span>
+  The Archivists: -2</code></pre>
+
+          <h3 id="relations">Relations</h3>
+          <p>
+            A relation is <b>one-directional</b>: “The Gutter Court towards the Archivists”. Its
+            target is the name of a faction or a character note. Its value is a whole number on an
+            eleven-step scale; each step has a name (renameable in the settings):
+          </p>
+          <div class="scale" role="list" aria-label="Relation scale">
+            <span role="listitem" style="--c: var(--neg)"><b>−5</b>war</span>
+            <span role="listitem" style="--c: color-mix(in srgb, var(--neg) 80%, var(--mid))"
+              ><b>−4</b>feud</span
+            >
+            <span role="listitem" style="--c: color-mix(in srgb, var(--neg) 60%, var(--mid))"
+              ><b>−3</b>hostile</span
+            >
+            <span role="listitem" style="--c: color-mix(in srgb, var(--neg) 40%, var(--mid))"
+              ><b>−2</b>distrust</span
+            >
+            <span role="listitem" style="--c: color-mix(in srgb, var(--neg) 20%, var(--mid))"
+              ><b>−1</b>wary</span
+            >
+            <span role="listitem" style="--c: var(--mid)"><b>0</b>neutral</span>
+            <span role="listitem" style="--c: color-mix(in srgb, var(--pos) 20%, var(--mid))"
+              ><b>+1</b>cordial</span
+            >
+            <span role="listitem" style="--c: color-mix(in srgb, var(--pos) 40%, var(--mid))"
+              ><b>+2</b>friendly</span
+            >
+            <span role="listitem" style="--c: color-mix(in srgb, var(--pos) 60%, var(--mid))"
+              ><b>+3</b>allied</span
+            >
+            <span role="listitem" style="--c: color-mix(in srgb, var(--pos) 80%, var(--mid))"
+              ><b>+4</b>close</span
+            >
+            <span role="listitem" style="--c: var(--pos)"><b>+5</b>sworn</span>
+          </div>
+          <ul>
+            <li>
+              <b>Public and true.</b> <code>relations</code> is what the world sees,
+              <code>secret_relations</code> the true stance. A secret value replaces the public one
+              in <i>True</i> mode and never shows in <i>Public</i> mode.
+            </li>
+            <li>
+              <b>Inheritance.</b> A member or sub-faction without its own value towards a target
+              takes its faction’s value. Views draw inherited values dashed; changing one gives the
+              member its own.
+            </li>
+            <li>
+              <b>Short or long form.</b> <code>Target: -4</code>, or <code>value:</code> with a
+              <code>why:</code> beneath it — the reason may hold links.
+            </li>
+          </ul>
+
+          <h3 id="card">The faction card</h3>
+          <p>
+            Faction and character notes of the campaign open with a <b>faction card</b> where
+            Obsidian’s Properties block would be, in Reading view and Live Preview. It shows kind
+            and place, name and power, every relation as a coloured row with value, step name and
+            reason, the secret relations (folded) and the note’s other fields. A character’s card
+            also shows AC, HP, CR, speed and the six ability modifiers from the note’s first stat
+            block.
+          </p>
+          <figure class="window">
+            <div class="window-bar"><i></i><i></i><i></i><span>The Drowned Choir</span></div>
+            <img
+              src="../../assets/dnd5e-bylokianer/card.webp"
+              width="1520"
+              height="1136"
+              loading="lazy"
+              decoding="async"
+              alt="The faction card: power pips, relation sliders with step names, secret relations folded."
+            />
+          </figure>
+          <p>
+            Everything on it is editable: drag a slider, click a name, a reason or a power pip.
+            Lists such as <code>tags</code> are shown but edited in source. Source mode still shows
+            the raw YAML; the setting <b>Show Obsidian’s properties on faction notes</b> brings
+            Properties back beside the card. <b>Edit faction data</b> focuses the card of the active
+            note.
+          </p>
+
+          <h3 id="world">Faction world</h3>
+          <p>
+            <b>Open faction world</b> (command or ribbon) opens a tab with every faction of the
+            campaign, in two modes:
+          </p>
+          <ul>
+            <li>
+              <b>Graph.</b> Factions as circles sized by power, each in its own colour (shared by
+              its sub-factions and members); the Party and Unaffiliated as frames; unknown targets
+              as dashed ghosts. Arrows run from red (−5) to green (+5); friends cluster, enemies
+              drift apart. Hover a faction to light up its stances, drag one to pin it, drag the
+              background to pan, scroll or pinch to zoom; <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>-click opens
+              its note.
+            </li>
+            <li>
+              <b>Matrix.</b> Who (rows) towards whom (columns), each cell with number and step name;
+              inherited values dashed.
+            </li>
+          </ul>
+          <p>
+            The <b>Public / True</b> toggle starts at Public every time the view opens. True adds
+            the secret stances and marks where they differ from the public face.
+          </p>
+          <p>
+            Click an arrow or a cell to edit that value in a <b>popover</b>: slider, reason, where
+            an inherited value comes from, <b>Reset to inherited</b> and <b>Open card</b>. The write
+            always lands in the subject’s own note.
+          </p>
+          <figure class="window">
+            <div class="window-bar"><i></i><i></i><i></i><span>Faction world</span></div>
+            <img
+              src="../../assets/dnd5e-bylokianer/graph.webp"
+              width="1600"
+              height="1093"
+              loading="lazy"
+              decoding="async"
+              alt="The faction world graph: factions as circles sized by power, coloured arrows for relations, the Party and Unaffiliated as frames."
+            />
+          </figure>
+
+          <h3 id="faction-view">Faction view</h3>
+          <p>
+            Click a faction (or the Party / Unaffiliated frame) to drill into it: the faction as a
+            frame with its members as pills, the factions it relates to around it. Members whose own
+            values differ from their faction’s line get a yellow ring. Click a member to see all its
+            stances, a sub-faction to go one level deeper; the breadcrumb leads back. Positions you
+            drag are kept per faction; the re-layout button resets them.
+          </p>
+
+          <h3 id="tensions">Tensions</h3>
+          <p>
+            The lightning button in the world’s header (or <b>Show faction tensions</b>) opens a
+            sidebar that lists where the story is pulling. It follows the Public / True toggle; the
+            thresholds are settings.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Finding</th>
+                  <th>Reported when</th>
+                  <th>Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>One-sided pair</td>
+                  <td>A → B and B → A differ by at least the threshold</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>Out of line</td>
+                  <td>A member’s own value differs from its faction’s by at least the threshold</td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>Public vs. true</td>
+                  <td>A secret stance differs from the public face (True mode only)</td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>Split allies</td>
+                  <td>Two allies stand on opposite sides of a third faction</td>
+                  <td>3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="warnings">Warnings</h3>
+          <p>
+            A broken value never blanks a view. The plugin reads what it can and collects the rest
+            as warnings: a value outside −5 … +5 or not a number, a power outside 1 … 5, a target no
+            faction or character is called, a relation to itself, two notes with the same name, a
+            <code>factions.md</code> without <code>type: faction</code>, frontmatter that is not
+            valid YAML. <b>Show faction warnings</b> lists them grouped by note; <b>Fix</b> opens
+            the note’s card on the broken entry.
+          </p>
+
+          <h3 id="history">History and loot</h3>
+          <p>
+            After every change of a relation value a notice offers <b>Log</b>, naming tonight’s
+            session. A click writes a line under its <code>## Log</code>; secret changes go into a
+            <code>[!gm]</code> callout:
+          </p>
+          <pre class="log"><code><span class="h">## Log</span>
+- 20:31 Order of the Lantern → The Gutter Court: −2 → −3
+&gt; [!gm]
+&gt; - 21:52 The Bench → Order of the Lantern: −4 → +4</code></pre>
+          <p>
+            The views read those lines back: each relation’s tooltip shows its last changes.
+            <b>Start next session</b> makes the next session note from the template and carries the
+            last session’s <code>## Loot</code> over — table rows and list items, each marked with
+            where it was found (<code>(from [[Session 14 – Bell Square]])</code>), so only the
+            newest session needs watching.
+          </p>
+        </section>
+
+        <section id="npcs" aria-labelledby="npcs-h">
+          <p class="eyebrow">Module 2</p>
+          <h2 id="npcs-h">Stat blocks and NPCs</h2>
+
+          <h3 id="statblock">The stat block</h3>
+          <p>
+            A fenced <code>dnd5e-statblock</code> block holds a 5e stat block in YAML, with the keys
+            Fantasy Statblocks uses — so blocks move between the two plugins:
+          </p>
+          <pre><code>```dnd5e-statblock
+<span class="k">name</span>: Mira Voss
+<span class="k">size</span>: Medium
+<span class="k">type</span>: humanoid
+<span class="k">ac</span>: 16
+<span class="k">ac_class</span>: studded leather
+<span class="k">hp</span>: 84
+<span class="k">hit_dice</span>: 13d8 + 26
+<span class="k">speed</span>: 30 ft.
+<span class="k">stats</span>: [11, 18, 14, 16, 13, 15]
+<span class="k">saves</span>:
+  - dexterity: 7
+<span class="k">skillsaves</span>:
+  - deception: 8
+<span class="k">cr</span>: 5
+<span class="k">traits</span>:
+  - name: Cunning Action
+    desc: …
+<span class="k">actions</span>:
+  - name: Rapier
+    desc: "Melee Weapon Attack: +7 to hit, …"
+```</code></pre>
+          <p>
+            It renders folded behind one line —
+            <code>Stat block · Mira Voss · AC 16 · HP 84 · CR 5</code> — and opens with a click into
+            the full block: modifiers, XP and proficiency bonus worked out.
+            <b>Convert stat block</b> switches a note’s blocks between
+            <code>dnd5e-statblock</code> and Fantasy Statblocks’ <code>statblock</code>. The 21 NPC
+            stat blocks of the SRD&nbsp;5.1 ship with the plugin.
+          </p>
+
+          <h3 id="statblock-edit">Editing a block</h3>
+          <p>
+            An opened block is editable where it stands: click the name, AC, HP, speed, senses,
+            languages, CR or an ability score, type, <kbd>Enter</kbd> writes,
+            <kbd>Esc</kbd> cancels. Traits, actions, bonus actions and reactions show a pencil and ×
+            (with Undo) on hover and <b>+ Add</b> under each section. Each change is one line edit
+            inside the block — and refused if the note changed in the meantime.
+          </p>
+
+          <h3 id="new-npc">New NPC</h3>
+          <p>
+            <b>New NPC</b> (command, or the button on a faction’s card) opens a dialog: the form on
+            the left, a live <b>preview card</b> on the right.
+          </p>
+          <ol class="steps">
+            <li>
+              <b>Pick from tiles.</b> Race (the nine SRD races and your own), archetype (the 21 SRD
+              NPCs and your own, with AC · HP · CR) and class (the twelve SRD classes). A race typed
+              without a tile still works as free text.
+            </li>
+            <li>
+              <b>Roll.</b> Each descriptive line — appearance, build, manner, voice, occupation,
+              wants, ideal, bond, flaw, quirk, secret, hook — has a die. <b>Roll everything</b>
+              rolls the race and every field that is not locked.
+            </li>
+            <li>
+              <b>Lock what you like.</b> Every rolled field has a lock; typing into a field locks
+              it. Faction, archetype and alignment are never rolled.
+            </li>
+            <li>
+              <b>Create.</b> The note is made from your NPC template (default
+              <code>Templates/NPC.md</code>, <code>{{title}}</code> becomes the name) in the
+              faction’s folder — the Party’s for the Party, the campaign’s <code>NPCs</code> folder
+              for the unaffiliated — with the archetype’s stat block named after the NPC and the
+              race’s traits written in (size, speed, darkvision, languages, resistances; never
+              ability scores).
+            </li>
+          </ol>
+          <p>
+            <b>Add stat block</b> gives the open note a stat block from an archetype under a new
+            <code>## Stats</code> heading.
+          </p>
+
+          <h3 id="own-npc">Archetypes, races and dice tables</h3>
+          <ul>
+            <li>
+              <b>Archetypes</b> — notes with <code>type: archetype</code> and a stat block in
+              <code>Templates/Archetypes/</code>. <b>New archetype</b> writes one from an existing
+              archetype or from nothing.
+            </li>
+            <li>
+              <b>Races</b> — <code>type: race</code> notes in <code>Templates/Races/</code>.
+              <b>New race</b> writes one from a base race.
+            </li>
+            <li>
+              <b>Dice tables</b> — every built-in table has at least fifty entries in English and
+              German. A note such as <code>Templates/Tables/NPC quirks.md</code>, one entry per list
+              item, replaces that table.
+            </li>
+          </ul>
+        </section>
+
+        <section id="spells" aria-labelledby="spells-h">
+          <p class="eyebrow">Module 3</p>
+          <h2 id="spells-h">Spellbook</h2>
+          <p>
+            <b>Open spellbook</b> (command, or the book in the ribbon) opens the 319 spells of the
+            SRD&nbsp;5.1. Search by English or German name — case and accents do not matter — and
+            narrow by level and school chips (each with its count), class, casting time, damage
+            type, saving throw, concentration and ritual. <kbd>↑</kbd> <kbd>↓</kbd> move through the
+            list, <kbd>Enter</kbd> opens the card. The card shows the spell in both languages with
+            its level line, meta, badges, description and “At Higher Levels”.
+          </p>
+          <p>
+            In an opened stat block, spell names in a <b>Spellcasting</b> trait are links: a click
+            opens the spellbook on that spell.
+          </p>
+          <h3>Own spells</h3>
+          <p>
+            A note anywhere in the vault with <code>type: spell</code> joins the list, marked “own”:
+          </p>
+          <pre><code><span class="k">type</span>: spell
+<span class="k">level</span>: 2              <span class="c"># 0 or "cantrip" for a cantrip</span>
+<span class="k">school</span>: abjuration   <span class="c"># English or German</span>
+<span class="k">casting_time</span>: 1 action
+<span class="k">range</span>: 30 feet
+<span class="k">components</span>: V, S, M
+<span class="k">material</span>: a lantern's wick
+<span class="k">duration</span>: Up to 1 hour
+<span class="k">concentration</span>: true
+<span class="k">classes</span>: [Cleric, Wizard]
+<span class="k">damage</span>: radiant       <span class="c"># optional; also save:, attack:</span></code></pre>
+          <p>
+            The body is the description; a <code>## At Higher Levels</code> heading adds that part.
+            A note without a valid <code>level</code> or <code>school</code> stays out.
+            <b>New spell</b> opens the spell builder: start from any SRD spell (its text arrives in
+            your language), fill the fields by hand, or load a JSON file (these keys, or the 5e-bits
+            and Open5e shapes). It writes into the spell folder (default <code>Spells</code>).
+          </p>
+        </section>
+
+        <section id="deck" aria-labelledby="deck-h">
+          <p class="eyebrow">Module 4</p>
+          <h2 id="deck-h">Deck of Many Things</h2>
+          <p>
+            <b>Open Deck of Many Things</b> puts the SRD’s deck on the table — 22 cards, or 13 with
+            the setting. Name who draws (the party is suggested), declare the number of cards and
+            turn them one by one. The rules run themselves: the Fool and the Jester leave the deck,
+            every other card returns; the Fool’s redraw counts as the same draw; the Jester offers
+            10,000&nbsp;XP or two more draws, the Idiot one more; The Void and Donjon end the
+            drawing.
+          </p>
+          <p>The deck lives in a note, made on the first draw:</p>
+          <pre><code><span class="k">type</span>: deck
+<span class="k">deck</span>: standard-22
+---
+- [ ] Vizier
+- [ ] Sun
+- [x] Fool          <span class="c"># ticked = out of the deck</span>
+
+<span class="h">## Draws</span>
+- 2026-10-25 · [[Mira]] · Fool</code></pre>
+          <p>
+            Tick or untick a card by hand and the tab follows. The reset button (↺) clears the
+            history, or also puts every card back.
+          </p>
+          <h3>Own decks</h3>
+          <p>
+            Any <code>type: deck</code> note in the campaign shows in the deck list. Its first task
+            list is the deck, one card per item, <code>Name — effect</code>:
+          </p>
+          <pre><code><span class="k">type</span>: deck
+<span class="k">returns</span>: true                  <span class="c"># drawn cards go back in</span>
+<span class="k">leaves</span>: ['The Cracked Bell']   <span class="c"># …except these</span>
+<span class="k">ends</span>: ['Midnight']             <span class="c"># these end the drawing</span>
+---
+- [ ] The Lantern — Someone you trust keeps a light burning for you.
+- [ ] Midnight — No more fortunes tonight.</code></pre>
+          <p>
+            <b>New deck</b> opens the deck builder: type cards one by one, start from the standard
+            deck, paste text (<code>Name — effect</code>, <code>Name: effect</code>,
+            <code>**Name.** effect</code>, list items or table rows) or load JSON. It writes into
+            the deck folder (default <code>Decks</code>).
+          </p>
+        </section>
+
+        <section id="monsters" aria-labelledby="monsters-h">
+          <p class="eyebrow">Module 5</p>
+          <h2 id="monsters-h">Monster Manual</h2>
+          <p>
+            <b>Open Monster Manual</b> (the skull in the ribbon) lists the 334 monsters of the
+            SRD&nbsp;5.1, built like the spellbook. Filter by challenge rating band (0–½, 1–4, 5–10,
+            11–16, 17+), type, size, movement (flies, swims, burrows, climbs), Legendary and
+            Spellcaster. The card is the full stat block — the same view as in your notes — with
+            dice buttons and spell links. In German, names, types, metres and every trait and action
+            are German.
+          </p>
+          <ul>
+            <li>
+              <b>Insert into note</b> puts the block below the cursor of the last note you were in.
+            </li>
+            <li>
+              <b>Make a note</b> writes a <code>type: monster</code> note into the monster folder
+              (default <code>Monsters</code>).
+            </li>
+            <li><b>Add to combat</b> / <b>Add to encounter</b> hand it to the battle tracker.</li>
+          </ul>
+          <h3>Own monsters and import</h3>
+          <p>
+            A <code>type: monster</code> note with a <code>dnd5e-statblock</code> block anywhere in
+            the vault joins the list as “own”. <b>New monster</b> opens the monster builder: start
+            from any SRD monster or from nothing; size, type, alignment and CR are dropdowns, saves
+            and skills one line each (<code>DEX +6, CON +13</code>), traits and actions rows.
+            <b>Import from a file</b> reads Fantasy Statblocks YAML/JSON or Markdown, the 5e-bits
+            and Open5e JSON shapes and 5etools bestiary files; several monsters show as tiles, with
+            <b>Create all</b>. Monsters outside the SRD are not shipped — bring them from your own
+            books this way.
+          </p>
+        </section>
+
+        <section id="battle" aria-labelledby="battle-h">
+          <p class="eyebrow">Module 6</p>
+          <h2 id="battle-h">Battle tracker</h2>
+
+          <h3 id="encounter-note">The encounter note</h3>
+          <p>A fight starts from any <code>type: encounter</code> note in the campaign:</p>
+          <pre><code><span class="k">type</span>: encounter
+<span class="k">party</span>: true                 <span class="c"># the party joins (default)</span>
+<span class="k">combatants</span>:
+  - "[[Sable]]"               <span class="c"># a note: ac/hp/initiative, else its stat block</span>
+  - monster: Owlbear          <span class="c"># Monster Manual, English or German name</span>
+    count: 2
+  - name: Court thug          <span class="c"># written right here</span>
+    count: 4
+    ac: 11
+    hp: 32
+    initiative: 0
+    side: enemy               <span class="c"># party, ally or enemy</span></code></pre>
+
+          <h3 id="running">Running a fight</h3>
+          <ol class="steps">
+            <li>
+              <b>Start.</b> Monsters and NPCs roll d20 + initiative (a group with a
+              <code>count</code> rolls once and is numbered “Court thug 1 … 4”); player characters’
+              numbers are typed in or rolled. Ties go to the higher Dexterity; arrows nudge a row.
+            </li>
+            <li>
+              <b>Begin round 1</b>, then <b>Next turn</b> (and back). Defeated monsters are skipped.
+            </li>
+            <li>
+              <b>Pick a row</b> for its card: one number with <b>Damage</b>, <b>Heal</b> and
+              <b>Temp HP</b> (temporary hit points absorb damage first and don’t stack), death saves
+              when a character is down, the SRD conditions as chips with an optional duration that
+              counts down at the end of the combatant’s turn, concentration — damage shows the
+              Constitution save’s DC — and the stat block with dice buttons.
+            </li>
+            <li>
+              <b>Change the line-up</b> while it runs: type a monster, a note or a name with HP and
+              AC and press <b>Add</b>; <b>Remove from fight</b> takes someone out.
+            </li>
+            <li><b>End combat</b> closes the fight.</li>
+          </ol>
+          <p>
+            Every change is written to the note’s <code>## Combat</code> section, a plain table that
+            reads without the plugin and is read back when the tab opens — the fight survives a
+            restart:
+          </p>
+          <pre><code><span class="h">## Combat</span>
+
+Round 3 · Turn: Court thug 2
+
+| Init | Combatant    |       HP |  AC | Conditions               |
+| ---: | ------------ | -------: | --: | ------------------------ |
+|   21 | [[Dagny]]    | 54/71 +5 |  15 | prone (1), concentration |
+|   17 | Court thug 2 |    12/32 |  11 |                          |
+|    9 | Owlbear 1    |     0/59 |  13 | defeated                 |</code></pre>
+          <p>
+            The fight’s moments — begin, defeated, down, dead, end — go to
+            <a href="#log">tonight’s session</a>. The ⋮ menu offers <b>Reset the fight</b> and
+            <b>Remove battle lines from tonight’s session</b>.
+          </p>
+
+          <h3 id="encounter-builder">Encounter builder</h3>
+          <p>
+            <b>New encounter</b> builds an encounter note: a name and place, the party as chips with
+            their levels (from each character’s <code>level</code>, or a number of characters and a
+            level), the difficulty — Low, Moderate or High, each with its XP budget from the
+            SRD&nbsp;5.2.1 table, summed over the characters — and the Monster Manual as tiles. The
+            preview fills the budget as you add monsters.
+          </p>
+          <div class="callout">
+            <b>Milestone or XP</b>
+            With <b>Experience points</b> off (the default) the builder shows how much of the budget
+            is used but no XP, and the log’s end line carries none. Switched on, budgets and every
+            monster’s XP show, and the end line sums the defeated enemies’ XP.
+          </div>
+        </section>
+
+        <section id="dice" aria-labelledby="dice-h">
+          <p class="eyebrow">Module 7</p>
+          <h2 id="dice-h">Dice</h2>
+          <p>
+            <b>Open dice</b> opens the Dice tab: type a formula and press <b>Roll</b>, or pick a
+            die. Normal / Advantage / Disadvantage applies to a single d20; a <b>DC</b> gives the
+            verdict. Each roll plays on <b>the dice stage</b>: the DC on top, every die in its own
+            shape tumbling and landing, the bonuses flying in, the total counting up, then
+            <b>Success</b> or <b>Failure</b> — a natural 20 with golden rays. A click or
+            <kbd>Space</kbd> skips to the result. The rolls of this Obsidian session are listed with
+            <b>Roll again</b> and <b>Log</b>.
+          </p>
+          <figure class="window">
+            <div class="window-bar"><i></i><i></i><i></i><span>Würfel</span></div>
+            <img
+              src="../../assets/dnd5e-bylokianer/dice.webp"
+              width="1600"
+              height="1600"
+              loading="lazy"
+              decoding="async"
+              alt="The Dice tab: a Persuasion check with advantage against DC 15, the kept 17 glowing, +7 added, total 24 and the verdict in gold."
+            />
+          </figure>
+
+          <h3 id="formulas">Formulas</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Written</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>d20</code>, <code>W20</code></td>
+                  <td>one twenty-sided die (German <code>W</code> works everywhere)</td>
+                </tr>
+                <tr>
+                  <td><code>2d6+3</code>, <code>1d8+2d6-1</code></td>
+                  <td>sums; <code>*</code>, <code>/</code> and brackets too</td>
+                </tr>
+                <tr>
+                  <td><code>d%</code>, <code>d100</code></td>
+                  <td>percentile (two d10, tens and ones)</td>
+                </tr>
+                <tr>
+                  <td><code>4d6kh3</code>, <code>2d20kl1</code>, <code>4d6dl1</code></td>
+                  <td>keep highest / keep lowest / drop lowest</td>
+                </tr>
+                <tr>
+                  <td><code>d20+5 adv</code>, <code>d20 dis</code></td>
+                  <td>advantage / disadvantage</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="dice-notes">Dice in notes</h3>
+          <p>
+            Inline code like <code>`dice: 2d6+3`</code> — Dice Roller’s syntax, so notes work with
+            both plugins — becomes a button in Reading view and Live Preview. A click plays the
+            stage in a small window and shows the total beside the button; nothing is written into
+            the note. Formulas the plugin does not read (exploding dice, rerolls) stay as they are.
+          </p>
+
+          <h3 id="tables">Rollable tables</h3>
+          <p>
+            A heading that ends in a die in brackets makes the first list or table under it
+            rollable. A list is numbered in order; a table’s first column holds numbers or ranges.
+          </p>
+          <pre><code><span class="h">## Weather on the estuary (1d8)</span>
+
+| d8  | Weather                                 |
+| --- | --------------------------------------- |
+| 1   | Fog, visibility 30 feet                 |
+| 2–4 | Grey and dry                            |
+| 5-6 | Rain, and the [[Lantern Bridge]] slick  |</code></pre>
+          <p>
+            Every <code>type: table</code> note shows its tables in the Dice tab.
+            <code>`dice: [[Street Rumours#Night on Lantern Quay (d20)]]`</code> rolls one table from
+            a note, <code>`dice: [[Street Rumours]]`</code> the note’s first. The row shows with its
+            links working; a total that lands on no row is recorded as “no row”, never re-rolled.
+          </p>
+
+          <h3 id="dice-statblocks">Stat blocks and the party</h3>
+          <p>
+            In every stat block — notes, Monster Manual, Battle tab — attack bonuses (<code
+              >+7 to hit</code
+            >), damage (<code>10 (1d10 + 5)</code>), saves, skills and the ability modifiers are
+            buttons:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Gesture</th>
+                  <th>Roll</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Click</td>
+                  <td>Normal</td>
+                </tr>
+                <tr>
+                  <td><kbd>Shift</kbd>-click</td>
+                  <td>Advantage — on a damage button: a critical hit (dice twice, numbers once)</td>
+                </tr>
+                <tr>
+                  <td><kbd>Alt</kbd>-click</td>
+                  <td>Disadvantage</td>
+                </tr>
+                <tr>
+                  <td>Right-click / long press</td>
+                  <td>A menu with all choices</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Saving throw DCs stay text — the target rolls those. Characters’ <code>saves</code> and
+            <code>skills</code> from their frontmatter appear as buttons in the Dice tab’s
+            <b>Party</b> section and on their Battle card, rolled with the tab’s Advantage and DC.
+          </p>
+        </section>
+
+        <section id="log" aria-labelledby="log-h">
+          <h2 id="log-h">The session log</h2>
+          <p>
+            The session note is the spine of the plugin: factions, battle tracker and dice all
+            append to <code>## Log</code> of <a href="#tonight">tonight’s session</a>, each line
+            with its time.
+          </p>
+          <pre class="log"><code><span class="h">## Log</span>
+- 20:10 Rolled d20+7 → 19 (12, +7) against DC 15: success
+- 20:31 Order of the Lantern → The Gutter Court: −2 → −3
+- 21:40 Combat begins: [[Ambush under the second arch]]
+- 21:52 Round 3: Owlbear 1 defeated
+- 21:58 Combat ends after 5 rounds — 1,400 XP
+&gt; [!gm]
+&gt; - 22:05 The Bench → Order of the Lantern: −4 → +4</code></pre>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>When it writes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Relations</td>
+                  <td>
+                    A notice with <b>Log</b> after every value change; secret ones go in a GM
+                    callout
+                  </td>
+                </tr>
+                <tr>
+                  <td>Battle</td>
+                  <td>
+                    Setting <b>Battle log</b>: offer each line (default), write automatically, or
+                    off
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dice</td>
+                  <td>
+                    Setting <b>Dice log</b>: offer each roll (default), write automatically, or off
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <b>Remove battle lines</b> and <b>Remove dice lines from tonight’s session</b> ask first
+            and touch only the lines those modules wrote; relation changes, your own lines and
+            <code>[!gm]</code> callouts stay.
+          </p>
+        </section>
+
+        <section id="reference" aria-labelledby="reference-h">
+          <h2 id="reference-h">Reference</h2>
+
+          <h3 id="commands">Commands</h3>
+          <p>
+            All in the command palette. No default hotkeys are set; assign your own under
+            <i>Settings → Hotkeys</i>.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Command</th>
+                  <th>Does</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Show faction warnings</td>
+                  <td>Every note the plugin could not read cleanly, with Fix</td>
+                </tr>
+                <tr>
+                  <td>Edit faction data</td>
+                  <td>Focuses the card of the active note</td>
+                </tr>
+                <tr>
+                  <td>Open faction world</td>
+                  <td>Graph and matrix of all factions</td>
+                </tr>
+                <tr>
+                  <td>Show faction tensions</td>
+                  <td>The tension panel in the right sidebar</td>
+                </tr>
+                <tr>
+                  <td>Start next session</td>
+                  <td>A new session note from the template, loot carried over</td>
+                </tr>
+                <tr>
+                  <td>New NPC · Add stat block · New archetype · New race</td>
+                  <td>The NPC builder and its parts</td>
+                </tr>
+                <tr>
+                  <td>Convert stat block</td>
+                  <td>
+                    Switches blocks between <code>dnd5e-statblock</code> and Fantasy Statblocks
+                  </td>
+                </tr>
+                <tr>
+                  <td>Open spellbook · New spell</td>
+                  <td>The spellbook and the spell builder</td>
+                </tr>
+                <tr>
+                  <td>Open Deck of Many Things · New deck</td>
+                  <td>Drawing and the deck builder</td>
+                </tr>
+                <tr>
+                  <td>Open Monster Manual · New monster</td>
+                  <td>The monsters and the monster builder</td>
+                </tr>
+                <tr>
+                  <td>Open battle tracker · New encounter</td>
+                  <td>A fight from an encounter note; the encounter builder</td>
+                </tr>
+                <tr>
+                  <td>Open dice</td>
+                  <td>The Dice tab</td>
+                </tr>
+                <tr>
+                  <td>Remove battle / dice lines</td>
+                  <td>Clears those modules’ lines from tonight’s log</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="settings">Settings</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Setting</th>
+                  <th>Default</th>
+                  <th>Effect</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Show Obsidian’s properties on faction notes</td>
+                  <td>off</td>
+                  <td>Properties beside the faction card</td>
+                </tr>
+                <tr>
+                  <td>Experience points</td>
+                  <td>off</td>
+                  <td>XP in the encounter builder and the battle log</td>
+                </tr>
+                <tr>
+                  <td>Language of the dice texts</td>
+                  <td>As Obsidian</td>
+                  <td>English or German content, independent of the interface</td>
+                </tr>
+                <tr>
+                  <td>Deck of Many Things</td>
+                  <td>22 cards</td>
+                  <td>Or 13</td>
+                </tr>
+                <tr>
+                  <td>Session template</td>
+                  <td><code>Templates/Session.md</code></td>
+                  <td>The note a new session is made from</td>
+                </tr>
+                <tr>
+                  <td>NPC template</td>
+                  <td><code>Templates/NPC.md</code></td>
+                  <td>The note a new NPC is made from</td>
+                </tr>
+                <tr>
+                  <td>Archetype · Races · Tables folder</td>
+                  <td><code>Templates/…</code></td>
+                  <td>Where own archetypes, races and dice tables live</td>
+                </tr>
+                <tr>
+                  <td>Folder for NPCs of no faction</td>
+                  <td><code>NPCs</code></td>
+                  <td>Inside the campaign folder</td>
+                </tr>
+                <tr>
+                  <td>Folders for spells · decks · monsters · encounters</td>
+                  <td>
+                    <code>Spells</code>, <code>Decks</code>, <code>Monsters</code>,
+                    <code>Encounters</code>
+                  </td>
+                  <td>Where the builders write</td>
+                </tr>
+                <tr>
+                  <td>Battle log · Dice log</td>
+                  <td>Offer in a notice</td>
+                  <td>Or write automatically, or off</td>
+                </tr>
+                <tr>
+                  <td>Dice animation</td>
+                  <td>Stage, animated</td>
+                  <td>Or the result at once, or no stage</td>
+                </tr>
+                <tr>
+                  <td>Step names</td>
+                  <td>war … sworn</td>
+                  <td>Your own names for −5 … +5</td>
+                </tr>
+                <tr>
+                  <td>Tension thresholds</td>
+                  <td>4 · 3 · 3 · 3</td>
+                  <td>When the tension panel reports (see <a href="#tensions">Tensions</a>)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 id="keys">Frontmatter keys</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>On</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>type</code></td>
+                  <td>every note</td>
+                  <td>See <a href="#types">Note types</a></td>
+                </tr>
+                <tr>
+                  <td><code>name</code></td>
+                  <td>faction</td>
+                  <td>Display name instead of the folder name</td>
+                </tr>
+                <tr>
+                  <td><code>power</code></td>
+                  <td>faction</td>
+                  <td>1–5</td>
+                </tr>
+                <tr>
+                  <td><code>relations</code> · <code>secret_relations</code></td>
+                  <td>faction, npc, character</td>
+                  <td>Target name → −5 … +5, or <code>value</code> + <code>why</code></td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>level</code> · <code>ac</code> · <code>hp</code> · <code>initiative</code>
+                  </td>
+                  <td>character, npc</td>
+                  <td>Encounter budget and battle tracker</td>
+                </tr>
+                <tr>
+                  <td><code>saves</code> · <code>skills</code></td>
+                  <td>character</td>
+                  <td>Dice buttons for the party</td>
+                </tr>
+                <tr>
+                  <td><code>session</code> · <code>date</code></td>
+                  <td>session</td>
+                  <td>Which session is tonight’s, and whether a new one is due</td>
+                </tr>
+                <tr>
+                  <td><code>party</code> · <code>combatants</code></td>
+                  <td>encounter</td>
+                  <td>Who fights</td>
+                </tr>
+                <tr>
+                  <td><code>returns</code> · <code>leaves</code> · <code>ends</code></td>
+                  <td>deck</td>
+                  <td>How an own deck is drawn</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="inside" aria-labelledby="inside-h">
+          <h2 id="inside-h">How it works inside</h2>
+          <p>
+            For the curious — and for anyone who wants to read or change the code in
+            <code>plugins/dnd5e-bylokianer/src/</code>.
+          </p>
+          <div class="callout inside">
+            <b>Two layers</b>
+            <p>
+              <b>Pure modules</b> (<code>factions/</code>, <code>npc/</code>, <code>spells/</code>,
+              <code>monsters/</code>, <code>deck/</code>, <code>battle/</code>, <code>dice/</code>,
+              <code>yaml/</code>, <code>campaign/</code>) hold all rules and parsing: plain
+              TypeScript without the Obsidian API, tested in Node with Vitest.
+            </p>
+            <p>
+              <b>Adapters</b> in <code>obsidian/</code> connect them to Obsidian: views, modals,
+              code-block processors, the settings tab. <code>main.ts</code> only loads the settings
+              and calls one <code>register…</code> function per module.
+            </p>
+          </div>
+          <ol class="steps">
+            <li>
+              <b>Read.</b> On load and after every change in Obsidian’s metadata cache (debounced,
+              never per keystroke) the plugin collects the frontmatter of the campaign’s notes,
+              finds the campaign, factions, members and sessions and builds one <i>world</i> — with
+              the warnings for whatever it could not read.
+            </li>
+            <li>
+              <b>Show.</b> Cards, graph, matrix and panels render from that world with the DOM API
+              (never <code>innerHTML</code> with note content) and Obsidian’s CSS variables, so
+              every theme works.
+            </li>
+            <li>
+              <b>Write.</b> An edit is computed as a line operation on the note’s text
+              (<code>yaml/edit.ts</code>) carrying the value last seen, and applied through
+              <code>app.vault.process</code>. A mismatch refuses the edit; frontmatter is never
+              re-serialised.
+            </li>
+            <li>
+              <b>Rebuild.</b> The write changes the file, the metadata cache fires, the world is
+              rebuilt and every open view follows.
+            </li>
+          </ol>
+          <p>
+            Big data — the 319 spells, 334 monsters, 21 NPCs, nine races and the German texts —
+            ships inside <code>main.js</code>, extracted from the SRD by scripts in
+            <code>scripts/</code>. The session logic (tonight’s session, the log, loot carry-over)
+            lives in the shared package <code>packages/session</code>. There are no network calls,
+            no telemetry and no Node APIs, which is why the plugin runs on mobile too.
+          </p>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-h">
+          <h2 id="faq-h">Troubleshooting</h2>
+          <h4>Nothing happens — no card, no world.</h4>
+          <p>
+            Is there a <code>type: campaign</code> note, and is the note you look at in its folder
+            or below it? Is the plugin enabled?
+          </p>
+          <h4>“The note changed” — my edit was not written.</h4>
+          <p>
+            The note says something else than the view showed: edited elsewhere, synced, or just
+            created outside Obsidian and not indexed yet. Wait a moment and try again; the view
+            refreshes on its own.
+          </p>
+          <h4>“Cannot edit safely”.</h4>
+          <p>
+            The line uses flow style <code>{ … }</code>, an anchor or tabs. Click
+            <b>Edit in source</b> and change it by hand, or rewrite it in block style once.
+          </p>
+          <h4>A faction or member is missing.</h4>
+          <p>
+            Run <b>Show faction warnings</b>. Common causes: the folder has no
+            <code>factions.md</code>, the character note has no <code>type: npc</code> /
+            <code>character</code>, or two notes share a name.
+          </p>
+          <h4>Log lines go to the wrong session.</h4>
+          <p>
+            Tonight’s session is the highest <code>session:</code> number. Check that the new note
+            has a whole number there — or use <b>Start next session</b>.
+          </p>
+          <h4>A <code>dice:</code> button does not appear.</h4>
+          <p>
+            It has to be inline code (in backticks) and a formula the plugin reads; exploding dice
+            and rerolls are left to Dice Roller.
+          </p>
+        </section>
+
+        <section id="credits" aria-labelledby="credits-h">
+          <h2 id="credits-h">Credits and licence</h2>
+          <p>
+            MIT licence. The plugin includes material from the System Reference Documents 5.1 and
+            5.2.1 by Wizards of the Coast LLC, licensed under
+            <a href="https://creativecommons.org/licenses/by/4.0/legalcode">CC-BY-4.0</a>; the
+            German texts are the plugin’s own translation under the same licence. The data was
+            extracted from the 5e-bits SRD database (MIT); the faction graph uses d3-force (ISC).
+            Stat block keys and the <code>dice:</code> syntax are compatible with Fantasy Statblocks
+            and Dice Roller; the dice stage is inspired by Baldur’s Gate&nbsp;3 and drawn by the
+            plugin itself. Not affiliated with or endorsed by Wizards of the Coast, Larian Studios
+            or Obsidian.
+          </p>
+          <nav class="next-prev" aria-label="More">
+            <a class="button small ghost" href="../">← Plugin page</a>
+            <a
+              class="button small ghost"
+              href="https://github.com/lokianer/obsidian-plugins/blob/main/plugins/dnd5e-bylokianer/README.md"
+              >README on GitHub →</a
+            >
+          </nav>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <p>
+        © 2026 Lokianer · MIT licence ·
+        <a href="https://github.com/lokianer/obsidian-plugins" translate="no"
+          >github.com/lokianer/obsidian-plugins</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      // The table of contents stands open beside the text on wide screens, folded on narrow ones.
+      const toc = document.getElementById('toc');
+      const wide = matchMedia('(min-width: 961px)');
+      const sync = () => (toc.open = wide.matches);
+      sync();
+      wide.addEventListener('change', sync);
+      toc.addEventListener('click', (event) => {
+        if (!wide.matches && event.target.closest('a')) toc.open = false;
+      });
+    </script>
+  </body>
+</html>
