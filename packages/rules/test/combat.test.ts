@@ -33,6 +33,10 @@ describe('armour class', () => {
     expect(derive(tester({}, []), plain).ac.total).toBe(13);
   });
 
+  it('takes no Dexterity at all in heavy armour, even a penalty', () => {
+    expect(derive(tester({ dex: 8 }, ['chain-mail']), plain).ac.total).toBe(16);
+  });
+
   it('takes the best unarmoured formula, with a shield only where it allows one', () => {
     const barbarian = rulesWith({
       kind: 'ac',

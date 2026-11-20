@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { checkRules, type Grant, loadRules, SRD_52 } from '../src/index';
+import { type Character, checkRules, derive, type Grant, loadRules, SRD_52 } from '../src/index';
 
 const rules = loadRules([SRD_52]);
 const grants = (classId: string): Grant[] =>
@@ -70,5 +70,37 @@ describe('SRD 5.2.1 classes and subclasses', () => {
       ...SRD_52.subclasses.flatMap((s) => s.features),
     ];
     expect(features.filter((f) => f.text.en.trim() === '').map((f) => f.id)).toEqual([]);
+  });
+});
+
+describe('SRD 5.2.1 weapon training and multiclassing', () => {
+  const hero = (levels: string[], items: string[]): Character => ({
+    rules: '2024',
+    species: 'human',
+    background: 'soldier',
+    abilities: { str: 10, dex: 16, con: 12, int: 10, wis: 14, cha: 10 },
+    choices: {},
+    levels: levels.map((c, i) => ({ class: c, hp: i === 0 ? 'max' : 'average', choices: {} })),
+    inventory: items.map((item) => ({ item, equipped: true })),
+    bonuses: [],
+  });
+  const trained = (c: Character) =>
+    Object.fromEntries(derive(c, rules).attacks.map((a) => [a.id, a.proficient]));
+
+  it('trains a rogue in martial finesse and light weapons, a monk in martial light ones', () => {
+    expect(trained(hero(['rogue'], ['rapier', 'shortsword', 'longsword']))).toEqual({
+      rapier: true,
+      shortsword: true,
+      longsword: false,
+    });
+    expect(trained(hero(['monk'], ['shortsword', 'rapier']))).toEqual({
+      shortsword: true,
+      rapier: false,
+    });
+  });
+
+  it('asks a multiclass rogue for its skill', () => {
+    const sheet = derive(hero(['fighter', 'rogue'], []), rules);
+    expect(sheet.missing).toContain('level 2: rogue-multiclass/skills');
   });
 });

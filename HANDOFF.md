@@ -32,9 +32,19 @@ character notes and the character sheet.
    builders) and the catalogues K1–K3. Release 0.2.0 only after the maintainer's go-ahead.
 3. **Next phase:** C1b (German SRD texts, from the official German SRD) or C2 (create and level up
    in a dialog); the maintainer picks. Each needs its plan first.
-4. **Final review of C1 still open:** the plan's executing skill ends with a whole-branch review on
-   the most capable model (`.superpowers/sdd/2026-11-20-character-c1-engine-sheet/progress.md` has
-   the rulings it should weigh). Not run in this session.
+4. **Before C2, decide** (from the final review): choices whose count grows with the class level
+   (Eldritch Invocations, Metamagic, Weapon Mastery) are stored in full at the level that first
+   grants them; the level-up dialog needs them per level (spread over the class's entries, or the
+   increments per level). Weapon Mastery's data lists categories, not weapons.
+5. **Deferred minors from the final review** (none blocks C1): 2024 third casters should round
+   down (latent, no SRD third caster); 2014 single-class half casters need their own table (latent,
+   no 2014 data); a feat taken at a class level follows that class's level, not the character's;
+   the same origin feat twice shares one choice key; background increases are not validated
+   (+3 to one score possible); the sheet's feature texts add render components on every redraw
+   until the tab closes; the Spells tab shows the first caster's DC only; a renamed note leaves its
+   sheet empty; tab pills need `tabindex` and keys; the first write-back turns flow maps into block
+   style and drops YAML comments (processFrontMatter); a subclass of another class is reported as
+   unknown rather than mismatched.
 
 ## State of the working tree
 
@@ -78,7 +88,10 @@ written only when they differ; spellcasting always its own feature; layout A.
 
 ## Verification
 
-`pnpm check` exit 0: plugin 466/466, rules 35/35, session 15/15 tests, lint 0 errors (13 known
+Final whole-branch review (most capable model): no critical, five important findings; four fixed
+(write-back only with every rules id known and a readable level, heavy armour ignores Dexterity,
+weapon training by property, multiclass skill choices), the fifth is item 4 above.
+`pnpm check` exit 0: plugin 467/467, rules 39/39, session 15/15 tests, lint 0 errors (13 known
 warnings), typecheck and build clean. Screenshots of the sheet (dark 1100 px, light German 900 px,
 380 px, features, hand-written) from the scratchpad harness; mid-word label breaks, raw ability ids
 and the German save names fixed from them.

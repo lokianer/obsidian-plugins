@@ -119,7 +119,8 @@ export interface ClassDef {
   /** Every feature, levels 1–20, including the first level's proficiencies and choices. */
   features: Feature[];
   subclassLevel: number;
-  multiclass: { requires: Partial<Record<Ability, number>>; grants: Grant[] };
+  /** What a later class level grants instead of the core proficiencies, and asks for. */
+  multiclass: { requires: Partial<Record<Ability, number>>; grants: Grant[]; choices?: Choice[] };
 }
 
 export interface SubclassDef {

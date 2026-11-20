@@ -56,7 +56,9 @@ function wren(): Record<string, unknown> {
 const keys = (fm: Record<string, unknown>) => {
   const character = readCharacter(fm);
   if (character === null) throw new Error('not a built character');
-  return computedKeys(character, rules);
+  const computed = computedKeys(character, rules);
+  if (computed === null) throw new Error('nothing to write');
+  return computed;
 };
 
 describe('the character note', () => {
@@ -122,6 +124,16 @@ describe('the character note', () => {
     if (fm === undefined) throw new Error('no Wren Ashdown in the example vault');
     expect(differs(fm, keys(fm))).toBe(false);
     expect(readCharacter(fm)?.levels).toHaveLength(6);
+  });
+
+  it('never writes numbers it could not compute', () => {
+    const fm = wren();
+    (fm.levels as Record<string, unknown>[]).push({ class: 'blood-hunter', hp: 'average' });
+    const character = readCharacter(fm);
+    expect(character).not.toBeNull();
+    expect(computedKeys(character!, rules)).toBeNull();
+    expect(readCharacter({ ...wren(), levels: [] })).toBeNull();
+    expect(readCharacter({ ...wren(), levels: ['fighter 5'] })).toBeNull();
   });
 
   it('names a multiclass by its classes and levels', () => {

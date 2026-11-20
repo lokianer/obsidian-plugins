@@ -533,6 +533,30 @@
 					"what": "armor",
 					"ids": ["light"]
 				}
+			],
+			"choices": [
+				{
+					"id": "skills",
+					"name": {
+						"en": "Skill Proficiency"
+					},
+					"count": 1,
+					"gives": "skill",
+					"from": {
+						"skills": "any"
+					}
+				},
+				{
+					"id": "tools",
+					"name": {
+						"en": "Musical Instrument"
+					},
+					"count": 1,
+					"gives": "tool",
+					"from": {
+						"list": ["musical-instrument"]
+					}
+				}
 			]
 		},
 		"features": [
@@ -3947,6 +3971,28 @@
 					"what": "armor",
 					"ids": ["light", "medium", "shield"]
 				}
+			],
+			"choices": [
+				{
+					"id": "skills",
+					"name": {
+						"en": "Skill Proficiency"
+					},
+					"count": 1,
+					"gives": "skill",
+					"from": {
+						"skills": [
+							"animal-handling",
+							"athletics",
+							"insight",
+							"investigation",
+							"nature",
+							"perception",
+							"stealth",
+							"survival"
+						]
+					}
+				}
 			]
 		}
 	},
@@ -3983,7 +4029,7 @@
 					{
 						"kind": "proficiency",
 						"what": "weapon",
-						"ids": ["simple"]
+						"ids": ["simple", "martial-finesse", "martial-light"]
 					},
 					{
 						"kind": "proficiency",
@@ -4492,6 +4538,30 @@
 					"kind": "proficiency",
 					"what": "armor",
 					"ids": ["light"]
+				}
+			],
+			"choices": [
+				{
+					"id": "skills",
+					"name": {
+						"en": "Skill Proficiency"
+					},
+					"count": 1,
+					"gives": "skill",
+					"from": {
+						"skills": [
+							"acrobatics",
+							"athletics",
+							"deception",
+							"insight",
+							"intimidation",
+							"investigation",
+							"perception",
+							"persuasion",
+							"sleight-of-hand",
+							"stealth"
+						]
+					}
 				}
 			]
 		}

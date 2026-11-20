@@ -43,4 +43,15 @@ describe('the data check', () => {
       'class tester tester-core: byLevel has 19 entries, not 20',
     ]);
   });
+  it('names a weapon proficiency that is no category, weapon or category with a property', () => {
+    const data = structuredClone(fixture) as RulesData;
+    data.classes[0]!.features[0]!.grants.push({
+      kind: 'proficiency',
+      what: 'weapon',
+      ids: ['martial-finesse', 'longsword', 'martial-lite'],
+    });
+    expect(checkRules(loadRules([data]))).toEqual([
+      "class tester tester-core: unknown weapon proficiency 'martial-lite'",
+    ]);
+  });
 });

@@ -54,22 +54,31 @@ export function readCharacter(fm: Record<string, unknown> | undefined): Characte
         ? [{ to: v.to, value: v.value, why: typeof v.why === 'string' ? v.why : '' }]
         : [],
   );
+  // No readable level: a hand-written note (`levels: []`, `- fighter 5`), left alone.
+  const levels = fm.levels.flatMap((v) => readLevel(v) ?? []);
+  if (levels.length === 0) return null;
   const species = typeof fm.species === 'string' ? fm.species : fm.race;
   return {
     rules: fm.rules === '2014' || fm.rules === 2014 ? '2014' : '2024',
     species: typeof species === 'string' ? species : '',
     background: typeof fm.background === 'string' ? fm.background : '',
     abilities,
-    levels: fm.levels.flatMap((v) => readLevel(v) ?? []),
+    levels,
     choices: readChoices(fm.choices),
     inventory,
     bonuses,
   };
 }
 
-/** The keys written back into the note, in the shape hand-written notes use. */
-export function computedKeys(character: Character, rules: Rules): Record<string, unknown> {
+/**
+ * The keys written back into the note, in the shape hand-written notes use; null when the rules
+ * do not know a class, subclass, species, background, feat or option of the note, so no lowered number ever replaces the note's own.
+ */
+export function computedKeys(character: Character, rules: Rules): Record<string, unknown> | null {
   const sheet = derive(character, rules);
+  // Gear the rules do not list (a rope) changes no number; any other unknown id does.
+  const items = new Set(character.inventory.map((i) => i.item));
+  if (sheet.unknown.some((id) => !items.has(id))) return null;
   const [first] = sheet.classes;
   const subclass = first?.subclass == null ? undefined : rules.subclass(first.subclass);
   const proficient = <T extends { total: number }>(

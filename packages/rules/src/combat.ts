@@ -35,7 +35,13 @@ export function armorClass(ctx: Context, armor: ReturnType<typeof worn>): Value 
   const candidates: { sources: Value['sources']; shield: boolean }[] = [];
   if (armor.body !== null) {
     const { body } = armor;
-    const dex = body.dexMax === null ? mod.dex : Math.min(mod.dex, body.dexMax);
+    // Heavy armour takes no Dexterity at all, not even a penalty.
+    const dex =
+      body.category === 'heavy'
+        ? 0
+        : body.dexMax === null
+          ? mod.dex
+          : Math.min(mod.dex, body.dexMax);
     const sources = [{ label: body.id, value: body.ac }];
     if (dex !== 0) sources.push({ label: 'dex', value: dex });
     candidates.push({ sources, shield: true });
@@ -82,8 +88,14 @@ export function attacks(ctx: Context): Attack[] {
     if (weapon === undefined) return [];
     const finesse = weapon.properties.includes('finesse');
     const ability = weapon.ranged ? 'dex' : finesse && mod.dex > mod.str ? 'dex' : 'str';
-    const proficient =
-      ctx.lists.weapon.includes(weapon.category) || ctx.lists.weapon.includes(weapon.id);
+    // Trained by category (`martial`), by weapon (`longsword`) or by category with a property
+    // (`martial-finesse`: the rogue's martial weapons that have Finesse).
+    const trained = [
+      weapon.category,
+      weapon.id,
+      ...weapon.properties.map((p) => `${weapon.category}-${p}`),
+    ];
+    const proficient = trained.some((id) => ctx.lists.weapon.includes(id));
     const toHit = [{ label: ability as string, value: mod[ability] }];
     if (proficient) toHit.push({ label: 'proficiency', value: ctx.proficiency });
     for (const { grant, p } of ctx.grants) {

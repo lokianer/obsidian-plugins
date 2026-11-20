@@ -25,7 +25,7 @@ export function registerCharacters(ctx: Context): void {
       const character = readCharacter(fm);
       if (character === null) return;
       const keys = computedKeys(character, rules());
-      if (!differs(fm, keys)) return;
+      if (keys === null || !differs(fm, keys)) return;
       void app.fileManager.processFrontMatter(file, (front: Record<string, unknown>) => {
         Object.assign(front, keys);
       });

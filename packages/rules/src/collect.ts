@@ -92,7 +92,12 @@ export function collect(character: Character, rules: Rules): Collected {
       if (f.level !== classLevel) continue;
       const feature: Feature =
         f.id === `${cls.id}-core` && !first
-          ? { ...f, id: `${cls.id}-multiclass`, grants: cls.multiclass.grants, choices: [] }
+          ? {
+              ...f,
+              id: `${cls.id}-multiclass`,
+              grants: cls.multiclass.grants,
+              choices: cls.multiclass.choices ?? [],
+            }
           : f;
       place({ feature, from: cls.id, choices: entry.choices, at: i + 1, owner: cls.id });
     }

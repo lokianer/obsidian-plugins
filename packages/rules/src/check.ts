@@ -13,8 +13,27 @@ const byLevelProblem = (where: string, value: unknown): string | null =>
     ? `${where}: byLevel has ${value.byLevel.length} entries, not 20`
     : null;
 
-function grantProblems(where: string, grant: Grant): string[] {
+/** Weapon proficiencies: a category, a weapon id, or a category with a property. */
+function weaponIds(rules: Rules): Set<string> {
+  const ids = new Set<string>(['simple', 'martial']);
+  for (const w of rules.data.weapons) {
+    ids.add(w.id);
+    for (const p of w.properties) {
+      ids.add(`simple-${p}`);
+      ids.add(`martial-${p}`);
+    }
+  }
+  return ids;
+}
+
+function grantProblems(where: string, grant: Grant, rules: Rules): string[] {
   const found: (string | null)[] = [];
+  if (grant.kind === 'proficiency' && grant.what === 'weapon') {
+    const known = weaponIds(rules);
+    for (const id of grant.ids) {
+      if (!known.has(id)) found.push(`${where}: unknown weapon proficiency '${id}'`);
+    }
+  }
   if (grant.kind === 'resource') {
     found.push(byLevelProblem(where, grant.uses), byLevelProblem(where, grant.die));
     found.push(byLevelProblem(where, grant.recharge));
@@ -34,7 +53,7 @@ function featureProblems(owner: string, feature: Feature, rules: Rules): string[
   const where = `${owner} ${feature.id}`;
   const found: string[] = [];
   if (feature.text.en.trim() === '') found.push(`${where}: no text`);
-  for (const grant of feature.grants) found.push(...grantProblems(where, grant));
+  for (const grant of feature.grants) found.push(...grantProblems(where, grant, rules));
   for (const choice of feature.choices) {
     const at = `${where}/${choice.id}`;
     const count = byLevelProblem(at, choice.count);
@@ -76,6 +95,9 @@ export function checkRules(rules: Rules): string[] {
 
   for (const c of data.classes) {
     for (const f of c.features) found.push(...featureProblems(`class ${c.id}`, f, rules));
+    for (const g of c.multiclass.grants) {
+      found.push(...grantProblems(`class ${c.id} multiclass`, g, rules));
+    }
     const asks = c.features.some(
       (f) =>
         f.level === c.subclassLevel &&
