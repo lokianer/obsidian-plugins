@@ -89,6 +89,10 @@
   }
 }
 
+.dnd5e-encounter-rating {
+  align-self: flex-start;
+}
+
 .dnd5e-encounter-rating.is-low {
   background: rgba(var(--color-green-rgb), 0.2);
 }

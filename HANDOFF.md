@@ -115,7 +115,7 @@ German rows, row names as plain text) were accepted with V1 as they are.
 
 ## Verification
 
-With the example vault as committed: `pnpm check` exit 0, plugin 424/424 and session 15/15 tests,
+With the example vault as committed: `pnpm check` exit 0, plugin 426/426 and session 15/15 tests,
 lint 0 errors; the warnings are the known complexity list, now without `renderStatblock`, the
 Battle tab's `renderCard` and the encounter builder's `drawPreview` (the `drawPreview` still listed
 is the New NPC dialog's), plus four sentence-case warnings in tests. Screenshots: stat blocks (900

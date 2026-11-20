@@ -1822,6 +1822,28 @@ describe('battle tab', () => {
     expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear 2']);
   });
 
+  it('shows a condition typed into the note as an active pill and removes it on a click', async () => {
+    const running = [
+      '## Combat',
+      '',
+      'Round 1 · Turn: Dagny',
+      '',
+      '| Init | Combatant | HP | AC | Conditions |',
+      '| ---: | --- | ---: | ---: | --- |',
+      '| 18 | [[Dagny]] | 71/71 | 15 | Grappled by the kraken (3) |',
+      '| 11 | Owlbear | 59/59 | 13 | |',
+      '| 11 | Thug 1 | 32/32 | 12 | |',
+      '| 11 | Thug 2 | 32/32 | 12 | |',
+    ].join('\n');
+    const { el, click, note } = await open('en', running);
+    const typed = el.querySelector('.dnd5e-battle-condition.is-active');
+    expect(typed?.textContent).toBe('Grappled by the kraken (3)');
+    expect(typed?.classList.contains('dnd5e-pill')).toBe(true);
+    await click('.dnd5e-battle-condition', 'Grappled by the kraken (3)');
+    expect(el.querySelector('.dnd5e-battle-condition.is-active')).toBeNull();
+    expect(note()).toMatch(/\| \[\[Dagny\]\] \| 71\/71 \| 15 \| +\|/);
+  });
+
   it('reads a running fight back and tracks a downed character in German', async () => {
     const running = [
       '## Combat',
@@ -1964,6 +1986,21 @@ describe('encounter builder', () => {
         monsters: [{ name: 'Owlbear', count: 1 }],
       },
     ]);
+  });
+
+  it('shows what goes over the budget as a red Over tile', () => {
+    const { el, type, tile, click } = builder('en', [{ name: 'Dagny', level: 1 }]);
+    type('.dnd5e-npc-search', 'owlbe');
+    click(tile('Owlbear'));
+    // Level 1 moderate: 75 XP; an owlbear is 700.
+    expect(texts(el, '.dnd5e-encounter-card .dnd5e-tile-label')).toEqual([
+      'Budget',
+      'Spent',
+      'Over',
+    ]);
+    const over = [...el.querySelectorAll('.dnd5e-encounter-card .dnd5e-tile')][2];
+    expect(over?.querySelector('.dnd5e-tile-value')?.textContent).toBe('625 XP');
+    expect(over?.classList.contains('is-over')).toBe(true);
   });
 
   it('shows no experience points when the setting is off', () => {

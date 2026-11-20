@@ -2,7 +2,7 @@
    560 px), the card's numbers as tiles, conditions and states as pills. */
 
 .dnd5e-battle {
-  container-type: inline-size;
+  container: dnd5e-battle / inline-size;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -185,6 +185,8 @@
 
 .dnd5e-battle-chips .dnd5e-pill {
   margin: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .dnd5e-battle-chip.is-down {
@@ -226,21 +228,27 @@
   font-variant-numeric: tabular-nums;
 }
 
-.dnd5e-battle-condition {
+/* Obsidian styles every button with `button:not(.clickable-icon)` and its `:hover`; these
+   selectors outrank both, so the pills and the tinted buttons keep their look on hover. */
+.dnd5e-battle button.dnd5e-battle-condition:not(.clickable-icon) {
   height: auto;
   margin: 0;
   border: none;
+  background: var(--background-modifier-hover);
   box-shadow: none;
   color: var(--text-normal);
   font-size: 16px;
+  white-space: normal;
   cursor: pointer;
 }
 
-.dnd5e-battle-condition:hover {
+.dnd5e-battle button.dnd5e-battle-condition:not(.clickable-icon):hover {
   background: var(--background-modifier-active-hover);
 }
 
-.dnd5e-battle-condition.is-active {
+.dnd5e-battle button.dnd5e-battle-condition.is-active:not(.clickable-icon),
+.dnd5e-battle button.dnd5e-battle-condition.is-active:not(.clickable-icon):hover {
+  background: color-mix(in srgb, var(--interactive-accent) 25%, transparent);
   color: var(--text-accent);
 }
 
@@ -263,14 +271,18 @@
   font-size: 16px;
 }
 
-.dnd5e-battle .dnd5e-battle-damage,
-.dnd5e-battle .dnd5e-battle-save-fail {
+.dnd5e-battle button.dnd5e-battle-damage:not(.clickable-icon),
+.dnd5e-battle button.dnd5e-battle-damage:not(.clickable-icon):hover,
+.dnd5e-battle button.dnd5e-battle-save-fail:not(.clickable-icon),
+.dnd5e-battle button.dnd5e-battle-save-fail:not(.clickable-icon):hover {
   background: color-mix(in srgb, var(--color-red) 22%, transparent);
   color: var(--text-normal);
 }
 
-.dnd5e-battle .dnd5e-battle-heal,
-.dnd5e-battle .dnd5e-battle-save-ok {
+.dnd5e-battle button.dnd5e-battle-heal:not(.clickable-icon),
+.dnd5e-battle button.dnd5e-battle-heal:not(.clickable-icon):hover,
+.dnd5e-battle button.dnd5e-battle-save-ok:not(.clickable-icon),
+.dnd5e-battle button.dnd5e-battle-save-ok:not(.clickable-icon):hover {
   background: color-mix(in srgb, var(--color-green) 22%, transparent);
   color: var(--text-normal);
 }
@@ -315,7 +327,11 @@
   margin-left: auto;
 }
 
-@container (max-width: 560px) {
+@container dnd5e-battle (max-width: 560px) {
+  .dnd5e-battle-numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .dnd5e-battle-body {
     grid-template-columns: minmax(0, 1fr);
     overflow-y: auto;
