@@ -45,11 +45,20 @@ function fromWork(workDir, books) {
 	const norm = join(workDir, 'norm');
 	// The SRD's spell names, from the plugin's SRD data.
 	const srdSource = readFileSync(new URL('../../src/spells/srd-spells.ts', here), 'utf8');
-	const srd = new Set(
-		[...srdSource.matchAll(/^ {4}name: (['"])(.+)\1,$/gm)].map((m) =>
-			m[2].replace(/\\'/g, "'").toLowerCase().replace(/’/g, "'"),
+	const fold = (name) => name.replace(/\\'/g, "'").toLowerCase().replace(/’/g, "'");
+	// SRD English name → its index, and index → the plugin's German name (src/spells/de.ts).
+	const srdIndex = new Map(
+		[...srdSource.matchAll(/^ {4}index: '([^']+)',\r?\n {4}name: (['"])(.+)\2,$/gm)].map(
+			(m) => [fold(m[3]), m[1]],
 		),
 	);
+	const srd = new Set(srdIndex.keys());
+	const deSource = readFileSync(new URL('../../src/spells/de.ts', here), 'utf8');
+	const deNames = new Map(
+		[...deSource.matchAll(/^ {2}'?([a-z0-9-]+)'?: (['"])(.+)\2,$/gm)].map((m) => [m[1], m[3]]),
+	);
+	/** A newer version of an SRD spell keeps the SRD's German name. */
+	const nameDe = (e) => deNames.get(srdIndex.get(fold(e.name)) ?? '') ?? e.nameDe;
 	for (const book of books) {
 		const files = readdirSync(norm).filter(
 			(f) => f.startsWith(`${book}-`) && /-\d+\.json$/.test(f),
@@ -58,14 +67,12 @@ function fromWork(workDir, books) {
 			.flatMap((f) => JSON.parse(readFileSync(join(norm, f), 'utf8')))
 			.filter((e) => e.srd == null && e.note !== 'not a spell')
 			// The cleaners missed a few SRD names; a 2014 book never repeats an SRD spell.
-			.filter(
-				(e) => RULES[book] !== '2014' || !srd.has(e.name.toLowerCase().replace(/’/g, "'")),
-			);
+			.filter((e) => RULES[book] !== '2014' || !srd.has(fold(e.name)));
 		const spells = entries
 			.map((e) =>
 				Object.fromEntries([
 					['index', `${book}/${slug(e.name)}`],
-					...FACTS.map((k) => [k, e[k]]),
+					...FACTS.map((k) => [k, k === 'nameDe' ? nameDe(e) : e[k]]),
 				]),
 			)
 			.sort((a, b) => a.index.localeCompare(b.index));

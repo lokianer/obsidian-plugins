@@ -1204,7 +1204,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/alter-self',
     name: 'Alter Self',
-    nameDe: 'Selbstverwandlung',
+    nameDe: 'Gestalt verändern',
     level: 2,
     school: 'transmutation',
     casting: '1 action',
@@ -1308,7 +1308,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/animate-dead',
     name: 'Animate Dead',
-    nameDe: 'Untote beleben',
+    nameDe: 'Tote beleben',
     level: 3,
     school: 'necromancy',
     casting: '1 minute',
@@ -1334,7 +1334,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/animate-objects',
     name: 'Animate Objects',
-    nameDe: 'Objekte beleben',
+    nameDe: 'Gegenstände beleben',
     level: 5,
     school: 'transmutation',
     casting: '1 action',
@@ -1621,7 +1621,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/augury',
     name: 'Augury',
-    nameDe: 'Vorzeichen',
+    nameDe: 'Vorahnung',
     level: 2,
     school: 'divination',
     casting: '1 minute',
@@ -1752,7 +1752,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/bane',
     name: 'Bane',
-    nameDe: 'Fluch',
+    nameDe: 'Verderben',
     level: 1,
     school: 'enchantment',
     casting: '1 action',
@@ -1831,7 +1831,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/barkskin',
     name: 'Barkskin',
-    nameDe: 'Baumrinde',
+    nameDe: 'Rindenhaut',
     level: 2,
     school: 'transmutation',
     casting: '1 bonus action',
@@ -2039,7 +2039,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/blight',
     name: 'Blight',
-    nameDe: 'Welken',
+    nameDe: 'Pesthauch',
     level: 4,
     school: 'necromancy',
     casting: '1 action',
@@ -2118,7 +2118,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/blink',
     name: 'Blink',
-    nameDe: 'Verschwimmen',
+    nameDe: 'Blinzeln',
     level: 3,
     school: 'transmutation',
     casting: '1 action',
@@ -2587,7 +2587,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/commune',
     name: 'Commune',
-    nameDe: 'Gemeinschaft',
+    nameDe: 'Kommunion',
     level: 5,
     school: 'divination',
     casting: '1 minute',
@@ -2613,7 +2613,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/commune-with-nature',
     name: 'Commune with Nature',
-    nameDe: 'Naturverbundenheit',
+    nameDe: 'Eins mit der Natur',
     level: 5,
     school: 'divination',
     casting: '1 minute',
@@ -2977,7 +2977,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/contact-other-plane',
     name: 'Contact Other Plane',
-    nameDe: 'Kontakt zu einer anderen Ebene',
+    nameDe: 'Andere Ebene kontaktieren',
     level: 5,
     school: 'divination',
     casting: '1 minute',
@@ -3003,7 +3003,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/contagion',
     name: 'Contagion',
-    nameDe: 'Seuche',
+    nameDe: 'Ansteckung',
     level: 5,
     school: 'necromancy',
     casting: '1 action',
@@ -3029,7 +3029,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/contingency',
     name: 'Contingency',
-    nameDe: 'Eventualfall',
+    nameDe: 'Eventualität',
     level: 6,
     school: 'abjuration',
     casting: '10 minutes',
@@ -3055,7 +3055,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/continual-flame',
     name: 'Continual Flame',
-    nameDe: 'Ewige Flamme',
+    nameDe: 'Immerwährende Flamme',
     level: 2,
     school: 'evocation',
     casting: '1 action',
@@ -3107,7 +3107,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/control-weather',
     name: 'Control Weather',
-    nameDe: 'Wetter kontrollieren',
+    nameDe: 'Wetterkontrolle',
     level: 8,
     school: 'transmutation',
     casting: '10 minutes',
@@ -3525,7 +3525,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/demiplane',
     name: 'Demiplane',
-    nameDe: 'Demiplane',
+    nameDe: 'Halbebene',
     level: 8,
     school: 'conjuration',
     casting: '1 action',
@@ -3733,7 +3733,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/disintegrate',
     name: 'Disintegrate',
-    nameDe: 'Desintegration',
+    nameDe: 'Auflösung',
     level: 6,
     school: 'transmutation',
     casting: '1 action',
@@ -3759,7 +3759,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/dispel-evil-and-good',
     name: 'Dispel Evil and Good',
-    nameDe: 'Böses und Gutes bannen',
+    nameDe: 'Gutes und Böses bannen',
     level: 5,
     school: 'abjuration',
     casting: '1 action',
@@ -4332,7 +4332,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/enthrall',
     name: 'Enthrall',
-    nameDe: 'Faszination',
+    nameDe: 'In den Bann ziehen',
     level: 2,
     school: 'enchantment',
     casting: '1 action',
@@ -4410,7 +4410,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/expeditious-retreat',
     name: 'Expeditious Retreat',
-    nameDe: 'Hastiger Rückzug',
+    nameDe: 'Rascher Rückzug',
     level: 1,
     school: 'transmutation',
     casting: '1 bonus action',
@@ -4462,7 +4462,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/fabricate',
     name: 'Fabricate',
-    nameDe: 'Herstellen',
+    nameDe: 'Fertigen',
     level: 4,
     school: 'transmutation',
     casting: '10 minutes',
@@ -4696,7 +4696,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/find-the-path',
     name: 'Find the Path',
-    nameDe: 'Weg finden',
+    nameDe: 'Pfad finden',
     level: 6,
     school: 'divination',
     casting: '1 minute',
@@ -4722,7 +4722,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/find-traps',
     name: 'Find Traps',
-    nameDe: 'Fallen entdecken',
+    nameDe: 'Fallen finden',
     level: 2,
     school: 'divination',
     casting: '1 action',
@@ -4774,7 +4774,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/fire-bolt',
     name: 'Fire Bolt',
-    nameDe: 'Feuerstrahl',
+    nameDe: 'Feuerpfeil',
     level: 0,
     school: 'evocation',
     casting: '1 action',
@@ -4930,7 +4930,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/flaming-sphere',
     name: 'Flaming Sphere',
-    nameDe: 'Flammenkugel',
+    nameDe: 'Flammende Kugel',
     level: 2,
     school: 'conjuration',
     casting: '1 action',
@@ -5034,7 +5034,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/forbiddance',
     name: 'Forbiddance',
-    nameDe: 'Verbannung',
+    nameDe: 'Verbot',
     level: 6,
     school: 'abjuration',
     casting: '10 minutes',
@@ -5060,7 +5060,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/forcecage',
     name: 'Forcecage',
-    nameDe: 'Kraftkäfig',
+    nameDe: 'Energiekäfig',
     level: 7,
     school: 'evocation',
     casting: '1 action',
@@ -5086,7 +5086,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/foresight',
     name: 'Foresight',
-    nameDe: 'Vorausschau',
+    nameDe: 'Voraussicht',
     level: 9,
     school: 'divination',
     casting: '1 minute',
@@ -5216,7 +5216,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/gate',
     name: 'Gate',
-    nameDe: 'Tor',
+    nameDe: 'Portal',
     level: 9,
     school: 'conjuration',
     casting: '1 action',
@@ -5242,7 +5242,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/geas',
     name: 'Geas',
-    nameDe: 'Auftrag',
+    nameDe: 'Geas',
     level: 5,
     school: 'enchantment',
     casting: '1 minute',
@@ -5268,7 +5268,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/gentle-repose',
     name: 'Gentle Repose',
-    nameDe: 'Ruhe der Toten',
+    nameDe: 'Sanfte Ruhe',
     level: 2,
     school: 'necromancy',
     casting: '1 action',
@@ -5294,7 +5294,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/giant-insect',
     name: 'Giant Insect',
-    nameDe: 'Riesiges Insekt',
+    nameDe: 'Rieseninsekt',
     level: 4,
     school: 'conjuration',
     casting: '1 action',
@@ -5320,7 +5320,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/glibness',
     name: 'Glibness',
-    nameDe: 'Redegewandtheit',
+    nameDe: 'Zungenfertigkeit',
     level: 8,
     school: 'enchantment',
     casting: '1 action',
@@ -5398,7 +5398,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/goodberry',
     name: 'Goodberry',
-    nameDe: 'Wohltätige Beeren',
+    nameDe: 'Gute Beeren',
     level: 1,
     school: 'conjuration',
     casting: '1 action',
@@ -5450,7 +5450,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/grease',
     name: 'Grease',
-    nameDe: 'Schmierfett',
+    nameDe: 'Schmieren',
     level: 1,
     school: 'conjuration',
     casting: '1 action',
@@ -5476,7 +5476,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/greater-invisibility',
     name: 'Greater Invisibility',
-    nameDe: 'Größere Unsichtbarkeit',
+    nameDe: 'Mächtige Unsichtbarkeit',
     level: 4,
     school: 'illusion',
     casting: '1 action',
@@ -5502,7 +5502,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/greater-restoration',
     name: 'Greater Restoration',
-    nameDe: 'Große Wiederherstellung',
+    nameDe: 'Vollständige Genesung',
     level: 5,
     school: 'abjuration',
     casting: '1 action',
@@ -5554,7 +5554,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/guards-and-wards',
     name: 'Guards and Wards',
-    nameDe: 'Wächter und Schutzzauber',
+    nameDe: 'Hüten und Wehren',
     level: 6,
     school: 'abjuration',
     casting: '1 hour',
@@ -5580,7 +5580,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/guidance',
     name: 'Guidance',
-    nameDe: 'Führung',
+    nameDe: 'Göttliche Führung',
     level: 0,
     school: 'divination',
     casting: '1 action',
@@ -5606,7 +5606,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/guiding-bolt',
     name: 'Guiding Bolt',
-    nameDe: 'Lichtlanze',
+    nameDe: 'Lenkendes Geschoss',
     level: 1,
     school: 'evocation',
     casting: '1 action',
@@ -5632,7 +5632,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/gust-of-wind',
     name: 'Gust of Wind',
-    nameDe: 'Windböe',
+    nameDe: 'Windstoß',
     level: 2,
     school: 'evocation',
     casting: '1 action',
@@ -5685,7 +5685,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/hallow',
     name: 'Hallow',
-    nameDe: 'Heiligen',
+    nameDe: 'Weihen',
     level: 5,
     school: 'abjuration',
     casting: '24 hours',
@@ -5737,7 +5737,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/harm',
     name: 'Harm',
-    nameDe: 'Verletzen',
+    nameDe: 'Leid',
     level: 6,
     school: 'necromancy',
     casting: '1 action',
@@ -5894,7 +5894,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/heroes-feast',
     name: "Heroes' Feast",
-    nameDe: 'Festmahl der Helden',
+    nameDe: 'Heldenmahl',
     level: 6,
     school: 'conjuration',
     casting: '10 minutes',
@@ -5920,7 +5920,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/heroism',
     name: 'Heroism',
-    nameDe: 'Heldentum',
+    nameDe: 'Heldenmut',
     level: 1,
     school: 'enchantment',
     casting: '1 action',
@@ -6284,7 +6284,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/inflict-wounds',
     name: 'Inflict Wounds',
-    nameDe: 'Wunden zufügen',
+    nameDe: 'Wunden verursachen',
     level: 1,
     school: 'necromancy',
     casting: '1 action',
@@ -6388,7 +6388,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/jump',
     name: 'Jump',
-    nameDe: 'Sprung',
+    nameDe: 'Springen',
     level: 1,
     school: 'transmutation',
     casting: '1 bonus action',
@@ -6520,7 +6520,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/lesser-restoration',
     name: 'Lesser Restoration',
-    nameDe: 'Schwache Wiederherstellung',
+    nameDe: 'Schwache Genesung',
     level: 2,
     school: 'abjuration',
     casting: '1 bonus action',
@@ -6651,7 +6651,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/locate-animals-or-plants',
     name: 'Locate Animals or Plants',
-    nameDe: 'Tiere oder Pflanzen finden',
+    nameDe: 'Tiere oder Pflanzen aufspüren',
     level: 2,
     school: 'divination',
     casting: '1 action',
@@ -6729,7 +6729,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/longstrider',
     name: 'Longstrider',
-    nameDe: 'Weitschreiten',
+    nameDe: 'Weiter Schritt',
     level: 1,
     school: 'transmutation',
     casting: '1 action',
@@ -6937,7 +6937,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/major-image',
     name: 'Major Image',
-    nameDe: 'Große Illusion',
+    nameDe: 'Mächtiges Trugbild',
     level: 3,
     school: 'illusion',
     casting: '1 action',
@@ -6963,7 +6963,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/mass-cure-wounds',
     name: 'Mass Cure Wounds',
-    nameDe: 'Massenheilung',
+    nameDe: 'Massen-Wunden heilen',
     level: 5,
     school: 'abjuration',
     casting: '1 action',
@@ -7015,7 +7015,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/mass-healing-word',
     name: 'Mass Healing Word',
-    nameDe: 'Massen-Heilendes-Wort',
+    nameDe: 'Massen-Heilendes Wort',
     level: 3,
     school: 'abjuration',
     casting: '1 bonus action',
@@ -7041,7 +7041,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/mass-suggestion',
     name: 'Mass Suggestion',
-    nameDe: 'Massen-Einflüsterung',
+    nameDe: 'Massensuggestion',
     level: 6,
     school: 'enchantment',
     casting: '1 action',
@@ -7093,7 +7093,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/meld-into-stone',
     name: 'Meld into Stone',
-    nameDe: 'Mit dem Stein verschmelzen',
+    nameDe: 'Mit Stein verschmelzen',
     level: 3,
     school: 'transmutation',
     casting: '1 action',
@@ -7171,7 +7171,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/message',
     name: 'Message',
-    nameDe: 'Botschaft',
+    nameDe: 'Nachricht',
     level: 0,
     school: 'transmutation',
     casting: '1 action',
@@ -7197,7 +7197,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/meteor-swarm',
     name: 'Meteor Swarm',
-    nameDe: 'Meteorschwarm',
+    nameDe: 'Meteoritenschwarm',
     level: 9,
     school: 'evocation',
     casting: '1 action',
@@ -7223,7 +7223,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/mind-blank',
     name: 'Mind Blank',
-    nameDe: 'Geistesleere',
+    nameDe: 'Gedankenleere',
     level: 8,
     school: 'abjuration',
     casting: '1 action',
@@ -7301,7 +7301,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/minor-illusion',
     name: 'Minor Illusion',
-    nameDe: 'Geringe Illusion',
+    nameDe: 'Kleine Illusion',
     level: 0,
     school: 'illusion',
     casting: '1 action',
@@ -7327,7 +7327,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/mirage-arcane',
     name: 'Mirage Arcane',
-    nameDe: 'Arkane Spiegelung',
+    nameDe: 'Arkane Trugwelt',
     level: 7,
     school: 'illusion',
     casting: '10 minutes',
@@ -7353,7 +7353,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/mirror-image',
     name: 'Mirror Image',
-    nameDe: 'Spiegelbild',
+    nameDe: 'Spiegelbilder',
     level: 2,
     school: 'illusion',
     casting: '1 action',
@@ -7431,7 +7431,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/modify-memory',
     name: 'Modify Memory',
-    nameDe: 'Gedächtnis verändern',
+    nameDe: 'Erinnerung verändern',
     level: 5,
     school: 'enchantment',
     casting: '1 action',
@@ -7769,7 +7769,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/passwall',
     name: 'Passwall',
-    nameDe: 'Wandlung',
+    nameDe: 'Mauerdurchgang',
     level: 5,
     school: 'transmutation',
     casting: '1 action',
@@ -7821,7 +7821,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/phantasmal-killer',
     name: 'Phantasmal Killer',
-    nameDe: 'Phantasmaler Killer',
+    nameDe: 'Tödliches Trugbild',
     level: 4,
     school: 'illusion',
     casting: '1 action',
@@ -7899,7 +7899,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/planar-binding',
     name: 'Planar Binding',
-    nameDe: 'Ebenenbindung',
+    nameDe: 'Planare Bindung',
     level: 5,
     school: 'abjuration',
     casting: '1 hour',
@@ -8081,7 +8081,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/power-word-kill',
     name: 'Power Word Kill',
-    nameDe: 'Wort der Macht: Töten',
+    nameDe: 'Machtwort: Tod',
     level: 9,
     school: 'enchantment',
     casting: '1 action',
@@ -8107,7 +8107,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/power-word-stun',
     name: 'Power Word Stun',
-    nameDe: 'Wort der Macht: Betäuben',
+    nameDe: 'Machtwort: Betäubung',
     level: 8,
     school: 'enchantment',
     casting: '1 action',
@@ -8133,7 +8133,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/prayer-of-healing',
     name: 'Prayer of Healing',
-    nameDe: 'Gebet der Heilung',
+    nameDe: 'Heilendes Gebet',
     level: 2,
     school: 'abjuration',
     casting: '10 minutes',
@@ -8289,7 +8289,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/project-image',
     name: 'Project Image',
-    nameDe: 'Bild projizieren',
+    nameDe: 'Abbild projizieren',
     level: 7,
     school: 'illusion',
     casting: '1 action',
@@ -8393,7 +8393,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/purify-food-and-drink',
     name: 'Purify Food and Drink',
-    nameDe: 'Speise und Trank läutern',
+    nameDe: 'Speise und Trank reinigen',
     level: 1,
     school: 'transmutation',
     casting: '1 action',
@@ -8471,7 +8471,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/ray-of-enfeeblement',
     name: 'Ray of Enfeeblement',
-    nameDe: 'Strahl der Schwächung',
+    nameDe: 'Schwächestrahl',
     level: 2,
     school: 'necromancy',
     casting: '1 action',
@@ -8549,7 +8549,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/regenerate',
     name: 'Regenerate',
-    nameDe: 'Regeneration',
+    nameDe: 'Regenerieren',
     level: 7,
     school: 'transmutation',
     casting: '1 minute',
@@ -8627,7 +8627,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/resistance',
     name: 'Resistance',
-    nameDe: 'Widerstand',
+    nameDe: 'Resistenz',
     level: 0,
     school: 'abjuration',
     casting: '1 action',
@@ -8653,7 +8653,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/resurrection',
     name: 'Resurrection',
-    nameDe: 'Wiederbelebung',
+    nameDe: 'Auferstehung',
     level: 7,
     school: 'necromancy',
     casting: '1 hour',
@@ -8679,7 +8679,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/reverse-gravity',
     name: 'Reverse Gravity',
-    nameDe: 'Schwerkraft umkehren',
+    nameDe: 'Umgekehrte Schwerkraft',
     level: 7,
     school: 'transmutation',
     casting: '1 action',
@@ -8705,7 +8705,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/revivify',
     name: 'Revivify',
-    nameDe: 'Wiederbelebung',
+    nameDe: 'Wiederbeleben',
     level: 3,
     school: 'necromancy',
     casting: '1 action',
@@ -8783,7 +8783,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/sanctuary',
     name: 'Sanctuary',
-    nameDe: 'Zuflucht',
+    nameDe: 'Heiligtum',
     level: 1,
     school: 'abjuration',
     casting: '1 bonus action',
@@ -8835,7 +8835,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/scrying',
     name: 'Scrying',
-    nameDe: 'Ausspähen',
+    nameDe: 'Ausspähung',
     level: 5,
     school: 'divination',
     casting: '10 minutes',
@@ -8914,7 +8914,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/seeming',
     name: 'Seeming',
-    nameDe: 'Verkleiden',
+    nameDe: 'Anschein',
     level: 5,
     school: 'illusion',
     casting: '1 action',
@@ -8940,7 +8940,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/sending',
     name: 'Sending',
-    nameDe: 'Nachricht',
+    nameDe: 'Botschaft',
     level: 3,
     school: 'divination',
     casting: '1 action',
@@ -8966,7 +8966,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/sequester',
     name: 'Sequester',
-    nameDe: 'Verbergen',
+    nameDe: 'Abschirmen',
     level: 7,
     school: 'transmutation',
     casting: '1 action',
@@ -9018,7 +9018,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/shatter',
     name: 'Shatter',
-    nameDe: 'Zerschmettern',
+    nameDe: 'Zersplittern',
     level: 2,
     school: 'evocation',
     casting: '1 action',
@@ -9097,7 +9097,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/shillelagh',
     name: 'Shillelagh',
-    nameDe: 'Knüppelkunst',
+    nameDe: 'Shillelagh',
     level: 0,
     school: 'transmutation',
     casting: '1 bonus action',
@@ -9202,7 +9202,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/silent-image',
     name: 'Silent Image',
-    nameDe: 'Stilles Bild',
+    nameDe: 'Lautloses Trugbild',
     level: 1,
     school: 'illusion',
     casting: '1 action',
@@ -9280,7 +9280,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/sleet-storm',
     name: 'Sleet Storm',
-    nameDe: 'Graupelschauer',
+    nameDe: 'Graupelsturm',
     level: 3,
     school: 'conjuration',
     casting: '1 action',
@@ -9358,7 +9358,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/spare-the-dying',
     name: 'Spare the Dying',
-    nameDe: 'Sterbenden verschonen',
+    nameDe: 'Verschonung der Sterbenden',
     level: 0,
     school: 'necromancy',
     casting: '1 action',
@@ -9514,7 +9514,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/spirit-guardians',
     name: 'Spirit Guardians',
-    nameDe: 'Geisterwächter',
+    nameDe: 'Geistwächter',
     level: 3,
     school: 'conjuration',
     casting: '1 action',
@@ -9540,7 +9540,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/spiritual-weapon',
     name: 'Spiritual Weapon',
-    nameDe: 'Geistige Waffe',
+    nameDe: 'Spirituelle Waffe',
     level: 2,
     school: 'conjuration',
     casting: '1 bonus action',
@@ -9671,7 +9671,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/stone-shape',
     name: 'Stone Shape',
-    nameDe: 'Stein formen',
+    nameDe: 'Steinformen',
     level: 4,
     school: 'transmutation',
     casting: '1 action',
@@ -9749,7 +9749,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/suggestion',
     name: 'Suggestion',
-    nameDe: 'Einflüsterung',
+    nameDe: 'Suggestion',
     level: 2,
     school: 'enchantment',
     casting: '1 action',
@@ -10243,7 +10243,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/teleport',
     name: 'Teleport',
-    nameDe: 'Teleportation',
+    nameDe: 'Teleportieren',
     level: 7,
     school: 'conjuration',
     casting: '1 action',
@@ -10426,7 +10426,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/thunderwave',
     name: 'Thunderwave',
-    nameDe: 'Donnerwelle',
+    nameDe: 'Donnerwoge',
     level: 1,
     school: 'evocation',
     casting: '1 action',
@@ -10504,7 +10504,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/tongues',
     name: 'Tongues',
-    nameDe: 'Sprachen verstehen',
+    nameDe: 'Zungen',
     level: 3,
     school: 'divination',
     casting: '1 action',
@@ -10530,7 +10530,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/transport-via-plants',
     name: 'Transport via Plants',
-    nameDe: 'Pflanzentransport',
+    nameDe: 'Pflanzenweg',
     level: 6,
     school: 'conjuration',
     casting: '1 action',
@@ -10608,7 +10608,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/true-resurrection',
     name: 'True Resurrection',
-    nameDe: 'Wahre Wiederbelebung',
+    nameDe: 'Wahre Auferstehung',
     level: 9,
     school: 'necromancy',
     casting: '1 hour',
@@ -10634,7 +10634,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/true-seeing',
     name: 'True Seeing',
-    nameDe: 'Wahres Sehen',
+    nameDe: 'Wahrer Blick',
     level: 6,
     school: 'divination',
     casting: '1 action',
@@ -10660,7 +10660,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/true-strike',
     name: 'True Strike',
-    nameDe: 'Zielsicherer Schlag',
+    nameDe: 'Wahrer Schlag',
     level: 0,
     school: 'divination',
     casting: '1 action',
@@ -10764,7 +10764,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/vicious-mockery',
     name: 'Vicious Mockery',
-    nameDe: 'Bösartiger Spott',
+    nameDe: 'Gehässiger Spott',
     level: 0,
     school: 'enchantment',
     casting: '1 action',
@@ -10842,7 +10842,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/wall-of-force',
     name: 'Wall of Force',
-    nameDe: 'Wand aus Energie',
+    nameDe: 'Energiewand',
     level: 5,
     school: 'evocation',
     casting: '1 action',
@@ -10944,35 +10944,9 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
     higher: '',
   },
   {
-    index: 'phb24/wall-of-wind',
-    name: 'Wall of Wind',
-    nameDe: 'Windwand',
-    level: 3,
-    school: 'evocation',
-    casting: '1 action',
-    range: '120 feet',
-    components: ['V', 'S', 'M'],
-    material: 'A fan and a feather.',
-    duration: 'Up to 1 minute',
-    concentration: true,
-    ritual: false,
-    classes: ['druid', 'ranger'],
-    damage: ['bludgeoning'],
-    save: 'str',
-    attack: null,
-    summary: {
-      en: 'Strong wind forms a barrier in range along a continuous ground path (50 feet long, 15 high, 1 thick). Creatures there when it appears must make a Strength save or take 4d8 bludgeoning damage, half if they pass. Gases are held back, small flyers and gaseous creatures stopped, and ordinary projectiles fly upward.',
-      de: 'In Reichweite erhebt sich entlang eines zusammenhängenden Pfades am Boden eine starke Windwand, bis 15 m lang, 4,5 m hoch und 30 cm dick. Kreaturen darin machen einen Stärkerettungswurf gegen 4W8 Wuchtschaden (halb bei Erfolg). Sie hält Gase fern, blockiert kleine Flieger und gasförmige Wesen und lenkt gewöhnliche Geschosse nach oben ab.',
-    },
-    rules: '2024',
-    source: 'phb24',
-    text: '',
-    higher: '',
-  },
-  {
     index: 'phb24/warding-bond',
     name: 'Warding Bond',
-    nameDe: 'Schutzband',
+    nameDe: 'Schützende Verbindung',
     level: 2,
     school: 'abjuration',
     casting: '1 action',
@@ -10999,7 +10973,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/water-breathing',
     name: 'Water Breathing',
-    nameDe: 'Wasseratmung',
+    nameDe: 'Wasser atmen',
     level: 3,
     school: 'transmutation',
     casting: '1 action',
@@ -11051,7 +11025,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'phb24/web',
     name: 'Web',
-    nameDe: 'Spinnennetz',
+    nameDe: 'Netz',
     level: 2,
     school: 'conjuration',
     casting: '1 action',
@@ -11120,6 +11094,32 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
     summary: {
       en: 'You and up to ten willing creatures turn into drifting clouds for eight hours, flying at 300 feet, resistant to ordinary weapon damage, and limited to a few actions. Changing back takes a minute.',
       de: 'Du und bis zu zehn willige Kreaturen werdet für 8 Stunden zu Wolken mit Fluggeschwindigkeit 90 m und Resistenz gegen Wuchtschaden, Stich- und Hiebschaden. Die Rückverwandlung dauert 1 Minute.',
+    },
+    rules: '2024',
+    source: 'phb24',
+    text: '',
+    higher: '',
+  },
+  {
+    index: 'phb24/wind-wall',
+    name: 'Wind Wall',
+    nameDe: 'Windwand',
+    level: 3,
+    school: 'evocation',
+    casting: '1 action',
+    range: '120 feet',
+    components: ['V', 'S', 'M'],
+    material: 'A fan and a feather.',
+    duration: 'Up to 1 minute',
+    concentration: true,
+    ritual: false,
+    classes: ['druid', 'ranger'],
+    damage: ['bludgeoning'],
+    save: 'str',
+    attack: null,
+    summary: {
+      en: 'Strong wind forms a barrier in range along a continuous ground path (50 feet long, 15 high, 1 thick). Creatures there when it appears must make a Strength save or take 4d8 bludgeoning damage, half if they pass. Gases are held back, small flyers and gaseous creatures stopped, and ordinary projectiles fly upward.',
+      de: 'In Reichweite erhebt sich entlang eines zusammenhängenden Pfades am Boden eine starke Windwand, bis 15 m lang, 4,5 m hoch und 30 cm dick. Kreaturen darin machen einen Stärkerettungswurf gegen 4W8 Wuchtschaden (halb bei Erfolg). Sie hält Gase fern, blockiert kleine Flieger und gasförmige Wesen und lenkt gewöhnliche Geschosse nach oben ab.',
     },
     rules: '2024',
     source: 'phb24',
@@ -12407,7 +12407,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'xge/earth-tremor',
     name: 'Earth Tremor',
-    nameDe: 'Erdbeben',
+    nameDe: 'Erdzittern',
     level: 1,
     school: 'evocation',
     casting: '1 action',
@@ -12563,7 +12563,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'xge/far-step',
     name: 'Far Step',
-    nameDe: 'Weiter Schritt',
+    nameDe: 'Ferner Schritt',
     level: 5,
     school: 'conjuration',
     casting: '1 bonus action',
@@ -12693,7 +12693,7 @@ export const CATALOGUE_SPELLS: readonly SrdSpell[] = [
   {
     index: 'xge/gust',
     name: 'Gust',
-    nameDe: 'Windstoß',
+    nameDe: 'Windhauch',
     level: 0,
     school: 'transmutation',
     casting: '1 action',

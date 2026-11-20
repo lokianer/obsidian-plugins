@@ -912,7 +912,11 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 - **SRD first:** a 2014 spell that is in the SRD keeps its SRD record (with the full SRD text) and
   is left out of the catalogue; the 2024 versions are separate entries, also for SRD spells.
 - **Name resolution** for stat block links: own, SRD, the preferred rule set's entry (2024 when
-  "both"), then the other. The rule set setting does not hide anything in the Spellbook.
+  "both"), then the other. The rule set setting does not hide anything in the Spellbook and is not
+  its starting filter (the plan's idea): the 2014 / 2024 chips stay the GM's own choice, kept with
+  the other filters.
+- **German names:** a 2024 version of an SRD spell carries the SRD's German name; no other entry
+  may use an SRD spell's German name (a test guards both).
 - **Extraction:** pdftotext, a stream cutter for entry headers, then LLM cleaning in batches with a
   check script; counts compared with the books' spell lists (phb24 391 of 391, xge 95, tce 21,
   phb14 all non-SRD spells).

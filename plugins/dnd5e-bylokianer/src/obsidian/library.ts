@@ -12,6 +12,7 @@ import type { LibrarySection } from '../catalogue/merge';
 export class Library {
   private found = new Map<string, LibrarySection>();
   private paths = new Set<string>();
+  private runs = 0;
   private readonly listeners = new Set<() => void>();
   private readonly schedule = debounce(() => void this.reload(), 250, true);
 
@@ -30,6 +31,12 @@ export class Library {
         if (this.paths.has(file.path)) this.schedule();
       }),
     );
+    // A renamed note keeps its sections, but its new path must be known for later changes.
+    plugin.registerEvent(
+      app.vault.on('rename', (_file, oldPath) => {
+        if (this.paths.has(oldPath)) this.schedule();
+      }),
+    );
   }
 
   /** Every section of every library note, keyed `<book>/<slug>`. */
@@ -43,6 +50,8 @@ export class Library {
   }
 
   async reload(): Promise<void> {
+    // Of overlapping reloads only the last one started may land: it read the newest notes.
+    const run = ++this.runs;
     const { vault, metadataCache } = this.plugin.app;
     const found = new Map<string, LibrarySection>();
     const paths = new Set<string>();
@@ -55,6 +64,7 @@ export class Library {
         found.set(key, section);
       }
     }
+    if (run !== this.runs) return;
     const changed = this.paths.size > 0 || paths.size > 0;
     this.found = found;
     this.paths = paths;

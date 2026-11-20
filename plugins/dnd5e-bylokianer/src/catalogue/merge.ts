@@ -1,5 +1,5 @@
-// Putting the spell lists together: library texts onto catalogue entries, and which entry a name in
-// a stat block means. Pure.
+// Putting the spell lists together: library texts onto catalogue entries, and the order in which a
+// name in a stat block finds its spell. Pure.
 
 import type { SrdSpell } from '../spells/model';
 import type { RulesSetting } from './books';
@@ -19,25 +19,6 @@ export function withLibrary(
     const section = spell.source === undefined ? undefined : sections.get(spell.index);
     return section === undefined ? spell : { ...spell, library: section };
   });
-}
-
-const fold = (text: string): string =>
-  text.normalize('NFD').replace(/\p{M}/gu, '').replace(/[’']/g, "'").toLowerCase().trim();
-
-/**
- * The spell a name means: an own spell first, then the SRD's, then the catalogue's in the preferred
- * rule set (2024 when both are played), then the other rule set's. English or German names.
- */
-export function resolveSpell(
-  name: string,
-  all: readonly SrdSpell[],
-  rules: RulesSetting,
-): SrdSpell | null {
-  const wanted = fold(name);
-  const named = all.filter(
-    (s) => fold(s.name) === wanted || (s.nameDe !== undefined && fold(s.nameDe) === wanted),
-  );
-  return byPreference(named, rules)[0] ?? null;
 }
 
 /** Spells in the order a name is looked up: own, SRD, the preferred rule set, the other one. */

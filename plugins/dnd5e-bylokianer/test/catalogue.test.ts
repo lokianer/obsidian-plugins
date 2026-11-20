@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { BOOKS, type BookKey, isBookKey } from '../src/catalogue/books';
+import { BOOKS, type BookKey, isBookKey, type RulesSetting } from '../src/catalogue/books';
 import { catalogueSlug, librarySections } from '../src/catalogue/library';
-import { resolveSpell, withLibrary } from '../src/catalogue/merge';
+import { byPreference, withLibrary } from '../src/catalogue/merge';
 import { CATALOGUE_SPELLS } from '../src/catalogue/spells';
 import { filterSpells, NO_FILTERS, readFilters } from '../src/spells/filter';
+import { spellFinder } from '../src/spells/links';
 import { spellName, spellText } from '../src/spells/meta';
 import type { SrdSpell } from '../src/spells/model';
 import { SRD_SPELLS } from '../src/spells/srd-spells';
@@ -106,17 +107,19 @@ describe('catalogue spells', () => {
     expect(f?.library).toEqual({ text: 'Full.', higher: '' });
   });
 
-  it('resolves a name: own, then SRD, then the preferred rule set', () => {
+  it('links a name in a stat block to own, then SRD, then the preferred rule set', () => {
+    const find = (text: string, list: SrdSpell[], rules: RulesSetting) =>
+      spellFinder(byPreference(list, rules))(text)[0]?.index;
     const all = [old, fresh, lantern];
-    expect(resolveSpell('Ember Thread', all, '2024')?.index).toBe('phb24/ember-thread');
-    expect(resolveSpell('ember thread', all, '2014')?.index).toBe('phb14/ember-thread');
-    expect(resolveSpell('Ember Thread', all, 'both')?.index).toBe('phb24/ember-thread');
-    expect(resolveSpell('Glutfaden', all, '2014')?.index).toBe('phb14/ember-thread');
+    expect(find('Ember Thread', all, '2024')).toBe('phb24/ember-thread');
+    expect(find('ember thread', all, '2014')).toBe('phb14/ember-thread');
+    expect(find('Ember Thread', all, 'both')).toBe('phb24/ember-thread');
+    expect(find('Glutfaden', all, '2014')).toBe('phb14/ember-thread');
     const own = of({ index: 'own', path: 'Spells/Ember Thread.md' });
-    expect(resolveSpell('Ember Thread', [...all, own], '2024')).toBe(own);
+    expect(find('Ember Thread', [...all, own], '2024')).toBe('own');
     const srdEmber = of({ index: 'ember-thread' });
-    expect(resolveSpell('Ember Thread', [...all, srdEmber], '2024')).toBe(srdEmber);
-    expect(resolveSpell('Nothing', all, '2024')).toBeNull();
+    expect(find('Ember Thread', [...all, srdEmber], '2024')).toBe('ember-thread');
+    expect(find('Nothing', all, '2024')).toBeUndefined();
   });
 });
 
@@ -184,5 +187,24 @@ describe('the spell catalogue', () => {
       (s) => s.rules === '2014' && srd.has(s.name.toLowerCase()),
     );
     expect(clash.map((s) => s.index)).toEqual([]);
+  });
+});
+
+describe('catalogue names', () => {
+  it('accepts only real book keys', () => {
+    expect(isBookKey('xge')).toBe(true);
+    expect(isBookKey('toString')).toBe(false);
+    expect(isBookKey('constructor')).toBe(false);
+  });
+
+  it('gives no entry the German name of a different SRD spell, and a 2024 version the SRD’s', () => {
+    const deOf = new Map(SRD_SPELLS.map((s) => [s.name.toLowerCase(), spellName(s, 'de')]));
+    const srdByDe = new Map(SRD_SPELLS.map((s) => [spellName(s, 'de').toLowerCase(), s.name]));
+    const wrong = CATALOGUE_SPELLS.filter((s) => {
+      const same = deOf.get(s.name.toLowerCase());
+      if (same !== undefined) return s.nameDe !== same;
+      return srdByDe.has((s.nameDe ?? '').toLowerCase());
+    }).map((s) => `${s.index}: ${s.nameDe}`);
+    expect(wrong).toEqual([]);
   });
 });

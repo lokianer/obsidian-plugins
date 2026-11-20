@@ -71,7 +71,7 @@ English, notes first in a folder outside the vault, German names too.
 
 ## Verification
 
-With the example vault stashed: `pnpm check` exit 0, plugin 442/442 and session 15/15 tests, lint 0
+With the example vault stashed: `pnpm check` exit 0, plugin 444/444 and session 15/15 tests, lint 0
 errors (known complexity warnings only). `check-spells.mjs` over all 610 cleaned entries: 0
 problems. No run of eight words of any summary appears in the library notes. `main.js` grew from
 2.08 MB to 2.57 MB.

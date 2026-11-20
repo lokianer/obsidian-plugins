@@ -464,7 +464,7 @@
 	{
 		"index": "xge/earth-tremor",
 		"name": "Earth Tremor",
-		"nameDe": "Erdbeben",
+		"nameDe": "Erdzittern",
 		"level": 1,
 		"school": "evocation",
 		"casting": "1 action",
@@ -596,7 +596,7 @@
 	{
 		"index": "xge/far-step",
 		"name": "Far Step",
-		"nameDe": "Weiter Schritt",
+		"nameDe": "Ferner Schritt",
 		"level": 5,
 		"school": "conjuration",
 		"casting": "1 bonus action",
@@ -706,7 +706,7 @@
 	{
 		"index": "xge/gust",
 		"name": "Gust",
-		"nameDe": "Windstoß",
+		"nameDe": "Windhauch",
 		"level": 0,
 		"school": "transmutation",
 		"casting": "1 action",

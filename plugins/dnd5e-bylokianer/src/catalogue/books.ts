@@ -2,7 +2,7 @@
 
 export type Rules = '2014' | '2024';
 
-/** Which rule set the GM plays by: the Spellbook's starting filter and how names resolve. */
+/** Which rule set the GM plays by: which version a spell name in a stat block means. */
 export type RulesSetting = 'both' | Rules;
 
 export type BookKey =
@@ -38,4 +38,5 @@ export const BOOKS: Readonly<Record<BookKey, Book>> = {
   },
 };
 
-export const isBookKey = (v: unknown): v is BookKey => typeof v === 'string' && v in BOOKS;
+export const isBookKey = (v: unknown): v is BookKey =>
+  typeof v === 'string' && Object.prototype.hasOwnProperty.call(BOOKS, v);
