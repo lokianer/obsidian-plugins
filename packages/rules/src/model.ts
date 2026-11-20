@@ -47,6 +47,8 @@ export type Grant =
       id: string;
       name: Text;
       uses: Amount;
+      /** The fewest uses, whatever the ability ("minimum of once"). */
+      min?: number;
       die?: string | { byLevel: string[] };
       recharge: Recharge | { byLevel: Recharge[] };
     }

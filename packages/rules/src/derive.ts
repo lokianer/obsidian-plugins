@@ -165,7 +165,7 @@ export function derive(character: Character, rules: Rules): Sheet {
     }
   }
 
-  const context = { character, rules, mod, proficiency, amount, grants, lists };
+  const context = { character, rules, mod, proficiency, amount, classLevel, grants, lists };
   const casting = spellcasting(context, classes);
   return {
     level,
@@ -216,6 +216,8 @@ export interface Context {
   mod: Record<Ability, number>;
   proficiency: number;
   amount: (a: Amount, owner: string | null) => number;
+  /** The owning class's level, or the character level for null. */
+  classLevel: (owner: string | null) => number;
   grants: { grant: Grant; p: Placed }[];
   lists: Sheet['proficiencies'];
 }
