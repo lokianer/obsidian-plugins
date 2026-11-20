@@ -79,36 +79,44 @@ function emptyGerman(value: unknown, path: string, found: string[]): void {
   if (Array.isArray(value)) {
     value.forEach((item, i) => emptyGerman(item, `${path}[${i}]`, found));
   } else if (typeof value === 'object' && value !== null) {
-    if ('en' in value && 'de' in value && value.de === '') {
-      found.push(`${path.replace(/^./, '')}: empty German text`);
+    if ('en' in value && 'de' in value && typeof value.de === 'string' && value.de.trim() === '') {
+      found.push(`${path.slice(1)}: empty German text`);
     }
     for (const [key, child] of Object.entries(value)) emptyGerman(child, `${path}.${key}`, found);
   }
 }
 
-const DICE = /\b\d*d\d+\b/g;
-const GERMAN_DICE = /\b\d*W\d+\b/g;
-/** A word cut after its first capital ("K leriker"); a lone lower-case "a" or "o" is German. */
-const SPLIT_FRAGMENT = /\b\p{Lu} \p{Ll}{2,}/u;
-const IMPERIAL = /ft\.|feet|Fuß|lb\.|pound/i;
+const ALONE = '(?<![\\p{L}\\d])';
+const NOT_FOLLOWED = '(?![\\p{L}\\d])';
+const ENGLISH_DIE = new RegExp(`${ALONE}(\\d*)d(\\d+)${NOT_FOLLOWED}`, 'giu');
+const GERMAN_DIE = new RegExp(`${ALONE}(\\d*)W(\\d+)${NOT_FOLLOWED}`, 'giu');
+/** A word cut after its first capital ("K leriker"): a lone capital before a lower-case word. */
+const SPLIT_FRAGMENT = new RegExp(`${ALONE}(\\p{Lu}) \\p{Ll}{2,}`, 'gu');
+const LONE_CAPITAL = new RegExp(`${ALONE}\\p{Lu}${NOT_FOLLOWED}`, 'gu');
+/** A number with feet or pounds, or the word Fuss; "Kraft." or "Gift." are not units. */
+const IMPERIAL = new RegExp(
+  `\\d\\s*(?:ft|feet|foot|lbs?|pounds?)${NOT_FOLLOWED}|${ALONE}Fuß${NOT_FOLLOWED}`,
+  'iu',
+);
 
-const sortedDice = (text: string, pattern: RegExp, from: string, to: string): string =>
-  (text.match(pattern) ?? [])
-    .map((d) => d.replace(from, to))
-    .sort()
-    .join(' ');
+/** The dice of a text as `<count>W<sides>` (a bare d20 is 1W20), whichever letter case. */
+const diceOf = (text: string, pattern: RegExp): string[] =>
+  [...text.matchAll(pattern)].map((m) => `${m[1] === '' ? '1' : m[1]}W${m[2]}`);
 
-/** What is wrong with a German text next to its English: empty, other dice, feet, split words. */
+/** What is wrong with a German text next to its English: empty, missing dice, feet, split words. */
 export function germanProblems(text: Text): string[] {
   const de = text.de ?? '';
   if (de.trim() === '') return ['no German text'];
   const found: string[] = [];
-  const english = sortedDice(text.en, DICE, 'd', 'W');
-  const german = sortedDice(de, GERMAN_DICE, 'W', 'W');
-  if (english !== german) found.push(`dice differ: '${english}' against '${german}'`);
+  const german = new Set(diceOf(de, GERMAN_DIE));
+  for (const die of new Set(diceOf(text.en, ENGLISH_DIE))) {
+    if (!german.has(die)) found.push(`die ${die} missing in the German text`);
+  }
   if (IMPERIAL.test(de)) found.push('imperial unit left in the German text');
-  const fragment = SPLIT_FRAGMENT.exec(de);
-  if (fragment !== null) found.push(`split word fragment '${fragment[0]}'`);
+  const capitals = new Set(text.en.match(LONE_CAPITAL));
+  for (const fragment of de.matchAll(SPLIT_FRAGMENT)) {
+    if (!capitals.has(fragment[1]!)) found.push(`split word fragment '${fragment[0]}'`);
+  }
   if (de.includes('-\n')) found.push('hyphen at a line break');
   return found;
 }

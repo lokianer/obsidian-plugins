@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import fixture from '../data/fixture/fixture.json';
-import { checkRules, germanProblems, loadRules, type RulesData } from '../src/index';
+import { checkRules, germanProblems, loadRules, local, type RulesData } from '../src/index';
 
 const base = fixture as RulesData;
 const copy = (): RulesData => structuredClone(base);
@@ -78,8 +78,35 @@ describe('the German text check', () => {
   });
 
   it('reports dice that differ', () => {
-    expect(problems('Deal 2d6 damage.', 'Verursache 1W6 Schaden.')).toHaveLength(1);
     expect(problems('Deal 1d8 damage.', 'Verursache 1d8 Schaden.')).toHaveLength(1);
+  });
+
+  it('needs every English die in the German text, extra German dice allowed', () => {
+    expect(problems('D8 per Bard level', 'W8 pro Bardenstufe')).toEqual([]);
+    expect(problems('roll a d20', 'würfle einen W20 und addiere den W20')).toEqual([]);
+    expect(problems('Roll.', 'Wirf einen W20.')).toEqual([]);
+    expect(problems('2d6 damage', '1W6 Schaden')).toHaveLength(1);
+  });
+
+  it('does not mistake German words for units', () => {
+    expect(problems('Strength. Poison. Half.', 'Die Kraft. Das Gift. Halb.')).toEqual([]);
+    expect(problems('30 feet', '9 m (30 ft.)')).not.toEqual([]);
+    expect(problems('5 feet', '5 Fuß')).not.toEqual([]);
+    expect(problems('5 pounds', '5 pounds')).not.toEqual([]);
+  });
+
+  it('keeps single capitals that the English text has too', () => {
+    expect(problems('Option A or B', 'Option A oder B')).toEqual([]);
+    expect(problems('Cleric', 'K leriker')).not.toEqual([]);
+  });
+
+  it('treats a blank German text as empty everywhere', () => {
+    expect(local({ en: 'Rage', de: '  ' }, 'de')).toBe('Rage');
+    const data = copy();
+    data.classes[0]!.features[0]!.text.de = ' ';
+    expect(checkRules(loadRules([data]))).toEqual([
+      'classes[0].features[0].text: empty German text',
+    ]);
   });
 
   it('reports imperial units', () => {

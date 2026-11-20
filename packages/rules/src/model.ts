@@ -12,7 +12,7 @@ export interface Text {
 
 /** The text in the language asked for; the English one when the German is missing or empty. */
 export function local(text: Text, lang: 'en' | 'de'): string {
-  return lang === 'de' && text.de !== undefined && text.de !== '' ? text.de : text.en;
+  return lang === 'de' && text.de !== undefined && text.de.trim() !== '' ? text.de : text.en;
 }
 
 /**
