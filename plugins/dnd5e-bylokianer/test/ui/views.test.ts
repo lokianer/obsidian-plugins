@@ -315,14 +315,19 @@ describe('stat block', () => {
     renderStatblock(root, parseStatblock(parse(block?.source ?? '')), { t, markdown });
     expect(texts(root, '.dnd5e-sb-name')).toEqual(['Mira Voss']);
     expect(texts(root, '.dnd5e-sb-meta')).toEqual(['Medium humanoid (half-elf), lawful evil']);
+    expect(texts(root, '.dnd5e-tile-value')).toEqual(['16', '84', '30 ft.']);
+    expect(texts(root, '.dnd5e-tile-note')).toEqual(['13d8 + 26']);
+    expect(texts(root, '.dnd5e-tile-label')).toEqual(['AC', 'HP', 'Speed']);
     expect(texts(root, '.dnd5e-sb-ability')).toEqual([
-      'STR11 (+0)',
-      'DEX18 (+4)',
-      'CON14 (+2)',
-      'INT17 (+3)',
-      'WIS15 (+2)',
-      'CHA16 (+3)',
+      'STR11+0',
+      'DEX18+4',
+      'CON14+2',
+      'INT17+3',
+      'WIS15+2',
+      'CHA16+3',
     ]);
+    expect(root.querySelector('.dnd5e-sb-side .dnd5e-sb-abilities')).not.toBeNull();
+    expect(root.querySelector('.dnd5e-sb-main .dnd5e-sb-section')).not.toBeNull();
     expect(texts(root, '.dnd5e-sb-line')).toContain('Saving ThrowsDex +7, Int +6');
     expect(texts(root, '.dnd5e-sb-line')).toContain('Challenge5 (1,800 XP)');
     expect(texts(root, '.dnd5e-sb-line')).toContain('Proficiency Bonus+3');
@@ -360,10 +365,10 @@ describe('stat block', () => {
       input.value = value;
       input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     };
-    const ac = [...root.querySelectorAll('.dnd5e-sb-line')].find((l) =>
-      l.textContent?.startsWith('Armor Class'),
+    const ac = [...root.querySelectorAll('.dnd5e-sb-tiles .dnd5e-tile')].find(
+      (l) => l.querySelector('.dnd5e-tile-label')?.textContent === 'AC',
     );
-    type(ac?.querySelector('.is-editable'), '17');
+    type(ac?.querySelector('.dnd5e-tile-value.is-editable'), '17');
     expect(edit.scalar).toHaveBeenCalledWith('ac', 18, 17);
     type(root.querySelectorAll('.dnd5e-sb-ability .is-editable')[1], '14');
     expect(edit.ability).toHaveBeenCalledWith(1, 11, 14);
@@ -406,6 +411,35 @@ describe('stat block', () => {
       'WEI',
       'CHA',
     ]);
+  });
+
+  it('shows no empty tiles, abilities or sections for a sparse block', () => {
+    renderStatblock(root, parseStatblock(parse('name: Nobody')), { t, markdown });
+    expect(texts(root, '.dnd5e-sb-name')).toEqual(['Nobody']);
+    expect(root.querySelector('.dnd5e-tile')).toBeNull();
+    expect(root.querySelector('.dnd5e-sb-abilities')).toBeNull();
+    expect(root.querySelector('.dnd5e-sb-section')).toBeNull();
+  });
+
+  it('shows a breath weapon with its DC and damage in a row, without an attack', () => {
+    const dragon = SRD_MONSTERS.find((m) => m.index === 'adult-red-dragon');
+    renderStatblock(root, parseStatblock(parse(dragon?.yaml ?? '')), {
+      t,
+      markdown,
+      roll: () => undefined,
+    });
+    const breath = [...root.querySelectorAll('.dnd5e-sb-entry')].find(
+      (e) => e.querySelector('.dnd5e-sb-action-name')?.textContent === 'Fire Breath (Recharge 5–6)',
+    );
+    expect(breath?.querySelector('.dnd5e-sb-dc')?.textContent).toBe('DC 21 DEX');
+    // A long speed: the first part large, the rest as the tile's note.
+    expect(texts(root, '.dnd5e-tile-value')).toEqual(['19', '256', '40 ft.']);
+    expect(texts(root, '.dnd5e-tile-note')).toEqual([
+      'natural armor',
+      '19d12 + 133',
+      'climb 40 ft., fly 80 ft.',
+    ]);
+    expect(texts(breath ?? root, '.dnd5e-sb-action-row .dnd5e-sb-roll')).toEqual(['18d6']);
   });
 
   it('shows unparsable YAML as text with a warning', () => {
@@ -754,23 +788,27 @@ describe('spellbook', () => {
     });
     await new Promise((r) => window.setTimeout(r, 0));
     expect(texts(root, '.dnd5e-sb-ability')).toEqual([
-      'STR20 (+5)',
-      'DEX12 (+1)',
-      'CON17 (+3)',
-      'INT3 (−4)',
-      'WIS12 (+1)',
-      'CHA7 (−2)',
+      'STR20+5',
+      'DEX12+1',
+      'CON17+3',
+      'INT3−4',
+      'WIS12+1',
+      'CHA7−2',
     ]);
-    const all = [...root.querySelectorAll<HTMLElement>('.dnd5e-sb-roll')];
+    // The Beak's row: its attack and damage as buttons beside the name; the text keeps its own.
+    const beak = [...root.querySelectorAll('.dnd5e-sb-action-row')].find(
+      (r) => r.querySelector('.dnd5e-sb-action-name')?.textContent === 'Beak',
+    );
+    expect(texts(beak ?? root, '.dnd5e-sb-roll')).toEqual(['+7', '1d10+5']);
+    beak?.querySelector<HTMLElement>('.dnd5e-sb-roll')?.dispatchEvent(new MouseEvent('click'));
+    expect(rolled.pop()?.[0]).toMatchObject({ formula: 'd20+7', d20: true });
+    const multiattack = [...root.querySelectorAll('.dnd5e-sb-entry')].find((e) =>
+      e.textContent?.includes('Multiattack'),
+    );
+    expect(multiattack?.querySelector('.dnd5e-sb-action-row')).toBeNull();
+    const all = [...root.querySelectorAll<HTMLElement>('.dnd5e-sb-roll:not(.dnd5e-sb-row-roll)')];
     // The six ability modifiers roll their checks.
-    expect(all.slice(0, 6).map((b) => b.textContent)).toEqual([
-      '(+5)',
-      '(+1)',
-      '(+3)',
-      '(−4)',
-      '(+1)',
-      '(−2)',
-    ]);
+    expect(all.slice(0, 6).map((b) => b.textContent)).toEqual(['+5', '+1', '+3', '−4', '+1', '−2']);
     const buttons = all.slice(6);
     expect(buttons.map((b) => b.textContent)).toEqual([
       'Perception +3',
@@ -1366,7 +1404,8 @@ describe('monster manual', () => {
     expect(el.querySelector('.dnd5e-sb-meta')?.textContent).toBe(
       'Große Monstrosität, gesinnungslos',
     );
-    expect(el.querySelector('.dnd5e-sb-lines')?.textContent).toContain('12 m');
+    expect(texts(el, '.dnd5e-tile-label')).toEqual(['RK', 'TP', 'Bew.']);
+    expect(el.querySelector('.dnd5e-sb-tiles')?.textContent).toContain('12 m');
     // Traits and actions in German too (M2).
     expect(el.querySelector('.dnd5e-statblock')?.textContent).toContain('Mehrfachangriff');
     expect(el.querySelector('.dnd5e-statblock')?.textContent).toContain(
@@ -1447,7 +1486,7 @@ describe('monster builder', () => {
       'Large monstrosity, unaligned',
     );
     expect(el.querySelector('.dnd5e-monster-preview .dnd5e-sb-ability')?.textContent).toContain(
-      '16 (+3)',
+      '16+3',
     );
     el.querySelector<HTMLElement>('[data-list="actions"] .setting-item button')?.dispatchEvent(
       new MouseEvent('click'),

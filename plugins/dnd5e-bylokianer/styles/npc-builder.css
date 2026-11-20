@@ -272,7 +272,8 @@
   max-width: 100%;
 }
 
-.dnd5e-sb-ability .dnd5e-sb-input {
+.dnd5e-sb-ability .dnd5e-sb-input,
+.dnd5e-tile .dnd5e-sb-input {
   text-align: center;
 }
 

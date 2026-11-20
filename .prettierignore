@@ -11,3 +11,4 @@ dist/
 coverage/
 main.js
 plugins/*/styles.css
+.impeccable/

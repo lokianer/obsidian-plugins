@@ -1,10 +1,12 @@
 /* dnd5e-byLokianer — styles. Only Obsidian CSS variables, so every theme works.
 
-   One visual language for every view:
-   - values: a soft tint of the value's colour behind normal text (`--dnd5e-soft`); full colour only
-     for arrows and small accents;
-   - sections: plain muted headings in normal case, like Obsidian's own "Properties";
-   - rows: no boxes, a hover background, icon buttons that appear on hover (always on phones);
+   Style C, one visual language for every view (2026-11-20, close to D&D Beyond's character sheet):
+   - tiles for key numbers: the value large, the label in capitals under it;
+   - section heads in capitals, in the accent colour, with a thin rule under them;
+   - pills for conditions, filters and tags, tinted with the accent when active;
+   - a list beside its details, one column in narrow places (below 480 px);
+   - values: a soft tint of the value's colour behind normal text (`--dnd5e-soft`);
+   - rows: a hover background, icon buttons that appear on hover (always on phones);
    - text at least 16 px. */
 
 .dnd5e-card,
@@ -90,4 +92,81 @@
 .dnd5e-card .dnd5e-card-badge,
 .dnd5e-world-header .dnd5e-card-badge {
   color: var(--text-warning);
+}
+
+/* Building blocks (style C), built by `src/obsidian/ui/blocks.ts`. */
+.dnd5e-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: var(--size-4-2);
+}
+
+.dnd5e-tile {
+  padding: var(--size-4-2);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  text-align: center;
+}
+
+.dnd5e-tile-value {
+  font-size: 1.4em;
+  font-weight: var(--font-bold);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.dnd5e-tile-note {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.dnd5e-tile-label,
+.dnd5e-section-head {
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.dnd5e-tile-label {
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+.dnd5e-section-head {
+  margin: var(--size-4-3) 0 var(--size-4-2);
+  padding-bottom: var(--size-4-1);
+  border-bottom: 1px solid var(--background-modifier-border);
+  color: var(--text-accent);
+  font-weight: var(--font-bold);
+  letter-spacing: 0.08em;
+}
+
+.dnd5e-pill {
+  display: inline-block;
+  margin: 2px var(--size-4-1) 2px 0;
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-l);
+  background: var(--background-modifier-hover);
+  white-space: nowrap;
+}
+
+.dnd5e-pill.is-active {
+  background: color-mix(in srgb, var(--interactive-accent) 25%, transparent);
+  color: var(--text-accent);
+}
+
+/* List and details side by side; below about 480 px the details wrap under the list. */
+.dnd5e-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-4);
+}
+
+.dnd5e-split-list {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.dnd5e-split-details {
+  flex: 2 1 264px;
+  min-width: 0;
 }

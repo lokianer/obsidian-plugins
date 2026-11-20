@@ -13,122 +13,67 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-10-25 and 2026-10-26, cloud. Built: the battle tracker (B1–B3, XP optional), German monster
-texts (M2), the dice module (R1–R4), clearing battle and dice logs; a quality round, the READMEs and
-the Pages site, the stylesheet per view, complexity steps 1, 4 and 5, a log button that wraps. The
-maintainer then checked everything in Obsidian: **"es läuft alles" — all accepted on 2026-10-26.**
-Last, asked for: **release 0.1.0 as a ZIP on GitHub** (`.github/workflows/release.yml`, tag
-`dnd5e-bylokianer-0.1.0`).
+2026-11-20, local. The maintainer asked for three things: a visual refactoring of the plugin ("mehr
+wie D&D Beyond, moderner und übersichtlicher"), **all** official subclasses with a character
+builder and a level-up database, and **all** spells and monsters. Agreed: the order visual
+refactoring → catalogues → character builder; for the content, catalogues with our own summaries
+in the plugin and full texts only by import (the repository is public). The visual refactoring was
+brainstormed with mockups (style C chosen), designed, planned, and **V1 built**: the building
+blocks and the stat block.
 
 ## Where to continue
 
-Everything that can still be done, in the order I would take it. Items marked _(needs a yes)_ wait
-for the maintainer's go-ahead; the rest follow from what they already asked for.
-
-1. **Release 0.1.0** — the Release workflow (`.github/workflows/release.yml`) was started by hand
-   on `main` (a cloud session may not push tags: the proxy refuses them with 403); it runs
-   `pnpm check`, builds, and publishes the release `dnd5e-bylokianer-0.1.0` with the ZIP and the
-   three files, creating the tag. Next releases: raise the version in `manifest.json` and
-   `versions.json`, move CHANGELOG's Unreleased into a new version section, then Actions →
-   Release → Run workflow (or push the tag `dnd5e-bylokianer-<version>` from a local clone).
-2. **Reducing complexity, steps 2 and 3** (asked for; steps 1, 4, 5 done). Measured with ESLint's
-   `complexity` rule on 2026-10-26: 62 functions above 10 before step 1. Since step 5 the lint
-   warns at complexity 20 and 150 lines per function; its eleven warnings are the list:
-   - **Step 2:** tables instead of `if` chains — `fromSrdApi` (32), `fromTools`, `parseSpellJson`
-     (29), `tokenize` (24), `readRow` (22), `fieldBlock` (26), `entries` (21). Tests first where
-     the importers are thin.
-   - **Step 3:** the big renderers in named parts — `renderStatblock` (199 lines), the Battle tab's
-     `renderCard` (163), the popover's `render` (27), `drawPreview` (24), the stage's `finish`
-     (22). Check views with the pixel comparison used for the stylesheet split.
-   - Then make the two rules errors and tighten them (e.g. 15 and 100).
-   - Done: step 1 (`findTensions` into four rules, `discoverEntities` into its steps), step 4
-     (`src/obsidian/register/`, `main.ts` 42 lines, guarded by `test/ui/plugin.test.ts`), step 5
-     (the lint limits).
-3. **Start-up time** _(needs a yes)_: `main.js` is 2 MB (480 KB gzipped), about 80 % SRD data
-   (monsters 520 KB, spells 393 KB, German texts about 700 KB), evaluated at every start, phones
-   too. Data as JSON strings parsed on first use of a tab; measure before and after.
-4. **Vault scans** _(needs a yes)_: `WorldCache` rebuilds the whole world 250 ms after any change;
-   `OwnSpells` and `OwnMonsters` re-read every own spell / monster note on each `resolved`.
-   Per-file caches, as CLAUDE.md asks; they matter for large vaults.
-5. **Installing** _(needs a yes)_: the release ZIP is there now. Still possible: (A)
-   `pnpm install-to "<vault>"`, generalising `scripts/install-example.mjs`; (C) BRAT and the
-   Obsidian directory need the mirror repository with `manifest.json` at its root.
-6. **Screenshots** for the Pages site, now that the check has passed: the encounter builder, the Monster
-   Manual with German texts (the current one shows English traits), from real Obsidian.
-7. **Dice, left out so far** _(needs a yes)_: hidden GM rolls (in a `[!gm]` callout; not chosen in
-   the brainstorm), critical damage rolled by itself after a natural 20, ability checks for
-   characters without a stat block (a frontmatter key), removing log lines from earlier sessions.
-8. **Battle tracker, left out so far** _(needs a yes)_: a critical hit's two failed death saves,
-   re-reading a fight the GM edits by hand while the tab is open.
-9. **Daggerheart plugin** — asked for on 2026-10-26, **roadmap only, no code** ("Mache nur eine
-   Roadmap, keinen Code"): `ROADMAP.md` "Daggerheart plugin" with the research (DPCGL, BeastVault's
-   `daggerheart` block, DaggerForge, the tracker, SRD data sources), phases H0–H7 and the open
-   questions. H0 needs a local session: darringtonpress.com and codeberg.org are blocked in the
-   cloud. README and Pages show it as planned.
-10. **New module: the GM gate** _(needs a yes, then brainstorm and spec)_: `[!gm]` callouts with
-    `revealed:`, `%%comments%%`, which notes the players have met, a player export (roadmap "Not
-    placed yet").
-11. **Release preparation** _(needs a yes)_: Obsidian's plugin guidelines and submission checklist,
-    the name against Wizards of the Coast's trademark rules, the release mirror repository, a
-    versioning and release workflow.
-12. **Housekeeping:** the private vault's daily reports and changelog for 2026-10-24 to 2026-10-26
-    (a local session; a cloud session cannot reach the vault).
+1. **Check V1 in Obsidian** (the build is installed in `examples/vault`): open [[Isolde Ferrant]],
+   [[Aldric Thane]], [[Mira Voss]] (stat blocks in notes, editing), the Monster Manual (Owlbear in
+   German, Adult Red Dragon: rows with DC pills), the monster builder's preview, a monster in the
+   Battle tab, the right sidebar (narrow). After "passt": tick V1 in the roadmap, retake the README
+   screenshots `statblock*.webp` and `monsters.webp` in real Obsidian.
+2. **V2 — Battle tab and encounter builder**: write its plan from the design (§3), reuse
+   `split()`, `tiles()`, `pill()` from `src/obsidian/ui/blocks.ts`; the Battle tab's 700 px media
+   query goes in favour of `dnd5e-split`. Then V3–V6, one at a time, each with the maintainer's
+   check.
+3. **Catalogues** (after V6): brainstorm → design → plan; agreed scope in the roadmap.
+4. **Character builder with level-up database** (after the catalogues): brainstorm not started.
+5. Older open items stay as in the roadmap's "Next steps" (code quality, start-up time, vault
+   scans, distribution, Daggerheart, extensions).
 
 ## State of the working tree
 
-Branch `claude/roadmap-and-handoff-nb9sav`, pushed; `main` fast-forwarded to it after every slice, so
-`git pull` on `main` brings everything. Clean. After pulling, run `pnpm build` once: `styles.css` is
-build output now. `examples/vault/.obsidian/graph.json` may show as modified after opening the
-vault: never commit it as part of a task. After trying session creation in the example vault,
-delete `Silverstadt/Sessions/Session 15.md` and `git checkout examples/vault`.
+Branch `visual-v1`, committed; `main` fast-forwarded to it and pushed (see `git log`). The
+maintainer's own uncommitted changes in `examples/vault` (Session 14's log lines, faction values,
+two monsters, Session 15) were left alone. They make 3 `packages/session` tests and 5 plugin tests
+fail locally, because those tests read the example vault as their contract; with them stashed,
+everything passes. Decide with the maintainer whether to keep them (then update the tests) or
+revert them (`git checkout examples/vault` and delete the new files).
 
 ## Done this session
 
-- `0c2d266` German traits and actions for all 334 SRD monsters (M2).
-- `ebb8f94`, `57259ef` Dice design and the clickable prototype of the stage; `5c9e37d` R1 (engine,
-  stage, Dice tab, `dice:` in notes, log); `ab3d0a9` README section on what is taken and what only
-  inspired; `9af709e` R2 (rollable tables); `0b5b67c` R3 (stat blocks and characters); `b6c668f`
-  R4 (critical hits, ability checks).
-- `9f2f57f` Quality round: no lookbehinds (iOS before 16.4) and a lint rule against them,
-  death-save rules, indented table lists, `dice:` stays code in code blocks (`@codemirror/language`
-  as an external dev dependency), encounter tiles on a phone.
-- `998029b` READMEs and Pages site: sections and screenshots for the battle tracker and the dice.
-- `5e8a63a` `styles.css` split into sixteen files under `styles/`, bundled by esbuild.
-- `63a40ee` Reducing complexity, step 1: tension rules and faction discovery split.
-- `2199eab` Reducing complexity, step 4: `main.ts` per module, `test/ui/plugin.test.ts`.
-- `0eb45e8` Step 5: complexity and function length limits as lint warnings.
-- `4f302b4` The log notice's button wraps (icon, **Log**, the session's name under it).
-- `d2ef529` Clearing battle and dice logs (Battle and Dice tab ⋮ menus, two commands,
-  `removeFromLog` in `packages/session`).
-- Everything accepted in Obsidian; release 0.1.0 (workflow, CHANGELOG section, manifest
-  description), committed with this handoff.
-- Earlier, on 2026-10-25: the battle tracker B1–B3 and the optional XP (built, awaiting the check)
-  — the commits before `0c2d266`.
+- Design `docs/superpowers/specs/2026-11-20-visual-refactoring-design.md` with the two mockups in
+  `assets/`; plan `docs/superpowers/plans/2026-11-20-visual-v1-blocks-statblock.md`.
+- V1: `src/obsidian/ui/blocks.ts` (tile with note, tiles, section head, pill, split) and their CSS
+  in `styles/base.css`; `src/dice/action-row.ts` (attack, damage parts and saving throw DC of an
+  entry, English and German); `partCheck` extracted in `statblock-dice.ts`; the stat block split
+  into `statblock-parts.ts` and restyled in `styles/statblock.css`.
+- DECISIONS "Visual refactoring: style C", CHANGELOG Unreleased, ROADMAP (visual refactoring,
+  catalogues, character builder).
 
 ## Half-finished — check in Obsidian
 
-Nothing: the maintainer checked everything on 2026-10-26 ("es läuft alles"). The check points of
-this session (20–21, 47–79) are in the git history of this file (`d2ef529`) if needed again.
+V1, see "Where to continue" 1.
 
 ## Decisions taken this session
 
-In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Loot carries over into the next session", "No non-SRD
-monsters in the plugin; an import for the GM's own", "The battle tracker keeps the fight in the
-encounter note", "The battle tracker logs moments, not blows; the line-up can change mid-fight", "The encounter
-builder uses the SRD 5.2.1's XP budget", "Experience points are optional, off by default", "German monster texts by rule, template and
-hand" (all 2026-10-25), "Dice: own engine, a stage like Baldur's Gate 3, Dice Roller's `dice:`
-syntax", "Dice R2: rollable tables by a die in the heading", "Dice R3: rolls from stat blocks and characters", "Quality round …", "Dice R4: critical hits and ability checks", "The stylesheet in one file per view", "Reducing
-complexity, step 1", "Reducing complexity, step 4", "Clearing battle and dice logs", "Release 0.1.0 as a ZIP on GitHub" (2026-10-26).
-Smaller calls, in the commit bodies: single member chips stay inside their frame (only the frame and
-boxes drag); label widths are estimated, not measured.
+In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Visual refactoring: style C". Agreed in the
+conversation and recorded in the roadmap: the catalogue approach for all subclasses, spells and
+monsters. Smaller calls in V1: short tile labels (AC/HP/Speed, RK/TP/Bew.); the score beside the
+label and the modifier as the roll button without brackets; CR stays out of the meta line; with a
+row the entry's name stands in the row only; the DC is a pill, not a button; one wrap point of
+about 480 px (flex-wrap for list | details, a container query for the stat block).
 
 ## Open questions for the maintainer
 
-- The check in Obsidian (points 20–21, 47–76).
-- A yes or no for the items marked _(needs a yes)_ under "Where to continue" (3–11), and the Daggerheart
-  plugin's open questions in the roadmap.
-- The "calls I made" sections of the phase 2–5 specs count as confirmed by the passing check, unless
-  the maintainer wants something changed.
+- V1's check in Obsidian.
+- The uncommitted example-vault changes: keep (tests updated) or revert.
 
 ## Watch out
 
@@ -163,10 +108,19 @@ boxes drag); label widths are estimated, not measured.
   lives in the scratchpad (`preview/tabs.ts`, `tabshot.cjs`, bundled with the UI test stub
   `test/ui/obsidian.ts` as `obsidian`); its page defines Obsidian's size variables, without them
   spacing looks wrong.
-- The private vault's daily reports and changelog for 2026-10-24 and 2026-10-25 still need writing
-  by a local session.
+- Python on Windows writes CRLF in text mode: open files with `newline=''` (or run `pnpm format`
+  afterwards), else Prettier flags them.
+- The stat block screenshot harness is in the session scratchpad only (`preview/statblocks.ts`,
+  `page.html`, bundled with `node_modules/.bin/esbuild … --alias:obsidian=./test/ui/obsidian.ts
+--alias:@p=. --alias:@v=../../examples/vault --loader:.md=text`, shot with headless Chrome
+  `--screenshot`, a separate `--user-data-dir` per shot). Headless Chrome lays out narrow windows
+  wider than asked: set the stage's width in the page instead (`&w=328`).
+- `.impeccable/` (a design-hook cache) is git- and prettier-ignored.
 
 ## Verification
 
-`pnpm check` at the root: exit 0; 409 plugin tests and 15 package tests pass. CI green on Linux,
-macOS and Windows for every push to `main` this session.
+With the example vault as committed: plugin 422/422 tests, session 15/15; typecheck and build
+clean; lint 0 errors, warnings only the known complexity list (now without `renderStatblock`) and
+four sentence-case warnings in tests. Screenshots of Isolde Ferrant (900 px and 328 px), the
+Owlbear in German and the Adult Red Dragon in the light theme checked: no horizontal overflow,
+the ability column folds, text at least 16 px.

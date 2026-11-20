@@ -12,6 +12,7 @@ main.js
 .env
 .env.*
 .claude/settings.local.json
+.impeccable/
 
 # Brainstorming mockups (visual companion)
 .superpowers/

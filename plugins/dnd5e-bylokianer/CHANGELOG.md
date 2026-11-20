@@ -6,6 +6,16 @@ All notable changes to this plugin are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **A new look, style C** (visual refactoring, phase V1): closer to D&D Beyond's character sheet.
+  Stat blocks show AC, hit points and speed as tiles (armour, hit dice and other speeds under the
+  value), the six abilities as a column beside the entries with the modifier large (a grid of three
+  in narrow places), section heads in capitals, and each attack or save as a row above its text:
+  the attack bonus and every damage part as dice buttons, the saving throw DC as a pill. The text
+  under the row is unchanged and keeps its own dice buttons. Editing and rolling work as before.
+  The other views follow in phases V2–V6.
+
 ## [0.1.0] - 2026-10-26
 
 The first release: all seven modules, accepted in Obsidian.

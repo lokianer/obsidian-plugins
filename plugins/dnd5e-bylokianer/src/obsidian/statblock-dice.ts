@@ -7,7 +7,7 @@ import { Menu } from 'obsidian';
 
 import type { Check } from '../dice/checks';
 import { criticalFormula, type Edge } from '../dice/formula';
-import { rollParts } from '../dice/statblock';
+import { rollParts, type RollPart } from '../dice/statblock';
 import type { StringKey, T } from '../i18n/strings';
 
 export type RollCheck = (check: Check, edge: Edge) => void;
@@ -72,6 +72,20 @@ export function checkButton(
   return button;
 }
 
+/** The check an attack bonus or damage part of `who`'s entry rolls. */
+export function partCheck(part: RollPart, who: string, entry: string, t: T): Check {
+  const what = [who, entry].filter((p) => p !== '').join(': ');
+  const damage = part.kind === 'damage';
+  return {
+    name: entry,
+    label: damage ? `${what} · ${t('dice.damage')}` : what,
+    subject: `${who} rolls ${entry}${damage ? ' damage' : ''}`.trim(),
+    formula: part.formula,
+    d20: !damage,
+    damage,
+  };
+}
+
 /**
  * Turns the attack bonuses and damage expressions in a rendered entry into buttons. The parts are
  * found in the entry's whole text (`*Melee Attack Roll:* +7` spans two nodes) and replaced where
@@ -91,7 +105,6 @@ export function linkEntryDice(
     nodes.push({ node: n as Text, at: text.length });
     text += (n as Text).data;
   }
-  const what = [who, entry].filter((p) => p !== '');
   // Last to first, so the offsets of the parts before stay right.
   for (const part of rollParts(text).reverse()) {
     const host = nodes.find(
@@ -100,15 +113,7 @@ export function linkEntryDice(
     if (host === undefined) continue;
     const { node, at } = host;
     if (node.parentElement?.closest('a, button, code, input, textarea') != null) continue;
-    const damage = part.kind === 'damage';
-    const check: Check = {
-      name: entry,
-      label: damage ? `${what.join(': ')} · ${t('dice.damage')}` : what.join(': '),
-      subject: `${who} rolls ${entry}${damage ? ' damage' : ''}`.trim(),
-      formula: part.formula,
-      d20: !damage,
-      damage,
-    };
+    const check = partCheck(part, who, entry, t);
     const button = checkButton(createSpan(), text.slice(part.start, part.end), check, roll, t);
     const after = node.splitText(part.start - at);
     after.data = after.data.slice(part.end - part.start);

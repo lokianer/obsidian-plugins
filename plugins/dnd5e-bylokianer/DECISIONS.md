@@ -817,3 +817,29 @@ publish nothing, for a GitHub release of this repository (not Obsidian's directo
   seven modules.
 
 Left out: the mirror repository and BRAT, Obsidian's directory, signing or checksums.
+
+## 2026-11-20 · Visual refactoring: style C
+
+The maintainer asked for "ein visuelles Refactoring … mehr wie D&D Beyond, moderner und
+übersichtlicher" and chose, from three mockups, **style C**: a character-sheet layout (design
+`docs/superpowers/specs/2026-11-20-visual-refactoring-design.md`). It replaces the 2026-10-24 rules
+"no boxes inside boxes" and "sections as muted headings in normal case"; the rest of that decision
+(soft value tints, hover rows, Obsidian's own components, only Obsidian's variables, text at least
+16 px) stays.
+
+- Shared building blocks in `src/obsidian/ui/blocks.ts` and `styles/base.css`: tiles (value, an
+  optional muted note, label), section heads in capitals in the accent colour, pills, a list beside
+  its details that wraps below about 480 px.
+- V1, the stat block: tiles for AC, HP and speed with the short labels (AC, HP, Speed; RK, TP,
+  Bew.), since the long ones do not fit a phone-width tile; the abilities as a column beside the
+  entries, a grid of three below a container width of 480 px; each entry whose text has an attack
+  bonus, damage or a saving throw DC gets a row above its text (**row and text**, the maintainer's
+  choice): the name, the attack and damage as dice buttons, the DC as a pill (not a button: the
+  target rolls the save). With a row the name stands in it, not again in the text; nothing else
+  leaves the text. `renderStatblock` is now a composition of named parts in
+  `statblock-parts.ts`, which also completes the code-quality step 3 for it.
+- Editing and rolling unchanged; the phases V2–V6 follow one view at a time, each checked in
+  Obsidian; no release until V6.
+
+Left out: CR in the meta line (it stays in the Challenge line), a fixed D&D Beyond red, the dice
+stage's animation.

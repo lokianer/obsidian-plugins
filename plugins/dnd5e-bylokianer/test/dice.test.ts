@@ -19,6 +19,7 @@ import {
   rollDie,
   rollLine,
 } from '../src/dice/formula';
+import { actionRow } from '../src/dice/action-row';
 import { rollParts } from '../src/dice/statblock';
 import { tableCells } from '../src/markdown/table';
 import { findTable, rollableTables, rowFor, tableLine } from '../src/dice/tables';
@@ -259,5 +260,73 @@ describe('dice lines in the log', () => {
     expect(isDiceLine('Owlbear rolls Beak damage (critical): 2d10+5 → 17 (4, 8, +5)')).toBe(true);
     expect(isDiceLine('Order of the Lantern → The Gutter Court: −2 → −3')).toBe(false);
     expect(isDiceLine('Combat begins: [[Ambush]]')).toBe(false);
+  });
+});
+
+describe('actionRow', () => {
+  const formulas = (text: string) => {
+    const row = actionRow(text);
+    return {
+      attack: row?.attack?.formula ?? null,
+      damage: row?.damage.map((p) => p.formula) ?? [],
+      dc: row?.dc ?? null,
+    };
+  };
+
+  it('reads an attack with its damage', () => {
+    expect(
+      formulas(
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 10 (1d10 + 5) piercing damage.',
+      ),
+    ).toEqual({ attack: 'd20+7', damage: ['1d10+5'], dc: null });
+  });
+
+  it('reads several damage parts without an attack', () => {
+    expect(formulas('Hit: 8 (1d8 + 4) slashing damage, plus 9 (2d8) radiant damage.')).toEqual({
+      attack: null,
+      damage: ['1d8+4', '2d8'],
+      dc: null,
+    });
+  });
+
+  it('reads a breath weapon: a DC and damage, no attack', () => {
+    expect(
+      formulas(
+        'Each creature in a 30-foot cone must make a DC 18 Constitution saving throw, taking 56 (16d6) poison damage on a failed save.',
+      ),
+    ).toEqual({ attack: null, damage: ['16d6'], dc: { dc: 18, ability: 'con' } });
+  });
+
+  it('reads the SRD 5.2 form of a saving throw', () => {
+    expect(
+      formulas(
+        'Dexterity Saving Throw: DC 15, each creature in a 20-foot line. Failure: 22 (4d10) fire damage.',
+      ).dc,
+    ).toEqual({ dc: 15, ability: 'dex' });
+  });
+
+  it('reads German texts', () => {
+    expect(
+      formulas(
+        'Nahkampf-Waffenangriff: +7 auf Treffer, Reichweite 1,5 m. Treffer: 10 (1W10 + 5) Stichschaden. Das Ziel muss einen Stärkerettungswurf mit SG 14 bestehen.',
+      ),
+    ).toEqual({ attack: 'd20+7', damage: ['1d10+5'], dc: { dc: 14, ability: 'str' } });
+    expect(formulas('Es muss einen Konstitutions-Rettungswurf mit SG 12 ablegen.').dc).toEqual({
+      dc: 12,
+      ability: 'con',
+    });
+  });
+
+  it('gives no row for an entry without attack, damage or a DC', () => {
+    expect(
+      actionRow('The owlbear makes two attacks: one with its beak and one with its claws.'),
+    ).toBeNull();
+  });
+
+  it('takes no DC from a spellcasting line', () => {
+    expect(
+      actionRow('The mage casts spells (spell save DC 12, +4 to hit with spell attacks).')?.dc ??
+        null,
+    ).toBeNull();
   });
 });

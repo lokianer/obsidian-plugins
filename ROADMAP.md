@@ -14,7 +14,7 @@ phase plans in `docs/superpowers/plans/` and each plugin's `DECISIONS.md`.
 
 | Plugin                                            | State                                                   | Released                                                                                                        |
 | ------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules built and accepted in Obsidian            | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
+| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; visual refactoring V1 built     | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
 | [Daggerheart plugin](#daggerheart-plugin-planned) | Planned: research done, design not started, no code yet | —                                                                                                               |
 
 Neither plugin is in Obsidian's community directory yet.
@@ -23,19 +23,26 @@ Neither plugin is in Obsidian's community directory yet.
 
 In order of priority. Items marked **(open)** wait for the maintainer's decision.
 
-1. **dnd5e-byLokianer: code quality.** Reduce complexity, steps 2 and 3 (see
+1. **dnd5e-byLokianer: visual refactoring, style C** (asked for on 2026-11-20). V1 (building
+   blocks, stat block) built, awaiting the check in Obsidian; then V2–V6, one view per phase (see
+   [Visual refactoring](#visual-refactoring--style-c)).
+2. **dnd5e-byLokianer: catalogues of all official spells, monsters and subclasses** (asked for on
+   2026-11-20, approach agreed, design not written): see [Catalogues](#catalogues-planned).
+3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20,
+   brainstorm not started): built in style C, after the catalogues.
+4. **dnd5e-byLokianer: code quality.** Reduce complexity, steps 2 and 3 (see
    [Code quality](#code-quality)); afterwards turn the lint limits into errors and tighten them.
-2. **dnd5e-byLokianer: performance (open).** Load the SRD data (80 % of the 2 MB `main.js`) on first
+5. **dnd5e-byLokianer: performance (open).** Load the SRD data (80 % of the 2 MB `main.js`) on first
    use instead of at start-up; cache per file instead of rescanning the vault after each change.
-3. **Distribution (open).** A script installing a build into any vault; the release mirror
+6. **Distribution (open).** A script installing a build into any vault; the release mirror
    repository and the submission to Obsidian's community directory (see
    [Before the directory](#before-the-community-directory)).
-4. **Daggerheart plugin.** Phase H0 (licence, name, data source, existing plugins), then the design
+7. **Daggerheart plugin.** Phase H0 (licence, name, data source, existing plugins), then the design
    and phases H1–H7 (see [Daggerheart plugin](#daggerheart-plugin-planned)).
-5. **dnd5e-byLokianer: extensions (open).** The GM gate; hidden GM rolls; critical damage after a
+8. **dnd5e-byLokianer: extensions (open).** The GM gate; hidden GM rolls; critical damage after a
    natural 20; a critical hit's two failed death saves; re-reading a fight edited by hand; removing
    log lines from earlier sessions.
-6. **Screenshots.** The encounter builder and the Monster Manual with German texts, taken in
+9. **Screenshots.** The encounter builder and the Monster Manual with German texts, taken in
    Obsidian, for the plugin README and the project page.
 
 ---
@@ -132,6 +139,37 @@ Design [`2026-10-26-dice-design.md`](docs/superpowers/specs/2026-10-26-dice-desi
 - [x] **R4 — Critical hits and ability checks** (accepted 2026-10-26).
 - [x] **Clearing** (accepted 2026-10-26): clear the list, remove dice lines from the session log.
 
+### Visual refactoring — style C
+
+Design [`2026-11-20-visual-refactoring-design.md`](docs/superpowers/specs/2026-11-20-visual-refactoring-design.md),
+mockups beside it in `assets/`. The maintainer chose style C (a character-sheet layout, close to
+D&D Beyond) on 2026-11-20. One view per phase, each checked in Obsidian; no release until V6.
+
+- [ ] **V1 — Building blocks and the stat block** (built 2026-11-20, awaiting the check): tiles,
+      section heads, pills, list | details; the stat block with tiles, the ability column and
+      action rows (row and text). Plan `2026-11-20-visual-v1-blocks-statblock.md`.
+- [ ] **V2 — Battle tab and encounter builder.**
+- [ ] **V3 — Faction card, faction world, tensions, popover, warnings.**
+- [ ] **V4 — Monster Manual and Spellbook lists, spell card.**
+- [ ] **V5 — Dice tab and Deck of Many Things** (the dice stage stays).
+- [ ] **V6 — Builders and dialogs.**
+
+### Catalogues (planned)
+
+Asked for on 2026-11-20: "ALLE subklassen", "ALLE spells und monster". Agreed with the maintainer
+(the repository is public, so no copyrighted text from the books):
+
+- **In the plugin:** every official subclass (name, source book, the levels it gains something,
+  feature names, a short summary of each feature's mechanics in our own words); every official
+  spell (name, level, school, casting time, range, components, duration, classes, source, a short
+  summary in our own words); every official monster as a catalogue entry (name, source, size,
+  type, CR, AC, HP) for the encounter builder. The SRD content keeps its full text in English and
+  German.
+- **By import into the GM's own vault:** the full texts from files the GM owns (5etools and
+  similar), as the monster import does today.
+
+Design not written yet; it follows the visual refactoring.
+
 ### Code quality
 
 A complexity analysis (ESLint `complexity`, 2026-10-26) found 62 functions above 10 and an
@@ -143,8 +181,8 @@ A complexity analysis (ESLint `complexity`, 2026-10-26) found 62 functions above
 - [x] Step 4: one registration per module under `src/obsidian/register/`; `main.ts` 42 lines.
 - [x] Step 5: complexity (20) and function length (150) as lint warnings.
 - [ ] Step 2: tables instead of `if` chains in the importers, `tokenize`, `readRow`, `fieldBlock`.
-- [ ] Step 3: the largest renderers in named parts (stat block, battle card, popover, NPC preview,
-      dice stage).
+- [ ] Step 3: the largest renderers in named parts (battle card, popover, NPC preview, dice stage;
+      the stat block done with V1).
 
 ### Not placed yet
 

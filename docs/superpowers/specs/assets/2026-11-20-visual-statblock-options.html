@@ -1,0 +1,384 @@
+<style>
+  .sb {
+    --bg: #1e1e1e;
+    --bg2: #262626;
+    --bg3: #2f2f2f;
+    --tx: #dcddde;
+    --mu: #b3b3b3;
+    --ac: #8a5cf5;
+    --red: #c53131;
+    background: var(--bg);
+    color: var(--tx);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 15px;
+    padding: 16px;
+    border-radius: 10px;
+    line-height: 1.45;
+  }
+  .sb .t {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .sb .m {
+    color: var(--mu);
+  }
+  .sb .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .sb .tile {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+  }
+  .sb .tile .v {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .sb .tile .l {
+    font-size: 12px;
+    color: var(--mu);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .sb .ab {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin: 10px 0;
+  }
+  .sb .abx {
+    background: var(--bg2);
+    border: 1px solid var(--bg3);
+    border-radius: 8px;
+    text-align: center;
+    padding: 6px 0 4px;
+  }
+  .sb .abx .l {
+    font-size: 11px;
+    color: var(--mu);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .sb .abx .mod {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .sb .abx .sc {
+    display: inline-block;
+    font-size: 12px;
+    background: var(--bg3);
+    border-radius: 10px;
+    padding: 0 8px;
+    color: var(--mu);
+  }
+  .sb .hd {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 14px 0 6px;
+    padding-bottom: 4px;
+  }
+  .sb .row {
+    display: grid;
+    grid-template-columns: 1.6fr 0.6fr 1fr;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 6px;
+  }
+  .sb .row:nth-child(odd) {
+    background: var(--bg2);
+  }
+  .sb .btn {
+    display: inline-block;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .sb .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--bg3);
+    margin: 12px 0 8px;
+  }
+  .sb .tab {
+    padding: 6px 12px;
+    color: var(--mu);
+    font-weight: 600;
+  }
+  .sb .tab.on {
+    color: var(--tx);
+    border-bottom: 2px solid var(--ac);
+  }
+  .sb p {
+    margin: 6px 0;
+  }
+  /* A: D&D Beyond, red */
+  .a .hd {
+    color: #f06a6a;
+    border-bottom: 2px solid var(--red);
+  }
+  .a .btn {
+    background: color-mix(in srgb, var(--red) 22%, transparent);
+    color: #ff8a8a;
+    border: 1px solid color-mix(in srgb, var(--red) 50%, transparent);
+  }
+  .a .abx {
+    border-color: color-mix(in srgb, var(--red) 45%, transparent);
+  }
+  /* B/C: theme accent */
+  .b .hd,
+  .c .hd {
+    color: #a98bff;
+    border-bottom: 1px solid var(--bg3);
+  }
+  .b .btn,
+  .c .btn {
+    background: color-mix(in srgb, var(--ac) 20%, transparent);
+    color: #c4adff;
+  }
+  .c .side {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 12px;
+  }
+  .c .stack .abx {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 10px;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+  .c .stack .abx .mod {
+    font-size: 18px;
+  }
+  .c .kv {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--bg2);
+    font-size: 14px;
+  }
+</style>
+
+<h2>Welche Richtung für Statblöcke und Karten?</h2>
+<p class="subtitle">
+  Dieselbe NPC (Commander Isolde Ferrant), drei Stile. Die Würfel-Knöpfe (+8, 1d8+4) bleiben
+  klickbar wie heute. Klick eine Variante an und sag im Terminal, was dir gefällt oder fehlt.
+</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="sb a">
+        <div class="t">Commander Isolde Ferrant</div>
+        <div class="m">Medium humanoid (human), lawful neutral</div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="v">20</div>
+            <div class="l">Armor Class</div>
+          </div>
+          <div class="tile">
+            <div class="v">117</div>
+            <div class="l">Hit Points</div>
+          </div>
+          <div class="tile">
+            <div class="v">30 ft.</div>
+            <div class="l">Speed</div>
+          </div>
+        </div>
+        <div class="ab">
+          <div class="abx">
+            <div class="l">STR</div>
+            <div class="mod">+4</div>
+            <span class="sc">18</span>
+          </div>
+          <div class="abx">
+            <div class="l">DEX</div>
+            <div class="mod">+0</div>
+            <span class="sc">11</span>
+          </div>
+          <div class="abx">
+            <div class="l">CON</div>
+            <div class="mod">+2</div>
+            <span class="sc">14</span>
+          </div>
+          <div class="abx">
+            <div class="l">INT</div>
+            <div class="mod">+1</div>
+            <span class="sc">12</span>
+          </div>
+          <div class="abx">
+            <div class="l">WIS</div>
+            <div class="mod">+2</div>
+            <span class="sc">14</span>
+          </div>
+          <div class="abx">
+            <div class="l">CHA</div>
+            <div class="mod">+3</div>
+            <span class="sc">17</span>
+          </div>
+        </div>
+        <div class="hd">Actions</div>
+        <div>
+          <div class="row">
+            <b>Longsword</b><span class="btn">+8</span><span class="btn">1d8+4 + 2d8</span>
+          </div>
+          <div class="row">
+            <b>Lantern Flare</b><span class="m">Recharge 5–6</span
+            ><span class="btn">DC 15 CON</span>
+          </div>
+        </div>
+        <div class="hd">Traits</div>
+        <p><b>Aura of the Crossing.</b> Allies within 10 feet add +3 to saving throws.</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · D&amp;D Beyond, nah am Original</h3>
+      <p>
+        Großer Modifikator, Wert darunter, Aktionen als Tabelle, rote Akzente. Am nächsten an DDB,
+        aber Rot ist eine feste Farbe: passt nicht zu jedem Obsidian-Theme (Regel „nur
+        Obsidian-Variablen“).
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="sb b">
+        <div class="t">Commander Isolde Ferrant</div>
+        <div class="m">Medium humanoid (human), lawful neutral · CR 9</div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="v">20</div>
+            <div class="l">AC</div>
+          </div>
+          <div class="tile">
+            <div class="v">117</div>
+            <div class="l">HP</div>
+          </div>
+          <div class="tile">
+            <div class="v">30 ft.</div>
+            <div class="l">Speed</div>
+          </div>
+        </div>
+        <div class="ab">
+          <div class="abx">
+            <div class="l">STR</div>
+            <div class="mod">+4</div>
+            <span class="sc">18</span>
+          </div>
+          <div class="abx">
+            <div class="l">DEX</div>
+            <div class="mod">+0</div>
+            <span class="sc">11</span>
+          </div>
+          <div class="abx">
+            <div class="l">CON</div>
+            <div class="mod">+2</div>
+            <span class="sc">14</span>
+          </div>
+          <div class="abx">
+            <div class="l">INT</div>
+            <div class="mod">+1</div>
+            <span class="sc">12</span>
+          </div>
+          <div class="abx">
+            <div class="l">WIS</div>
+            <div class="mod">+2</div>
+            <span class="sc">14</span>
+          </div>
+          <div class="abx">
+            <div class="l">CHA</div>
+            <div class="mod">+3</div>
+            <span class="sc">17</span>
+          </div>
+        </div>
+        <div class="tabs">
+          <span class="tab on">Actions</span><span class="tab">Traits</span
+          ><span class="tab">Reactions</span><span class="tab">Details</span>
+        </div>
+        <div>
+          <div class="row">
+            <b>Longsword</b><span class="btn">+8</span><span class="btn">1d8+4 + 2d8</span>
+          </div>
+          <div class="row">
+            <b>Lantern Flare</b><span class="m">Recharge 5–6</span
+            ><span class="btn">DC 15 CON</span>
+          </div>
+          <div class="row">
+            <b>Multiattack</b><span class="m">—</span><span class="m">3× Longsword</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · DDB-Aufbau mit Tabs, Theme-Farben</h3>
+      <p>
+        Aufbau wie A, Farbe vom Obsidian-Akzent. Lange Blöcke werden zu Tabs (Actions / Traits /
+        Reactions / Details): kurz und übersichtlich, aber nicht mehr alles auf einen Blick.
+      </p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="sb c">
+        <div class="t">Commander Isolde Ferrant</div>
+        <div class="m">Medium humanoid (human), lawful neutral · CR 9</div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="v">20</div>
+            <div class="l">AC</div>
+          </div>
+          <div class="tile">
+            <div class="v">117</div>
+            <div class="l">HP</div>
+          </div>
+          <div class="tile">
+            <div class="v">30 ft.</div>
+            <div class="l">Speed</div>
+          </div>
+        </div>
+        <div class="side">
+          <div class="stack">
+            <div class="abx"><span class="l">STR 18</span><span class="mod">+4</span></div>
+            <div class="abx"><span class="l">DEX 11</span><span class="mod">+0</span></div>
+            <div class="abx"><span class="l">CON 14</span><span class="mod">+2</span></div>
+            <div class="abx"><span class="l">INT 12</span><span class="mod">+1</span></div>
+            <div class="abx"><span class="l">WIS 14</span><span class="mod">+2</span></div>
+            <div class="abx"><span class="l">CHA 17</span><span class="mod">+3</span></div>
+            <div class="kv"><span class="m">Saves</span><span>Con Wis Cha</span></div>
+            <div class="kv"><span class="m">Passive</span><span>12</span></div>
+          </div>
+          <div>
+            <div class="hd" style="margin-top: 0">Actions</div>
+            <div class="row">
+              <b>Longsword</b><span class="btn">+8</span><span class="btn">1d8+4</span>
+            </div>
+            <div class="row">
+              <b>Lantern Flare</b><span class="m">5–6</span><span class="btn">DC 15</span>
+            </div>
+            <div class="hd">Traits</div>
+            <p><b>Aura of the Crossing.</b> Allies within 10 ft. add +3 to saves.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · Charakterbogen-Layout, zwei Spalten</h3>
+      <p>
+        Attribute als Leiste links wie auf dem DDB-Charakterbogen, Aktionen rechts. Sehr
+        übersichtlich in breiten Ansichten, wird auf dem Handy wieder einspaltig. Passt gut zum
+        kommenden Charakter-Builder.
+      </p>
+    </div>
+  </div>
+</div>

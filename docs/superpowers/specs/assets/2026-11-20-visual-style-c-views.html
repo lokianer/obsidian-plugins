@@ -1,0 +1,364 @@
+<style>
+  .v {
+    --bg: #1e1e1e;
+    --bg2: #262626;
+    --bg3: #303030;
+    --tx: #dcddde;
+    --mu: #b3b3b3;
+    --ac: #8a5cf5;
+    --acx: #b9a0ff;
+    --red: #f06a6a;
+    --grn: #6fcf8a;
+    background: var(--bg);
+    color: var(--tx);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 15px;
+    padding: 16px;
+    border-radius: 10px;
+    line-height: 1.45;
+  }
+  .v .m {
+    color: var(--mu);
+  }
+  .v b {
+    font-weight: 650;
+  }
+  .v .hd {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--acx);
+    border-bottom: 1px solid var(--bg3);
+    padding-bottom: 4px;
+    margin: 12px 0 8px;
+  }
+  .v .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .v .tile {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+  }
+  .v .tile .n {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .v .tile .l {
+    font-size: 12px;
+    color: var(--mu);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .v .pill {
+    display: inline-block;
+    border-radius: 12px;
+    padding: 1px 10px;
+    font-size: 14px;
+    background: var(--bg3);
+    margin: 2px 4px 2px 0;
+  }
+  .v .pill.on {
+    background: color-mix(in srgb, var(--ac) 28%, transparent);
+    color: var(--acx);
+  }
+  .v .btn {
+    display: inline-block;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--bg3);
+  }
+  .v .btn.p {
+    background: color-mix(in srgb, var(--ac) 25%, transparent);
+    color: var(--acx);
+  }
+  .v .btn.r {
+    background: color-mix(in srgb, #c53131 25%, transparent);
+    color: var(--red);
+  }
+  .v .two {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 14px;
+  }
+  .v .ini {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .v .ini.cur {
+    background: color-mix(in srgb, var(--ac) 18%, transparent);
+  }
+  .v .ini .num {
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .v .bar {
+    height: 6px;
+    background: var(--bg3);
+    border-radius: 3px;
+    margin: 3px 0;
+  }
+  .v .bar i {
+    display: block;
+    height: 100%;
+    border-radius: 3px;
+    background: var(--grn);
+  }
+  .v .dead {
+    opacity: 0.5;
+  }
+  .v .rel {
+    display: grid;
+    grid-template-columns: 1.3fr 1.5fr 50px 70px;
+    gap: 10px;
+    align-items: center;
+    padding: 5px 0;
+  }
+  .v .slider {
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    position: relative;
+  }
+  .v .slider i {
+    position: absolute;
+    top: -5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--tx);
+  }
+  .v .val {
+    text-align: center;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 1px 0;
+  }
+  .v a {
+    color: var(--acx);
+    text-decoration: none;
+  }
+  .v .dots i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ac);
+    margin-right: 3px;
+  }
+  .v .lst {
+    padding: 6px 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .v .lst.sel {
+    background: color-mix(in srgb, var(--ac) 18%, transparent);
+  }
+  .v .cr {
+    display: inline-block;
+    min-width: 34px;
+    text-align: center;
+    border-radius: 6px;
+    background: var(--bg3);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 1px 4px;
+  }
+</style>
+
+<h2>Variante C auf den anderen Ansichten</h2>
+<p class="subtitle">
+  Dieselbe Sprache überall: Kacheln für Kernwerte, violette Abschnittsköpfe in Großbuchstaben,
+  Pillen für Zustände und Filter, Liste links und Details rechts. Die Farben kommen später aus dem
+  Obsidian-Theme (hier steht Violett für den Akzent).
+</p>
+
+<div class="mockup">
+  <div class="mockup-header">Kampf-Tab</div>
+  <div class="mockup-body">
+    <div class="v">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <div>
+          <b style="font-size: 18px">Ambush under the second arch</b>
+          <span class="m">· Runde 2</span>
+        </div>
+        <div>
+          <span class="btn">‹</span> <span class="btn p">Nächster Zug ›</span>
+          <span class="btn">⚑ Beenden</span>
+        </div>
+      </div>
+      <div class="two" style="margin-top: 12px">
+        <div>
+          <div class="ini">
+            <span class="num">19</span>
+            <div>
+              <b>Ilex</b>
+              <div class="bar"><i style="width: 100%"></i></div>
+              <span class="m">50/50 · RK 16</span>
+            </div>
+          </div>
+          <div class="ini cur">
+            <span class="num">15</span>
+            <div>
+              <b>Owlbear</b>
+              <div class="bar"><i style="width: 69%"></i></div>
+              <span class="m">41/59 · RK 13</span><br /><span class="pill">Liegend 1</span>
+            </div>
+          </div>
+          <div class="ini">
+            <span class="num">14</span>
+            <div>
+              <b>Dagny</b>
+              <div class="bar"><i style="width: 73%"></i></div>
+              <span class="m">52/71 +5 · RK 15</span>
+            </div>
+          </div>
+          <div class="ini dead">
+            <span class="num">11</span>
+            <div>
+              <b>Court thug 1</b>
+              <div class="bar"><i style="width: 0"></i></div>
+              <span class="m">Besiegt</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between">
+            <b style="font-size: 20px">Owlbear</b
+            ><span
+              class="pill"
+              style="background: color-mix(in srgb, #c53131 25%, transparent); color: var(--red)"
+              >Feind</span
+            >
+          </div>
+          <div class="tiles" style="margin-top: 8px">
+            <div class="tile">
+              <div class="n">41<span class="m" style="font-size: 15px">/59</span></div>
+              <div class="l">TP</div>
+            </div>
+            <div class="tile">
+              <div class="n">0</div>
+              <div class="l">Temp</div>
+            </div>
+            <div class="tile">
+              <div class="n">13</div>
+              <div class="l">RK</div>
+            </div>
+            <div class="tile">
+              <div class="n">15</div>
+              <div class="l">Init</div>
+            </div>
+          </div>
+          <div style="margin-top: 10px">
+            <span class="btn" style="width: 70px">Menge</span> <span class="btn r">Schaden</span>
+            <span class="btn">Heilen</span> <span class="btn">Temp. TP</span>
+          </div>
+          <div class="hd">Zustände</div>
+          <span class="pill">Blind</span><span class="pill">Bezaubert</span
+          ><span class="pill">Verängstigt</span><span class="pill on">Liegend 1</span
+          ><span class="pill">Vergiftet</span><span class="pill">Betäubt</span
+          ><span class="pill">…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Fraktionskarte</div>
+    <div class="mockup-body">
+      <div class="v">
+        <div class="m" style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em">
+          Fraktion
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <b style="font-size: 20px">The Drowned Choir</b
+          ><span class="dots"><i></i><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="tiles" style="grid-template-columns: repeat(3, 1fr); margin-top: 8px">
+          <div class="tile">
+            <div class="n">5</div>
+            <div class="l">Macht</div>
+          </div>
+          <div class="tile">
+            <div class="n">2</div>
+            <div class="l">Verbündete</div>
+          </div>
+          <div class="tile">
+            <div class="n">1</div>
+            <div class="l">Feinde</div>
+          </div>
+        </div>
+        <div class="hd">Beziehungen</div>
+        <div class="rel">
+          <a>The Archivists</a>
+          <div class="slider"><i style="left: 95%"></i></div>
+          <span class="val" style="background: color-mix(in srgb, #2e8b57 35%, transparent)"
+            >+5</span
+          ><span class="m">sworn</span>
+        </div>
+        <div class="rel">
+          <a>Order of the Lantern</a>
+          <div class="slider"><i style="left: 20%"></i></div>
+          <span class="val" style="background: color-mix(in srgb, #c53131 30%, transparent)"
+            >−3</span
+          ><span class="m">hostile</span>
+        </div>
+        <div class="rel">
+          <a>The Gutter Court</a>
+          <div class="slider"><i style="left: 40%"></i></div>
+          <span class="val" style="background: color-mix(in srgb, #b8860b 30%, transparent)"
+            >−1</span
+          ><span class="m">wary</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Monster Manual / Zauberbuch (Liste)</div>
+    <div class="mockup-body">
+      <div class="v">
+        <div class="btn" style="display: block; font-weight: 400; color: var(--mu)">
+          ⌕ Monster suchen …
+        </div>
+        <div style="margin: 8px 0">
+          <span class="pill on">HG 1–4</span><span class="pill">HG 5–10</span
+          ><span class="pill">Tier</span><span class="pill on">Monstrosität</span
+          ><span class="pill">Untoter</span>
+        </div>
+        <div class="hd">HG 3 · 4 Treffer</div>
+        <div class="lst sel">
+          <span><b>Eulenbär</b> <span class="m">· Groß · RK 13 · TP 59</span></span
+          ><span class="cr">3</span>
+        </div>
+        <div class="lst">
+          <span><b>Basilisk</b> <span class="m">· Mittel · RK 15 · TP 52</span></span
+          ><span class="cr">3</span>
+        </div>
+        <div class="lst">
+          <span><b>Mantikor</b> <span class="m">· Groß · RK 14 · TP 68</span></span
+          ><span class="cr">3</span>
+        </div>
+        <div class="lst">
+          <span><b>Wervolf</b> <span class="m">· Mittel · RK 12 · TP 58</span></span
+          ><span class="cr">3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
