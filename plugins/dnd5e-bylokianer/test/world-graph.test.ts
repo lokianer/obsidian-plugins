@@ -24,6 +24,7 @@ describe('buildGraph', () => {
       'Ilex',
       'Orrin Quill',
       'Tessaly Vane',
+      'Wren Ashdown',
     ]);
     expect(graph.nodes.some((n) => n.id === UNAFFILIATED)).toBe(true);
     expect(graph.ties).toEqual([{ child: BENCH, parent: COURT }]);

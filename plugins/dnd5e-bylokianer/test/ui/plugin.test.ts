@@ -48,6 +48,7 @@ it('registers every module of the plugin', async () => {
         "new-archetype",
         "new-race",
         "add-statblock",
+        "open-character-sheet",
       ],
       "editorExtensions": 1,
       "postProcessors": 2,
@@ -68,6 +69,7 @@ it('registers every module of the plugin', async () => {
         "dnd5e-deck",
         "dnd5e-dice",
         "dnd5e-battle",
+        "dnd5e-character-sheet",
       ],
     }
   `);

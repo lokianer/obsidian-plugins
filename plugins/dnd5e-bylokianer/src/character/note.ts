@@ -9,6 +9,7 @@ import {
   derive,
   type LevelEntry,
   type Rules,
+  type Sheet,
 } from '@obsidian-plugins/rules';
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
@@ -109,4 +110,28 @@ function same(a: unknown, b: unknown): boolean {
 /** Whether writing these keys would change the note. */
 export function differs(fm: Record<string, unknown>, keys: Record<string, unknown>): boolean {
   return Object.entries(keys).some(([k, v]) => !same(fm[k], v));
+}
+
+/** What the sheet shows of a character note: built (with its sheet) or hand-written. */
+export interface SheetData {
+  path: string;
+  name: string;
+  frontmatter: Record<string, unknown>;
+  character: Character | null;
+  sheet: Sheet | null;
+}
+
+export function sheetData(
+  path: string,
+  fm: Record<string, unknown> | undefined,
+  rules: Rules,
+): SheetData {
+  const character = readCharacter(fm);
+  return {
+    path,
+    name: (path.split('/').pop() ?? path).replace(/\.md$/, ''),
+    frontmatter: fm ?? {},
+    character,
+    sheet: character === null ? null : derive(character, rules),
+  };
 }

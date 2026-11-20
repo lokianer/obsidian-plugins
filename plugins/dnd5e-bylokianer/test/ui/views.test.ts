@@ -62,6 +62,9 @@ import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/m
 import type { SrdMonster } from '../../src/monsters/model';
 import { ownMonster } from '../../src/monsters/own';
 import { SRD_MONSTERS } from '../../src/monsters/srd-monsters';
+import { loadRules, SRD_52 } from '@obsidian-plugins/rules';
+import { sheetData } from '../../src/character/note';
+import { CharacterSheetView } from '../../src/obsidian/character-sheet-view';
 import { linkSpells } from '../../src/obsidian/spell-links';
 import { spellFinder } from '../../src/spells/links';
 import type { SrdSpell } from '../../src/spells/model';
@@ -2529,5 +2532,147 @@ describe('dice', () => {
     await new Promise((r) => window.setTimeout(r, 0));
     expect(el.querySelector('.dnd5e-dice-inline-result')?.textContent).toBe('= 10');
     expect(logged.map((r) => r.text)).toEqual(['2d6+3 → 10 (4, 3, +3)']);
+  });
+});
+
+describe('character sheet', () => {
+  const rules = loadRules([SRD_52]);
+  const PARTY_DIR = 'Silverstadt/Party';
+  const front = (name: string) => {
+    const fm = notes.find((n) => n.path === `${PARTY_DIR}/${name}.md`)?.frontmatter;
+    if (fm === undefined) throw new Error(`no note ${name}`);
+    return fm;
+  };
+  const open = async (
+    name: string,
+    lang: 'en' | 'de' = 'en',
+    fm: Record<string, unknown> = front(name),
+  ) => {
+    const roll = vi.fn();
+    const openNote = vi.fn();
+    const path = `${PARTY_DIR}/${name}.md`;
+    const view = new CharacterSheetView({} as WorkspaceLeaf, {
+      t: createT(lang),
+      lang: () => lang,
+      rules: () => rules,
+      load: (p) => Promise.resolve(sheetData(p, fm, rules)),
+      roll,
+      openNote,
+      onChange: () => () => undefined,
+      render: (md, target) => target.setText(md),
+    });
+    root.appendChild(view.contentEl);
+    await view.setState({ path }, { history: false });
+    await view.onOpen();
+    return { view, el: view.contentEl, roll, openNote };
+  };
+  const tab = (el: HTMLElement, name: string) =>
+    [...el.querySelectorAll<HTMLElement>('.dnd5e-cs-tabs .dnd5e-pill')]
+      .find((p) => p.textContent === name)
+      ?.dispatchEvent(new MouseEvent('click'));
+
+  it('shows the key numbers as tiles and the abilities in a column', async () => {
+    const { el } = await open('Wren Ashdown');
+    expect(texts(el, '.dnd5e-cs-name')).toEqual(['Wren Ashdown']);
+    expect(texts(el, '.dnd5e-cs-sub')).toEqual(['Halfling · Bard 6 (College of Lore) · 2024']);
+    expect(texts(el, '.dnd5e-cs-hp .dnd5e-tile-value')).toEqual(['31 / 39']);
+    expect(texts(el, '.dnd5e-cs-tiles .dnd5e-tile-value')).toEqual([
+      '14',
+      '+6',
+      '30 ft.',
+      '+3',
+      '14',
+    ]);
+    expect(texts(el, '.dnd5e-cs-tiles .dnd5e-tile-label')).toEqual([
+      'AC',
+      'Initiative',
+      'Speed',
+      'Proficiency',
+      'Passive Perception',
+    ]);
+    const abilities = [...el.querySelectorAll('.dnd5e-cs-ability')].map((a) =>
+      [...a.children].map((c) => c.textContent).join(' '),
+    );
+    expect(abilities).toEqual([
+      'STR 8 −1',
+      'DEX 16 +3',
+      'CON 13 +1',
+      'INT 10 +0',
+      'WIS 13 +1',
+      'CHA 17 +3',
+    ]);
+    expect(el.querySelectorAll('.dnd5e-cs-warning')).toHaveLength(0);
+  });
+
+  it('rolls the dagger from the Actions tab', async () => {
+    const { el, roll } = await open('Wren Ashdown');
+    tab(el, 'Actions');
+    const dagger = [...el.querySelectorAll<HTMLElement>('.dnd5e-cs-attack')].find((a) =>
+      a.textContent?.includes('Dagger'),
+    );
+    if (dagger === undefined) throw new Error('no dagger');
+    const buttons = [...dagger.querySelectorAll<HTMLElement>('button')];
+    expect(buttons.map((b) => b.textContent)).toEqual(['+6', '1d4+3']);
+    buttons[0]?.dispatchEvent(new MouseEvent('click'));
+    expect(roll).toHaveBeenCalledWith(
+      expect.objectContaining({ formula: 'd20+6', label: 'Wren Ashdown: Dagger' }),
+      'normal',
+    );
+    expect(texts(el, '.dnd5e-cs-resource .dnd5e-cs-resource-name')).toContain('Bardic Inspiration');
+  });
+
+  it('marks expertise in the Skills tab and lists every level', async () => {
+    const { el } = await open('Wren Ashdown');
+    tab(el, 'Skills');
+    const persuasion = [...el.querySelectorAll<HTMLElement>('.dnd5e-cs-skill')].find((s) =>
+      s.textContent?.includes('Persuasion'),
+    );
+    expect(persuasion?.classList.contains('is-expertise')).toBe(true);
+    expect(persuasion?.querySelector('button')?.textContent).toBe('+9');
+    expect(el.querySelectorAll('.dnd5e-cs-skill')).toHaveLength(18);
+    tab(el, 'Levels');
+    const rows = [...el.querySelectorAll<HTMLElement>('.dnd5e-cs-level')];
+    expect(rows).toHaveLength(6);
+    expect(rows[2]?.textContent).toContain('College of Lore');
+  });
+
+  it('shows a spellcaster its slots, and opens the note from Notes', async () => {
+    const { el, openNote } = await open('Wren Ashdown');
+    tab(el, 'Spells');
+    expect(texts(el, '.dnd5e-cs-spells .dnd5e-tile-value')).toEqual(['14', '+6']);
+    expect(
+      [...el.querySelectorAll('.dnd5e-cs-slots')].map(
+        (s) => s.querySelectorAll('.dnd5e-cs-slot').length,
+      ),
+    ).toEqual([4, 3, 3]);
+    tab(el, 'Notes');
+    el.querySelector<HTMLElement>('.dnd5e-cs-open-note')?.dispatchEvent(new MouseEvent('click'));
+    expect(openNote).toHaveBeenCalledWith('Silverstadt/Party/Wren Ashdown.md');
+  });
+
+  it('shows a hand-written note with its own values', async () => {
+    const { el } = await open('Orrin Quill');
+    expect(texts(el, '.dnd5e-cs-tiles .dnd5e-tile-value').slice(0, 1)).toEqual(['14']);
+    expect(texts(el, '.dnd5e-cs-hp .dnd5e-tile-value')).toEqual(['39 / 39']);
+    expect(texts(el, '.dnd5e-cs-hand-written')).toEqual([
+      'Built with the character builder in a later version.',
+    ]);
+    expect(texts(el, '.dnd5e-cs-save button')).toEqual(['+6', '+7']);
+    expect(texts(el, '.dnd5e-cs-skill button')).toEqual(['+7', '+7', '+4', '+5']);
+  });
+
+  it('warns about an unknown feat, and speaks German', async () => {
+    const fm = structuredClone(front('Wren Ashdown'));
+    const levels = fm.levels as { choices?: Record<string, unknown> }[];
+    levels[3]!.choices = { 'bard-asi-4/feat': 'no-such-feat' };
+    const { el } = await open('Wren Ashdown', 'de', fm);
+    expect(texts(el, '.dnd5e-cs-warning')).toHaveLength(1);
+    expect(texts(el, '.dnd5e-cs-tiles .dnd5e-tile-label')).toEqual([
+      'RK',
+      'Initiative',
+      'Bewegung',
+      'Übung',
+      'Passive Wahrnehmung',
+    ]);
   });
 });

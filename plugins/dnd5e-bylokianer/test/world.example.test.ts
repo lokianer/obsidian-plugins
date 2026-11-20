@@ -95,14 +95,20 @@ describe('the example vault — entities and warnings', () => {
         .filter((e) => e.parent === id)
         .map((e) => e.name)
         .sort();
-    expect(membersOf(PARTY)).toEqual(['Dagny', 'Ilex', 'Orrin Quill', 'Tessaly Vane']);
+    expect(membersOf(PARTY)).toEqual([
+      'Dagny',
+      'Ilex',
+      'Orrin Quill',
+      'Tessaly Vane',
+      'Wren Ashdown',
+    ]);
     expect(membersOf(UNAFFILIATED)).toEqual(['Brannoc Ironweld', 'Elder Wren']);
   });
 
-  it('counts 7 factions and 15 characters', () => {
+  it('counts 7 factions and 16 characters', () => {
     const all = [...world.entities.values()];
     expect(all.filter((e) => e.kind === 'faction' && !e.pseudo)).toHaveLength(7);
-    expect(all.filter((e) => e.kind === 'character')).toHaveLength(15);
+    expect(all.filter((e) => e.kind === 'character')).toHaveLength(16);
   });
 
   it('warns only about the Garbled Hymnal and the two broken notes, once per problem', () => {

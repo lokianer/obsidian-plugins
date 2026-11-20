@@ -19,6 +19,12 @@ export class ItemView extends Component {
   constructor(readonly leaf: unknown) {
     super();
   }
+  getState(): Record<string, unknown> {
+    return {};
+  }
+  setState(_state: unknown, _result: unknown): Promise<void> {
+    return Promise.resolve();
+  }
 }
 
 export class Modal extends Component {

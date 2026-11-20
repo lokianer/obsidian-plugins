@@ -1,0 +1,246 @@
+/* The character sheet, layout A: the head with the name and hit points, the key numbers as
+   tiles, the abilities with saves and senses in a column beside the tabs. Below 480 px of the
+   view's own width the column becomes a row of six boxes above the tabs. */
+
+.dnd5e-cs {
+  container: dnd5e-cs / inline-size;
+  padding: var(--size-4-4);
+}
+
+.dnd5e-cs-empty,
+.dnd5e-cs-muted,
+.dnd5e-cs-hand-written {
+  margin: var(--size-4-2) 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.dnd5e-cs-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-4-4);
+  margin-bottom: var(--size-4-3);
+}
+
+.dnd5e-cs-who {
+  min-width: 0;
+}
+
+.dnd5e-cs-name {
+  font-size: var(--h1-size);
+  font-weight: var(--font-bold);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.dnd5e-cs-sub {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.dnd5e-cs-hp {
+  flex: 0 0 auto;
+  min-width: 140px;
+}
+
+.dnd5e-cs-warning {
+  margin: var(--size-4-2) 0;
+  padding: var(--size-4-2) var(--size-4-3);
+  border-left: 3px solid var(--text-warning);
+  border-radius: var(--radius-s);
+  background: var(--background-secondary);
+  font-size: 16px;
+}
+
+.dnd5e-cs-tiles {
+  margin-bottom: var(--size-4-4);
+}
+
+.dnd5e-cs .dnd5e-tile-label {
+  overflow-wrap: normal;
+}
+
+.dnd5e-cs-body {
+  display: grid;
+  grid-template-columns: minmax(170px, 210px) 1fr;
+  gap: var(--size-4-4);
+  align-items: start;
+}
+
+.dnd5e-cs-abilities {
+  display: grid;
+  gap: var(--size-4-2);
+}
+
+.dnd5e-cs-ability {
+  display: grid;
+  grid-template-columns: 3.2em 1fr auto;
+  align-items: center;
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+
+.dnd5e-cs-ability-name {
+  color: var(--text-muted);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+}
+
+.dnd5e-cs-ability-score {
+  font-size: 1.4em;
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-cs-save,
+.dnd5e-cs-skill,
+.dnd5e-cs-attack,
+.dnd5e-cs-resource,
+.dnd5e-cs-item,
+.dnd5e-cs-level {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: 16px;
+}
+
+.dnd5e-cs-save-name,
+.dnd5e-cs-skill-name,
+.dnd5e-cs-attack-name,
+.dnd5e-cs-resource-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dnd5e-cs-save.is-proficient .dnd5e-cs-save-name,
+.dnd5e-cs-skill.is-proficient .dnd5e-cs-skill-name,
+.dnd5e-cs-skill.is-expertise .dnd5e-cs-skill-name {
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-cs-rank {
+  width: 0.8em;
+  height: 0.8em;
+  border: 2px solid var(--text-faint);
+  border-radius: 50%;
+}
+
+.dnd5e-cs-skill.is-half .dnd5e-cs-rank {
+  background: linear-gradient(90deg, var(--text-accent) 50%, transparent 50%);
+  border-color: var(--text-accent);
+}
+
+.dnd5e-cs-skill.is-proficient .dnd5e-cs-rank {
+  background: var(--text-accent);
+  border-color: var(--text-accent);
+}
+
+.dnd5e-cs-skill.is-expertise .dnd5e-cs-rank {
+  background: var(--text-accent);
+  border-color: var(--text-accent);
+  box-shadow:
+    0 0 0 2px var(--background-primary),
+    0 0 0 4px var(--text-accent);
+}
+
+.dnd5e-cs-skill-ability,
+.dnd5e-cs-attack-type,
+.dnd5e-cs-resource-uses,
+.dnd5e-cs-level-hp,
+.dnd5e-cs-level-choices {
+  color: var(--text-muted);
+}
+
+.dnd5e-cs-level-number {
+  min-width: 1.6em;
+  font-weight: var(--font-bold);
+}
+
+.dnd5e-cs-level-class {
+  min-width: 5em;
+}
+
+.dnd5e-cs-tabs {
+  margin-bottom: var(--size-4-2);
+}
+
+.dnd5e-cs-tabs .dnd5e-pill {
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dnd5e-cs-casting {
+  margin-top: var(--size-4-3);
+  font-size: 16px;
+}
+
+.dnd5e-cs-spells {
+  max-width: 320px;
+}
+
+.dnd5e-cs-slots {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) 0;
+  font-size: 16px;
+}
+
+.dnd5e-cs-slots-label {
+  min-width: 5em;
+  color: var(--text-muted);
+}
+
+.dnd5e-cs-slot {
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--text-accent);
+  border-radius: 50%;
+}
+
+.dnd5e-cs-feature {
+  padding: var(--size-4-1) 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: 16px;
+}
+
+.dnd5e-cs-feature summary {
+  cursor: pointer;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-cs-feature-text {
+  padding: var(--size-4-1) 0 var(--size-4-2);
+}
+
+.dnd5e-cs-attribution {
+  margin-top: var(--size-4-4);
+}
+
+@container dnd5e-cs (max-width: 480px) {
+  .dnd5e-cs-head {
+    flex-wrap: wrap;
+  }
+
+  .dnd5e-cs-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dnd5e-cs-body {
+    grid-template-columns: 1fr;
+  }
+
+  .dnd5e-cs-abilities {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dnd5e-cs-ability {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
