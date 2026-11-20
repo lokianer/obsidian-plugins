@@ -167,7 +167,7 @@ export function label(key: string, lang: Lang): string {
 
 /** The spell's name in a language; English when there is no German one. */
 export function spellName(spell: SrdSpell, lang: Lang): string {
-  return lang === 'de' ? (DE_NAMES[spell.index] ?? spell.name) : spell.name;
+  return lang === 'de' ? (DE_NAMES[spell.index] ?? spell.nameDe ?? spell.name) : spell.name;
 }
 
 const ORDINAL = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
@@ -279,6 +279,10 @@ export function spellText(
   spell: SrdSpell,
   lang: Lang,
 ): { text: string; higher: string; material: string } {
+  if (spell.library !== undefined) return { ...spell.library, material: spell.material };
+  if (spell.summary !== undefined) {
+    return { text: spell.summary[lang], higher: '', material: spell.material };
+  }
   const de = lang === 'de' ? DE_TEXTS[spell.index] : undefined;
   return {
     text: de?.text ?? spell.text,

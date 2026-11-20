@@ -1,5 +1,6 @@
 // The plugin's settings: Properties beside the card, and the names of the eleven steps.
 
+import type { RulesSetting } from '../catalogue/books';
 import {
   type App,
   type Plugin,
@@ -69,6 +70,8 @@ export interface Settings {
   diceLog: LogMode;
   /** The dice stage animated, shown at once, or not at all. */
   diceAnimation: DiceAnimation;
+  /** The rule set the GM plays by: which edition a spell name in a stat block means. */
+  rules: RulesSetting;
 }
 
 export type LogMode = 'ask' | 'auto' | 'off';
@@ -79,6 +82,7 @@ const CHOICES = {
   battleLog: ['ask', 'auto', 'off'],
   diceLog: ['ask', 'auto', 'off'],
   diceAnimation: ['stage', 'simple', 'off'],
+  rules: ['both', '2024', '2014'],
 } as const;
 type ChoiceKey = keyof typeof CHOICES;
 const CHOICE_KEYS = Object.keys(CHOICES) as ChoiceKey[];
@@ -112,6 +116,7 @@ export const DEFAULT_SETTINGS: Settings = {
   battleLog: 'ask',
   diceLog: 'ask',
   diceAnimation: 'stage',
+  rules: 'both',
 };
 
 /** The text settings that name a note or folder, falling back to the default when emptied. */

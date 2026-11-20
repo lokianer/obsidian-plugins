@@ -717,7 +717,12 @@ describe('warnings dialog', () => {
 
 describe('spellbook', () => {
   const openNote = vi.fn();
-  async function open(lang: 'en' | 'de', state: unknown = null, own: SrdSpell[] = []) {
+  async function open(
+    lang: 'en' | 'de',
+    state: unknown = null,
+    own: SrdSpell[] = [],
+    catalogue: SrdSpell[] = [],
+  ) {
     const saved: SpellbookState[] = [];
     const view = new SpellbookView({} as WorkspaceLeaf, {
       t,
@@ -726,6 +731,8 @@ describe('spellbook', () => {
       saveState: (s) => saved.push(s),
       own: () => own,
       onOwnChange: () => () => undefined,
+      catalogue: () => catalogue,
+      onCatalogueChange: () => () => undefined,
       openNote,
       newSpell: vi.fn(),
     });
@@ -846,6 +853,77 @@ describe('spellbook', () => {
     );
     el.querySelector('.dnd5e-spells-note')?.dispatchEvent(new MouseEvent('click'));
     expect(openNote).toHaveBeenCalledWith('Spells/Ember Lance.md');
+  });
+
+  it('lists catalogue spells with their rule set, book filter, summary or library text', async () => {
+    // Invented catalogue entries: no text from any book.
+    const entry = (patch: Partial<SrdSpell>): SrdSpell => ({
+      index: 'phb24/ember-thread',
+      name: 'Ember Thread',
+      level: 1,
+      school: 'evocation',
+      casting: '1 action',
+      range: '30 feet',
+      components: ['V'],
+      material: '',
+      duration: 'Instantaneous',
+      concentration: false,
+      ritual: false,
+      classes: ['wizard'],
+      damage: ['fire'],
+      save: null,
+      attack: null,
+      text: '',
+      higher: '',
+      rules: '2024',
+      source: 'phb24',
+      nameDe: 'Glutfaden',
+      summary: { en: 'A thread of fire.', de: 'Ein Faden aus Feuer.' },
+      ...patch,
+    });
+    const thread = entry({});
+    const lantern = entry({
+      index: 'xge/gloom-lantern',
+      name: 'Gloom Lantern',
+      nameDe: 'Düsterlaterne',
+      rules: '2014',
+      source: 'xge',
+      library: { text: 'The full words of the lantern.', higher: '' },
+    });
+    const { el, rows, row, chip } = await open('en', null, [], [thread, lantern]);
+    expect(rows()).toHaveLength(321);
+    expect(row('Ember Thread')?.querySelector('.dnd5e-spells-rules')?.textContent).toBe('2024');
+    expect(row('Gloom Lantern')?.querySelector('.dnd5e-spells-rules')).toBeNull();
+    chip('2024')?.dispatchEvent(new MouseEvent('click'));
+    expect(rows().map((r) => r.dataset.spell)).toEqual(['phb24/ember-thread']);
+    chip('2024')?.dispatchEvent(new MouseEvent('click'));
+    const book = el.querySelector<HTMLSelectElement>('.dnd5e-spells-book');
+    expect([...(book?.options ?? [])].map((o) => o.value)).toEqual(['', 'srd', 'xge', 'phb24']);
+    if (book === null) throw new Error('no book filter');
+    book.value = 'xge';
+    book.dispatchEvent(new Event('change'));
+    expect(rows().map((r) => r.dataset.spell)).toEqual(['xge/gloom-lantern']);
+    el.querySelector<HTMLSelectElement>('.dnd5e-spells-book')!.value = '';
+    el.querySelector('.dnd5e-spells-book')?.dispatchEvent(new Event('change'));
+    row('Ember Thread')?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('A thread of fire.');
+    expect(texts(el, '.dnd5e-spells-library')).toEqual([
+      "Full text: add the library note for Player's Handbook (2024).",
+    ]);
+    expect(el.querySelector('.dnd5e-spells-source')?.textContent).toBe("Player's Handbook (2024)");
+    row('Gloom Lantern')?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain(
+      'The full words of the lantern.',
+    );
+    expect(texts(el, '.dnd5e-spells-library')).toEqual([]);
+    const de = await open('de', null, [], [thread, lantern]);
+    de.row('Düsterlaterne')?.dispatchEvent(new MouseEvent('click'));
+    expect(texts(de.el, '.dnd5e-spells-library')).toEqual([
+      'Full text from your library, in English.',
+    ]);
+    expect(de.el.querySelector('.dnd5e-spells-source')?.textContent).toBe(
+      'Xanathars Ratgeber für alles',
+    );
   });
 
   it('opens a spell from a link, clearing filters that hide it', async () => {

@@ -19,7 +19,7 @@ All seven are accepted in Obsidian (the last three on 2026-10-26).
 | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
 | ⚔️ **Factions:** factions as folders, relations −5 … +5, a colour-coded faction world, tensions, session log | [Faction card](#the-faction-card), [world](#the-faction-world) |
 | 📜 **NPC builder:** 5e stat blocks in notes, New NPC with races, classes, archetypes and dice tables         | [NPCs and stat blocks](#npcs-and-stat-blocks)                  |
-| ✨ **Spellbook:** the SRD's 319 spells in English and German, your own spells, a spell builder               | [The spellbook](#the-spellbook)                                |
+| ✨ **Spellbook:** the SRD's 319 spells and 550 from the books, EN/DE, own spells, a builder                  | [The spellbook](#the-spellbook)                                |
 | 🃏 **Deck of Many Things:** the SRD deck drawn by its rules, your own decks, a deck builder                  | [The Deck of Many Things](#the-deck-of-many-things)            |
 | 🐉 **Monster Manual:** the SRD's 334 monsters, German traits and actions, your own monsters, import          | [The Monster Manual](#the-monster-manual)                      |
 | 🛡️ **Battle tracker:** the fight kept in the encounter note, logged to the session, an encounter builder     | [The battle tracker](#the-battle-tracker)                      |
@@ -179,7 +179,36 @@ with a back button. The filters and the picked spell are kept.
 In an open stat block, the spell names of a **Spellcasting** trait are links (English or German
 names): a click opens the spellbook on that spell.
 
-**Own spells** — spells beyond the SRD you own — are notes anywhere in the vault:
+**The catalogue** adds the spells beyond the SRD of the Player's Handbook (2014), Xanathar's Guide
+to Everything, Tasha's Cauldron of Everything (2014 rules) and the Player's Handbook (2024): 550
+entries with their facts (level, school, casting time, range, components, duration, classes,
+damage, save), an English and a German name, and a short summary in the plugin's own words in both
+languages. The book's own text is not in the plugin. A 2014 and a 2024 version of the same spell
+are two entries; 2024 rows carry a "2024" pill. Two more filters narrow the list: the rule set
+(2014 / 2024) and the book. **Rule set** (setting: both, 2024 or 2014) decides which version a
+spell name in a stat block opens; own and SRD spells come first either way.
+
+**Library notes** bring the full text for a book you own. A note with `type: library` and the
+book's key as `source:` (`phb14`, `xge`, `tce`, `phb24`), anywhere in the vault, holds one `##`
+section per spell, named as the spell's English name; a paragraph starting `**At Higher Levels.**`
+(or the 2024 wording) becomes the card's "At Higher Levels". A catalogue card shows that text in
+place of the summary — in English, also on a German card — and says which note to add when there is
+none. The plugin never writes or ships these notes; they stay in your vault.
+
+```markdown
+---
+type: library
+source: xge
+---
+
+## Ember Thread
+
+The spell's text from your book.
+
+**At Higher Levels.** What a higher slot adds.
+```
+
+**Own spells** — spells beyond the SRD and the catalogue — are notes anywhere in the vault:
 
 ```markdown
 ---

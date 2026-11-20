@@ -1,5 +1,7 @@
 // Spells for the spellbook: the type the SRD data is written in.
 
+import type { BookKey, Rules } from '../catalogue/books';
+
 export type School =
   | 'abjuration'
   | 'conjuration'
@@ -39,6 +41,16 @@ export interface SrdSpell {
   higher: string;
   /** An own spell's note; absent for the SRD's spells. */
   path?: string;
+  /** The rule set; set on catalogue entries (and on SRD spells when merged). */
+  rules?: Rules;
+  /** The book a catalogue entry comes from; absent for the SRD's and own spells. */
+  source?: BookKey | 'srd';
+  /** A catalogue entry's German name (the SRD's are in `DE_NAMES`). */
+  nameDe?: string;
+  /** A catalogue entry's summary in our own words; its `text` is empty. */
+  summary?: { en: string; de: string };
+  /** A catalogue entry's full text, from the GM's library note. */
+  library?: { text: string; higher: string };
 }
 
 /** A spell's German text, by spell index: description, "At Higher Levels" and the material. */

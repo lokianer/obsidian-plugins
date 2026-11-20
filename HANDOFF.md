@@ -13,69 +13,65 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-11-20, local. The maintainer asked for three things: a visual refactoring of the plugin ("mehr
-wie D&D Beyond, moderner und übersichtlicher"), **all** official subclasses with a character
-builder and a level-up database, and **all** spells and monsters. Agreed: the order visual
-refactoring → catalogues → character builder; for the content, catalogues with our own summaries
-in the plugin and full texts only by import (the repository is public). Style C was chosen from
-mockups. **V1** (building blocks, stat block), **V2** (Battle tab, encounter builder) and **V3**
-(faction card, tension panel, warnings dialog) were built and **accepted**; **V4** (Spellbook,
-Monster Manual) built.
+2026-11-20, local (second part). The maintainer noticed that every spell and monster beyond the SRD
+was missing and brought the catalogues forward, before V5/V6: 2014 and 2024, adventure books
+included, from their own PDFs. Design (`docs/superpowers/specs/2026-11-20-catalogues-design.md`)
+and plan K1 (`docs/superpowers/plans/2026-11-20-catalogue-k1-spells.md`) approved; **K1 (spells)
+built**.
 
 ## Where to continue
 
-1. **Check V4 in Obsidian** (installed in `examples/vault`): the Spellbook and the Monster Manual
-   — filter pills (hover, on, school-tinted), the sticky level / CR heads while scrolling, arrow
-   keys, the spell card's tiles and pills (Fireball), a narrow tab (card replaces the list), light
-   theme. After "passt": tick V4.
-2. **V5 — Dice tab and Deck of Many Things** (the dice stage itself stays), then **V6** (builders
-   and dialogs: New NPC, spell builder with its old `.dnd5e-spells-grid`, monster builder, deck
-   builder, `dnd5e-builder-flag`, the encounter builder's dialog layout).
-3. **Catalogues** (after V6), then the **character builder** — see the roadmap.
-4. Retake the README screenshots in real Obsidian once the look is final.
-5. Older open items as in the roadmap's "Next steps".
+1. **Check K1 in Obsidian**: copy the four library notes from the maintainer's private folder
+   `D:\03 Projekte\Code\Loki\dnd5e-library\` (not the `work` folder) into a vault, open the
+   Spellbook: the 2014 / 2024 chips and the book select, a 2024 row's pill, a catalogue card with
+   summary (without library note) and with full text, a German card, the Rule set setting and a
+   stat block link (Fireball with Rule set 2024 → `phb24/fireball`). Never put these notes in
+   `examples/vault`.
+2. Open checks on the data, from the cleaning notes: the German names translated rather than
+   official (the cleaners noted some), Spiritual Weapon's school in phb24 (conjuration, the 2024
+   book may say evocation), and the reconstructed tables (Summon stat blocks, Control Weather,
+   Reincarnate) in the private library.
+3. **K2 — monsters**, then K3, then V5/V6, then the character builder.
 
 ## State of the working tree
 
-`main`, pushed (see `git log`). The maintainer's own uncommitted changes in `examples/vault`
-(Session 14's log lines, faction values, two monsters, Session 15) were left alone; they make 3
-`packages/session` tests and 5 plugin tests fail locally because those tests read the example
-vault as their contract. With them stashed everything passes. Still to decide with the
-maintainer: keep them (update the tests) or revert them.
+`main`. The maintainer's own uncommitted changes in `examples/vault` (Session 14's log lines,
+faction values, two monsters, Session 15) are still left alone; they make 3 `packages/session` and
+5 plugin tests fail locally. `pnpm check` runs green with them stashed
+(`git stash push -u -q -- examples/vault` … `git stash pop -q`). Still to decide: keep them (update
+the tests) or revert them.
+
+**Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\` holds the library
+notes and `work/` (raw extractions, batches, cleaned `norm/` files, `INSTRUCTIONS-spells.md` for the
+cleaning agents). The book dumps were in the session scratchpad and may be gone; `pdftotext -enc
+UTF-8 <pdf> <out>` recreates them. None of this may enter the repository.
 
 ## Done this session
 
-- Design `docs/superpowers/specs/2026-11-20-visual-refactoring-design.md` with mockups in
-  `assets/`; plans `…-visual-v1-blocks-statblock.md`, `…-visual-v2-battle-encounter.md`,
-  `…-visual-v3-factions.md`, `…-visual-v4-lists.md`.
-- V1: `src/obsidian/ui/blocks.ts`, `src/dice/action-row.ts`, `statblock-parts.ts`.
-- V2: `battle-view.ts` (`renderCard` in named parts), `encounter-builder.ts`; review fixes for
-  Obsidian's button styles (`ee8f6cf`).
-- V3: `card-render.ts` (tiles), `tension-view.ts`, `warnings-modal.ts`; section titles share the
-  section head; `styles/faction-card.css`, `tensions.css`, `warnings.css`.
-- V4: `spellbook-view.ts`, `monster-manual-view.ts`, `styles/spellbook.css`.
-- DECISIONS "Visual refactoring: style C", "… V2", "… V3", "… V4"; CHANGELOG Unreleased; ROADMAP.
-
-## Half-finished — check in Obsidian
-
-V4, see "Where to continue" 1.
+- `src/catalogue/`: `books.ts`, `merge.ts` (library onto entries, name resolution, `byPreference`),
+  `library.ts` (sections of a library note), `spells.ts` (generated, 550 entries).
+- `scripts/catalogue/`: `parse-spells.mjs` (stream cutter, EN and IT), `extract-spells.mjs`,
+  `batch-spells.mjs`, `check-spells.mjs`, `build-spells.mjs`, `library-spells.mjs`; `data/` with
+  the public per-book JSON.
+- `src/obsidian/library.ts` (the Library service), the Spellbook (rule set and book filters,
+  pill, library line, book on the card), `register/spells.ts` wiring, the Rule set setting.
+- Tests: `test/catalogue.test.ts`, `test/catalogue-parse.test.ts`, the Spellbook view test.
+- DECISIONS "Catalogues K1: spells", CHANGELOG, README, ROADMAP.
 
 ## Decisions taken this session
 
-In `plugins/dnd5e-bylokianer/DECISIONS.md`: style C, V2, V3 (graph, faction view, matrix and
-popover deliberately unchanged). Agreed in the conversation and in the roadmap: the catalogue
-approach for all subclasses, spells and monsters.
+In `plugins/dnd5e-bylokianer/DECISIONS.md` ("Catalogues K1") and the spec's "Decided by the
+maintainer": full texts privately as library notes, one note per book, the 2024 text translated to
+English, notes first in a folder outside the vault, German names too.
 
 ## Open questions for the maintainer
 
-- V4's check in Obsidian.
+- K1's check in Obsidian.
 - The uncommitted example-vault changes: keep (tests updated) or revert.
 
 ## Verification
 
-With the example vault as committed: `pnpm check` exit 0, plugin 429/429 and session 15/15 tests,
-lint 0 errors; the warnings are the known complexity list, now without `renderStatblock`, the
-Battle tab's `renderCard` and the encounter builder's `drawPreview` (the `drawPreview` still listed
-is the New NPC dialog's), plus four sentence-case warnings in tests. Screenshots: stat blocks (900
-and 328 px, dark, light, German), the Battle tab (1000 and 380 px, German light) and the encounter
-builder — no horizontal overflow, the panes fold.
+With the example vault stashed: `pnpm check` exit 0, plugin 442/442 and session 15/15 tests, lint 0
+errors (known complexity warnings only). `check-spells.mjs` over all 610 cleaned entries: 0
+problems. No run of eight words of any summary appears in the library notes. `main.js` grew from
+2.08 MB to 2.57 MB.

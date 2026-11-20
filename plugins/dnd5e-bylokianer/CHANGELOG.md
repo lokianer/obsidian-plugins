@@ -6,6 +6,20 @@ All notable changes to this plugin are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Spell catalogue** (catalogues, phase K1): the Spellbook lists the spells beyond the SRD of the
+  Player's Handbook 2014, Xanathar's, Tasha's and the Player's Handbook 2024 — 550 entries with
+  their facts, English and German names and a summary in our own words (EN/DE), no book text. New
+  filters for the rule set (2014 / 2024) and the book, a "2024" pill on 2024 rows, the book on the
+  card. **Library notes** (`type: library`, `source: <book>`) in the vault bring the full text of
+  books the GM owns. **Rule set** setting: which version a spell name in a stat block opens.
+
+### Known limitations
+
+- Library texts are English only; a German card shows the English text from the library.
+- Monsters (K2) and Heroes of Faerûn (K3) follow.
+
 ### Changed
 
 - **A new look, style C** (visual refactoring, phase V1): closer to D&D Beyond's character sheet.

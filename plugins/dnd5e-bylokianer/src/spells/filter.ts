@@ -2,6 +2,7 @@
 // (level 1 or 2, and Wizard). The search finds English and German names, ignoring case and
 // accents. Pure.
 
+import { isBookKey, type BookKey, type Rules } from '../catalogue/books';
 import { DE_NAMES } from './de';
 import type { Ability, School, SpellClass, SrdSpell } from './model';
 
@@ -18,6 +19,10 @@ export interface SpellFilters {
   /** Only rituals. */
   ritual: boolean;
   concentration: 'any' | 'only' | 'none';
+  /** Rule sets; the GM's own spells belong to every one. */
+  rules: Rules[];
+  /** Books; `srd` for the SRD's spells. */
+  sources: (BookKey | 'srd')[];
 }
 
 export const NO_FILTERS: SpellFilters = {
@@ -30,6 +35,8 @@ export const NO_FILTERS: SpellFilters = {
   saves: [],
   ritual: false,
   concentration: 'any',
+  rules: [],
+  sources: [],
 };
 
 /** Lower case, without accents, `ß` as `ss`: `Säure` and `saure` meet. */
@@ -49,7 +56,8 @@ function passes(spell: SrdSpell, filters: SpellFilters, skip?: keyof SpellFilter
   const any = <V>(key: keyof SpellFilters, chosen: readonly V[], has: (v: V) => boolean) =>
     key === skip || chosen.length === 0 || chosen.some(has);
   const words = fold(filters.query).split(/\s+/).filter(Boolean);
-  const names = fold(`${spell.name} ${DE_NAMES[spell.index] ?? ''}`);
+  const names = fold(`${spell.name} ${DE_NAMES[spell.index] ?? spell.nameDe ?? ''}`);
+  const source = spell.path !== undefined ? null : (spell.source ?? 'srd');
   return (
     words.every((w) => names.includes(w)) &&
     any('levels', filters.levels, (l) => spell.level === l) &&
@@ -58,6 +66,8 @@ function passes(spell: SrdSpell, filters: SpellFilters, skip?: keyof SpellFilter
     any('casting', filters.casting, (k) => castingKind(spell) === k) &&
     any('damage', filters.damage, (d) => spell.damage.includes(d)) &&
     any('saves', filters.saves, (a) => spell.save === a) &&
+    any('rules', filters.rules, (r) => spell.path !== undefined || (spell.rules ?? '2014') === r) &&
+    any('sources', filters.sources, (b) => source === b) &&
     (!filters.ritual || spell.ritual) &&
     (filters.concentration === 'any' || spell.concentration === (filters.concentration === 'only'))
   );
@@ -105,5 +115,7 @@ export function readFilters(data: unknown): SpellFilters {
     ritual: d.ritual === true,
     concentration:
       d.concentration === 'only' || d.concentration === 'none' ? d.concentration : 'any',
+    rules: list(d.rules, (v): v is Rules => v === '2014' || v === '2024'),
+    sources: list(d.sources, (v): v is BookKey | 'srd' => v === 'srd' || isBookKey(v)),
   };
 }

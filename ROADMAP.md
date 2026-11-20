@@ -26,8 +26,10 @@ In order of priority. Items marked **(open)** wait for the maintainer's decision
 1. **dnd5e-byLokianer: visual refactoring, style C** (asked for on 2026-11-20). V1–V3 accepted, V4
    (Spellbook, Monster Manual) built, awaiting the check in Obsidian; then V5–V6 (see
    [Visual refactoring](#visual-refactoring--style-c)).
-2. **dnd5e-byLokianer: catalogues of all official spells, monsters and subclasses** (asked for on
-   2026-11-20, approach agreed, design not written): see [Catalogues](#catalogues-planned).
+2. **dnd5e-byLokianer: catalogues of all official spells and monsters** (asked for on 2026-11-20,
+   brought forward before V5/V6 by the maintainer). K1 (spells) built, awaiting the check in
+   Obsidian; then K2 (monsters), K3 (Heroes of Faerûn). Subclasses come with the character builder.
+   See [Catalogues](#catalogues).
 3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20,
    brainstorm not started): built in style C, after the catalogues.
 4. **dnd5e-byLokianer: code quality.** Reduce complexity, steps 2 and 3 (see
@@ -157,21 +159,22 @@ D&D Beyond) on 2026-11-20. One view per phase, each checked in Obsidian; no rele
 - [ ] **V5 — Dice tab and Deck of Many Things** (the dice stage stays).
 - [ ] **V6 — Builders and dialogs.**
 
-### Catalogues (planned)
+### Catalogues
 
-Asked for on 2026-11-20: "ALLE subklassen", "ALLE spells und monster". Agreed with the maintainer
-(the repository is public, so no copyrighted text from the books):
+Asked for on 2026-11-20: "ALLE spells und monster", 2014 and 2024 including adventure books, from
+the maintainer's own PDFs. Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`: facts,
+names (EN/DE) and summaries in our own words in the plugin; full texts only in the GM's private
+library notes (`type: library`), made outside the repository. Books so far: PHB 2014, DMG 2014, MM
+2014, Xanathar's, Tasha's, Monsters of the Multiverse, PHB 2024 (Italian), Heroes of Faerûn
+(image-only), Adventures in Faerûn.
 
-- **In the plugin:** every official subclass (name, source book, the levels it gains something,
-  feature names, a short summary of each feature's mechanics in our own words); every official
-  spell (name, level, school, casting time, range, components, duration, classes, source, a short
-  summary in our own words); every official monster as a catalogue entry (name, source, size,
-  type, CR, AC, HP) for the encounter builder. The SRD content keeps its full text in English and
-  German.
-- **By import into the GM's own vault:** the full texts from files the GM owns (5etools and
-  similar), as the monster import does today.
-
-Design not written yet; it follows the visual refactoring.
+- [ ] **K1 — spells** (built 2026-11-20, awaiting the check): 550 entries (phb14 43, xge 95, tce 21,
+      phb24 391), rule set and book filters, library notes, Rule set setting. Plan
+      `2026-11-20-catalogue-k1-spells.md`.
+- [ ] **K2 — monsters** (MM 2014, MPMM, the Faerûn books): catalogue entries for the Monster Manual
+      and the encounter builder.
+- [ ] **K3 — Heroes of Faerûn** (spells read from page images).
+- [ ] Subclasses with the character builder.
 
 ### Code quality
 

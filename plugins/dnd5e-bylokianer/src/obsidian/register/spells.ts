@@ -1,12 +1,16 @@
-// The spellbook: the tab, own spells from `type: spell` notes, the spell builder, and the links from
-// spell names in stat blocks to the spellbook.
+// The spellbook: the tab, the catalogue with the GM's library notes, own spells from `type: spell`
+// notes, the spell builder, and the links from spell names in stat blocks to the spellbook.
 
 import { Notice } from 'obsidian';
 
+import { byPreference, withLibrary } from '../../catalogue/merge';
+import { CATALOGUE_SPELLS } from '../../catalogue/spells';
 import { spellNoteText } from '../../spells/draft';
+import type { SrdSpell } from '../../spells/model';
 import { spellFinder } from '../../spells/links';
 import { ownIndex } from '../../spells/own';
 import { SRD_SPELLS } from '../../spells/srd-spells';
+import { Library } from '../library';
 import { newNote } from '../new-note';
 import { OwnSpells } from '../own-spells';
 import { SpellBuilderModal } from '../spell-builder';
@@ -21,11 +25,25 @@ export function registerSpells(ctx: Context): SpellLinker {
   const { plugin, t } = ctx;
   const { app } = plugin;
   const ownSpells = new OwnSpells(plugin);
-  app.workspace.onLayoutReady(() => void ownSpells.reload());
+  const library = new Library(plugin);
+  app.workspace.onLayoutReady(() => {
+    void ownSpells.reload();
+    void library.reload();
+  });
+  let catalogue: SrdSpell[] | null = null;
+  const catalogueSpells = () => (catalogue ??= withLibrary(CATALOGUE_SPELLS, library.sections));
+  library.onChange(() => (catalogue = null));
   let finder: ReturnType<typeof spellFinder> | null = null;
+  let finderRules = ctx.settings().rules;
   ownSpells.onChange(() => (finder = null));
+  library.onChange(() => (finder = null));
   const findSpells = (text: string) => {
-    finder ??= spellFinder([...SRD_SPELLS, ...ownSpells.list]);
+    const { rules } = ctx.settings();
+    if (rules !== finderRules) finder = null;
+    finderRules = rules;
+    finder ??= spellFinder(
+      byPreference([...SRD_SPELLS, ...catalogueSpells(), ...ownSpells.list], rules),
+    );
     return finder(text);
   };
 
@@ -39,6 +57,8 @@ export function registerSpells(ctx: Context): SpellLinker {
         saveState: (spellbook) => void ctx.save({ ...ctx.settings(), spellbook }),
         own: () => ownSpells.list,
         onOwnChange: (listener) => ownSpells.onChange(listener),
+        catalogue: catalogueSpells,
+        onCatalogueChange: (listener) => library.onChange(listener),
         openNote: (path) => ctx.openNote(path),
         newSpell: () => newSpell(),
       }),

@@ -1,6 +1,8 @@
-// The Spellbook tab: the 319 SRD spells with a search, level and school chips, filters for class,
-// casting time, damage, saving throw, concentration and ritual, a list grouped by level and a card
-// for the picked spell, accented by its school. Names and meta follow the dice-text language; the
+// The Spellbook tab: the 319 SRD spells and the catalogue's (other books, both rule sets) with a
+// search, level and school chips, filters for rule set, book, class, casting time, damage, saving
+// throw, concentration and ritual, a list grouped by level and a card for the picked spell, accented
+// by its school. A catalogue spell shows its library text when the GM has the book's library note,
+// else our summary. Names and meta follow the dice-text language; the
 // card can switch to the other one. The filters are kept in the plugin's data. The GM's own
 // `type: spell` notes join the list, marked "own"; links in stat blocks open a spell's card.
 
@@ -13,6 +15,7 @@ import {
   type WorkspaceLeaf,
 } from 'obsidian';
 
+import { BOOKS, type BookKey, isBookKey } from '../catalogue/books';
 import type { StringKey, T } from '../i18n/strings';
 import type { Lang } from '../npc/races';
 import {
@@ -73,6 +76,9 @@ export interface SpellbookDeps {
   /** The GM's own `type: spell` notes, and a way to hear when they change. */
   own: () => readonly SrdSpell[];
   onOwnChange: (listener: () => void) => () => void;
+  /** The catalogue's spells (library texts attached), and a way to hear when the library changes. */
+  catalogue: () => readonly SrdSpell[];
+  onCatalogueChange: (listener: () => void) => () => void;
   openNote: (path: string) => void;
   /** Opens the spell builder. */
   newSpell: () => void;
@@ -122,10 +128,9 @@ export class SpellbookView extends ItemView {
     return 'book-open';
   }
 
-  /** Every spell: the SRD's and the GM's own. */
+  /** Every spell: the SRD's, the catalogue's and the GM's own. */
   private get spells(): readonly SrdSpell[] {
-    const own = this.deps.own();
-    return own.length === 0 ? SRD_SPELLS : [...SRD_SPELLS, ...own];
+    return [...SRD_SPELLS, ...this.deps.catalogue(), ...this.deps.own()];
   }
 
   /** Opens a spell's card (from a link in a stat block). */
@@ -137,6 +142,7 @@ export class SpellbookView extends ItemView {
 
   async onOpen(): Promise<void> {
     this.register(this.deps.onOwnChange(() => this.render()));
+    this.register(this.deps.onCatalogueChange(() => this.render()));
     const stored = this.deps.state() as Partial<SpellbookState> | undefined;
     this.filters = readFilters(stored?.filters);
     this.selected = typeof stored?.selected === 'string' ? stored.selected : null;
@@ -248,6 +254,7 @@ export class SpellbookView extends ItemView {
     }
 
     const more = header.createDiv({ cls: 'dnd5e-spells-filters' });
+    this.renderSourceFilters(more);
     this.select(
       more,
       'spells.class',
@@ -297,6 +304,27 @@ export class SpellbookView extends ItemView {
     );
     const ritual = this.chip(more, t('spells.ritual'), this.filters.ritual);
     ritual.addEventListener('click', () => this.setFilters({ ritual: !this.filters.ritual }));
+  }
+
+  /** The rule set pills and the book dropdown (the SRD, then the books the catalogue draws on). */
+  private renderSourceFilters(more: HTMLElement): void {
+    for (const rules of ['2014', '2024'] as const) {
+      const chip = this.chip(more, rules, this.filters.rules.includes(rules));
+      chip.addEventListener('click', () =>
+        this.setFilters({ rules: toggle(this.filters.rules, rules) }),
+      );
+    }
+    const present = new Set(this.deps.catalogue().map((s) => s.source));
+    const books = (Object.keys(BOOKS) as BookKey[]).filter((b) => present.has(b));
+    this.select(
+      more,
+      'spells.book',
+      ['srd', ...books] as const,
+      this.filters.sources,
+      (v) => (isBookKey(v) ? BOOKS[v][this.lang] : this.deps.t('spells.srdBook')),
+      (v) => this.setFilters({ sources: v === null ? [] : [v] }),
+    );
+    more.lastElementChild?.addClass('dnd5e-spells-book');
   }
 
   private chip(parent: HTMLElement, text: string, on: boolean): HTMLElement {
@@ -404,6 +432,7 @@ export class SpellbookView extends ItemView {
     if (spell.path !== undefined) {
       marks.createSpan({ cls: ['dnd5e-spells-mark', 'is-own'], text: this.deps.t('spells.own') });
     }
+    if (spell.rules === '2024') pill(marks, '2024').addClass('dnd5e-spells-rules');
     row.addEventListener('click', () => this.pick(spell.index, true));
   }
 
@@ -523,6 +552,7 @@ export class SpellbookView extends ItemView {
 
     this.cardText = new Component();
     this.cardText.load();
+    this.renderLibraryLine(card, spell, lang);
     const text = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
     const source = spell.path ?? '';
     void MarkdownRenderer.render(this.app, words.text, text, source, this.cardText);
@@ -535,11 +565,27 @@ export class SpellbookView extends ItemView {
     sectionHead(card, t('spells.classes'));
     const classes = card.createDiv({ cls: 'dnd5e-spells-classes' });
     for (const c of spell.classes) pill(classes, label(c, lang));
-    card.createDiv({
-      cls: 'dnd5e-spells-source',
-      text:
-        spell.path === undefined ? t('spells.source') : t('spells.ownSource', { path: spell.path }),
-    });
+    card.createDiv({ cls: 'dnd5e-spells-source', text: this.sourceLine(spell, lang) });
+  }
+
+  /** Above a catalogue spell's text: where its full text comes from, or how to get it. */
+  private renderLibraryLine(card: HTMLElement, spell: SrdSpell, lang: Lang): void {
+    const { t } = this.deps;
+    if (spell.source === undefined || !isBookKey(spell.source)) return;
+    const text =
+      spell.library === undefined
+        ? t('spells.noLibrary', { book: BOOKS[spell.source][lang] })
+        : lang === 'de'
+          ? t('spells.libraryEnglish')
+          : null;
+    if (text !== null) card.createDiv({ cls: 'dnd5e-spells-library', text });
+  }
+
+  private sourceLine(spell: SrdSpell, lang: Lang): string {
+    const { t } = this.deps;
+    if (spell.path !== undefined) return t('spells.ownSource', { path: spell.path });
+    if (spell.source !== undefined && isBookKey(spell.source)) return BOOKS[spell.source][lang];
+    return t('spells.source');
   }
 }
 

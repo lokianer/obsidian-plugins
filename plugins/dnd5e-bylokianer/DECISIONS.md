@@ -895,3 +895,25 @@ Manual (plan `docs/superpowers/plans/2026-11-20-visual-v4-lists.md`).
 - The two panes keep their own grid, each scrolling on its own like the Battle tab, and fold at
   560 px of the tab's width (the Battle tab's fold point) instead of 640.
 - The spell builder's preview keeps the old grid until V6.
+
+## 2026-11-20 · Catalogues K1: spells
+
+Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
+`docs/superpowers/plans/2026-11-20-catalogue-k1-spells.md`.
+
+- **What ships:** facts, names (EN/DE) and summaries in our own words for 550 spells (phb14 43,
+  xge 95, tce 21, phb24 391). Never the books' text: summaries are checked against the source for
+  any run of eight words (`check-spells.mjs`, and once more against the library notes before the
+  commit).
+- **Full texts** live only in the GM's own library notes (`type: library`), made from the GM's own
+  PDFs by `scripts/catalogue/` outside the repository, one note per book.
+- **The 2024 book was read in Italian** (the maintainer's copy) and translated; its English names
+  are the 2024 book's. The Italian edition's "Evocazione" is conjuration, "Invocazione" evocation.
+- **SRD first:** a 2014 spell that is in the SRD keeps its SRD record (with the full SRD text) and
+  is left out of the catalogue; the 2024 versions are separate entries, also for SRD spells.
+- **Name resolution** for stat block links: own, SRD, the preferred rule set's entry (2024 when
+  "both"), then the other. The rule set setting does not hide anything in the Spellbook.
+- **Extraction:** pdftotext, a stream cutter for entry headers, then LLM cleaning in batches with a
+  check script; counts compared with the books' spell lists (phb24 391 of 391, xge 95, tce 21,
+  phb14 all non-SRD spells).
+- Left out: Heroes of Faerûn (image-only PDF, K3), monsters (K2), German library texts.
