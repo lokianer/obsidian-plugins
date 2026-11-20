@@ -49,6 +49,7 @@ import type { Lang } from '../npc/races';
 import type { BattleSource, EncounterInfo } from './battle-store';
 import { renderChecks, type RollCheck } from './statblock-dice';
 import { renderStatblock } from './statblock-view';
+import { pill, sectionHead, tile, tiles } from './ui/blocks';
 
 export const BATTLE_VIEW = 'dnd5e-battle';
 
@@ -341,10 +342,9 @@ export class BattleView extends ItemView {
   /** Before the fight: who will be in it. */
   private renderLineup(list: HTMLElement): void {
     const { t } = this.deps;
-    list.createDiv({
-      cls: 'dnd5e-battle-section',
-      text: t('battle.lineup', { count: this.fighters.length }),
-    });
+    sectionHead(list, t('battle.lineup', { count: this.fighters.length })).addClass(
+      'dnd5e-battle-section',
+    );
     for (const f of this.fighters) {
       const row = list.createDiv({ cls: ['dnd5e-battle-row', `is-${f.side}`] });
       row.createDiv({ cls: 'dnd5e-battle-name', text: f.name });
@@ -412,19 +412,31 @@ export class BattleView extends ItemView {
     if (c.ac !== null) meta.createSpan({ text: t('battle.ac', { ac: c.ac }) });
     const chips = main.createDiv({ cls: 'dnd5e-battle-chips' });
     if (isDefeated(c))
-      chips.createSpan({ cls: ['dnd5e-battle-chip', 'is-out'], text: t('battle.defeated') });
+      chips.createSpan({
+        cls: ['dnd5e-pill', 'dnd5e-battle-chip', 'is-out'],
+        text: t('battle.defeated'),
+      });
     if (isDead(c))
-      chips.createSpan({ cls: ['dnd5e-battle-chip', 'is-out'], text: t('battle.dead') });
+      chips.createSpan({
+        cls: ['dnd5e-pill', 'dnd5e-battle-chip', 'is-out'],
+        text: t('battle.dead'),
+      });
     else if (isDown(c)) {
       chips.createSpan({
-        cls: ['dnd5e-battle-chip', 'is-down'],
+        cls: ['dnd5e-pill', 'dnd5e-battle-chip', 'is-down'],
         text: `${t('battle.down')} ${'✓'.repeat(c.saves.ok)}${'✗'.repeat(c.saves.fail)}`.trim(),
       });
     }
     if (c.concentration)
-      chips.createSpan({ cls: 'dnd5e-battle-chip', text: t('battle.concentration') });
+      chips.createSpan({
+        cls: ['dnd5e-pill', 'dnd5e-battle-chip'],
+        text: t('battle.concentration'),
+      });
     for (const k of c.conditions) {
-      chips.createSpan({ cls: 'dnd5e-battle-chip', text: this.conditionText(k.name, k.rounds) });
+      chips.createSpan({
+        cls: ['dnd5e-pill', 'dnd5e-battle-chip'],
+        text: this.conditionText(k.name, k.rounds),
+      });
     }
 
     if (f.round === 0) {
@@ -461,7 +473,7 @@ export class BattleView extends ItemView {
   private renderAdd(list: HTMLElement): void {
     const { t } = this.deps;
     const form = list.createEl('form', { cls: 'dnd5e-battle-add' });
-    form.createDiv({ cls: 'dnd5e-battle-section', text: t('battle.addSection') });
+    sectionHead(form, t('battle.addSection')).addClass('dnd5e-battle-section');
     const fields = form.createDiv({ cls: 'dnd5e-battle-add-fields' });
     const field = (key: 'name' | 'hp' | 'ac', label: StringKey, numeric: boolean) => {
       const input = fields.createEl('input', {
@@ -534,13 +546,23 @@ export class BattleView extends ItemView {
   }
 
   private renderCard(card: HTMLElement, c: Combatant): void {
-    const { t } = this.deps;
     const f = this.fight;
     if (f === null) return;
     card.addClass(`is-${c.side}`);
+    this.cardHead(card, f, c);
+    this.cardNumbers(card, c);
+    this.cardHitPoints(card, f, c);
+    if (isDown(c) && !isDead(c)) this.cardSaves(card, f, c);
+    this.cardConditions(card, f, c);
+    this.cardChecksAndBlock(card, c);
+  }
+
+  /** The name, the side as a pill, open note and remove. */
+  private cardHead(card: HTMLElement, f: Fight, c: Combatant): void {
+    const { t } = this.deps;
     const head = card.createDiv({ cls: 'dnd5e-battle-card-head' });
     head.createDiv({ cls: 'dnd5e-battle-card-name', text: c.id });
-    head.createSpan({ cls: 'dnd5e-battle-side', text: t(`battle.side.${c.side}`) });
+    pill(head, t(`battle.side.${c.side}`)).addClass('dnd5e-battle-side');
     const path = c.path;
     if (path !== null) {
       const open = head.createEl('button', {
@@ -559,19 +581,22 @@ export class BattleView extends ItemView {
       this.picked = null;
       this.apply(removeCombatant(f, c.id));
     });
+  }
 
-    const numbers = card.createDiv({ cls: 'dnd5e-battle-numbers' });
-    const big = (label: StringKey, value: string) => {
-      const box = numbers.createDiv({ cls: 'dnd5e-battle-number' });
-      box.createDiv({ cls: 'dnd5e-battle-number-label', text: t(label) });
-      box.createDiv({ cls: 'dnd5e-battle-number-value', text: value });
-    };
-    big('battle.hpLabel', `${c.hp} / ${c.maxHp}`);
-    big('battle.tempLabel', String(c.temp));
-    big('battle.acLabel', c.ac === null ? '—' : String(c.ac));
-    big('battle.initLabel', c.init === null ? '—' : String(c.init));
+  /** Hit points (the maximum as the note), temporary hit points, AC, initiative. */
+  private cardNumbers(card: HTMLElement, c: Combatant): void {
+    const { t } = this.deps;
+    const grid = tiles(card);
+    grid.addClass('dnd5e-battle-numbers');
+    tile(grid, String(c.hp), t('battle.hpLabel'), `/ ${c.maxHp}`);
+    tile(grid, String(c.temp), t('battle.tempLabel'));
+    tile(grid, c.ac === null ? '—' : String(c.ac), t('battle.acLabel'));
+    tile(grid, c.init === null ? '—' : String(c.init), t('battle.initLabel'));
+  }
 
-    // Hit points: one number, three buttons.
+  /** Hit points: one number, three buttons. */
+  private cardHitPoints(card: HTMLElement, f: Fight, c: Combatant): void {
+    const { t } = this.deps;
     const hp = card.createDiv({ cls: 'dnd5e-battle-hp' });
     const input = hp.createEl('input', {
       cls: 'dnd5e-battle-amount',
@@ -607,27 +632,38 @@ export class BattleView extends ItemView {
     });
     act('battle.heal', 'dnd5e-battle-heal', (n) => this.apply(heal(f, c.id, n)));
     act('battle.temp', 'dnd5e-battle-temp', (n) => this.apply(setTemp(f, c.id, n)));
+  }
 
-    if (isDown(c) && !isDead(c)) {
-      const saves = card.createDiv({ cls: 'dnd5e-battle-saves' });
-      saves.createSpan({
-        cls: 'dnd5e-battle-section',
-        text: t('battle.deathSaves', { ok: c.saves.ok, fail: c.saves.fail }),
-      });
-      const ok = saves.createEl('button', {
-        cls: 'dnd5e-battle-save-ok',
-        text: t('battle.saveOk'),
-      });
-      ok.addEventListener('click', () => this.apply(deathSave(f, c.id, true)));
-      const fail = saves.createEl('button', {
-        cls: 'dnd5e-battle-save-fail',
-        text: t('battle.saveFail'),
-      });
-      fail.addEventListener('click', () => this.apply(deathSave(f, c.id, false)));
-    }
+  private cardSaves(card: HTMLElement, f: Fight, c: Combatant): void {
+    const { t } = this.deps;
+    sectionHead(card, t('battle.deathSaves', { ok: c.saves.ok, fail: c.saves.fail })).addClass(
+      'dnd5e-battle-section',
+    );
+    const saves = card.createDiv({ cls: 'dnd5e-battle-saves' });
+    const ok = saves.createEl('button', { cls: 'dnd5e-battle-save-ok', text: t('battle.saveOk') });
+    ok.addEventListener('click', () => this.apply(deathSave(f, c.id, true)));
+    const fail = saves.createEl('button', {
+      cls: 'dnd5e-battle-save-fail',
+      text: t('battle.saveFail'),
+    });
+    fail.addEventListener('click', () => this.apply(deathSave(f, c.id, false)));
+  }
 
-    // Conditions: a chip per SRD condition; a duration applies to the one added next.
-    card.createDiv({ cls: 'dnd5e-battle-section', text: t('battle.conditions') });
+  /** A condition as a pill button, active or not. */
+  private conditionButton(parent: HTMLElement, text: string, on: boolean): HTMLElement {
+    return parent.createEl('button', {
+      cls: on
+        ? ['dnd5e-pill', 'dnd5e-battle-condition', 'is-active']
+        : ['dnd5e-pill', 'dnd5e-battle-condition'],
+      text,
+      attr: { 'aria-pressed': String(on) },
+    });
+  }
+
+  /** Conditions: a pill per SRD condition; a duration applies to the one added next. */
+  private cardConditions(card: HTMLElement, f: Fight, c: Combatant): void {
+    const { t } = this.deps;
+    sectionHead(card, t('battle.conditions')).addClass('dnd5e-battle-section');
     const duration = card.createDiv({ cls: 'dnd5e-battle-duration' });
     duration.createSpan({ text: t('battle.rounds') });
     const roundsInput = duration.createEl('input', {
@@ -643,21 +679,17 @@ export class BattleView extends ItemView {
     roundsInput.addEventListener('input', () => (this.rounds = roundsInput.value));
     const chips = card.createDiv({ cls: 'dnd5e-battle-condition-chips' });
     const has = new Map(c.conditions.map((k) => [k.name, k]));
-    const concentration = chips.createEl('button', {
-      cls: c.concentration ? ['dnd5e-builder-flag', 'is-active'] : 'dnd5e-builder-flag',
-      text: t('battle.concentration'),
-      attr: { 'aria-pressed': String(c.concentration) },
-    });
-    concentration.addEventListener('click', () =>
-      this.apply(setConcentration(f, c.id, !c.concentration)),
+    this.conditionButton(chips, t('battle.concentration'), c.concentration).addEventListener(
+      'click',
+      () => this.apply(setConcentration(f, c.id, !c.concentration)),
     );
     for (const name of CONDITIONS) {
       const on = has.get(name);
-      const chip = chips.createEl('button', {
-        cls: on !== undefined ? ['dnd5e-builder-flag', 'is-active'] : 'dnd5e-builder-flag',
-        text: this.conditionText(name, on?.rounds ?? null),
-        attr: { 'aria-pressed': String(on !== undefined) },
-      });
+      const chip = this.conditionButton(
+        chips,
+        this.conditionText(name, on?.rounds ?? null),
+        on !== undefined,
+      );
       chip.dataset.condition = name;
       chip.addEventListener('click', () => {
         if (on !== undefined) {
@@ -673,14 +705,16 @@ export class BattleView extends ItemView {
     for (const k of c.conditions.filter(
       (x) => !(CONDITIONS as readonly string[]).includes(x.name),
     )) {
-      const chip = chips.createEl('button', {
-        cls: ['dnd5e-builder-flag', 'is-active'],
-        text: this.conditionText(k.name, k.rounds),
-      });
-      chip.addEventListener('click', () => this.apply(removeCondition(f, c.id, k.name)));
+      this.conditionButton(chips, this.conditionText(k.name, k.rounds), true).addEventListener(
+        'click',
+        () => this.apply(removeCondition(f, c.id, k.name)),
+      );
     }
+  }
 
-    const { roll, checks } = this.deps;
+  /** A character's checks, then the stat block. */
+  private cardChecksAndBlock(card: HTMLElement, c: Combatant): void {
+    const { t, roll, checks } = this.deps;
     if (c.pc && c.path !== null && roll !== undefined && checks !== undefined) {
       const box = card.createDiv();
       void checks(c.path).then((list) => {

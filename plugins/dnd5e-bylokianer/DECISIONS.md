@@ -843,3 +843,24 @@ The maintainer asked for "ein visuelles Refactoring … mehr wie D&D Beyond, mod
 
 Left out: CR in the meta line (it stays in the Challenge line), a fixed D&D Beyond red, the dice
 stage's animation.
+
+## 2026-11-20 · Visual refactoring V2: Battle tab and encounter builder
+
+V1 accepted by the maintainer ("passt weiter"). V2 applies style C to the Battle tab and the
+encounter builder's summary card (plan `docs/superpowers/plans/2026-11-20-visual-v2-battle-encounter.md`).
+
+- The combatant card's numbers are tiles (the maximum hit points as the HP tile's note), with short
+  labels like the stat block's; the side is a pill tinted with the side's colour; conditions,
+  Concentration and the states in the order (down, defeated, dead) are pills; section heads in
+  capitals. Damage and a failed death save tinted red, Heal and a success green.
+- The tab keeps its own two scrolling panes rather than the shared `dnd5e-split`: the order and the
+  card scroll on their own, which a wrapping flex row cannot do. It folds by a container query at
+  560 px of the tab's width instead of the window's 700 px: below that the order needs about 240
+  px and the card 300.
+- `renderCard` is split into named parts (head, numbers, hit points, death saves, conditions,
+  checks and block); `drawPreview` into budget, meter and rating. Both drop off the lint's
+  warning list.
+- The encounter builder's dialog layout (shared with New NPC) and its party chips stay as they are
+  until V6.
+
+Left out: a combatant's portrait, colour-coded initiative numbers.

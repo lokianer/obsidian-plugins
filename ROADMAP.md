@@ -14,7 +14,7 @@ phase plans in `docs/superpowers/plans/` and each plugin's `DECISIONS.md`.
 
 | Plugin                                            | State                                                   | Released                                                                                                        |
 | ------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; visual refactoring V1 built     | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
+| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; visual refactoring V2 built     | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
 | [Daggerheart plugin](#daggerheart-plugin-planned) | Planned: research done, design not started, no code yet | —                                                                                                               |
 
 Neither plugin is in Obsidian's community directory yet.
@@ -23,8 +23,8 @@ Neither plugin is in Obsidian's community directory yet.
 
 In order of priority. Items marked **(open)** wait for the maintainer's decision.
 
-1. **dnd5e-byLokianer: visual refactoring, style C** (asked for on 2026-11-20). V1 (building
-   blocks, stat block) built, awaiting the check in Obsidian; then V2–V6, one view per phase (see
+1. **dnd5e-byLokianer: visual refactoring, style C** (asked for on 2026-11-20). V1 accepted, V2
+   (Battle tab, encounter builder) built, awaiting the check in Obsidian; then V3–V6 (see
    [Visual refactoring](#visual-refactoring--style-c)).
 2. **dnd5e-byLokianer: catalogues of all official spells, monsters and subclasses** (asked for on
    2026-11-20, approach agreed, design not written): see [Catalogues](#catalogues-planned).
@@ -145,10 +145,11 @@ Design [`2026-11-20-visual-refactoring-design.md`](docs/superpowers/specs/2026-1
 mockups beside it in `assets/`. The maintainer chose style C (a character-sheet layout, close to
 D&D Beyond) on 2026-11-20. One view per phase, each checked in Obsidian; no release until V6.
 
-- [ ] **V1 — Building blocks and the stat block** (built 2026-11-20, awaiting the check): tiles,
+- [x] **V1 — Building blocks and the stat block** (accepted 2026-11-20): tiles,
       section heads, pills, list | details; the stat block with tiles, the ability column and
       action rows (row and text). Plan `2026-11-20-visual-v1-blocks-statblock.md`.
-- [ ] **V2 — Battle tab and encounter builder.**
+- [ ] **V2 — Battle tab and encounter builder** (built 2026-11-20, awaiting the check). Plan
+      `2026-11-20-visual-v2-battle-encounter.md`.
 - [ ] **V3 — Faction card, faction world, tensions, popover, warnings.**
 - [ ] **V4 — Monster Manual and Spellbook lists, spell card.**
 - [ ] **V5 — Dice tab and Deck of Many Things** (the dice stage stays).
@@ -181,8 +182,8 @@ A complexity analysis (ESLint `complexity`, 2026-10-26) found 62 functions above
 - [x] Step 4: one registration per module under `src/obsidian/register/`; `main.ts` 42 lines.
 - [x] Step 5: complexity (20) and function length (150) as lint warnings.
 - [ ] Step 2: tables instead of `if` chains in the importers, `tokenize`, `readRow`, `fieldBlock`.
-- [ ] Step 3: the largest renderers in named parts (battle card, popover, NPC preview, dice stage;
-      the stat block done with V1).
+- [ ] Step 3: the largest renderers in named parts (popover, NPC preview, dice stage; the stat
+      block done with V1, the battle card and the encounter preview with V2).
 
 ### Not placed yet
 

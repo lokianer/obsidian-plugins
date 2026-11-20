@@ -1,6 +1,8 @@
-/* The Battle tab: header, initiative order, the combatant card. */
+/* The Battle tab in style C: header, initiative order beside the combatant card (one column below
+   560 px), the card's numbers as tiles, conditions and states as pills. */
 
 .dnd5e-battle {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -51,10 +53,13 @@
   border-right: 1px solid var(--background-modifier-border);
 }
 
-.dnd5e-battle-section {
-  padding: var(--size-4-2) var(--size-4-2) var(--size-4-1);
-  color: var(--text-muted);
-  font-weight: var(--font-semibold);
+.dnd5e-battle-order > .dnd5e-section-head,
+.dnd5e-battle-add > .dnd5e-section-head {
+  margin: var(--size-4-2) var(--size-4-2) var(--size-4-1);
+}
+
+.dnd5e-battle-card > .dnd5e-section-head {
+  margin: var(--size-4-1) 0 0;
 }
 
 .dnd5e-battle-row {
@@ -174,16 +179,16 @@
   gap: var(--size-4-1);
 }
 
-.dnd5e-battle-chip {
+.dnd5e-battle-chips {
   margin-top: var(--size-4-1);
-  padding: 0 var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--background-modifier-hover);
-  color: var(--text-normal);
+}
+
+.dnd5e-battle-chips .dnd5e-pill {
+  margin: 0;
 }
 
 .dnd5e-battle-chip.is-down {
-  background: rgba(var(--color-red-rgb), 0.2);
+  background: color-mix(in srgb, var(--color-red) 22%, transparent);
 }
 
 .dnd5e-battle-moves {
@@ -212,33 +217,31 @@
 }
 
 .dnd5e-battle-side {
-  padding: 0 var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--dnd5e-side);
-  color: var(--text-on-accent);
+  margin: 0;
+  background: color-mix(in srgb, var(--dnd5e-side) 22%, transparent);
+  color: var(--text-normal);
 }
 
-.dnd5e-battle-numbers {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--size-4-2);
-}
-
-.dnd5e-battle-number {
-  padding: var(--size-4-2) var(--size-4-3);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
-  background: var(--background-secondary);
-}
-
-.dnd5e-battle-number-label {
-  color: var(--text-muted);
-}
-
-.dnd5e-battle-number-value {
-  font-size: var(--font-ui-large);
-  font-weight: var(--font-bold);
+.dnd5e-battle-numbers .dnd5e-tile-value {
   font-variant-numeric: tabular-nums;
+}
+
+.dnd5e-battle-condition {
+  height: auto;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  color: var(--text-normal);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dnd5e-battle-condition:hover {
+  background: var(--background-modifier-active-hover);
+}
+
+.dnd5e-battle-condition.is-active {
+  color: var(--text-accent);
 }
 
 .dnd5e-battle-hp,
@@ -260,12 +263,16 @@
   font-size: 16px;
 }
 
-.dnd5e-battle-damage {
-  color: var(--color-red);
+.dnd5e-battle .dnd5e-battle-damage,
+.dnd5e-battle .dnd5e-battle-save-fail {
+  background: color-mix(in srgb, var(--color-red) 22%, transparent);
+  color: var(--text-normal);
 }
 
-.dnd5e-battle-heal {
-  color: var(--color-green);
+.dnd5e-battle .dnd5e-battle-heal,
+.dnd5e-battle .dnd5e-battle-save-ok {
+  background: color-mix(in srgb, var(--color-green) 22%, transparent);
+  color: var(--text-normal);
 }
 
 .dnd5e-battle-statblock {
@@ -308,7 +315,7 @@
   margin-left: auto;
 }
 
-@media (max-width: 700px) {
+@container (max-width: 560px) {
   .dnd5e-battle-body {
     grid-template-columns: minmax(0, 1fr);
     overflow-y: auto;
@@ -322,9 +329,5 @@
 
   .dnd5e-battle-card {
     overflow-y: visible;
-  }
-
-  .dnd5e-battle-numbers {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

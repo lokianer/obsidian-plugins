@@ -1704,6 +1704,21 @@ describe('battle tab', () => {
     // The owlbear's card shows its stat block; damage it down to defeated.
     await new Promise((r) => window.setTimeout(r, 0));
     expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear']);
+    // Style C: the numbers as tiles, the side as a pill, section titles as heads.
+    expect(texts(el, '.dnd5e-battle-numbers .dnd5e-tile-label')).toEqual([
+      'HP',
+      'Temp',
+      'AC',
+      'Init',
+    ]);
+    expect(texts(el, '.dnd5e-battle-numbers .dnd5e-tile-value').slice(0, 1)).toEqual(['59']);
+    expect(texts(el, '.dnd5e-battle-numbers .dnd5e-tile-note')).toEqual(['/ 59']);
+    expect(el.querySelector('.dnd5e-battle-side')?.classList.contains('dnd5e-pill')).toBe(true);
+    expect(
+      [...el.querySelectorAll('.dnd5e-battle-section')].every((s) =>
+        s.classList.contains('dnd5e-section-head'),
+      ),
+    ).toBe(true);
     const amount = el.querySelector<HTMLInputElement>('.dnd5e-battle-amount');
     if (amount === null) throw new Error('no amount');
     amount.value = '59';
@@ -1718,8 +1733,16 @@ describe('battle tab', () => {
     if (rounds === null) throw new Error('no rounds');
     rounds.value = '1';
     rounds.dispatchEvent(new Event('input'));
-    await click('.dnd5e-builder-flag', 'Prone');
+    await click('.dnd5e-battle-condition', 'Prone');
     expect(texts(el, '.is-turn .dnd5e-battle-chip')).toEqual(['Prone (1)']);
+    expect(el.querySelector('.is-turn .dnd5e-battle-chip')?.classList.contains('dnd5e-pill')).toBe(
+      true,
+    );
+    const prone = [...el.querySelectorAll('.dnd5e-battle-condition')].find(
+      (b) => b.textContent === 'Prone (1)',
+    );
+    expect(prone?.classList.contains('dnd5e-pill')).toBe(true);
+    expect(prone?.classList.contains('is-active')).toBe(true);
     await click('.dnd5e-battle-next');
     expect(texts(el, '.dnd5e-battle-chip')).toEqual(['Defeated']);
     await click('.dnd5e-battle-end');
@@ -1896,6 +1919,20 @@ describe('encounter builder', () => {
     );
     expect(el.querySelector('.dnd5e-encounter-left')?.textContent).toBe('675 XP left');
     expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Moderate difficulty');
+    // Style C: budget, spent and left as tiles, the rating as a pill.
+    expect(texts(el, '.dnd5e-encounter-card .dnd5e-tile-label')).toEqual([
+      'Budget',
+      'Spent',
+      'Left',
+    ]);
+    expect(texts(el, '.dnd5e-encounter-card .dnd5e-tile-value')).toEqual([
+      '2,075 XP',
+      '1,400 XP',
+      '675 XP',
+    ]);
+    expect(el.querySelector('.dnd5e-encounter-rating')?.classList.contains('dnd5e-pill')).toBe(
+      true,
+    );
     // Leaving Orrin out lowers the budget; High raises it.
     click(
       [...el.querySelectorAll('.dnd5e-encounter-party button')].find(
@@ -1945,6 +1982,7 @@ describe('encounter builder', () => {
       '70 % of the Moderate budget',
     );
     expect(el.querySelector('.dnd5e-encounter-left')).toBeNull();
+    expect(el.querySelector('.dnd5e-encounter-card .dnd5e-tile')).toBeNull();
     expect(el.querySelector('.dnd5e-encounter-rating')?.textContent).toBe('Moderate difficulty');
     expect(el.textContent).not.toContain('XP');
   });

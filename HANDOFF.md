@@ -18,67 +18,58 @@ wie D&D Beyond, moderner und übersichtlicher"), **all** official subclasses wit
 builder and a level-up database, and **all** spells and monsters. Agreed: the order visual
 refactoring → catalogues → character builder; for the content, catalogues with our own summaries
 in the plugin and full texts only by import (the repository is public). The visual refactoring was
-brainstormed with mockups (style C chosen), designed, planned, and **V1 built**: the building
-blocks and the stat block.
+brainstormed with mockups (style C chosen), designed and planned. **V1** (building blocks, stat
+block) was built and **accepted** ("passt weiter"); **V2** (Battle tab, encounter builder card)
+built.
 
 ## Where to continue
 
-1. **Check V1 in Obsidian** (the build is installed in `examples/vault`): open [[Isolde Ferrant]],
-   [[Aldric Thane]], [[Mira Voss]] (stat blocks in notes, editing), the Monster Manual (Owlbear in
-   German, Adult Red Dragon: rows with DC pills), the monster builder's preview, a monster in the
-   Battle tab, the right sidebar (narrow). After "passt": tick V1 in the roadmap, retake the README
-   screenshots `statblock*.webp` and `monsters.webp` in real Obsidian.
-2. **V2 — Battle tab and encounter builder**: write its plan from the design (§3), reuse
-   `split()`, `tiles()`, `pill()` from `src/obsidian/ui/blocks.ts`; the Battle tab's 700 px media
-   query goes in favour of `dnd5e-split`. Then V3–V6, one at a time, each with the maintainer's
-   check.
-3. **Catalogues** (after V6): brainstorm → design → plan; agreed scope in the roadmap.
-4. **Character builder with level-up database** (after the catalogues): brainstorm not started.
-5. Older open items stay as in the roadmap's "Next steps" (code quality, start-up time, vault
-   scans, distribution, Daggerheart, extensions).
+1. **Check V2 in Obsidian** (installed in `examples/vault`): the Battle tab on the encounter
+   "Ambush under the second arch" — start, roll, next turns, damage, a condition with rounds, a
+   combatant down (death saves), the tab narrow in the right sidebar; the encounter builder
+   (Battle tab ⋮ or the command) with and without experience points. After "passt": tick V2.
+2. **V3 — faction card, faction world, tensions, popover, warnings**: plan from the design (§3),
+   building blocks in `src/obsidian/ui/blocks.ts`. Then V4 (Monster Manual and Spellbook lists,
+   spell card; these may use `split()`), V5 (Dice tab, deck), V6 (builders and dialogs, including
+   `dnd5e-builder-flag` and the encounter builder's dialog layout).
+3. **Catalogues** (after V6), then the **character builder** — see the roadmap.
+4. Retake the README screenshots in real Obsidian once the look is final (after V6, or per view).
+5. Older open items as in the roadmap's "Next steps".
 
 ## State of the working tree
 
-Branch `visual-v1`, committed; `main` fast-forwarded to it and pushed (see `git log`). The
-maintainer's own uncommitted changes in `examples/vault` (Session 14's log lines, faction values,
-two monsters, Session 15) were left alone. They make 3 `packages/session` tests and 5 plugin tests
-fail locally, because those tests read the example vault as their contract; with them stashed,
-everything passes. Decide with the maintainer whether to keep them (then update the tests) or
-revert them (`git checkout examples/vault` and delete the new files).
+`main`, pushed (see `git log`). The maintainer's own uncommitted changes in `examples/vault`
+(Session 14's log lines, faction values, two monsters, Session 15) were left alone; they make 3
+`packages/session` tests and 5 plugin tests fail locally because those tests read the example
+vault as their contract. With them stashed everything passes. Still to decide with the
+maintainer: keep them (update the tests) or revert them.
 
 ## Done this session
 
-- Design `docs/superpowers/specs/2026-11-20-visual-refactoring-design.md` with the two mockups in
-  `assets/`; plan `docs/superpowers/plans/2026-11-20-visual-v1-blocks-statblock.md`.
-- V1: `src/obsidian/ui/blocks.ts` (tile with note, tiles, section head, pill, split) and their CSS
-  in `styles/base.css`; `src/dice/action-row.ts` (attack, damage parts and saving throw DC of an
-  entry, English and German); `partCheck` extracted in `statblock-dice.ts`; the stat block split
-  into `statblock-parts.ts` and restyled in `styles/statblock.css`.
-- DECISIONS "Visual refactoring: style C", CHANGELOG Unreleased, ROADMAP (visual refactoring,
-  catalogues, character builder).
+- Design `docs/superpowers/specs/2026-11-20-visual-refactoring-design.md` with mockups in
+  `assets/`; plans `…-visual-v1-blocks-statblock.md`, `…-visual-v2-battle-encounter.md`.
+- V1 (accepted): `src/obsidian/ui/blocks.ts`, `src/dice/action-row.ts`, `statblock-parts.ts`,
+  `styles/statblock.css`; fixes from the final review (Markdown italics, tools over the row).
+- V2: `battle-view.ts` (`renderCard` in named parts, tiles, pills, section heads),
+  `encounter-builder.ts` (`drawPreview` in budget, meter, rating), `styles/battle.css`,
+  `styles/encounter-builder.css`, short tile labels.
+- DECISIONS "Visual refactoring: style C" and "… V2"; CHANGELOG Unreleased; ROADMAP.
 
 ## Half-finished — check in Obsidian
 
-V1, see "Where to continue" 1.
+V2, see "Where to continue" 1.
 
 ## Decisions taken this session
 
-In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Visual refactoring: style C". Agreed in the
-conversation and recorded in the roadmap: the catalogue approach for all subclasses, spells and
-monsters. Smaller calls in V1: short tile labels (AC/HP/Speed, RK/TP/Bew.); the score beside the
-label and the modifier as the roll button without brackets; CR stays out of the meta line; with a
-row the entry's name stands in the row only; the DC is a pill, not a button; one wrap point of
-about 480 px (flex-wrap for list | details, a container query for the stat block).
+In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Visual refactoring: style C", "Visual refactoring V2:
+Battle tab and encounter builder". Agreed in the conversation and in the roadmap: the catalogue
+approach for all subclasses, spells and monsters. The V1 small things (Spellcasting row, `d` in
+German rows, row names as plain text) were accepted with V1 as they are.
 
 ## Open questions for the maintainer
 
-- V1's check in Obsidian.
+- V2's check in Obsidian.
 - The uncommitted example-vault changes: keep (tests updated) or revert.
-- Small things the final review found, left for the check (decide after seeing them in Obsidian):
-  a Spellcasting trait gets a row with its spell attack (`+6`) and its name leaves the text; German
-  rows show `d` (`18d6`) while the text under them says `W`; row names show as plain text (a
-  `[[link]]` in an entry's name would show its brackets); narrow blocks show the abilities as a
-  grid of three, not a row of six as the plan said.
 
 ## Watch out
 
@@ -124,8 +115,9 @@ about 480 px (flex-wrap for list | details, a container query for the stat block
 
 ## Verification
 
-With the example vault as committed: plugin 422/422 tests, session 15/15; typecheck and build
-clean; lint 0 errors, warnings only the known complexity list (now without `renderStatblock`) and
-four sentence-case warnings in tests. Screenshots of Isolde Ferrant (900 px and 328 px), the
-Owlbear in German and the Adult Red Dragon in the light theme checked: no horizontal overflow,
-the ability column folds, text at least 16 px.
+With the example vault as committed: `pnpm check` exit 0, plugin 424/424 and session 15/15 tests,
+lint 0 errors; the warnings are the known complexity list, now without `renderStatblock`, the
+Battle tab's `renderCard` and the encounter builder's `drawPreview` (the `drawPreview` still listed
+is the New NPC dialog's), plus four sentence-case warnings in tests. Screenshots: stat blocks (900
+and 328 px, dark, light, German), the Battle tab (1000 and 380 px, German light) and the encounter
+builder — no horizontal overflow, the panes fold.

@@ -15,6 +15,12 @@ All notable changes to this plugin are documented here. The format follows
   the attack bonus and every damage part as dice buttons, the saving throw DC as a pill. The text
   under the row is unchanged and keeps its own dice buttons. Editing and rolling work as before.
   The other views follow in phases V2–V6.
+- **Battle tab and encounter builder in style C** (phase V2): the combatant's hit points, temporary
+  hit points, AC and initiative as tiles; the side, conditions and states as pills; section heads
+  in capitals; Damage and failed death saves tinted red, Heal and successes green. The tab folds to
+  one column below 560 px of its own width (a container query; before, the window's 700 px). The
+  encounter builder's card shows budget, spent and what is left (or over) as tiles and the
+  difficulty as a pill. Tile labels are short (HP, Temp, AC, Init; TP, Temp., RK, Init.).
 
 ## [0.1.0] - 2026-10-26
 

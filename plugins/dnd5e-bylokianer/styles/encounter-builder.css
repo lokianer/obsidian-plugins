@@ -1,4 +1,17 @@
-/* The encounter builder. */
+/* The encounter builder. Its summary card in style C: budget, spent and left as tiles, the
+   rating as a pill; the dialog's layout follows with the other builders (V6). */
+
+.dnd5e-encounter-card > .dnd5e-tiles {
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-encounter-card .dnd5e-tile {
+  background: var(--background-primary);
+}
+
+.dnd5e-encounter-card .dnd5e-tile.is-over {
+  background: color-mix(in srgb, var(--color-red) 22%, transparent);
+}
 
 .dnd5e-encounter-difficulty {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -74,14 +87,6 @@
   .dnd5e-encounter-fill {
     transition: none;
   }
-}
-
-.dnd5e-encounter-rating {
-  display: inline-block;
-  padding: 0 var(--size-4-2);
-  border-radius: var(--radius-s);
-  background: var(--background-modifier-hover);
-  color: var(--text-normal);
 }
 
 .dnd5e-encounter-rating.is-low {

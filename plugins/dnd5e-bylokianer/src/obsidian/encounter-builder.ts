@@ -21,6 +21,7 @@ import type { SrdMonster } from '../monsters/model';
 import { experience } from '../npc/statblock';
 import type { Lang } from '../npc/races';
 import type { EncounterInfo, PartyMember } from './battle-store';
+import { pill, tile, tiles } from './ui/blocks';
 
 export interface EncounterBuilderDeps {
   t: T;
@@ -281,7 +282,7 @@ export class EncounterBuilderModal extends Modal {
   }
 
   private drawPreview(): void {
-    const { t, lang } = this.deps;
+    const { t } = this.deps;
     const el = this.previewEl;
     el.empty();
     const card = el.createDiv({ cls: ['dnd5e-npc-card', 'dnd5e-encounter-card'] });
@@ -302,6 +303,28 @@ export class EncounterBuilderModal extends Modal {
     });
     const spent = this.spent();
     const total = budget(levels, this.difficulty);
+    if (this.deps.experience) this.drawBudget(card, spent, total);
+    this.drawMeter(card, spent, total);
+    this.drawRating(card, spent, levels);
+  }
+
+  /** Budget, spent and left (or over) as tiles, when experience points are shown. */
+  private drawBudget(card: HTMLElement, spent: number, total: number): void {
+    const { t } = this.deps;
+    const grid = tiles(card);
+    tile(grid, this.xp(total), t('encounterBuilder.tile.budget'));
+    tile(grid, this.xp(spent), t('encounterBuilder.tile.spent'));
+    const over = spent > total;
+    tile(
+      grid,
+      this.xp(over ? spent - total : total - spent),
+      t(over ? 'encounterBuilder.tile.over' : 'encounterBuilder.tile.left'),
+    ).el.toggleClass('is-over', over);
+  }
+
+  /** The spent line, the bar and what is left. */
+  private drawMeter(card: HTMLElement, spent: number, total: number): void {
+    const { t } = this.deps;
     const meter = card.createDiv({ cls: 'dnd5e-encounter-meter' });
     const ratio = total > 0 ? spent / total : 0;
     const difficulty = t(`encounterBuilder.${this.difficulty}`);
@@ -324,11 +347,14 @@ export class EncounterBuilderModal extends Modal {
             : t('encounterBuilder.left', { xp: this.xp(total - spent) }),
       });
     }
+  }
+
+  /** The rating as a pill, the level hint and the monsters picked. */
+  private drawRating(card: HTMLElement, spent: number, levels: number[]): void {
+    const { t, lang } = this.deps;
     const rated = rating(spent, levels);
-    const chip = card.createDiv({
-      cls: ['dnd5e-encounter-rating', `is-${rated}`],
-      text: t(`encounterBuilder.rating.${rated}`),
-    });
+    const chip = pill(card, t(`encounterBuilder.rating.${rated}`));
+    chip.addClass('dnd5e-encounter-rating', `is-${rated}`);
     chip.dataset.rating = rated;
     if (this.deps.party.some((m) => this.members.has(m.name) && m.level === null)) {
       card.createDiv({ cls: 'dnd5e-builder-hint', text: t('encounterBuilder.levelOne') });
