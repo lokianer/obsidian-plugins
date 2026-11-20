@@ -202,9 +202,16 @@ export class CardRenderer extends Component {
     const { card } = this.ctx;
     const grid = tiles(head);
     if (card.power !== null) this.renderPower(grid, head, card.power);
-    const values = card.sections.relations.rows.map((r) => r.value ?? 0);
-    tile(grid, String(values.filter((v) => v > 0).length), this.t('card.allies'));
-    tile(grid, String(values.filter((v) => v < 0).length), this.t('card.enemies'));
+    const { relations } = card.sections;
+    // The rows the world reads: a repeated key or a relation to itself is left out.
+    const values = relations.rows
+      .filter(
+        (r) => !r.warnings.some((w) => w.code === 'duplicate-key' || w.code === 'self-relation'),
+      )
+      .map((r) => r.value ?? 0);
+    const count = (n: number) => (relations.editable ? String(n) : '—');
+    tile(grid, count(values.filter((v) => v > 0).length), this.t('card.allies'));
+    tile(grid, count(values.filter((v) => v < 0).length), this.t('card.enemies'));
   }
 
   private renderPower(

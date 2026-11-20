@@ -16,7 +16,8 @@
   margin-bottom: var(--size-4-1);
   padding: var(--size-4-2) var(--size-4-3);
   border-radius: var(--radius-m);
-  background: var(--background-secondary);
+  /* The panel lives in the sidebar, which is --background-secondary itself. */
+  background: var(--background-primary);
   line-height: 1.6;
 }
 

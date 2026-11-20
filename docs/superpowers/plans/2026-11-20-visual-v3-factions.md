@@ -37,7 +37,7 @@ limits (complexity 20, 150 lines per function), no behaviour or note changes.
 ## Review Focus
 
 1. Power editing: a pip click still writes `power`; `data-focus="power"` still finds the box.
-2. A faction without `power`: no Power tile, Allies and Enemies still shown.
+2. A faction without `power`: the Power tile shows the default 3 (as the card did before).
 3. Narrow pane / phone: tiles wrap, relation rows keep their slider usable.
 4. Collapsible toggles (secret relations, other fields) keep their chevron, count and detail line.
 5. The warnings dialog with no warnings: the stats and the clean message only.

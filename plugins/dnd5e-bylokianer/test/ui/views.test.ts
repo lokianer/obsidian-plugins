@@ -192,6 +192,13 @@ describe('faction card', () => {
     expect(root.querySelector('.dnd5e-card .dnd5e-tiles')).toBeNull();
   });
 
+  it('leaves a relation to itself out of the allies, as the world does', () => {
+    // The Garbled Hymnal: The Archivists 7 (read as +5), itself 5 (ignored), The Gutter Court -1,
+    // The Salt Kings -2 (a dangling target, still read).
+    render(`${F}/The Garbled Hymnal/factions.md`);
+    expect(texts(root, '.dnd5e-card .dnd5e-tile-value')).toEqual(['5', '1', '2']);
+  });
+
   it('keeps a character’s secret section closed', () => {
     render(`${COURT}/Sable.md`);
     expect(texts(root, '.dnd5e-card-name')).toEqual(['Sable']);

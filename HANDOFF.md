@@ -72,7 +72,7 @@ approach for all subclasses, spells and monsters.
 
 ## Verification
 
-With the example vault as committed: `pnpm check` exit 0, plugin 428/428 and session 15/15 tests,
+With the example vault as committed: `pnpm check` exit 0, plugin 429/429 and session 15/15 tests,
 lint 0 errors; the warnings are the known complexity list, now without `renderStatblock`, the
 Battle tab's `renderCard` and the encounter builder's `drawPreview` (the `drawPreview` still listed
 is the New NPC dialog's), plus four sentence-case warnings in tests. Screenshots: stat blocks (900

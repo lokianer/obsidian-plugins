@@ -42,7 +42,7 @@
   height: 16px;
 }
 
-/* A small neutral pill: "unknown", "secret", the mode in the tension panel. */
+/* A small neutral tag: "unknown", "secret". */
 .dnd5e-card-tag {
   padding: 0 var(--size-4-2);
   border-radius: var(--radius-s);
@@ -121,8 +121,10 @@
 }
 
 .dnd5e-tile-label {
+  min-width: 0;
   color: var(--text-muted);
   letter-spacing: 0.06em;
+  overflow-wrap: anywhere;
 }
 
 .dnd5e-section-head {

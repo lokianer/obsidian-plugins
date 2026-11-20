@@ -46,8 +46,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--size-4-2) var(--size-4-4);
+  gap: var(--size-4-2);
   padding: var(--size-4-1) var(--size-4-1) 0;
 }
 
@@ -71,6 +70,7 @@
 }
 
 .dnd5e-card-head > .dnd5e-tiles {
+  grid-template-columns: repeat(auto-fit, minmax(7.5em, 1fr));
   margin-top: var(--size-4-3);
 }
 
@@ -82,6 +82,7 @@
 }
 
 .dnd5e-card .dnd5e-card-pip {
+  flex: none;
   width: 14px;
   height: 14px;
   padding: 0;
@@ -94,6 +95,11 @@
 
 .dnd5e-card .dnd5e-card-pip:hover {
   border-color: var(--interactive-accent);
+}
+
+/* Obsidian's button hover would fill an unlit pip grey. */
+.dnd5e-card button.dnd5e-card-pip:not(.is-on):hover {
+  background: transparent;
 }
 
 .dnd5e-card .dnd5e-card-pip.is-on {
@@ -129,6 +135,7 @@
   box-shadow: none;
   color: var(--text-accent);
   font-size: 16px;
+  font-weight: var(--font-bold);
   text-align: left;
   cursor: pointer;
 }
