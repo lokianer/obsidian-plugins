@@ -69,6 +69,7 @@
   margin: 0;
   padding: var(--size-4-1) var(--size-4-3);
   border: none;
+  border-radius: var(--radius-l);
   background: var(--background-modifier-hover);
   box-shadow: none;
   color: var(--text-muted);
@@ -82,6 +83,11 @@
 .dnd5e-spells button.dnd5e-spells-chip:not(.clickable-icon):hover {
   background: var(--background-modifier-active-hover);
   color: var(--text-normal);
+}
+
+/* The rule above removes Obsidian's focus shadow; keyboard focus gets its own ring. */
+.dnd5e-spells button.dnd5e-spells-chip:not(.clickable-icon):focus-visible {
+  box-shadow: 0 0 0 2px var(--background-modifier-border-focus, var(--interactive-accent));
 }
 
 .dnd5e-spells button.dnd5e-spells-chip.is-active:not(.clickable-icon),
@@ -130,6 +136,8 @@
 
 .dnd5e-spells-list {
   overflow-y: auto;
+  /* A row picked with the arrow keys scrolls into view below the sticky level head. */
+  scroll-padding-top: 3em;
   padding: 0 var(--size-4-2) var(--size-4-6);
   border-right: 1px solid var(--background-modifier-border);
   outline: none;
@@ -173,7 +181,7 @@
 }
 
 .dnd5e-spells-list:focus-visible .dnd5e-spells-row.is-selected {
-  outline: 2px solid var(--dnd5e-school);
+  outline: 2px solid var(--interactive-accent);
   outline-offset: -2px;
 }
 
@@ -283,6 +291,15 @@
 .dnd5e-spells-card-level {
   color: var(--dnd5e-school);
   font-weight: var(--font-semibold);
+}
+
+/* Two by two, so long labels (WIRKUNGSDAUER) fit and no tile is left alone on a row. */
+.dnd5e-spells-tiles {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dnd5e-spells-tiles .dnd5e-tile-label {
+  overflow-wrap: normal;
 }
 
 .dnd5e-spells-tiles .dnd5e-tile-value {

@@ -888,7 +888,8 @@ Manual (plan `docs/superpowers/plans/2026-11-20-visual-v4-lists.md`).
 
 - Filters are pills; levels and challenge ratings are sticky section heads; the selected row is
   tinted with the accent (the school's colour stays as the row's left edge).
-- The spell card's four numbers are tiles, its badges and classes pills, its sections heads.
+- The spell card's four numbers are tiles, two by two (German labels such as WIRKUNGSDAUER do not
+  fit four across), its badges and classes pills, its sections heads.
 - **No CR / level badge at the row's end** (the spec's suggestion): the sticky group head already
   says it, a badge on every row would repeat it.
 - The two panes keep their own grid, each scrolling on its own like the Battle tab, and fold at

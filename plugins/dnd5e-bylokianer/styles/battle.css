@@ -234,12 +234,17 @@
   height: auto;
   margin: 0;
   border: none;
+  border-radius: var(--radius-l);
   background: var(--background-modifier-hover);
   box-shadow: none;
   color: var(--text-normal);
   font-size: 16px;
   white-space: normal;
   cursor: pointer;
+}
+
+.dnd5e-battle button.dnd5e-battle-condition:not(.clickable-icon):focus-visible {
+  box-shadow: 0 0 0 2px var(--background-modifier-border-focus, var(--interactive-accent));
 }
 
 .dnd5e-battle button.dnd5e-battle-condition:not(.clickable-icon):hover {
