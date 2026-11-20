@@ -3,6 +3,7 @@ import { Plugin } from 'obsidian';
 import { Library } from './obsidian/library';
 import { createContext } from './obsidian/register/context';
 import { registerBattle } from './obsidian/register/battle';
+import { registerCharacters } from './obsidian/register/character';
 import { registerDeck } from './obsidian/register/deck';
 import { registerDice } from './obsidian/register/dice';
 import { registerFactions } from './obsidian/register/factions';
@@ -42,5 +43,6 @@ export default class Dnd5ePlugin extends Plugin {
     registerBattle(ctx, monsters, spells, party);
     registerStatblocks(ctx, spells);
     registerNpcs(ctx);
+    registerCharacters(ctx);
   }
 }
