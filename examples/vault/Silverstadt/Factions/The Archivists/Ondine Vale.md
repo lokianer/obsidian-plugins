@@ -6,7 +6,7 @@ alignment: lawful neutral
 rank: First Keeper
 relations:
   # the strongest deviation in the vault: she despises the Court her own faction trades with
-  The Gutter Court: -5
+  The Gutter Court: -4
   Corvin Marsh: -1
 tags:
   - npc

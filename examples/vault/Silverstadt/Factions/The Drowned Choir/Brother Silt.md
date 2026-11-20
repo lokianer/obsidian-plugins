@@ -3,7 +3,7 @@ type: npc
 race: human
 class: cleric
 relations:
-  The Archivists: 3
+  The Archivists: 2
 tags:
   - campaign/silverstadt/npcs
 ---

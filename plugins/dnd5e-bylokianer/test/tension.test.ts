@@ -34,21 +34,22 @@ describe('findTensions on the example vault', () => {
   it('finds members out of line in Public, nothing secret', () => {
     const found = findTensions(world, 'public', DEFAULT_THRESHOLDS);
     expect(summary(found)).toEqual([
-      ['out-of-line', 'Ondine Vale→The Gutter Court -5', 'The Archivists→The Gutter Court 2'],
+      ['out-of-line', 'Ondine Vale→The Gutter Court -4', 'The Archivists→The Gutter Court 2'],
       ['out-of-line', 'Mira Voss→The Archivists -5', 'The Gutter Court→The Archivists 1'],
       [
         'out-of-line',
         'Aldric Thane→The Gutter Court 1',
-        'Order of the Lantern→The Gutter Court -3',
+        'Order of the Lantern→The Gutter Court -2',
       ],
       [
         'out-of-line',
         'Corvin Marsh→Order of the Lantern -3',
         'The Archivists→Order of the Lantern 0',
       ],
+      ['out-of-line', 'Brother Silt→The Archivists 2', 'The Drowned Choir→The Archivists 5'],
     ]);
     expect(found.find((t) => t.rule === 'out-of-line')).toMatchObject({
-      difference: 7,
+      difference: 6,
       own: { edit: { path: `${F}/The Archivists/Ondine Vale.md`, field: 'relations' } },
     });
     expect(findTensions(withoutSecrets(world), 'public', DEFAULT_THRESHOLDS)).toEqual(found);

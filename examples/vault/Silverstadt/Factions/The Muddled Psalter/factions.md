@@ -4,7 +4,7 @@ name: The Muddled Psalter
 power: 2
 relations:
   The Drowned Choir: 2
-  The Archivists: 3
+  The Archivists: 4
   Order of the Lantern:
     value: -4
     why: "the Order burned their first hymnal"

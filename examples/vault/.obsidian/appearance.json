@@ -6,5 +6,6 @@
   "textFontFamily": "",
   "monospaceFontFamily": "",
   "cssTheme": "",
-  "showViewHeader": true
+  "showViewHeader": true,
+  "showRibbon": true
 }

@@ -6,7 +6,7 @@ leader: "[[Isolde Ferrant]]"
 relations:
   The Archivists: 1
   The Gutter Court:
-    value: -3
+    value: -2
     why: "[[Session 11 – Under the Lantern Bridge]]"
 secret_relations:
   # they want their charter back before the Archivists read it

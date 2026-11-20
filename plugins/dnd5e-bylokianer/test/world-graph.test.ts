@@ -32,7 +32,7 @@ describe('buildGraph', () => {
   it('keeps relations one-directional, with reasons', () => {
     const edge = (from: string, to: string) => graph.edges.find((e) => e.id === `${from}→${to}`);
     expect(edge(ORDER, COURT)).toMatchObject({
-      value: -3,
+      value: -2,
       why: '[[Session 11 – Under the Lantern Bridge]]',
       differs: false,
     });

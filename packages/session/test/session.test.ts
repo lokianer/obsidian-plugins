@@ -40,7 +40,7 @@ describe('appendToLog', () => {
   it('adds the line after the last log entry, before the next heading', () => {
     const after = appendToLog(session14, line).split('\n');
     const at = after.indexOf(line);
-    expect(after[at - 1]).toBe('- 21:40 The party now knows [[Lady Vermillion]].');
+    expect(after[at - 1]).toBe('- 10:55 Order of the Lantern → The Gutter Court: −3 → −2');
     expect(after[at + 1]).toBe('');
     expect(after[at + 2]).toBe('## Loot');
     expect(after.length).toBe(session14.split('\n').length + 1);
@@ -70,7 +70,7 @@ describe('appendToLog', () => {
 });
 
 describe('parseLog', () => {
-  it('reads the relation line of Session 14 and nothing else there', () => {
+  it('reads the relation lines of Session 14 and nothing else there', () => {
     expect(parseLog(session14)).toEqual([
       {
         time: '20:31',
@@ -78,6 +78,22 @@ describe('parseLog', () => {
         to: 'The Gutter Court',
         before: -2,
         after: -3,
+        secret: false,
+      },
+      {
+        time: '10:46',
+        from: 'The Muddled Psalter',
+        to: 'The Archivists',
+        before: 3,
+        after: 4,
+        secret: false,
+      },
+      {
+        time: '10:55',
+        from: 'Order of the Lantern',
+        to: 'The Gutter Court',
+        before: -3,
+        after: -2,
         secret: false,
       },
     ]);
@@ -91,7 +107,7 @@ describe('parseLog', () => {
     ];
     text = appendToLog(text, formatLogLine(changes[0]!));
     text = appendToLog(text, formatLogLine(changes[1]!), { secret: true });
-    expect(parseLog(text).slice(1)).toEqual([
+    expect(parseLog(text).slice(parseLog(session14).length)).toEqual([
       { ...changes[0], secret: false },
       { ...changes[1], secret: true },
     ]);

@@ -28,7 +28,7 @@ const world = buildWorld(loadExampleVault());
 describe('the example vault — stances', () => {
   it('keeps relations one-directional, with reasons', () => {
     expect(stance(world, ORDER, COURT, 'public')).toEqual({
-      value: -3,
+      value: -2,
       why: '[[Session 11 – Under the Lantern Bridge]]',
       source: ORDER,
       field: 'relations',
@@ -69,7 +69,7 @@ describe('the example vault — stances', () => {
   });
 
   it('reads characters’ own values, also towards characters', () => {
-    expect(stance(world, ONDINE, COURT, 'public')).toMatchObject({ value: -5, inherited: false });
+    expect(stance(world, ONDINE, COURT, 'public')).toMatchObject({ value: -4, inherited: false });
     expect(stance(world, ORRIN, MIRA, 'public')).toMatchObject({ value: -2 });
     expect(stance(world, SABLE, ARCHIVISTS, 'true')).toMatchObject({
       value: 4,

@@ -31,6 +31,8 @@ The party took the charts to [[Elder Wren]] instead. She read them on sight and 
 - 20:55 Rumours on Lantern Quay, d6 → 4: The Gutter Court has a new chair, and she wears red
 - 21:14 Drew from %%[[Omens of the River]]%%: Bells under the water, faint, out of rhythm
 - 21:40 The party now knows [[Lady Vermillion]].
+- 10:46 The Muddled Psalter → The Archivists: +3 → +4
+- 10:55 Order of the Lantern → The Gutter Court: −3 → −2
 
 ## Loot
 

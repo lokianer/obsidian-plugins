@@ -15,7 +15,9 @@ const session14 = readExampleNote('Silverstadt/Sessions/Session 14 – Bell Squa
 describe('buildHistory', () => {
   it('resolves the example vault’s log line to the Order and the Court', () => {
     const history = buildHistory(world, [{ session: 14, entries: parseLog(session14) }]);
+    // Newest first: the maintainer's play test eased the feud again at 10:55.
     expect(historyFor(history, ORDER, COURT, 'public')).toEqual([
+      { session: 14, time: '10:55', from: ORDER, to: COURT, before: -3, after: -2, secret: false },
       { session: 14, time: '20:31', from: ORDER, to: COURT, before: -2, after: -3, secret: false },
     ]);
   });

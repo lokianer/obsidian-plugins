@@ -45,3 +45,24 @@ The thugs pin, the sharpshooters stay on the ledge (half cover). [[Sable]] wants
 
 > [!gm]
 > If [[Sergeant Pell]] is on watch, the watch arrives in 1 round instead.
+
+## Combat
+
+Rolling initiative
+
+| Init | Combatant | HP | AC | Conditions |
+| ---: | --- | ---: | ---: | --- |
+| 15 | [[Sable]] | 40/40 | 15 |  |
+| 8 | Court sharpshooter 1 | 27/27 | 14 |  |
+| 8 | Court sharpshooter 2 | 27/27 | 14 |  |
+| 8 | Court thug 1 | 32/32 | 11 |  |
+| 8 | Court thug 2 | 32/32 | 11 |  |
+| 8 | Court thug 3 | 32/32 | 11 |  |
+| 8 | Court thug 4 | 32/32 | 11 |  |
+| 5 | Bridge rat 1 | 7/7 | 12 |  |
+| 5 | Bridge rat 2 | 7/7 | 12 |  |
+| 5 | Bridge rat 3 | 7/7 | 12 |  |
+| — | [[Dagny]] | 71/71 | 15 |  |
+| — | [[Ilex]] | 50/50 | 16 |  |
+| — | [[Orrin Quill]] | 39/39 | 14 |  |
+| — | [[Tessaly Vane]] | 58/58 | 18 |  |
