@@ -4,18 +4,21 @@
 		"class": "barbarian",
 		"rules": "2024",
 		"name": {
-			"en": "Path of the Berserker"
+			"en": "Path of the Berserker",
+			"de": "Pfad des Berserkers"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "berserker-frenzy",
 				"name": {
-					"en": "Frenzy"
+					"en": "Frenzy",
+					"de": "Raserei"
 				},
 				"level": 3,
 				"text": {
-					"en": "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
+					"en": "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack.",
+					"de": "Wenn du im Kampfrausch deinen Rücksichtslosen Angriff einsetzt, fügst du dem ersten Ziel, das du in deinem Zug mit einem stärkebasierten Angriff triffst, zusätzlichen Schaden zu. Ermittle den zusätzlichen Schaden, indem du mit einer Anzahl von W6 in Höhe deines Kampfrausch-Schadensbonus würfelst und ihre Summe hinzufügst. Der Schaden ist vom selben Typ wie jener der Waffe oder des waffenlosen Angriffs, die für den Angriff verwendet wurden."
 				},
 				"grants": [],
 				"choices": []
@@ -23,11 +26,13 @@
 			{
 				"id": "berserker-mindless-rage",
 				"name": {
-					"en": "Mindless Rage"
+					"en": "Mindless Rage",
+					"de": "Geistloser Kampfrausch"
 				},
 				"level": 6,
 				"text": {
-					"en": "You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you."
+					"en": "You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you.",
+					"de": "Im Kampfrausch bist du gegen die Zustände Bezaubert und Verängstigt immun. Wenn du zu Beginn des Kampfrauschs bezaubert oder verängstigt bist, endet der Zustand."
 				},
 				"grants": [],
 				"choices": []
@@ -35,11 +40,13 @@
 			{
 				"id": "berserker-retaliation",
 				"name": {
-					"en": "Retaliation"
+					"en": "Retaliation",
+					"de": "Vergeltung"
 				},
 				"level": 10,
 				"text": {
-					"en": "When you take damage from a creature that is within 5 feet of you, you can take a Reaction to make one melee attack against that creature, using a weapon or an Unarmed Strike."
+					"en": "When you take damage from a creature that is within 5 feet of you, you can take a Reaction to make one melee attack against that creature, using a weapon or an Unarmed Strike.",
+					"de": "Wenn du Schaden durch eine Kreatur erleidest, die sich im Abstand von bis zu 1,5 Metern von dir befindet, kannst du als Reaktion einen Nahkampfangriff gegen diese Kreatur ausführen und dazu eine Waffe oder einen waffenlosen Angriff verwenden."
 				},
 				"grants": [],
 				"choices": []
@@ -47,11 +54,13 @@
 			{
 				"id": "berserker-intimidating-presence",
 				"name": {
-					"en": "Intimidating Presence"
+					"en": "Intimidating Presence",
+					"de": "Einschüchternde Präsenz"
 				},
 				"level": 14,
 				"text": {
-					"en": "As a Bonus Action, you can strike terror into others with your menacing presence and primal power. When you do so, each creature of your choice in a 30-foot Emanation originating from you must make a Wisdom saving throw (DC 8 plus your Strength modifier and Proficiency Bonus). On a failed save, a creature has the Frightened condition for 1 minute. At the end of each of the Frightened creature's turns, the creature repeats the save, ending the effect on itself on a success.\n\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it."
+					"en": "As a Bonus Action, you can strike terror into others with your menacing presence and primal power. When you do so, each creature of your choice in a 30-foot Emanation originating from you must make a Wisdom saving throw (DC 8 plus your Strength modifier and Proficiency Bonus). On a failed save, a creature has the Frightened condition for 1 minute. At the end of each of the Frightened creature's turns, the creature repeats the save, ending the effect on itself on a success.\n\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it.",
+					"de": "Als Bonusaktion kannst du andere mit deiner bedrohlichen Präsenz und deiner Urmacht in Panik versetzen. In diesem Fall muss jede Kreatur deiner Wahl in einer Ausströmung von neun Metern, die von dir ausgeht, einen Weisheitsrettungswurf (SG 8 plus dein Stärkemodifikator plus dein Übungsbonus) ausführen. Misslingt der Wurf, so ist die Kreatur eine Minute lang verängstigt. Die verängstigte Kreatur wiederholt den Rettungswurf am Ende jedes ihrer Züge. Bei einem Erfolg endet der Effekt.\n\nWenn du dieses Merkmal verwendet hast, kannst du dies erst nach einer langen Rast erneut tun, sofern du nicht eine Anwendung deines Kampfrauschs zum Wiederherstellen verbrauchst (keine Aktion erforderlich)."
 				},
 				"grants": [],
 				"choices": []
@@ -63,25 +72,29 @@
 		"class": "bard",
 		"rules": "2024",
 		"name": {
-			"en": "College of Lore"
+			"en": "College of Lore",
+			"de": "Schule des Wissens"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "lore-bonus-proficiencies",
 				"name": {
-					"en": "Bonus Proficiencies"
+					"en": "Bonus Proficiencies",
+					"de": "Zusätzliches Wissen"
 				},
 				"level": 3,
 				"text": {
-					"en": "You gain proficiency with three skills of your choice."
+					"en": "You gain proficiency with three skills of your choice.",
+					"de": "Du erhältst Übung im Umgang mit drei Fertigkeiten deiner Wahl."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "skills",
 						"name": {
-							"en": "Skills"
+							"en": "Skills",
+							"de": "Fertigkeiten"
 						},
 						"count": 3,
 						"gives": "skill",
@@ -94,11 +107,13 @@
 			{
 				"id": "lore-cutting-words",
 				"name": {
-					"en": "Cutting Words"
+					"en": "Cutting Words",
+					"de": "Schneidende Worte"
 				},
 				"level": 3,
 				"text": {
-					"en": "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."
+					"en": "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure.",
+					"de": "Du lernst, mit Verstand und Schlagfertigkeit für übernatürliche Ablenkung und Verwirrung zu sorgen oder auf anderen Wegen Einfluss und Selbstsicherheit anderer zu schwächen. Wenn eine Kreatur im Abstand von bis zu 18 Metern von dir, die du sehen kannst, einen Schadenswurf ausführt oder einen Attributs- oder Angriffswurf besteht, kannst du eine Reaktion ausführen, um eine Anwendung deiner Bardischen Inspiration zu verbrauchen. Würfle mit deinem Bardische-Inspiration-Würfel und ziehe das Ergebnis von dem der Kreatur ab, um Schaden zu verringern oder den Erfolg möglicherweise in einen Misserfolg zu verwandeln."
 				},
 				"grants": [],
 				"choices": []
@@ -106,11 +121,13 @@
 			{
 				"id": "lore-magical-discoveries",
 				"name": {
-					"en": "Magical Discoveries"
+					"en": "Magical Discoveries",
+					"de": "Magische Entdeckungen"
 				},
 				"level": 6,
 				"text": {
-					"en": "You learn two spells of your choice. These spells can come from the Cleric, Druid, or Wizard spell list or any combination thereof (see a class's section for its spell list). A spell you choose must be a cantrip or a spell for which you have spell slots, as shown in the Bard Features table.\n\nYou always have the chosen spells prepared, and whenever you gain a Bard level, you can replace one of the spells with another spell that meets these requirements."
+					"en": "You learn two spells of your choice. These spells can come from the Cleric, Druid, or Wizard spell list or any combination thereof (see a class's section for its spell list). A spell you choose must be a cantrip or a spell for which you have spell slots, as shown in the Bard Features table.\n\nYou always have the chosen spells prepared, and whenever you gain a Bard level, you can replace one of the spells with another spell that meets these requirements.",
+					"de": "Du erlernst zwei Zauber deiner Wahl. Diese Zauber dürfen aus der Zauberliste des Druiden, des Klerikers und des Magiers oder einer Kombination daraus stammen (die Zauberlisten findest du in den Abschnitten der Klassen). Die ausgewählten Zauber müssen Zaubertricks oder Zauber sein, für die du Zauberplätze hast, wie in der Tabelle „Bardenmerkmale“ dargestellt.\n\nDu hast die ausgewählten Zauber stets vorbereitet. Wann immer du eine Bardenstufe erhältst, kannst du einen der Zauber mit einem anderen Zauber ersetzen, der diese Voraussetzungen erfüllt."
 				},
 				"grants": [],
 				"choices": []
@@ -118,11 +135,13 @@
 			{
 				"id": "lore-peerless-skill",
 				"name": {
-					"en": "Peerless Skill"
+					"en": "Peerless Skill",
+					"de": "Grenzenlose Begabung"
 				},
 				"level": 14,
 				"text": {
-					"en": "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."
+					"en": "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended.",
+					"de": "Wenn du bei einem Attributs- oder Angriffswurf scheiterst, kannst du eine Anwendung von Bardische Inspiration verbrauchen, mit dem Bardische-Inspiration-Würfel würfeln, das Ergebnis dem W20 hinzufügen und so aus dem Misserfolg möglicherweise einen Erfolg machen. Misslingt der Wurf, so wird die Bardische Inspiration nicht verbraucht."
 				},
 				"grants": [],
 				"choices": []
@@ -134,18 +153,21 @@
 		"class": "cleric",
 		"rules": "2024",
 		"name": {
-			"en": "Life Domain"
+			"en": "Life Domain",
+			"de": "Domäne des Lebens"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "life-disciple-of-life",
 				"name": {
-					"en": "Disciple of Life"
+					"en": "Disciple of Life",
+					"de": "Jünger des Lebens"
 				},
 				"level": 3,
 				"text": {
-					"en": "When a spell you cast with a spell slot restores Hit Points to a creature, that creature regains additional Hit Points on the turn you cast the spell. The additional Hit Points equal 2 plus the spell slot's level."
+					"en": "When a spell you cast with a spell slot restores Hit Points to a creature, that creature regains additional Hit Points on the turn you cast the spell. The additional Hit Points equal 2 plus the spell slot's level.",
+					"de": "Wenn ein Zauber, den du mit einem Zauberplatz wirkst, Trefferpunkte bei einer Kreatur wiederherstellt, erhält diese Kreatur in dem Zug, in dem du den Zauber wirkst, zusätzliche Trefferpunkte zurück. Die zusätzlichen Trefferpunkte betragen 2 plus Zauberplatzgrad."
 				},
 				"grants": [],
 				"choices": []
@@ -153,11 +175,13 @@
 			{
 				"id": "life-domain-spells",
 				"name": {
-					"en": "Life Domain Spells"
+					"en": "Life Domain Spells",
+					"de": "Domänenzauber des Lebens"
 				},
 				"level": 3,
 				"text": {
-					"en": "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Life Domain Spells table, you thereafter always have the listed spells prepared.\n\n| Cleric Level | Prepared Spells |\n| --- | --- |\n| 3 | Aid, Bless, Cure Wounds, Lesser Restoration |\n| 5 | Mass Healing Word, Revivify |\n| 7 | Aura of Life, Death Ward |\n| 9 | Greater Restoration, Mass Cure Wounds |"
+					"en": "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Life Domain Spells table, you thereafter always have the listed spells prepared.\n\n| Cleric Level | Prepared Spells |\n| --- | --- |\n| 3 | Aid, Bless, Cure Wounds, Lesser Restoration |\n| 5 | Mass Healing Word, Revivify |\n| 7 | Aura of Life, Death Ward |\n| 9 | Greater Restoration, Mass Cure Wounds |",
+					"de": "Deine Verbindung mit dieser göttlichen Domäne sorgt dafür, dass du bestimmte Zauber stets bereithalten kannst. Wenn du eine Klerikerstufe erreichst, die in der Tabelle „Domänenzauber des Lebens“ aufgeführt ist, hast du die aufgeführten Zauber fortan stets vorbereitet.\n\n| Klerikerstufe | Vorbereitete Zauber |\n| --- | --- |\n| 3 | Beistand, Schwache Genesung, Segnen, Wunden heilen |\n| 5 | Massen-Heilendes Wort, Wiederbeleben |\n| 7 | Aura des Lebens, Todesschutz |\n| 9 | Massen-Wunden heilen, Vollständige Genesung |"
 				},
 				"grants": [],
 				"choices": []
@@ -165,11 +189,13 @@
 			{
 				"id": "life-preserve-life",
 				"name": {
-					"en": "Preserve Life"
+					"en": "Preserve Life",
+					"de": "Leben erhalten"
 				},
 				"level": 3,
 				"text": {
-					"en": "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to evoke healing energy that can restore a number of Hit Points equal to five times your Cleric level. Choose Bloodied creatures within 30 feet of yourself (which can include you), and divide those Hit Points among them. This feature can restore a creature to no more than half its Hit Point maximum."
+					"en": "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to evoke healing energy that can restore a number of Hit Points equal to five times your Cleric level. Choose Bloodied creatures within 30 feet of yourself (which can include you), and divide those Hit Points among them. This feature can restore a creature to no more than half its Hit Point maximum.",
+					"de": "Als magische Aktion zeigst du dein heiliges Symbol und verbrauchst eine Anwendung von Göttliche Macht fokussieren, um heilende Energie zu beschwören, mit der sich eine Anzahl von Trefferpunkten in Höhe des Fünffachen deiner Klerikerstufe wiederherstellen lässt. Wähle Kreaturen im Abstand von bis zu neun Metern von dir aus, die blutig sind (auch du selbst kannst ein Ziel sein), und teile diese Trefferpunkte unter ihnen auf. Dieses Merkmal kann keine Trefferpunkte über die Hälfte des Trefferpunktemaximums hinaus wiederherstellen."
 				},
 				"grants": [],
 				"choices": []
@@ -177,11 +203,13 @@
 			{
 				"id": "life-blessed-healer",
 				"name": {
-					"en": "Blessed Healer"
+					"en": "Blessed Healer",
+					"de": "Gesegneter Heiler"
 				},
 				"level": 6,
 				"text": {
-					"en": "The healing spells you cast on others heal you as well. Immediately after you cast a spell with a spell slot that restores Hit Points to one or more creatures other than yourself, you regain Hit Points equal to 2 plus the spell slot's level."
+					"en": "The healing spells you cast on others heal you as well. Immediately after you cast a spell with a spell slot that restores Hit Points to one or more creatures other than yourself, you regain Hit Points equal to 2 plus the spell slot's level.",
+					"de": "Die Heilzauber, die du auf andere wirkst, wirken auch auf dich. Sofort, nachdem du einen Zauber mit einem Zauberplatz gewirkt hast, der Trefferpunkte bei mindestens einer Kreatur außer dir selbst wiederherstellt, erhältst du Trefferpunkte in Höhe von 2 plus Zauberplatzgrad zurück."
 				},
 				"grants": [],
 				"choices": []
@@ -189,11 +217,13 @@
 			{
 				"id": "life-supreme-healing",
 				"name": {
-					"en": "Supreme Healing"
+					"en": "Supreme Healing",
+					"de": "Höchste Heilung"
 				},
 				"level": 17,
 				"text": {
-					"en": "When you would normally roll one or more dice to restore Hit Points to a creature with a spell or Channel Divinity, don't roll those dice for the healing; instead use the highest number possible for each die. For example, instead of restoring 2d6 Hit Points to a creature with a spell, you restore 12."
+					"en": "When you would normally roll one or more dice to restore Hit Points to a creature with a spell or Channel Divinity, don't roll those dice for the healing; instead use the highest number possible for each die. For example, instead of restoring 2d6 Hit Points to a creature with a spell, you restore 12.",
+					"de": "Wenn du normalerweise mit mindestens einen Würfel würfeln würdest, um mit einem Zauber oder Göttliche Macht fokussieren Trefferpunkte einer Kreatur wiederherzustellen, so verwendest du stattdessen die höchstmöglichen Ergebnisse der Würfel. Anstatt beispielsweise mit einem Zauber 2W6 Trefferpunkte bei einer Kreatur wiederherzustellen, stellst du 12 Trefferpunkte wieder her."
 				},
 				"grants": [],
 				"choices": []
@@ -205,18 +235,21 @@
 		"class": "druid",
 		"rules": "2024",
 		"name": {
-			"en": "Circle of the Land"
+			"en": "Circle of the Land",
+			"de": "Zirkel des Landes"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "land-circle-of-the-land-spells",
 				"name": {
-					"en": "Circle of the Land Spells"
+					"en": "Circle of the Land Spells",
+					"de": "Zirkelzauber des Landes"
 				},
 				"level": 3,
 				"text": {
-					"en": "Whenever you finish a Long Rest, choose one type of land: arid, polar, temperate, or tropical. Consult the table below that corresponds to the chosen type; you have the spells listed for your Druid level and lower prepared.\n\n**Arid Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Blur, Burning Hands, Fire Bolt |\n| 5 | Fireball |\n| 7 | Blight |\n| 9 | Wall of Stone |\n\n**Polar Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Fog Cloud, Hold Person, Ray of Frost |\n| 5 | Sleet Storm |\n| 7 | Ice Storm |\n| 9 | Cone of Cold |\n\n**Temperate Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Misty Step, Shocking Grasp, Sleep |\n| 5 | Lightning Bolt |\n| 7 | Freedom of Movement |\n| 9 | Tree Stride |\n\n**Tropical Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Acid Splash, Ray of Sickness, Web |\n| 5 | Stinking Cloud |\n| 7 | Polymorph |\n| 9 | Insect Plague |"
+					"en": "Whenever you finish a Long Rest, choose one type of land: arid, polar, temperate, or tropical. Consult the table below that corresponds to the chosen type; you have the spells listed for your Druid level and lower prepared.\n\n**Arid Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Blur, Burning Hands, Fire Bolt |\n| 5 | Fireball |\n| 7 | Blight |\n| 9 | Wall of Stone |\n\n**Polar Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Fog Cloud, Hold Person, Ray of Frost |\n| 5 | Sleet Storm |\n| 7 | Ice Storm |\n| 9 | Cone of Cold |\n\n**Temperate Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Misty Step, Shocking Grasp, Sleep |\n| 5 | Lightning Bolt |\n| 7 | Freedom of Movement |\n| 9 | Tree Stride |\n\n**Tropical Land**\n\n| Druid Level | Circle Spells |\n| --- | --- |\n| 3 | Acid Splash, Ray of Sickness, Web |\n| 5 | Stinking Cloud |\n| 7 | Polymorph |\n| 9 | Insect Plague |",
+					"de": "Wann immer du eine lange Rast beendest, wähle ein Art des Landes aus: gemäßigt, polar, trocken oder tropisch. Konsultiere die Tabelle des ausgewählten Typs unten. Die Zauber, die für deine Druidenstufe und darunter aufgeführt sind, hast du vorbereitet.\n\n**Gemäßigtes Land**\n\n| Druidenstufe | Zauber des Zirkels |\n| --- | --- |\n| 3 | Nebelschritt, Schlaf, Schockgriff |\n| 5 | Blitz |\n| 7 | Bewegungsfreiheit |\n| 9 | Baumwandeln |\n\n**Polares Land**\n\n| Druidenstufe | Zauber des Zirkels |\n| --- | --- |\n| 3 | Kältestrahl, Nebelwolke, Person festhalten |\n| 5 | Schneesturm |\n| 7 | Eissturm |\n| 9 | Kältekegel |\n\n**Trockenes Land**\n\n| Druidenstufe | Zauber des Zirkels |\n| --- | --- |\n| 3 | Brennende Hände, Feuerpfeil, Verschwimmen |\n| 5 | Feuerball |\n| 7 | Dürre |\n| 9 | Steinwand |\n\n**Tropisches Land**\n\n| Druidenstufe | Zauber des Zirkels |\n| --- | --- |\n| 3 | Netz, Säurespritzer, Strahl der Übelkeit |\n| 5 | Stinkende Wolke |\n| 7 | Verwandlung |\n| 9 | Insektenplage |"
 				},
 				"grants": [],
 				"choices": []
@@ -224,11 +257,13 @@
 			{
 				"id": "land-lands-aid",
 				"name": {
-					"en": "Land's Aid"
+					"en": "Land's Aid",
+					"de": "Beistand des Landes"
 				},
 				"level": 3,
 				"text": {
-					"en": "As a Magic action, you can expend a use of your Wild Shape and choose a point within 60 feet of yourself. Vitality-giving flowers and life-draining thorns appear for a moment in a 10-foot-radius Sphere centered on that point. Each creature of your choice in the Sphere must make a Constitution saving throw against your spell save DC, taking 2d6 Necrotic damage on a failed save or half as much damage on a successful one. One creature of your choice in that area regains 2d6 Hit Points.\n\nThe damage and healing increase by 1d6 when you reach Druid levels 10 (3d6) and 14 (4d6)."
+					"en": "As a Magic action, you can expend a use of your Wild Shape and choose a point within 60 feet of yourself. Vitality-giving flowers and life-draining thorns appear for a moment in a 10-foot-radius Sphere centered on that point. Each creature of your choice in the Sphere must make a Constitution saving throw against your spell save DC, taking 2d6 Necrotic damage on a failed save or half as much damage on a successful one. One creature of your choice in that area regains 2d6 Hit Points.\n\nThe damage and healing increase by 1d6 when you reach Druid levels 10 (3d6) and 14 (4d6).",
+					"de": "Als magische Aktion kannst du eine Anwendung von Tiergestalt verbrauchen und einen Punkt im Abstand von bis zu 18 Metern von dir auswählen. Um diesen Punkt erscheinen in einer Kugel mit einem Radius von drei Metern für kurze Zeit Blumen, die Lebenskraft spenden, sowie Dornen, die Lebenskraft entziehen. Jede Kreatur deiner Wahl in der Kugel muss einen Konstitutionsrettungswurf gegen deinen Zauberrettungswurf-SG ausführen. Misslingt der Wurf, so erleidet die Kreatur 2W6 nekrotischen Schaden, anderenfalls die Hälfte. Eine Kreatur deiner Wahl in diesem Bereich erhält 2W6 Trefferpunkte zurück.\n\nSchaden und Heilung werden um jeweils 1W6 erhöht, wenn du die 10. (3W6) und die 14. (4W6) Druidenstufe erreichst."
 				},
 				"grants": [],
 				"choices": []
@@ -236,18 +271,21 @@
 			{
 				"id": "land-natural-recovery",
 				"name": {
-					"en": "Natural Recovery"
+					"en": "Natural Recovery",
+					"de": "Natürliche Erholung"
 				},
 				"level": 6,
 				"text": {
-					"en": "You can cast one of the level 1+ spells that you have prepared from your Circle Spells feature without expending a spell slot, and you must finish a Long Rest before you do so again.\n\nIn addition, when you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level that is equal to or less than half your Druid level (round up), and none of them can be level 6+. For example, if you're a level 6 Druid, you can recover up to three levels' worth of spell slots. You can recover a level 3 spell slot, a level 2 and a level 1 spell slot, or three level 1 spell slots. Once you recover spell slots with this feature, you can't do so again until you finish a Long Rest."
+					"en": "You can cast one of the level 1+ spells that you have prepared from your Circle Spells feature without expending a spell slot, and you must finish a Long Rest before you do so again.\n\nIn addition, when you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level that is equal to or less than half your Druid level (round up), and none of them can be level 6+. For example, if you're a level 6 Druid, you can recover up to three levels' worth of spell slots. You can recover a level 3 spell slot, a level 2 and a level 1 spell slot, or three level 1 spell slots. Once you recover spell slots with this feature, you can't do so again until you finish a Long Rest.",
+					"de": "Du kannst einen deiner vorbereiteten Zauber ab dem 1. Grad deines Merkmals Zauber des Zirkels wirken, ohne einen Zauberplatz zu verbrauchen. Du musst eine lange Rast beenden, bevor du dies erneut tun kannst.\n\nAußerdem kannst du dir nach einer kurzen Rast verbrauchte Zauberplätze aussuchen, die du zurückerhältst. Die Zauberplätze dürfen zusammen nur eine Gradzahl besitzen, die höchstens der Hälfte deiner Druidenstufe entspricht (aufgerundet), und keiner von ihnen darf den 6. Grad oder höher aufweisen. Beispiel: Wenn du ein Druide der 6. Stufe bist, kannst du Zauberplätze zurückerhalten, deren Grade sich auf bis zu 3 addieren. Du kannst also entweder einen Zauberplatz des 3. Grades, zwei Zauberplätze des 1. und einen Zauberplatz des 2. Grades oder drei Zauberplätze des 1. Grades zurückerhalten. Du kannst dieses Merkmal erst nach einer langen Rast erneut verwenden."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "natural-recovery-spell",
 						"name": {
-							"en": "Natural Recovery (spell)"
+							"en": "Natural Recovery (spell)",
+							"de": "Natürliche Erholung (Zauber)"
 						},
 						"uses": 1,
 						"recharge": "long"
@@ -256,7 +294,8 @@
 						"kind": "resource",
 						"id": "natural-recovery-slots",
 						"name": {
-							"en": "Natural Recovery (spell slots)"
+							"en": "Natural Recovery (spell slots)",
+							"de": "Natürliche Erholung (Zauberplätze)"
 						},
 						"uses": 1,
 						"recharge": "long"
@@ -267,11 +306,13 @@
 			{
 				"id": "land-natures-ward",
 				"name": {
-					"en": "Nature's Ward"
+					"en": "Nature's Ward",
+					"de": "Schutz der Natur"
 				},
 				"level": 10,
 				"text": {
-					"en": "You are immune to the Poisoned condition, and you have Resistance to a damage type associated with your current land choice in the Circle Spells feature, as shown in the Nature's Ward table.\n\n| Land Type | Resistance |\n| --- | --- |\n| Arid | Fire |\n| Polar | Cold |\n| Temperate | Lightning |\n| Tropical | Poison |"
+					"en": "You are immune to the Poisoned condition, and you have Resistance to a damage type associated with your current land choice in the Circle Spells feature, as shown in the Nature's Ward table.\n\n| Land Type | Resistance |\n| --- | --- |\n| Arid | Fire |\n| Polar | Cold |\n| Temperate | Lightning |\n| Tropical | Poison |",
+					"de": "Du bist gegen den Zustand Vergiftet immun und bist gegen eine Schadensart resistent, die mit deiner aktuellen Land-Entscheidung beim Merkmal Zauber des Zirkels assoziiert ist, wie in der Tabelle „Schutz der Natur“ dargestellt.\n\n| Land-Typ | Resistenz |\n| --- | --- |\n| Gemäßigt | Blitz |\n| Polar | Kälte |\n| Trocken | Feuer |\n| Tropisch | Gift |"
 				},
 				"grants": [],
 				"choices": []
@@ -279,11 +320,13 @@
 			{
 				"id": "land-natures-sanctuary",
 				"name": {
-					"en": "Nature's Sanctuary"
+					"en": "Nature's Sanctuary",
+					"de": "Heiligtum der Natur"
 				},
 				"level": 14,
 				"text": {
-					"en": "As a Magic action, you can expend a use of your Wild Shape and cause spectral trees and vines to appear in a 15-foot Cube on the ground within 120 feet of yourself. They last there for 1 minute or until you have the Incapacitated condition or die. You and your allies have Half Cover while in that area, and your allies gain the current Resistance of your Nature's Ward while there.\n\nAs a Bonus Action, you can move the Cube up to 60 feet to ground within 120 feet of yourself."
+					"en": "As a Magic action, you can expend a use of your Wild Shape and cause spectral trees and vines to appear in a 15-foot Cube on the ground within 120 feet of yourself. They last there for 1 minute or until you have the Incapacitated condition or die. You and your allies have Half Cover while in that area, and your allies gain the current Resistance of your Nature's Ward while there.\n\nAs a Bonus Action, you can move the Cube up to 60 feet to ground within 120 feet of yourself.",
+					"de": "Als magische Aktion kannst du eine Anwendung von Tiergestalt verbrauchen und in einem Würfel mit 4,5 Metern Kantenlänge auf dem Boden im Abstand von bis zu 36 Metern von dir geisterhafte Bäume und Ranken erscheinen lassen. Sie bleiben eine Minute lang bestehen, oder bis du kampfunfähig wirst oder stirbst. Du und deine Verbündete habt in diesem Bereich Teildeckung, und deine Verbündeten erhalten die aktuelle Resistenz deines Schutzes der Natur, während sie sich dort befinden.\n\nAls Bonusaktion kannst du den Würfel um bis zu 18 Meter an einen Punkt auf dem Boden im Abstand von bis zu 36 Metern von dir verschieben."
 				},
 				"grants": [],
 				"choices": []
@@ -295,18 +338,21 @@
 		"class": "fighter",
 		"rules": "2024",
 		"name": {
-			"en": "Champion"
+			"en": "Champion",
+			"de": "Champion"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "champion-improved-critical",
 				"name": {
-					"en": "Improved Critical"
+					"en": "Improved Critical",
+					"de": "Verbesserter kritischer Treffer"
 				},
 				"level": 3,
 				"text": {
-					"en": "Your attack rolls with weapons and Unarmed Strikes can score a Critical Hit on a roll of 19 or 20 on the d20."
+					"en": "Your attack rolls with weapons and Unarmed Strikes can score a Critical Hit on a roll of 19 or 20 on the d20.",
+					"de": "Deine Angriffswürfe mit Waffen und deine waffenlosen Angriffe bewirken kritische Treffer, wenn du mit dem W20 eine 19 oder eine 20 würfelst."
 				},
 				"grants": [],
 				"choices": []
@@ -314,11 +360,13 @@
 			{
 				"id": "champion-remarkable-athlete",
 				"name": {
-					"en": "Remarkable Athlete"
+					"en": "Remarkable Athlete",
+					"de": "Bemerkenswerter Athlet"
 				},
 				"level": 3,
 				"text": {
-					"en": "Thanks to your athleticism, you have Advantage on Initiative rolls and Strength (Athletics) checks.\n\nIn addition, immediately after you score a Critical Hit, you can move up to half your Speed without provoking Opportunity Attacks."
+					"en": "Thanks to your athleticism, you have Advantage on Initiative rolls and Strength (Athletics) checks.\n\nIn addition, immediately after you score a Critical Hit, you can move up to half your Speed without provoking Opportunity Attacks.",
+					"de": "Dank deiner hervorragenden Konstitution bist du bei Initiative- und Stärkewürfen (Athletik) im Vorteil.\n\nAußerdem kannst du sofort nach Erzielen eines kritischen Treffers bis zur Hälfte deiner Bewegungsrate zurücklegen, ohne Gelegenheitsangriffe zu provozieren."
 				},
 				"grants": [],
 				"choices": []
@@ -326,18 +374,21 @@
 			{
 				"id": "champion-additional-fighting-style",
 				"name": {
-					"en": "Additional Fighting Style"
+					"en": "Additional Fighting Style",
+					"de": "Weiterer Kampfstil"
 				},
 				"level": 7,
 				"text": {
-					"en": "You gain another Fighting Style feat of your choice."
+					"en": "You gain another Fighting Style feat of your choice.",
+					"de": "Du erhältst ein weiteres Kampfstil-Talent deiner Wahl."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "fighting-style",
 						"name": {
-							"en": "Fighting Style"
+							"en": "Fighting Style",
+							"de": "Kampfstil"
 						},
 						"count": 1,
 						"gives": "feat",
@@ -350,11 +401,13 @@
 			{
 				"id": "champion-heroic-warrior",
 				"name": {
-					"en": "Heroic Warrior"
+					"en": "Heroic Warrior",
+					"de": "Heldenhafter Krieger"
 				},
 				"level": 10,
 				"text": {
-					"en": "The thrill of battle drives you toward victory. During combat, you can give yourself Heroic Inspiration whenever you start your turn without it."
+					"en": "The thrill of battle drives you toward victory. During combat, you can give yourself Heroic Inspiration whenever you start your turn without it.",
+					"de": "Der Nervenkitzel der Schlacht treibt dich zum Sieg. Im Kampf kannst du dir selbst Heldische Inspiration geben, wann immer du deinen Zug ohne diese beginnst."
 				},
 				"grants": [],
 				"choices": []
@@ -362,11 +415,13 @@
 			{
 				"id": "champion-superior-critical",
 				"name": {
-					"en": "Superior Critical"
+					"en": "Superior Critical",
+					"de": "Überlegener kritischer Treffer"
 				},
 				"level": 15,
 				"text": {
-					"en": "Your attack rolls with weapons and Unarmed Strikes can now score a Critical Hit on a roll of 18-20 on the d20."
+					"en": "Your attack rolls with weapons and Unarmed Strikes can now score a Critical Hit on a roll of 18-20 on the d20.",
+					"de": "Deine Angriffswürfe mit Waffen und deine waffenlosen Angriffe bewirken ab sofort kritische Treffer, wenn du mit dem W20 ein Ergebnis von 18–20 würfelst."
 				},
 				"grants": [],
 				"choices": []
@@ -374,11 +429,13 @@
 			{
 				"id": "champion-survivor",
 				"name": {
-					"en": "Survivor"
+					"en": "Survivor",
+					"de": "Der Überlebende"
 				},
 				"level": 18,
 				"text": {
-					"en": "You attain the pinnacle of resilience in battle, giving you these benefits.\n\nDefy Death. You have Advantage on Death Saving Throws. Moreover, when you roll 18-20 on a Death Saving Throw, you gain the benefit of rolling a 20 on it.\n\nHeroic Rally. At the start of each of your turns, you regain Hit Points equal to 5 plus your Constitution modifier if you are Bloodied and have at least 1 Hit Point."
+					"en": "You attain the pinnacle of resilience in battle, giving you these benefits.\n\nDefy Death. You have Advantage on Death Saving Throws. Moreover, when you roll 18-20 on a Death Saving Throw, you gain the benefit of rolling a 20 on it.\n\nHeroic Rally. At the start of each of your turns, you regain Hit Points equal to 5 plus your Constitution modifier if you are Bloodied and have at least 1 Hit Point.",
+					"de": "Du erreichst den Gipfel der Zähigkeit im Kampf und erhältst folgende Vorzüge:\n\nDem Tode trotzen: Du bist bei Todesrettungswürfen im Vorteil. Außerdem erhältst du, wenn du bei einem Todesrettungswurf ein Ergebnis von 18–20 würfelst, den Vorzug wie bei einem Ergebnis von 20.\n\nHeldischer Schlachtruf: Zu Beginn jedes deiner Züge erhältst du Trefferpunkte in Höhe von 5 plus deinem Konstitutionsmodifikator zurück, wenn du blutig bist und mindestens 1 Trefferpunkt hast."
 				},
 				"grants": [],
 				"choices": []
@@ -390,18 +447,21 @@
 		"class": "monk",
 		"rules": "2024",
 		"name": {
-			"en": "Warrior of the Open Hand"
+			"en": "Warrior of the Open Hand",
+			"de": "Krieger der Offenen Hand"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "open-hand-open-hand-technique",
 				"name": {
-					"en": "Open Hand Technique"
+					"en": "Open Hand Technique",
+					"de": "Technik der Offenen Hand"
 				},
 				"level": 3,
 				"text": {
-					"en": "Whenever you hit a creature with an attack granted by your Flurry of Blows, you can impose one of the following effects on that target.\n\nAddle. The target can't make Opportunity Attacks until the start of its next turn.\n\nPush. The target must succeed on a Strength saving throw or be pushed up to 15 feet away from you.\n\nTopple. The target must succeed on a Dexterity saving throw or have the Prone condition."
+					"en": "Whenever you hit a creature with an attack granted by your Flurry of Blows, you can impose one of the following effects on that target.\n\nAddle. The target can't make Opportunity Attacks until the start of its next turn.\n\nPush. The target must succeed on a Strength saving throw or be pushed up to 15 feet away from you.\n\nTopple. The target must succeed on a Dexterity saving throw or have the Prone condition.",
+					"de": "Jedes Mal, wenn du eine Kreatur mit einem durch Schlaghagel gewährten Angriff triffst, kannst du einen der folgenden Effekte auf das Ziel wirken:\n\nVerdattern: Das Ziel kann bis zum Beginn seines nächsten Zugs keine Gelegenheitsangriffe ausführen.\n\nStoßen: Das Ziel muss einen Stärkerettungswurf bestehen, oder es wird bis zu 4,5 Meter weit von dir weggestoßen.\n\nUmstoßen: Das Ziel muss einen Geschicklichkeitsrettungswurf bestehen, oder es wird umgestoßen."
 				},
 				"grants": [],
 				"choices": []
@@ -409,18 +469,21 @@
 			{
 				"id": "open-hand-wholeness-of-body",
 				"name": {
-					"en": "Wholeness of Body"
+					"en": "Wholeness of Body",
+					"de": "Unversehrtheit des Körpers"
 				},
 				"level": 6,
 				"text": {
-					"en": "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n\nYou can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
+					"en": "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n\nYou can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",
+					"de": "Du erhältst die Fähigkeit, dich selbst zu heilen. Als Bonusaktion kannst du mit deinem Kampfkünste-Würfel würfeln. Du erhältst eine Anzahl von Trefferpunkten in Höhe des Ergebnisses plus deines Weisheitsmodifikators zurück (mindestens 1 Trefferpunkt).\n\nDie Anzahl der möglichen Anwendungen dieses Merkmals entspricht deinem Weisheitsmodifikator (mindestens einmal). Du erhältst alle verbrauchten Anwendungen nach einer langen Rast zurück."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "wholeness-of-body",
 						"name": {
-							"en": "Wholeness of Body"
+							"en": "Wholeness of Body",
+							"de": "Unversehrtheit des Körpers"
 						},
 						"uses": {
 							"ability": "wis"
@@ -434,11 +497,13 @@
 			{
 				"id": "open-hand-fleet-step",
 				"name": {
-					"en": "Fleet Step"
+					"en": "Fleet Step",
+					"de": "Flinker Schritt"
 				},
 				"level": 11,
 				"text": {
-					"en": "When you take a Bonus Action other than Step of the Wind, you can also use Step of the Wind immediately after that Bonus Action."
+					"en": "When you take a Bonus Action other than Step of the Wind, you can also use Step of the Wind immediately after that Bonus Action.",
+					"de": "Wenn du eine andere Bonusaktion als Windschritt ausführst, kannst du Windschritt sofort nach der Bonusaktion ebenfalls ausführen."
 				},
 				"grants": [],
 				"choices": []
@@ -446,11 +511,13 @@
 			{
 				"id": "open-hand-quivering-palm",
 				"name": {
-					"en": "Quivering Palm"
+					"en": "Quivering Palm",
+					"de": "Vibrierende Handfläche"
 				},
 				"level": 17,
 				"text": {
-					"en": "You gain the ability to set up lethal vibrations in someone's body. When you hit a creature with an Unarmed Strike, you can expend 4 Focus Points to start these imperceptible vibrations, which last for a number of days equal to your Monk level. The vibrations are harmless unless you take an action to end them. Alternatively, when you take the Attack action on your turn, you can forgo one of the attacks to end the vibrations. To end them, you and the target must be on the same plane of existence. When you end them, the target must make a Constitution saving throw, taking 10d12 Force damage on a failed save or half as much damage on a successful one.\n\nYou can have only one creature under the effect of this feature at a time. You can end the vibrations harmlessly (no action required)."
+					"en": "You gain the ability to set up lethal vibrations in someone's body. When you hit a creature with an Unarmed Strike, you can expend 4 Focus Points to start these imperceptible vibrations, which last for a number of days equal to your Monk level. The vibrations are harmless unless you take an action to end them. Alternatively, when you take the Attack action on your turn, you can forgo one of the attacks to end the vibrations. To end them, you and the target must be on the same plane of existence. When you end them, the target must make a Constitution saving throw, taking 10d12 Force damage on a failed save or half as much damage on a successful one.\n\nYou can have only one creature under the effect of this feature at a time. You can end the vibrations harmlessly (no action required).",
+					"de": "Du erhältst die Fähigkeit, tödliche Vibrationen im Körper einer anderen Kreatur auszulösen. Wenn du eine Kreatur mit einem waffenlosen Angriff triffst, kannst du vier Fokuspunkte verbrauchen, um diese nicht spürbaren Vibrationen zu erzeugen. Sie dauern eine Anzahl von Tagen an, die deiner Mönchsstufe entspricht. Die Vibrationen sind harmlos, solange du keine Aktion ausführst, um sie zu beenden. Wenn du alternativ in deinem Zug die Angriffsaktion ausführst, kannst du auf einen der Angriffe verzichten, um die Vibrationen zu beenden. Dazu musst du dich auf derselben Existenzebene befinden wie das Ziel. Wenn du die Vibrationen beendest, muss das Ziel einen Konstitutionsrettungswurf ausführen. Misslingt der Wurf, so erleidet das Ziel 10W12 Energieschaden, anderenfalls die Hälfte.\n\nDu kannst dieses Merkmal immer nur auf jeweils eine Kreatur wirken. Du kannst die Vibrationen auch harmlos beenden (keine Aktion erforderlich)."
 				},
 				"grants": [],
 				"choices": []
@@ -462,18 +529,21 @@
 		"class": "paladin",
 		"rules": "2024",
 		"name": {
-			"en": "Oath of Devotion"
+			"en": "Oath of Devotion",
+			"de": "Schwur der Hingabe"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "devotion-oath-spells",
 				"name": {
-					"en": "Oath of Devotion Spells"
+					"en": "Oath of Devotion Spells",
+					"de": "Schwurzauber der Hingabe"
 				},
 				"level": 3,
 				"text": {
-					"en": "The magic of your oath ensures you always have certain spells ready; when you reach a Paladin level specified in the Oath of Devotion Spells table, you thereafter always have the listed spells prepared.\n\n| Paladin Level | Spells |\n| --- | --- |\n| 3 | Protection from Evil and Good, Shield of Faith |\n| 5 | Aid, Zone of Truth |\n| 9 | Beacon of Hope, Dispel Magic |\n| 13 | Freedom of Movement, Guardian of Faith |\n| 17 | Commune, Flame Strike |"
+					"en": "The magic of your oath ensures you always have certain spells ready; when you reach a Paladin level specified in the Oath of Devotion Spells table, you thereafter always have the listed spells prepared.\n\n| Paladin Level | Spells |\n| --- | --- |\n| 3 | Protection from Evil and Good, Shield of Faith |\n| 5 | Aid, Zone of Truth |\n| 9 | Beacon of Hope, Dispel Magic |\n| 13 | Freedom of Movement, Guardian of Faith |\n| 17 | Commune, Flame Strike |",
+					"de": "Dank der Magie deines Schwurs hast du stets bestimmte Zauber vorbereitet. Wenn du die in der Tabelle „Schwurzauber der Hingabe“ angegebenen Paladinstufen erreichst, hast du fortan stets die aufgeführten Zauber vorbereitet.\n\n| Paladinstufe | Zauber |\n| --- | --- |\n| 3 | Schild des Glaubens, Schutz vor Gut und Böse |\n| 5 | Beistand, Zone der Wahrheit |\n| 9 | Leuchtfeuer der Hoffnung, Magie bannen |\n| 13 | Bewegungsfreiheit, Hüter des Glaubens |\n| 17 | Flammenschlag, Heiliges Gespräch |"
 				},
 				"grants": [],
 				"choices": []
@@ -481,11 +551,13 @@
 			{
 				"id": "devotion-sacred-weapon",
 				"name": {
-					"en": "Sacred Weapon"
+					"en": "Sacred Weapon",
+					"de": "Heilige Waffe"
 				},
 				"level": 3,
 				"text": {
-					"en": "When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.\n\nThe weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.\n\nYou can end this effect early (no action required). This effect also ends if you aren't carrying the weapon."
+					"en": "When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.\n\nThe weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.\n\nYou can end this effect early (no action required). This effect also ends if you aren't carrying the weapon.",
+					"de": "Wenn du die Angriffsaktion ausführst, kannst du eine Anwendung von Göttliche Macht fokussieren verbrauchen, um eine Nahkampfwaffe, die du hältst, mit positiver Energie zu versehen. Deinen Angriffswürfen mit dieser Waffe fügst du zehn Minuten lang – oder bis du dieses Merkmal erneut einsetzt – deinen Charismamodifikator hinzu (mindestens +1), und bei jedem Treffer mit der Waffe bewirkst du ihre normale Schadensart oder gleißenden Schaden.\n\nAußerdem spendet die Waffe in einem Radius von sechs Metern helles Licht und in einem Radius von weiteren sechs Metern dämmriges Licht.\n\nDu kannst diesen Effekt vorzeitig beenden (keine Aktion erforderlich). Der Effekt endet auch, wenn du die Waffe nicht trägst."
 				},
 				"grants": [],
 				"choices": []
@@ -493,11 +565,13 @@
 			{
 				"id": "devotion-aura-of-devotion",
 				"name": {
-					"en": "Aura of Devotion"
+					"en": "Aura of Devotion",
+					"de": "Aura der Hingabe"
 				},
 				"level": 7,
 				"text": {
-					"en": "You and your allies have Immunity to the Charmed condition while in your Aura of Protection. If a Charmed ally enters the aura, that condition has no effect on that ally while there."
+					"en": "You and your allies have Immunity to the Charmed condition while in your Aura of Protection. If a Charmed ally enters the aura, that condition has no effect on that ally while there.",
+					"de": "Du und deine Verbündeten innerhalb deiner Aura des Schutzes seid gegen den Zustand Bezaubert immun. Wenn ein bezauberter Verbündeter die Aura betritt, hat der Zustand keine Wirkung auf ihn, solange er sich innerhalb der Aura aufhält."
 				},
 				"grants": [],
 				"choices": []
@@ -505,11 +579,13 @@
 			{
 				"id": "devotion-smite-of-protection",
 				"name": {
-					"en": "Smite of Protection"
+					"en": "Smite of Protection",
+					"de": "Schützendes Niederstrecken"
 				},
 				"level": 15,
 				"text": {
-					"en": "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn."
+					"en": "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn.",
+					"de": "Dein magisches Niederstrecken strahlt nun schützende Energie aus. Wann immer du Göttliches Niederstrecken wirkst, habt du und deine Verbündeten Teildeckung, solange sie sich in deiner Aura des Schutzes aufhalten. Die Aura behält diesen Vorzug bis zum Beginn deines nächsten Zugs bei."
 				},
 				"grants": [],
 				"choices": []
@@ -517,18 +593,21 @@
 			{
 				"id": "devotion-holy-nimbus",
 				"name": {
-					"en": "Holy Nimbus"
+					"en": "Holy Nimbus",
+					"de": "Heiliger Nimbus"
 				},
 				"level": 20,
 				"text": {
-					"en": "As a Bonus Action, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n\nHoly Ward. You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.\n\nRadiant Damage. Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.\n\nSunlight. The aura is filled with Bright Light that is sunlight."
+					"en": "As a Bonus Action, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n\nHoly Ward. You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.\n\nRadiant Damage. Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.\n\nSunlight. The aura is filled with Bright Light that is sunlight.",
+					"de": "Als Bonusaktion kannst du deine Aura des Schutzes mit heiliger Macht versehen, welche zehn Minuten lang – oder bis du sie beendest (keine Aktion erforderlich) – die unten beschriebenen Vorzüge gewährt. Du kannst dieses Merkmal erst nach einer langen Rast erneut verwenden. Alternativ kannst du die Anwendung wiederherstellen, indem du einen Zauberplatz des 5. Grades verbrauchst (keine Aktion erforderlich).\n\nGleißender Schaden: Wann immer ein Gegner seinen Zug in der Aura beginnt, erleidet er gleißenden Schaden in Höhe deines Charismamodifikators plus deines Übungsbonus.\n\nHeiliger Schutz: Du bist bei allen Rettungswürfen im Vorteil, zu denen Unholde oder Untote dich zwingen.\n\nSonnenlicht: Die Aura ist von hellem Licht erfüllt, bei dem es sich um Sonnenlicht handelt."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "holy-nimbus",
 						"name": {
-							"en": "Holy Nimbus"
+							"en": "Holy Nimbus",
+							"de": "Heiliger Nimbus"
 						},
 						"uses": 1,
 						"recharge": "long"
@@ -543,18 +622,21 @@
 		"class": "ranger",
 		"rules": "2024",
 		"name": {
-			"en": "Hunter"
+			"en": "Hunter",
+			"de": "Jäger"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "hunter-hunters-lore",
 				"name": {
-					"en": "Hunter's Lore"
+					"en": "Hunter's Lore",
+					"de": "Jägerkunde"
 				},
 				"level": 3,
 				"text": {
-					"en": "You can call on the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether that creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are."
+					"en": "You can call on the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether that creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are.",
+					"de": "Du kannst die Kräfte der Natur beschwören, um bestimmte Stärken und Schwächen deiner Beute zu enthüllen. Wenn eine Kreatur mit deinem Zeichen des Jägers markiert ist, erkennst du, ob diese Kreatur Immunitäten, Resistenzen oder Anfälligkeiten hat, und wenn ja, welche."
 				},
 				"grants": [],
 				"choices": []
@@ -562,18 +644,21 @@
 			{
 				"id": "hunter-hunters-prey",
 				"name": {
-					"en": "Hunter's Prey"
+					"en": "Hunter's Prey",
+					"de": "Beute des Jägers"
 				},
 				"level": 3,
 				"text": {
-					"en": "You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.\n\nColossus Slayer. Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.\n\nHorde Breaker. Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
+					"en": "You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.\n\nColossus Slayer. Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.\n\nHorde Breaker. Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn.",
+					"de": "Du erhältst eine der folgenden Merkmal-Optionen nach deiner Wahl. Wann immer du eine kurze oder lange Rast beendest, kannst du die ausgewählte Option durch eine andere ersetzen.\n\nHordenbrecher: Einmal in jedem deiner Züge kannst du, wenn du einen Waffenangriff ausführst, einen weiteren Angriff auf eine andere Kreatur im Abstand von bis zu 1,5 Metern vom ursprünglichen Ziel sowie innerhalb der Waffenreichweite ausführen, sofern du die andere Kreatur in diesem Zug noch nicht angegriffen hast.\n\nKolossschlächter: Deine Hartnäckigkeit kann selbst die zähesten Gegner zermürben. Wenn du eine Kreatur mit einer Waffe triffst, bewirkt diese zusätzlich 1W8 Schaden, sofern das Ziel nicht mehr all seine Trefferpunkte hat. Du kannst diesen zusätzlichen Schaden nur einmal pro Zug bewirken."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "hunters-prey",
 						"name": {
-							"en": "Hunter's Prey"
+							"en": "Hunter's Prey",
+							"de": "Beute des Jägers"
 						},
 						"count": 1,
 						"gives": "option",
@@ -582,11 +667,13 @@
 								{
 									"id": "hunter-colossus-slayer",
 									"name": {
-										"en": "Colossus Slayer"
+										"en": "Colossus Slayer",
+										"de": "Kolossschlächter"
 									},
 									"level": 3,
 									"text": {
-										"en": "Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn."
+										"en": "Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn.",
+										"de": "Deine Hartnäckigkeit kann selbst die zähesten Gegner zermürben. Wenn du eine Kreatur mit einer Waffe triffst, bewirkt diese zusätzlich 1W8 Schaden, sofern das Ziel nicht mehr all seine Trefferpunkte hat. Du kannst diesen zusätzlichen Schaden nur einmal pro Zug bewirken."
 									},
 									"grants": [],
 									"choices": []
@@ -594,11 +681,13 @@
 								{
 									"id": "hunter-horde-breaker",
 									"name": {
-										"en": "Horde Breaker"
+										"en": "Horde Breaker",
+										"de": "Hordenbrecher"
 									},
 									"level": 3,
 									"text": {
-										"en": "Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
+										"en": "Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn.",
+										"de": "Einmal in jedem deiner Züge kannst du, wenn du einen Waffenangriff ausführst, einen weiteren Angriff auf eine andere Kreatur im Abstand von bis zu 1,5 Metern vom ursprünglichen Ziel sowie innerhalb der Waffenreichweite ausführen, sofern du die andere Kreatur in diesem Zug noch nicht angegriffen hast."
 									},
 									"grants": [],
 									"choices": []
@@ -611,18 +700,21 @@
 			{
 				"id": "hunter-defensive-tactics",
 				"name": {
-					"en": "Defensive Tactics"
+					"en": "Defensive Tactics",
+					"de": "Defensive Taktiken"
 				},
 				"level": 7,
 				"text": {
-					"en": "You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.\n\nEscape the Horde. Opportunity Attacks have Disadvantage against you.\n\nMultiattack Defense. When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn."
+					"en": "You gain one of the following feature options of your choice. Whenever you finish a Short or Long Rest, you can replace the chosen option with the other one.\n\nEscape the Horde. Opportunity Attacks have Disadvantage against you.\n\nMultiattack Defense. When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn.",
+					"de": "Du erhältst eine der folgenden Merkmal-Optionen nach deiner Wahl. Wann immer du eine kurze oder lange Rast beendest, kannst du die ausgewählte Option durch eine andere ersetzen.\n\nDer Horde entkommen: Gelegenheitsangriffe auf dich sind im Nachteil.\n\nVerteidigung gegen Mehrfachangriffe: Wenn eine Kreatur dich mit einem Angriffswurf trifft, ist sie in diesem Zug bei allen anderen Angriffswürfen gegen dich im Nachteil."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "defensive-tactics",
 						"name": {
-							"en": "Defensive Tactics"
+							"en": "Defensive Tactics",
+							"de": "Defensive Taktiken"
 						},
 						"count": 1,
 						"gives": "option",
@@ -631,11 +723,13 @@
 								{
 									"id": "hunter-escape-the-horde",
 									"name": {
-										"en": "Escape the Horde"
+										"en": "Escape the Horde",
+										"de": "Der Horde entkommen"
 									},
 									"level": 7,
 									"text": {
-										"en": "Opportunity Attacks have Disadvantage against you."
+										"en": "Opportunity Attacks have Disadvantage against you.",
+										"de": "Gelegenheitsangriffe auf dich sind im Nachteil."
 									},
 									"grants": [],
 									"choices": []
@@ -643,11 +737,13 @@
 								{
 									"id": "hunter-multiattack-defense",
 									"name": {
-										"en": "Multiattack Defense"
+										"en": "Multiattack Defense",
+										"de": "Verteidigung gegen Mehrfachangriffe"
 									},
 									"level": 7,
 									"text": {
-										"en": "When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn."
+										"en": "When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn.",
+										"de": "Wenn eine Kreatur dich mit einem Angriffswurf trifft, ist sie in diesem Zug bei allen anderen Angriffswürfen gegen dich im Nachteil."
 									},
 									"grants": [],
 									"choices": []
@@ -660,11 +756,13 @@
 			{
 				"id": "hunter-superior-hunters-prey",
 				"name": {
-					"en": "Superior Hunter's Prey"
+					"en": "Superior Hunter's Prey",
+					"de": "Beute des überlegenen Jägers"
 				},
 				"level": 11,
 				"text": {
-					"en": "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
+					"en": "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature.",
+					"de": "Einmal pro Zug kannst du, wenn du einer mit deinem Zeichen des Jägers markierten Kreatur Schaden zufügst, den zusätzlichen Schaden des Zaubers noch einer weiteren Kreatur im Abstand von bis zu neun Metern vom ersten Ziel zufügen, die du sehen kannst."
 				},
 				"grants": [],
 				"choices": []
@@ -672,11 +770,13 @@
 			{
 				"id": "hunter-superior-hunters-defense",
 				"name": {
-					"en": "Superior Hunter's Defense"
+					"en": "Superior Hunter's Defense",
+					"de": "Verteidigung des überlegenen Jägers"
 				},
 				"level": 15,
 				"text": {
-					"en": "When you take damage, you can take a Reaction to give yourself Resistance to that damage and any other damage of the same type until the end of the current turn."
+					"en": "When you take damage, you can take a Reaction to give yourself Resistance to that damage and any other damage of the same type until the end of the current turn.",
+					"de": "Wenn du Schaden erleidest, kannst du eine Reaktion ausführen, um dir bis zum Ende des aktuellen Zugs Resistenz gegen diesen Schaden und jeden anderen Schaden der gleichen Art zu verleihen."
 				},
 				"grants": [],
 				"choices": []
@@ -688,18 +788,21 @@
 		"class": "rogue",
 		"rules": "2024",
 		"name": {
-			"en": "Thief"
+			"en": "Thief",
+			"de": "Dieb"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "thief-fast-hands",
 				"name": {
-					"en": "Fast Hands"
+					"en": "Fast Hands",
+					"de": "Flinke Finger"
 				},
 				"level": 3,
 				"text": {
-					"en": "As a Bonus Action, you can do one of the following.\n\nSleight of Hand. Make a Dexterity (Sleight of Hand) check to pick a lock or disarm a trap with Thieves' Tools or to pick a pocket.\n\nUse an Object. Take the Utilize action, or take the Magic action to use a magic item that requires that action."
+					"en": "As a Bonus Action, you can do one of the following.\n\nSleight of Hand. Make a Dexterity (Sleight of Hand) check to pick a lock or disarm a trap with Thieves' Tools or to pick a pocket.\n\nUse an Object. Take the Utilize action, or take the Magic action to use a magic item that requires that action.",
+					"de": "Als Bonusaktion kannst du eine der folgenden Optionen ausführen:\n\nEinen Gegenstand verwenden: Führe die Verwenden-Aktion oder die magische Aktion aus, um einen magischen Gegenstand zu verwenden, der diese Aktion erfordert.\n\nFingerfertigkeit: Führe einen Geschicklichkeitswurf (Fingerfertigkeit) aus, um mit Diebeswerkzeug ein Schloss zu knacken, eine Falle zu entschärfen oder um einen Taschendiebstahl auszuführen."
 				},
 				"grants": [],
 				"choices": []
@@ -707,11 +810,13 @@
 			{
 				"id": "thief-second-story-work",
 				"name": {
-					"en": "Second-Story Work"
+					"en": "Second-Story Work",
+					"de": "Kletteraffe"
 				},
 				"level": 3,
 				"text": {
-					"en": "You've trained to get into especially hard-to-reach places, granting you these benefits.\n\nClimber. You gain a Climb Speed equal to your Speed.\n\nJumper. You can determine your jump distance using your Dexterity rather than your Strength."
+					"en": "You've trained to get into especially hard-to-reach places, granting you these benefits.\n\nClimber. You gain a Climb Speed equal to your Speed.\n\nJumper. You can determine your jump distance using your Dexterity rather than your Strength.",
+					"de": "Du bist darin ausgebildet, an besonders schwierig zu erreichende Orte zu gelangen, was dir diese Vorzüge gewährt:\n\nKletterer: Du erhältst eine Kletterbewegungsrate in Höhe deiner Bewegungsrate.\n\nSpringer: Du kannst deine Sprungdistanz anhand deiner Geschicklichkeit anstatt deiner Stärke bestimmen."
 				},
 				"grants": [],
 				"choices": []
@@ -719,11 +824,13 @@
 			{
 				"id": "thief-supreme-sneak",
 				"name": {
-					"en": "Supreme Sneak"
+					"en": "Supreme Sneak",
+					"de": "Außerordentliches Schleichen"
 				},
 				"level": 9,
 				"text": {
-					"en": "You gain the following Cunning Strike option.\n\nStealth Attack (Cost: 1d6). If you have the Hide action's Invisible condition, this attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover."
+					"en": "You gain the following Cunning Strike option.\n\nStealth Attack (Cost: 1d6). If you have the Hide action's Invisible condition, this attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover.",
+					"de": "Du erhältst bei Raffinierter Schlag folgende Option:\n\nHeimlicher Angriff (Kosten: 1W6): Wenn du aufgrund der Verstecken-Aktion unsichtbar bist, wird die Unsichtbarkeit nicht durch diesen Angriff beendet, sofern du den Zug hinter Dreivierteldeckung oder vollständiger Deckung beendest."
 				},
 				"grants": [],
 				"choices": []
@@ -731,11 +838,13 @@
 			{
 				"id": "thief-use-magic-device",
 				"name": {
-					"en": "Use Magic Device"
+					"en": "Use Magic Device",
+					"de": "Magischen Gegenstand verwenden"
 				},
 				"level": 13,
 				"text": {
-					"en": "You've learned how to maximize use of magic items, granting you the following benefits.\n\nAttunement. You can attune to up to four magic items at once.\n\nCharges. Whenever you use a magic item property that expends charges, roll 1d6. On a roll of 6, you use the property without expending the charges.\n\nScrolls. You can use any Spell Scroll, using Intelligence as your spellcasting ability for the spell. If the spell is a cantrip or a level 1 spell, you can cast it reliably. If the scroll contains a higher-level spell, you must first succeed on an Intelligence (Arcana) check (DC 10 plus the spell's level). On a successful check, you cast the spell from the scroll. On a failed check, the scroll disintegrates."
+					"en": "You've learned how to maximize use of magic items, granting you the following benefits.\n\nAttunement. You can attune to up to four magic items at once.\n\nCharges. Whenever you use a magic item property that expends charges, roll 1d6. On a roll of 6, you use the property without expending the charges.\n\nScrolls. You can use any Spell Scroll, using Intelligence as your spellcasting ability for the spell. If the spell is a cantrip or a level 1 spell, you can cast it reliably. If the scroll contains a higher-level spell, you must first succeed on an Intelligence (Arcana) check (DC 10 plus the spell's level). On a successful check, you cast the spell from the scroll. On a failed check, the scroll disintegrates.",
+					"de": "Du hast gelernt, magische Gegenstände optimal zu nutzen, was dir folgende Vorzüge gewährt:\n\nEinstimmung: Du kannst dich auf bis zu vier magische Gegenstände auf einmal einstimmen.\n\nLadungen: Wann immer du eine Eigenschaft eines magischen Gegenstands verwendest, die Ladungen verbraucht, würfle mit 1W6. Bei einem Ergebnis von 6 verwendest du die Eigenschaft, ohne eine Ladung zu verbrauchen.\n\nSchriftrollen: Du kannst alle Zauberschriftrollen verwenden, und dein Attribut zum Wirken der Zauber ist Intelligenz. Zaubertricks und Zauber des 1. Grades kannst du zuverlässig wirken. Wenn die Schriftrolle einen Zauber höheren Grades enthält, musst du zunächst einen Intelligenzwurf (Arkane Kunde) bestehen (SG 10 plus Zaubergrad). Bei einem Erfolg wirkst du den Zauber von der Schriftrolle. Misslingt der Wurf, so löst die Schriftrolle sich auf."
 				},
 				"grants": [],
 				"choices": []
@@ -743,11 +852,13 @@
 			{
 				"id": "thief-thiefs-reflexes",
 				"name": {
-					"en": "Thief's Reflexes"
+					"en": "Thief's Reflexes",
+					"de": "Reflexe eines Diebes"
 				},
 				"level": 17,
 				"text": {
-					"en": "You are adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal Initiative and your second turn at your Initiative minus 10."
+					"en": "You are adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal Initiative and your second turn at your Initiative minus 10.",
+					"de": "Du bist versiert darin, Hinterhalte zu legen und rasch aus Gefahren zu entkommen. In der ersten Runde jedes Kampfs kannst du zwei Züge ausführen. Du führst den ersten Zug mit deiner normalen Initiative und den zweiten Zug mit deiner Initiative minus 10 aus."
 				},
 				"grants": [],
 				"choices": []
@@ -759,18 +870,21 @@
 		"class": "sorcerer",
 		"rules": "2024",
 		"name": {
-			"en": "Draconic Sorcery"
+			"en": "Draconic Sorcery",
+			"de": "Drakonische Zauberei"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "draconic-resilience",
 				"name": {
-					"en": "Draconic Resilience"
+					"en": "Draconic Resilience",
+					"de": "Drakonische Widerstandskraft"
 				},
 				"level": 3,
 				"text": {
-					"en": "The magic in your body manifests physical traits of your draconic gift. Your Hit Point maximum increases by 3, and it increases by 1 whenever you gain another Sorcerer level.\n\nParts of you are also covered by dragon-like scales. While you aren't wearing armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers."
+					"en": "The magic in your body manifests physical traits of your draconic gift. Your Hit Point maximum increases by 3, and it increases by 1 whenever you gain another Sorcerer level.\n\nParts of you are also covered by dragon-like scales. While you aren't wearing armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers.",
+					"de": "Die Magie in deinem Körper manifestiert physische Merkmale deiner drakonischen Gabe. Dein Trefferpunktemaximum wird um 3 Punkte und auf jeder höheren Zaubererstufe um 1 weiteren Punkt erhöht.\n\nAußerdem sind Teile deines Körpers drachenartig mit Schuppen bedeckt. Solange du keine Rüstung trägst, entspricht deine Basis-Rüstungsklasse 10 plus deinem Geschicklichkeits- plus deinem Charismamodifikator."
 				},
 				"grants": [
 					{
@@ -790,11 +904,13 @@
 			{
 				"id": "draconic-spells",
 				"name": {
-					"en": "Draconic Spells"
+					"en": "Draconic Spells",
+					"de": "Drakonische Zauber"
 				},
 				"level": 3,
 				"text": {
-					"en": "When you reach a Sorcerer level specified in the Draconic Spells table, you thereafter always have the listed spells prepared.\n\n**Draconic Spells**\n\n| Sorcerer Level | Spells |\n| --- | --- |\n| 3 | Alter Self, Chromatic Orb, Command, Dragon's Breath |\n| 5 | Fear, Fly |\n| 7 | Arcane Eye, Charm Monster |\n| 9 | Legend Lore, Summon Dragon |"
+					"en": "When you reach a Sorcerer level specified in the Draconic Spells table, you thereafter always have the listed spells prepared.\n\n**Draconic Spells**\n\n| Sorcerer Level | Spells |\n| --- | --- |\n| 3 | Alter Self, Chromatic Orb, Command, Dragon's Breath |\n| 5 | Fear, Fly |\n| 7 | Arcane Eye, Charm Monster |\n| 9 | Legend Lore, Summon Dragon |",
+					"de": "Wenn du eine Zaubererstufe erreichst, die in der Tabelle „Drakonische Zauber“ aufgeführt ist, hast du die aufgeführten Zauber fortan stets vorbereitet.\n\n**Drakonische Zauber**\n\n| Zaubererstufe | Zauber |\n| --- | --- |\n| 3 | Befehl, Chromatische Kugel, Drachenodem, Gestalt verändern |\n| 5 | Fliegen, Furcht |\n| 7 | Arkanes Auge, Monster bezaubern |\n| 9 | Drachen herbeirufen, Sagenkunde |"
 				},
 				"grants": [],
 				"choices": []
@@ -802,18 +918,21 @@
 			{
 				"id": "draconic-elemental-affinity",
 				"name": {
-					"en": "Elemental Affinity"
+					"en": "Elemental Affinity",
+					"de": "Elementare Affinität"
 				},
 				"level": 6,
 				"text": {
-					"en": "Your draconic magic has an affinity with a damage type associated with dragons. Choose one of those types: Acid, Cold, Fire, Lightning, or Poison.\n\nYou have Resistance to that damage type, and when you cast a spell that deals damage of that type, you can add your Charisma modifier to one damage roll of that spell."
+					"en": "Your draconic magic has an affinity with a damage type associated with dragons. Choose one of those types: Acid, Cold, Fire, Lightning, or Poison.\n\nYou have Resistance to that damage type, and when you cast a spell that deals damage of that type, you can add your Charisma modifier to one damage roll of that spell.",
+					"de": "Deine drakonische Magie hat eine Affinität mit der Schadensart, die mit Drachen assoziiert ist. Wähle eine der folgenden Arten aus: Blitz, Feuer, Gift, Kälte oder Säure.\n\nDu bist gegen diese Schadensart resistent, und wenn du einen Zauber wirkst, der Schaden dieser Art bewirkt, kannst du einem Schadenswurf dieses Zaubers deinen Charismamodifikator hinzufügen."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "affinity",
 						"name": {
-							"en": "Elemental Affinity"
+							"en": "Elemental Affinity",
+							"de": "Elementare Affinität"
 						},
 						"count": 1,
 						"gives": "option",
@@ -822,11 +941,13 @@
 								{
 									"id": "draconic-elemental-affinity-acid",
 									"name": {
-										"en": "Acid"
+										"en": "Acid",
+										"de": "Säure"
 									},
 									"level": 6,
 									"text": {
-										"en": "You have Resistance to Acid damage, and when you cast a spell that deals Acid damage, you can add your Charisma modifier to one damage roll of that spell."
+										"en": "You have Resistance to Acid damage, and when you cast a spell that deals Acid damage, you can add your Charisma modifier to one damage roll of that spell.",
+										"de": "Du bist gegen Säureschaden resistent, und wenn du einen Zauber wirkst, der Säureschaden bewirkt, kannst du einem Schadenswurf dieses Zaubers deinen Charismamodifikator hinzufügen."
 									},
 									"grants": [
 										{
@@ -839,11 +960,13 @@
 								{
 									"id": "draconic-elemental-affinity-cold",
 									"name": {
-										"en": "Cold"
+										"en": "Cold",
+										"de": "Kälte"
 									},
 									"level": 6,
 									"text": {
-										"en": "You have Resistance to Cold damage, and when you cast a spell that deals Cold damage, you can add your Charisma modifier to one damage roll of that spell."
+										"en": "You have Resistance to Cold damage, and when you cast a spell that deals Cold damage, you can add your Charisma modifier to one damage roll of that spell.",
+										"de": "Du bist gegen Kälteschaden resistent, und wenn du einen Zauber wirkst, der Kälteschaden bewirkt, kannst du einem Schadenswurf dieses Zaubers deinen Charismamodifikator hinzufügen."
 									},
 									"grants": [
 										{
@@ -856,11 +979,13 @@
 								{
 									"id": "draconic-elemental-affinity-fire",
 									"name": {
-										"en": "Fire"
+										"en": "Fire",
+										"de": "Feuer"
 									},
 									"level": 6,
 									"text": {
-										"en": "You have Resistance to Fire damage, and when you cast a spell that deals Fire damage, you can add your Charisma modifier to one damage roll of that spell."
+										"en": "You have Resistance to Fire damage, and when you cast a spell that deals Fire damage, you can add your Charisma modifier to one damage roll of that spell.",
+										"de": "Du bist gegen Feuerschaden resistent, und wenn du einen Zauber wirkst, der Feuerschaden bewirkt, kannst du einem Schadenswurf dieses Zaubers deinen Charismamodifikator hinzufügen."
 									},
 									"grants": [
 										{
@@ -873,11 +998,13 @@
 								{
 									"id": "draconic-elemental-affinity-lightning",
 									"name": {
-										"en": "Lightning"
+										"en": "Lightning",
+										"de": "Blitz"
 									},
 									"level": 6,
 									"text": {
-										"en": "You have Resistance to Lightning damage, and when you cast a spell that deals Lightning damage, you can add your Charisma modifier to one damage roll of that spell."
+										"en": "You have Resistance to Lightning damage, and when you cast a spell that deals Lightning damage, you can add your Charisma modifier to one damage roll of that spell.",
+										"de": "Du bist gegen Blitzschaden resistent, und wenn du einen Zauber wirkst, der Blitzschaden bewirkt, kannst du einem Schadenswurf dieses Zaubers deinen Charismamodifikator hinzufügen."
 									},
 									"grants": [
 										{
@@ -890,11 +1017,13 @@
 								{
 									"id": "draconic-elemental-affinity-poison",
 									"name": {
-										"en": "Poison"
+										"en": "Poison",
+										"de": "Gift"
 									},
 									"level": 6,
 									"text": {
-										"en": "You have Resistance to Poison damage, and when you cast a spell that deals Poison damage, you can add your Charisma modifier to one damage roll of that spell."
+										"en": "You have Resistance to Poison damage, and when you cast a spell that deals Poison damage, you can add your Charisma modifier to one damage roll of that spell.",
+										"de": "Du bist gegen Giftschaden resistent, und wenn du einen Zauber wirkst, der Giftschaden bewirkt, kannst du einem Schadenswurf dieses Zaubers deinen Charismamodifikator hinzufügen."
 									},
 									"grants": [
 										{
@@ -912,18 +1041,21 @@
 			{
 				"id": "draconic-dragon-wings",
 				"name": {
-					"en": "Dragon Wings"
+					"en": "Dragon Wings",
+					"de": "Drachenflügel"
 				},
 				"level": 14,
 				"text": {
-					"en": "As a Bonus Action, you can cause draconic wings to appear on your back. The wings last for 1 hour or until you dismiss them (no action required). For the duration, you have a Fly Speed of 60 feet.\n\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you spend 3 Sorcery Points (no action required) to restore your use of it."
+					"en": "As a Bonus Action, you can cause draconic wings to appear on your back. The wings last for 1 hour or until you dismiss them (no action required). For the duration, you have a Fly Speed of 60 feet.\n\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you spend 3 Sorcery Points (no action required) to restore your use of it.",
+					"de": "Als Bonusaktion kannst du drakonische Flügel auf deinem Rücken erscheinen lassen. Sie bleiben eine Stunde lang bestehen, oder bis du sie verwirfst (keine Aktion erforderlich). Für die Wirkungsdauer hast du eine Flugbewegungsrate von 18 Metern.\n\nDu kannst dieses Merkmal erst nach einer langen Rast erneut verwenden, es sei denn, du verbrauchst 3 Zaubereipunkte (keine Aktion erforderlich), um die Anwendung wiederherzustellen."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "dragon-wings",
 						"name": {
-							"en": "Dragon Wings"
+							"en": "Dragon Wings",
+							"de": "Drachenflügel"
 						},
 						"uses": 1,
 						"recharge": "long"
@@ -934,18 +1066,21 @@
 			{
 				"id": "draconic-dragon-companion",
 				"name": {
-					"en": "Dragon Companion"
+					"en": "Dragon Companion",
+					"de": "Drachengefährte"
 				},
 				"level": 18,
 				"text": {
-					"en": "You can cast Summon Dragon without a Material component. You can also cast it once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest.\n\nWhenever you start casting the spell, you can modify it so that it doesn't require Concentration. If you do so, the spell's duration becomes 1 minute for that casting."
+					"en": "You can cast Summon Dragon without a Material component. You can also cast it once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest.\n\nWhenever you start casting the spell, you can modify it so that it doesn't require Concentration. If you do so, the spell's duration becomes 1 minute for that casting.",
+					"de": "Du kannst Drachen herbeirufen ohne Materialkomponente wirken. Du kannst den Zauber auch einmal wirken, ohne einen Zauberplatz zu verbrauchen. Diese Fähigkeit erhältst du nach einer langen Rast zurück.\n\nWann immer du beginnst, diesen Zauber zu wirken, kannst du ihn so verändern, dass er keine Konzentration erfordert. In diesem Fall beträgt die Wirkungsdauer des Zaubers eine Minute."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "dragon-companion",
 						"name": {
-							"en": "Dragon Companion"
+							"en": "Dragon Companion",
+							"de": "Drachengefährte"
 						},
 						"uses": 1,
 						"recharge": "long"
@@ -960,18 +1095,21 @@
 		"class": "warlock",
 		"rules": "2024",
 		"name": {
-			"en": "Fiend Patron"
+			"en": "Fiend Patron",
+			"de": "Unhold-Schutzherr"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "fiend-dark-ones-blessing",
 				"name": {
-					"en": "Dark One's Blessing"
+					"en": "Dark One's Blessing",
+					"de": "Segen des Dunklen Meisters"
 				},
 				"level": 3,
 				"text": {
-					"en": "When you reduce an enemy to 0 Hit Points, you gain Temporary Hit Points equal to your Charisma modifier plus your Warlock level (minimum of 1 Temporary Hit Point). You also gain this benefit if someone else reduces an enemy within 10 feet of you to 0 Hit Points."
+					"en": "When you reduce an enemy to 0 Hit Points, you gain Temporary Hit Points equal to your Charisma modifier plus your Warlock level (minimum of 1 Temporary Hit Point). You also gain this benefit if someone else reduces an enemy within 10 feet of you to 0 Hit Points.",
+					"de": "Wenn du die Trefferpunkte eines Gegners auf 0 verringerst, erhältst du temporäre Trefferpunkte in Höhe deines Charismamodifikator plus deiner Hexenmeisterstufe (mindestens 1 temporärer Trefferpunkt). Du erhältst diesen Vorzug ebenfalls, wenn jemand anders die Trefferpunkte eines Gegners im Abstand von bis zu drei Metern von dir auf 0 verringert."
 				},
 				"grants": [],
 				"choices": []
@@ -979,11 +1117,13 @@
 			{
 				"id": "fiend-spells",
 				"name": {
-					"en": "Fiend Spells"
+					"en": "Fiend Spells",
+					"de": "Unhold-Zauber"
 				},
 				"level": 3,
 				"text": {
-					"en": "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Fiend Spells table, you thereafter always have the listed spells prepared.\n\n**Fiend Spells**\n\n| Warlock Level | Spells |\n| --- | --- |\n| 3 | Burning Hands, Command, Scorching Ray, Suggestion |\n| 5 | Fireball, Stinking Cloud |\n| 7 | Fire Shield, Wall of Fire |\n| 9 | Geas, Insect Plague |"
+					"en": "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Fiend Spells table, you thereafter always have the listed spells prepared.\n\n**Fiend Spells**\n\n| Warlock Level | Spells |\n| --- | --- |\n| 3 | Burning Hands, Command, Scorching Ray, Suggestion |\n| 5 | Fireball, Stinking Cloud |\n| 7 | Fire Shield, Wall of Fire |\n| 9 | Geas, Insect Plague |",
+					"de": "Die Magie deines Schutzherrn sorgt dafür, dass du bestimmte Zauber stets verfügbar hast. Wenn du eine Hexenmeisterstufe erreichst, die in der Tabelle „Unhold-Zauber“ angegeben ist, hast du die aufgeführten Zauber stets vorbereitet.\n\n**Unhold-Zauber**\n\n| Hexenmeisterstufe | Zauber |\n| --- | --- |\n| 3 | Befehl, Brennende Hände, Einflüsterung, Sengender Strahl |\n| 5 | Feuerball, Stinkende Wolke |\n| 7 | Feuerschild, Feuerwand |\n| 9 | Geas, Insektenplage |"
 				},
 				"grants": [],
 				"choices": []
@@ -991,18 +1131,21 @@
 			{
 				"id": "fiend-dark-ones-own-luck",
 				"name": {
-					"en": "Dark One's Own Luck"
+					"en": "Dark One's Own Luck",
+					"de": "Schicksal des Dunklen Meisters"
 				},
 				"level": 6,
 				"text": {
-					"en": "You can call on your fiendish patron to alter fate in your favor. When you make an ability check or a saving throw, you can use this feature to add 1d10 to your roll. You can do so after seeing the roll but before any of the roll's effects occur.\n\nYou can use this feature a number of times equal to your Charisma modifier (minimum of once), but you can use it no more than once per roll. You regain all expended uses when you finish a Long Rest."
+					"en": "You can call on your fiendish patron to alter fate in your favor. When you make an ability check or a saving throw, you can use this feature to add 1d10 to your roll. You can do so after seeing the roll but before any of the roll's effects occur.\n\nYou can use this feature a number of times equal to your Charisma modifier (minimum of once), but you can use it no more than once per roll. You regain all expended uses when you finish a Long Rest.",
+					"de": "Du kannst deinen Unhold-Schutzherrn bitten, das Schicksal zu deinen Gunsten zu ändern. Wenn du einen Attributs- oder Rettungswurf ausführst, kannst du dieses Merkmal anwenden, um dem Wurf 1W10 hinzuzufügen. Dies kannst du tun, nachdem der Wurf ausgeführt wurde, aber bevor die Effekte des Wurfs auftreten.\n\nDie Anzahl der möglichen Anwendungen dieses Merkmals entspricht deinem Charismamodifikator (mindestens einmal), doch du kannst es nicht öfter als einmal pro Würfelwurf anwenden. Du erhältst alle verbrauchten Anwendungen nach einer langen Rast zurück."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "dark-ones-own-luck",
 						"name": {
-							"en": "Dark One's Own Luck"
+							"en": "Dark One's Own Luck",
+							"de": "Schicksal des Dunklen Meisters"
 						},
 						"uses": {
 							"ability": "cha"
@@ -1017,11 +1160,13 @@
 			{
 				"id": "fiend-fiendish-resilience",
 				"name": {
-					"en": "Fiendish Resilience"
+					"en": "Fiendish Resilience",
+					"de": "Widerstandskraft des Unholds"
 				},
 				"level": 10,
 				"text": {
-					"en": "Choose one damage type, other than Force, whenever you finish a Short or Long Rest. You have Resistance to that damage type until you choose a different one with this feature."
+					"en": "Choose one damage type, other than Force, whenever you finish a Short or Long Rest. You have Resistance to that damage type until you choose a different one with this feature.",
+					"de": "Wähle eine Schadensart außer Energie aus, wann immer du eine kurze oder lange Rast beendest. Du bist gegen diese Schadensart resistent, bis du mit diesem Merkmal eine andere auswählst."
 				},
 				"grants": [],
 				"choices": []
@@ -1029,18 +1174,21 @@
 			{
 				"id": "fiend-hurl-through-hell",
 				"name": {
-					"en": "Hurl Through Hell"
+					"en": "Hurl Through Hell",
+					"de": "Schlund des Wahnsinns"
 				},
 				"level": 14,
 				"text": {
-					"en": "Once per turn when you hit a creature with an attack roll, you can try to instantly transport the target through the Lower Planes. The target must succeed on a Charisma saving throw against your spell save DC, or the target disappears and hurtles through a nightmare landscape. The target takes 8d10 Psychic damage if it isn't a Fiend, and it has the Incapacitated condition until the end of your next turn, when it returns to the space it previously occupied or the nearest unoccupied space.\n\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it."
+					"en": "Once per turn when you hit a creature with an attack roll, you can try to instantly transport the target through the Lower Planes. The target must succeed on a Charisma saving throw against your spell save DC, or the target disappears and hurtles through a nightmare landscape. The target takes 8d10 Psychic damage if it isn't a Fiend, and it has the Incapacitated condition until the end of your next turn, when it returns to the space it previously occupied or the nearest unoccupied space.\n\nOnce you use this feature, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it.",
+					"de": "Einmal pro Zug kannst du, wenn du eine Kreatur mit einem Angriffswurf triffst, versuchen, das Ziel sofort in die Unteren Ebenen zu schleudern. Das Ziel muss einen Charismarettungswurf gegen deinen Zauberrettungswurf-SG bestehen, oder es verschwindet und trudelt durch eine Albtraumlandschaft. Es erleidet 8W10 psychischen Schaden, sofern es kein Unhold ist, und ist bis zum Ende deines nächsten Zugs kampfunfähig. Dann kehrt es in den Bereich zurück, aus dem es verschwunden ist, oder gelangt in den nächstliegenden freien Bereich.\n\nDu kannst dieses Merkmal erst nach einer langen Rast erneut verwenden, es sei denn, du verbrauchst einen Paktmagie-Zauberplatz (keine Aktion erforderlich), um die Anwendung wiederherzustellen."
 				},
 				"grants": [
 					{
 						"kind": "resource",
 						"id": "hurl-through-hell",
 						"name": {
-							"en": "Hurl Through Hell"
+							"en": "Hurl Through Hell",
+							"de": "Schlund des Wahnsinns"
 						},
 						"uses": 1,
 						"recharge": "long"
@@ -1055,18 +1203,21 @@
 		"class": "wizard",
 		"rules": "2024",
 		"name": {
-			"en": "Evoker"
+			"en": "Evoker",
+			"de": "Hervorrufer"
 		},
 		"source": "srd-5.2.1",
 		"features": [
 			{
 				"id": "evoker-evocation-savant",
 				"name": {
-					"en": "Evocation Savant"
+					"en": "Evocation Savant",
+					"de": "Gelehrter der Hervorrufungsmagie"
 				},
 				"level": 3,
 				"text": {
-					"en": "Choose two Wizard spells from the Evocation school, each of which must be no higher than level 2, and add them to your spellbook for free.\n\nIn addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Evocation school to your spellbook for free. The chosen spell must be of a level for which you have spell slots."
+					"en": "Choose two Wizard spells from the Evocation school, each of which must be no higher than level 2, and add them to your spellbook for free.\n\nIn addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Evocation school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+					"de": "Wähle zwei Magierzauber der Schule der Hervorrufungsmagie des höchstens 2. Grades aus und füge sie gratis deinem Zauberbuch hinzu.\n\nWann immer außerdem ein neuer Zauberplatzgrad in dieser Klasse verfügbar wird, kannst du deinem Zauberbuch gratis einen Magierzauber der Schule der Hervorrufungsmagie hinzufügen. Der Grad des ausgewählten Zaubers muss dem der verfügbaren Zauberplätze entsprechen."
 				},
 				"grants": [],
 				"choices": []
@@ -1074,11 +1225,13 @@
 			{
 				"id": "evoker-potent-cantrip",
 				"name": {
-					"en": "Potent Cantrip"
+					"en": "Potent Cantrip",
+					"de": "Kraftvoller Zaubertrick"
 				},
 				"level": 3,
 				"text": {
-					"en": "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
+					"en": "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip.",
+					"de": "Deine Schadenszaubertricks wirken auch auf Kreaturen, welche die volle Wucht deiner magischen Angriffe zu vermeiden versuchen. Wenn du einen Zaubertrick auf eine Kreatur wirkst und dein Angriffswurf misslingt, oder wenn das Ziel einen Rettungswurf gegen den Zaubertrick besteht, erleidet das Ziel dennoch die Hälfte des Schadens (sofern der Zaubertrick Schaden bewirkt), jedoch keine zusätzliche Effekte."
 				},
 				"grants": [],
 				"choices": []
@@ -1086,11 +1239,13 @@
 			{
 				"id": "evoker-sculpt-spells",
 				"name": {
-					"en": "Sculpt Spells"
+					"en": "Sculpt Spells",
+					"de": "Zauber formen"
 				},
 				"level": 6,
 				"text": {
-					"en": "You can create pockets of relative safety within the effects of your evocations. When you cast an Evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 plus the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save."
+					"en": "You can create pockets of relative safety within the effects of your evocations. When you cast an Evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 plus the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save.",
+					"de": "Du kannst innerhalb der Effekte deiner Hervorrufungszauber Bereiche von relativer Sicherheit erzeugen. Wenn du einen Hervorrufungszauber wirkst, der andere Kreaturen betrifft, die du sehen kannst, so kannst du eine Anzahl dieser Kreaturen in Höhe von 1 plus Zaubergrad auswählen. Die ausgewählten Kreaturen bestehen ihren Rettungswurf gegen deinen Zauber automatisch und erleiden keinen Schaden, wenn sie normalerweise die Hälfte des Schadens erleiden würden."
 				},
 				"grants": [],
 				"choices": []
@@ -1098,11 +1253,13 @@
 			{
 				"id": "evoker-empowered-evocation",
 				"name": {
-					"en": "Empowered Evocation"
+					"en": "Empowered Evocation",
+					"de": "Mächtige Hervorrufung"
 				},
 				"level": 10,
 				"text": {
-					"en": "Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell."
+					"en": "Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell.",
+					"de": "Wann immer du einen Magierzauber von der Schule der Hervorrufungsmagie wirkst, kannst du dem Schadenswurf des Zaubers deinen Intelligenzmodifikator hinzufügen."
 				},
 				"grants": [],
 				"choices": []
@@ -1110,11 +1267,13 @@
 			{
 				"id": "evoker-overchannel",
 				"name": {
-					"en": "Overchannel"
+					"en": "Overchannel",
+					"de": "Überladen"
 				},
 				"level": 14,
 				"text": {
-					"en": "You can increase the power of your spells. When you cast a Wizard spell with a spell slot of levels 1-5 that deals damage, you can deal maximum damage with that spell on the turn you cast it.\n\nThe first time you do so, you suffer no adverse effect. If you use this feature again before you finish a Long Rest, you take 2d12 Necrotic damage for each level of the spell slot immediately after you cast it. This damage ignores Resistance and Immunity.\n\nEach time you use this feature again before finishing a Long Rest, the Necrotic damage per spell level increases by 1d12."
+					"en": "You can increase the power of your spells. When you cast a Wizard spell with a spell slot of levels 1-5 that deals damage, you can deal maximum damage with that spell on the turn you cast it.\n\nThe first time you do so, you suffer no adverse effect. If you use this feature again before you finish a Long Rest, you take 2d12 Necrotic damage for each level of the spell slot immediately after you cast it. This damage ignores Resistance and Immunity.\n\nEach time you use this feature again before finishing a Long Rest, the Necrotic damage per spell level increases by 1d12.",
+					"de": "Du kannst die Macht deiner Zauber erhöhen. Wenn du einen Magierzauber mit einem Zauberplatz des 1. bis 5. Grades wirkst und der Zauber Schaden bewirkt, kannst du mit diesem Zauber in dem Zug, in dem du ihn wirkst, maximalen Schaden bewirken.\n\nBeim ersten Mal hat dies keine nachteiligen Effekte für dich. Wenn du dieses Merkmal jedoch vor Ende einer langen Rast erneut einsetzt, erleidest du sofort danach 2W12 nekrotischen Schaden pro Zauberplatzgrad. Dieser Schaden ignoriert Resistenzen und Immunitäten.\n\nWann immer du dieses Merkmal vor Ende einer langen Rast erneut verwendest, erhöht sich der nekrotische Schaden um weitere 1W12 pro Zaubergrad."
 				},
 				"grants": [],
 				"choices": []

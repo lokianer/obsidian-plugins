@@ -124,8 +124,7 @@ describe('SRD 5.2.1 weapon training and multiclassing', () => {
 });
 
 describe('SRD 5.2.1 German texts', () => {
-  // Skipped until every text has its German (phase C1b, task 3 turns it on).
-  it.skip('every rules text has its German', () => {
+  it('every rules text has its German', () => {
     const problems = texts(SRD_52, 'srd').flatMap(([path, text]) =>
       germanProblems(text).map((p) => `${path}: ${p}`),
     );
@@ -206,5 +205,103 @@ describe('SRD 5.2.1 German names from the official German SRD', () => {
       germanProblems(text).map((p) => `${path}: ${p}`),
     );
     expect(problems).toEqual([]);
+  });
+
+  it('names the classes, their first features and the subclasses', () => {
+    expect(de(SRD_52.classes)).toEqual({
+      barbarian: 'Barbar',
+      bard: 'Barde',
+      cleric: 'Kleriker',
+      druid: 'Druide',
+      fighter: 'Kämpfer',
+      monk: 'Mönch',
+      paladin: 'Paladin',
+      ranger: 'Waldläufer',
+      rogue: 'Schurke',
+      sorcerer: 'Zauberer',
+      warlock: 'Hexenmeister',
+      wizard: 'Magier',
+    });
+    expect(features(SRD_52.classes)).toMatchObject({
+      'barbarian-core': 'Hauptmerkmale des Barbaren',
+      'barbarian-rage': 'Kampfrausch',
+      'barbarian-unarmored-defense': 'Ungerüstete Verteidigung',
+      'barbarian-weapon-mastery': 'Waffenbeherrschung',
+      'barbarian-danger-sense': 'Gefahrengespür',
+      'barbarian-reckless-attack': 'Rücksichtsloser Angriff',
+      'bard-core': 'Hauptmerkmale des Barden',
+      'bard-bardic-inspiration': 'Bardische Inspiration',
+      'bard-spellcasting': 'Zauberwirken',
+      'bard-expertise': 'Expertise',
+      'bard-jack-of-all-trades': 'Alleskönner',
+      'cleric-core': 'Hauptmerkmale des Klerikers',
+      'cleric-spellcasting': 'Zauberwirken',
+      'cleric-divine-order': 'Göttliche Ordnung',
+      'cleric-channel-divinity': 'Göttliche Macht fokussieren',
+      'druid-core': 'Hauptmerkmale des Druiden',
+      'druid-spellcasting': 'Zauberwirken',
+      'druid-druidic': 'Druidisch',
+      'druid-primal-order': 'Urtümliche Ordnung',
+      'druid-wild-shape': 'Tiergestalt',
+      'druid-wild-companion': 'Wilder Gefährte',
+      'fighter-core': 'Hauptmerkmale des Kämpfers',
+      'fighter-fighting-style': 'Kampfstil',
+      'fighter-second-wind': 'Durchschnaufen',
+      'fighter-weapon-mastery': 'Waffenbeherrschung',
+      'fighter-action-surge': 'Tatendrang',
+      'fighter-tactical-mind': 'Taktisches Verständnis',
+      'monk-core': 'Hauptmerkmale des Mönchs',
+      'monk-martial-arts': 'Kampfkünste',
+      'monk-unarmored-defense': 'Ungerüstete Verteidigung',
+      'monk-monks-focus': 'Mönchsfokus',
+      'monk-unarmored-movement': 'Ungerüstete Bewegung',
+      'monk-uncanny-metabolism': 'Unglaublicher Stoffwechsel',
+      'paladin-core': 'Hauptmerkmale des Paladins',
+      'paladin-lay-on-hands': 'Handauflegen',
+      'paladin-spellcasting': 'Zauberwirken',
+      'paladin-weapon-mastery': 'Waffenbeherrschung',
+      'paladin-fighting-style': 'Kampfstil',
+      'paladin-paladins-smite': 'Paladin-Niederstrecken',
+      'ranger-core': 'Hauptmerkmale des Waldläufers',
+      'ranger-spellcasting': 'Zauberwirken',
+      'ranger-favored-enemy': 'Erzfeind',
+      'ranger-weapon-mastery': 'Waffenbeherrschung',
+      'ranger-deft-explorer': 'Geschickte Erkundung',
+      'ranger-fighting-style': 'Kampfstil',
+      'rogue-core': 'Hauptmerkmale des Schurken',
+      'rogue-expertise': 'Expertise',
+      'rogue-sneak-attack': 'Hinterhältiger Angriff',
+      'rogue-thieves-cant': 'Diebessprache',
+      'rogue-weapon-mastery': 'Waffenbeherrschung',
+      'rogue-cunning-action': 'Raffinierte Aktion',
+      'sorcerer-core': 'Hauptmerkmale des Zauberers',
+      'sorcerer-spellcasting': 'Zauberwirken',
+      'sorcerer-innate-sorcery': 'Intuitive Zauberei',
+      'sorcerer-font-of-magic': 'Quelle der Magie',
+      'sorcerer-metamagic': 'Metamagie',
+      'warlock-core': 'Hauptmerkmale des Hexenmeisters',
+      'warlock-eldritch-invocations': 'Schauerliche Anrufungen',
+      'warlock-pact-magic': 'Paktmagie',
+      'warlock-magical-cunning': 'Magische Raffinesse',
+      'wizard-core': 'Hauptmerkmale des Magiers',
+      'wizard-spellcasting': 'Zauberwirken',
+      'wizard-ritual-adept': 'Ritual-Adept',
+      'wizard-arcane-recovery': 'Arkane Erholung',
+      'wizard-scholar': 'Gelehrter',
+    });
+    expect(de(SRD_52.subclasses)).toEqual({
+      'barbarian/path-of-the-berserker': 'Pfad des Berserkers',
+      'bard/college-of-lore': 'Schule des Wissens',
+      'cleric/life-domain': 'Domäne des Lebens',
+      'druid/circle-of-the-land': 'Zirkel des Landes',
+      'fighter/champion': 'Champion',
+      'monk/warrior-of-the-open-hand': 'Krieger der Offenen Hand',
+      'paladin/oath-of-devotion': 'Schwur der Hingabe',
+      'ranger/hunter': 'Jäger',
+      'rogue/thief': 'Dieb',
+      'sorcerer/draconic-sorcery': 'Drakonische Zauberei',
+      'warlock/fiend-patron': 'Unhold-Schutzherr',
+      'wizard/evoker': 'Hervorrufer',
+    });
   });
 });
