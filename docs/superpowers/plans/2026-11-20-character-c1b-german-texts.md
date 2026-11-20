@@ -1,5 +1,7 @@
 # Character Builder C1b — German SRD Texts — Implementation Plan
 
+**Status:** built 2026-11-20, awaiting the maintainer's check.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Every name and text C1 ships in `packages/rules/data/srd-5.2.1/` (classes, subclasses,

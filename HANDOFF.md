@@ -14,50 +14,63 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 ## Session
 
 2026-11-20, local (third part). After V5 and V6 the maintainer started the character builder:
-brainstorm, design `docs/superpowers/specs/2026-11-20-character-builder-design.md` (approved), plan
-`docs/superpowers/plans/2026-11-20-character-c1-engine-sheet.md` (approved, executed natively).
-**Phase C1 built and pushed**: the shared package `packages/rules`, the SRD 5.2.1 rules data, built
-character notes and the character sheet.
+brainstorm, design `docs/superpowers/specs/2026-11-20-character-builder-design.md` (approved), plans
+`2026-11-20-character-c1-engine-sheet.md` and `2026-11-20-character-c1b-german-texts.md`.
+**Phases C1 and C1b built and pushed**: the shared package `packages/rules`, the SRD 5.2.1 rules
+data, built character notes and the character sheet (C1), and the official German SRD 5.2.1 texts
+for all of that data, shown on the sheet with German Obsidian (C1b).
 
 ## Where to continue
 
-1. **Check C1 in Obsidian** (`pnpm --filter dnd5e-bylokianer install-example`, then the example vault): open
-   [[Wren Ashdown]] → **Open character sheet** (command or the file menu). Expected: HP 31 / 39,
-   AC 14, initiative +6, speed 30 ft., proficiency +3, passive Perception 14; the dagger rolls +6
-   and 1d4+3; Bardic Inspiration 3 per short rest · d8; Skills with Persuasion and Deception +9;
-   Levels with College of Lore at 3. Change `cha: 15` to `16` in the note: the computed keys
-   (`skills:`, `saves:`) follow, and the sheet with them. Orrin Quill (hand-written) shows his own
-   values. Check in dark and light, German, and a narrow pane (the abilities as six boxes).
+1. **Check C1 and C1b in Obsidian** (`pnpm --filter dnd5e-bylokianer install-example`, then the
+   example vault): open [[Wren Ashdown]] → **Open character sheet** (command or the file menu).
+   Expected: HP 31 / 39, AC 14, initiative +6, speed 30 ft., proficiency +3, passive Perception 14;
+   the dagger rolls +6 and 1d4+3; Bardic Inspiration 3 per short rest · d8; Skills with Persuasion
+   and Deception +9; Levels with College of Lore at 3. Change `cha: 15` to `16` in the note: the
+   computed keys (`skills:`, `saves:`) follow, and the sheet with them. Orrin Quill
+   (hand-written) shows his own values. Check in dark and light and a narrow pane. **In German**
+   (Obsidian set to German): class, subclass, species, background, feature texts, choice labels
+   and tables are the official German SRD; damage types on the Actions tab are German; anything
+   without a German text falls back to English.
 2. **Still waiting for the check from earlier:** V4–V6 (style C for the lists, Dice tab, deck and
    builders) and the catalogues K1–K3. Release 0.2.0 only after the maintainer's go-ahead.
-3. **Next phase:** C1b (German SRD texts, from the official German SRD) or C2 (create and level up
-   in a dialog); the maintainer picks. Each needs its plan first.
-4. **Before C2, decide** (from the final review): choices whose count grows with the class level
+3. **Next phase:** C2 (create and level up in a dialog) after the check; it needs its plan first.
+4. **Before C2, decide** (from the C1 final review): choices whose count grows with the class level
    (Eldritch Invocations, Metamagic, Weapon Mastery) are stored in full at the level that first
    grants them; the level-up dialog needs them per level (spread over the class's entries, or the
-   increments per level). Weapon Mastery's data lists categories, not weapons.
-5. **Deferred minors from the final review** (none blocks C1): 2024 third casters should round
-   down (latent, no SRD third caster); 2014 single-class half casters need their own table (latent,
-   no 2014 data); a feat taken at a class level follows that class's level, not the character's;
-   the same origin feat twice shares one choice key; background increases are not validated
-   (+3 to one score possible); the sheet's feature texts add render components on every redraw
-   until the tab closes; the Spells tab shows the first caster's DC only; a renamed note leaves its
-   sheet empty; tab pills need `tabindex` and keys; the first write-back turns flow maps into block
-   style and drops YAML comments (processFrontMatter); a subclass of another class is reported as
-   unknown rather than mismatched.
+   increments per level). Weapon Mastery's data lists categories, not weapons. **Still open.**
+5. **Deferred minors from C1** (none blocks): 2024 third casters should round down (latent, no SRD
+   third caster); 2014 single-class half casters need their own table (latent, no 2014 data); a
+   feat taken at a class level follows that class's level, not the character's; the same origin
+   feat twice shares one choice key; background increases are not validated (+3 to one score
+   possible); the sheet's feature texts add render components on every redraw until the tab
+   closes; the Spells tab shows the first caster's DC only; a renamed note leaves its sheet empty;
+   tab pills need `tabindex` and keys; the first write-back turns flow maps into block style and
+   drops YAML comments (processFrontMatter); a subclass of another class is reported as unknown
+   rather than mismatched.
+6. **Deferred minors from C1b:** the split-fragment check misses lower-case fragments and the unit
+   check hyphenated units ("5-foot"); `nameOf` falls back to the raw id for unknown choice kinds
+   (languages, tools); dragonborn option names mix "Schwarzer Drache" and "Messingdrache"; the
+   forest gnome's option text comes from running text; the official German terms may differ from
+   the plugin's own S2/M2 German (spells, monsters), which stays unchanged.
 
 ## State of the working tree
 
-`main`, clean apart from local Obsidian state; everything pushed. The ledger of the C1 plan is in
-`.superpowers/sdd/2026-11-20-character-c1-engine-sheet/` (git-ignored).
+`main`, clean apart from local Obsidian state; everything pushed. The ledgers are in
+`.superpowers/sdd/2026-11-20-character-c1-engine-sheet/` and
+`.superpowers/sdd/2026-11-20-character-c1b-german-texts/` (git-ignored).
 
-**Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\work\srd52\` holds the
-SRD 5.2.1 PDF, its `pdftotext` slices per class (`src/`) and the cleaning agents' JSON (`out/`),
-which the assembly merged into `packages/rules/data/srd-5.2.1/`. From now on the repository's JSON
-is the source; edit it there.
+**Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\work\srd52\` holds
+the English SRD 5.2.1 PDF with its slices (`src/`) and cleaning output (`out/`), and for C1b the
+German `DE_SRD_CC_v5.2.1.pdf`, `srd-de-raw.txt`, `de-src/`, `de-out/`, `merge-de.mjs`,
+`de-extra.json`, `extract-options.mjs` and `INSTRUCTIONS-de.md`. From now on the repository's JSON
+(`packages/rules/data/srd-5.2.1/`, English and `de`) is the source; edit it there.
 
 ## Done this session
 
+- **C1b:** the German SRD texts merged into the rules data (1,223 strings, by id), checked by known
+  pairs, a dice inclusion rule, units and split fragments; the sheet shows them with German
+  Obsidian (`local(text, lang)`), damage types German; attribution statement in both READMEs.
 - `packages/rules`: `basics` (modifier, proficiency bonus), `model` (records, grants, choices),
   `data` (`loadRules`, lookups), `check` (`checkRules`), `collect` (which features a character
   has, where their choices live; multiclass levels take the multiclass proficiencies), `derive`
@@ -81,7 +94,7 @@ written only when they differ; spellcasting always its own feature; layout A.
 
 ## Open questions for the maintainer
 
-- The C1 check in Obsidian, and C1b or C2 next.
+- The C1 and C1b check in Obsidian (German too); then C2.
 - Data gaps kept as text for now: partial short-rest recharge (Rage, Channel Divinity, Wild
   Shape), either-or prerequisites (Grappler, the fighter's multiclass), Magic Initiate's and
   Skilled's choices, versatile damage, language lists and the musical instrument list.

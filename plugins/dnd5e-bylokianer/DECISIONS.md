@@ -992,3 +992,27 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
   normal casting (casting time, range, duration as printed outside the Circle option).
 - Blade of Disaster and Conjure Constructs, also in other books, are their own 2024 entries.
 - Left out: the book's subclasses, feats, backgrounds and species (with the character builder).
+
+## Character builder C1b: German SRD texts
+
+- **Source:** the official German SRD 5.2.1 (December 2025), CC-BY-4.0, not our own translation.
+  Its terms may differ from the plugin's own German of the spells (S2) and monsters (M2), which
+  stays unchanged.
+- **Alignment:** by id. The PDF text was cleaned into JSON per slice (15 slices, five cleaning
+  agents) in a private work folder and merged into the `de` fields of `packages/rules/data/`. The
+  repository JSON is the source from now on.
+- **Checks** (`srd52.test.ts`, `local`): known English/German pairs per slice; every die of the
+  English appears in the German (inclusion, not equal multisets, since the German names dice more
+  often, e.g. W20 for "the roll"; a bare d20 reads as 1d20); number-plus-unit pairs; no split
+  fragments left by the PDF (a lone letter before a lower-case word).
+- **Labels we composed** (no official wording exists): choice labels and grant names, the
+  dragonborn ancestry and draconic option texts (from the German table), the Mystic Arcanum level
+  names ("Mystisches Arkanum (Zauber des N. Grades)"), the `Merkmal | Wert` table headers, the
+  background proficiency features named "Übung" (the German has no heading), "Attributswerte" and
+  "Spielset".
+- **Official typos kept**, so the text stays verbatim (for example "Ab die 5. Charakterstufe",
+  omissions in Cunning Strike and Feral Senses). **One correction:** "Dire Musikinstrumente" to
+  "Drei Musikinstrumente" (barbarian and bard source).
+- **Left out:** lower-case split fragments and hyphenated units (such as "5-foot") are not caught
+  by the checks; a choice of an unknown kind (languages, tools) falls back to its raw id on the
+  sheet; the sidebar "Deinen Schwur brechen" stays out, like the English.

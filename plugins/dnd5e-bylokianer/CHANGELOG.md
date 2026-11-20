@@ -18,6 +18,12 @@ All notable changes to this plugin are documented here. The format follows
   their SRD text, inventory, skills, notes and levels; every check, save, attack and damage rolls.
   The example vault gains Wren Ashdown, a built bard.
 
+- **German rules texts on the character sheet** (character builder, phase C1b): with German
+  Obsidian, class, subclass, species, background, feat, armour, weapon and skill names and all
+  feature texts, choice labels and tables come from the official German SRD 5.2.1 (1,223 strings),
+  aligned by id and checked against the English (numbers, dice, units). English stays the
+  fallback for anything without a German text. Damage types on the Actions tab are German too.
+
 - **Spell catalogue** (catalogues, phase K1): the Spellbook lists the spells beyond the SRD of the
   Player's Handbook 2014, Xanathar's, Tasha's and the Player's Handbook 2024 — 550 entries with
   their facts, English and German names and a summary in our own words (EN/DE), no book text. New
@@ -37,7 +43,7 @@ All notable changes to this plugin are documented here. The format follows
 ### Known limitations
 
 - The character sheet cannot create or level up a character yet (a dialog follows in C2), nor
-  spend hit points, slots or resources (C4); species, class and feature names are English.
+  spend hit points, slots or resources (C4).
 - Rests that give back only part of a resource (Rage, Channel Divinity, Wild Shape on a short
   rest), either-or prerequisites, Magic Initiate's and Skilled's choices and versatile damage are
   text on the sheet, not computed.

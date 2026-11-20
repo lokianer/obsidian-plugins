@@ -692,3 +692,9 @@ Character table are taken from the System Reference Document
 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at
 https://www.dndbeyond.com/srd, licensed under the Creative Commons Attribution 4.0 International
 License, available at https://creativecommons.org/licenses/by/4.0/legalcode.
+
+The German rules texts of the character builder (the `de` fields of those data files) are the
+official German SRD 5.2.1, not this plugin's own translation (unlike the German spell and monster
+texts). Its attribution statement:
+
+> Dieses Werk enthält Material aus dem Systemreferenzdokument 5.2.1 („SRD 5.2.1“) von Wizards of the Coast LLC, verfügbar unter https://www.dndbeyond.com/srd. Das SRD 5.2.1 ist lizenziert gemäß Creative Commons Namensnennung 4.0 International Public License (verfügbar unter https://creativecommons.org/licenses/by/4.0/legalcode.de).

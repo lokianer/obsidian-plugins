@@ -32,8 +32,8 @@ In order of priority. Items marked **(open)** wait for the maintainer's decision
    Faerûn) built, awaiting the check in Obsidian. Subclasses come with the character builder.
    See [Catalogues](#catalogues).
 3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20).
-   Design approved; C1 (engine, SRD 5.2.1 data, the sheet) built, awaiting the check in Obsidian;
-   next C1b (German SRD texts) or C2 (create and level up). See
+   Design approved; C1 (engine, SRD 5.2.1 data, the sheet) and C1b (German SRD texts) built,
+   awaiting the check in Obsidian; next C2 (create and level up) after the check. See
    [Character builder](#character-builder).
 4. **dnd5e-byLokianer: code quality.** Reduce complexity, steps 2 and 3 (see
    [Code quality](#code-quality)); afterwards turn the lint limits into errors and tighten them.
@@ -195,7 +195,9 @@ character sheet in layout A (D&D Beyond style) to play from; multiclassing.
       5.2.1 data (12 classes and subclasses, 9 species, 4 backgrounds, 17 feats, armour, weapons,
       skills), built character notes with computed keys, the character sheet; example character
       Wren Ashdown. Plan `2026-11-20-character-c1-engine-sheet.md`.
-- [ ] **C1b — German SRD texts** from the official German SRD (option 2a).
+- [ ] **C1b — German SRD texts** (built 2026-11-20, awaiting the check with C1): the official German
+      SRD 5.2.1 for every name and text C1 ships, aligned by id and checked; the sheet shows it with
+      German Obsidian, damage types German. Plan `2026-11-20-character-c1b-german-texts.md`.
 - [ ] **C2 — create and level up** in a dialog, every option of a level as a tile.
 - [ ] **C3 — spells** (lists, known and prepared). **C4 — play state** (hit points, slots,
       resources, rests; the Battle tab writes `hp_current`). **C5 — inventory**. **C6 — the books'
