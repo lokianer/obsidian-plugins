@@ -880,3 +880,17 @@ panel and the warnings dialog (plan `docs/superpowers/plans/2026-11-20-visual-v3
   tile would only make it taller).
 
 Left out: a tile for members or for the number of secret relations.
+
+## 2026-11-20 · Visual refactoring V4: Spellbook and Monster Manual
+
+V3 accepted by the maintainer ("passt"). V4 applies style C to the Spellbook and the Monster
+Manual (plan `docs/superpowers/plans/2026-11-20-visual-v4-lists.md`).
+
+- Filters are pills; levels and challenge ratings are sticky section heads; the selected row is
+  tinted with the accent (the school's colour stays as the row's left edge).
+- The spell card's four numbers are tiles, its badges and classes pills, its sections heads.
+- **No CR / level badge at the row's end** (the spec's suggestion): the sticky group head already
+  says it, a badge on every row would repeat it.
+- The two panes keep their own grid, each scrolling on its own like the Battle tab, and fold at
+  560 px of the tab's width (the Battle tab's fold point) instead of 640.
+- The spell builder's preview keeps the old grid until V6.

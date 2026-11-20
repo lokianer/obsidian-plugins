@@ -27,6 +27,12 @@ All notable changes to this plugin are documented here. The format follows
   tension panel shows the mode as a pill, each rule under a section head and each finding as a
   row; the warnings dialog its numbers as tiles, its groups under section heads and the subjects
   as pills. The graph, the faction view, the matrix and the value popover are unchanged.
+- **Spellbook and Monster Manual in style C** (phase V4): filters as pills (tinted with the accent
+  or the school when on), levels and challenge ratings as sticky section heads, the selected row
+  tinted with the accent; the spell card shows casting time, range, components and duration as
+  tiles, its damage, save and other badges and its classes as pills, and "At higher levels" and
+  "Classes" as section heads. Both tabs fold to one column below 560 px of their own width
+  (before: 640).
 
 ## [0.1.0] - 2026-10-26
 

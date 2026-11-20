@@ -41,6 +41,7 @@ import {
 } from '../spells/meta';
 import type { School, SrdSpell } from '../spells/model';
 import { SRD_SPELLS } from '../spells/srd-spells';
+import { pill, sectionHead, tile, tiles } from './ui/blocks';
 
 export const SPELLBOOK_VIEW = 'dnd5e-spellbook';
 
@@ -300,7 +301,9 @@ export class SpellbookView extends ItemView {
 
   private chip(parent: HTMLElement, text: string, on: boolean): HTMLElement {
     const chip = parent.createEl('button', {
-      cls: on ? ['dnd5e-spells-chip', 'is-active'] : 'dnd5e-spells-chip',
+      cls: on
+        ? ['dnd5e-pill', 'dnd5e-spells-chip', 'is-active']
+        : ['dnd5e-pill', 'dnd5e-spells-chip'],
       attr: { 'aria-pressed': String(on) },
     });
     chip.createSpan({ text });
@@ -356,7 +359,7 @@ export class SpellbookView extends ItemView {
       if (spell.level !== level) {
         level = spell.level;
         const n = this.shown.filter((s) => s.level === level).length;
-        const heading = list.createDiv({ cls: 'dnd5e-spells-level' });
+        const heading = list.createDiv({ cls: ['dnd5e-section-head', 'dnd5e-spells-level'] });
         heading.createSpan({ text: levelLabel(level, this.lang) });
         heading.createSpan({ cls: 'dnd5e-spells-level-count', text: String(n) });
       }
@@ -494,12 +497,9 @@ export class SpellbookView extends ItemView {
     }
     card.createDiv({ cls: 'dnd5e-spells-card-level', text: levelLine(spell, lang) });
 
-    const grid = card.createDiv({ cls: 'dnd5e-spells-grid' });
-    const cell = (key: StringKey, value: string) => {
-      const c = grid.createDiv();
-      c.createDiv({ cls: 'dnd5e-spells-grid-label', text: t(key) });
-      c.createDiv({ cls: 'dnd5e-spells-grid-value', text: value });
-    };
+    const grid = tiles(card);
+    grid.addClass('dnd5e-spells-tiles');
+    const cell = (key: StringKey, value: string) => tile(grid, value, t(key));
     cell('spells.castingTime', castingTime(spell, lang));
     cell('spells.range', range(spell, lang));
     cell('spells.components', components(spell, lang));
@@ -513,20 +513,12 @@ export class SpellbookView extends ItemView {
     }
 
     const badges = card.createDiv({ cls: 'dnd5e-spells-badges' });
-    for (const damage of spell.damage)
-      badges.createSpan({ cls: 'dnd5e-spells-badge', text: label(damage, lang) });
-    if (spell.save !== null) {
-      badges.createSpan({
-        cls: 'dnd5e-spells-badge',
-        text: t('spells.saveBadge', { ability: label(spell.save, lang) }),
-      });
-    }
-    if (spell.attack !== null) {
-      badges.createSpan({ cls: 'dnd5e-spells-badge', text: t(`spells.attack.${spell.attack}`) });
-    }
-    if (spell.concentration)
-      badges.createSpan({ cls: 'dnd5e-spells-badge', text: t('spells.concentration') });
-    if (spell.ritual) badges.createSpan({ cls: 'dnd5e-spells-badge', text: t('spells.ritual') });
+    const badge = (text: string) => pill(badges, text).addClass('dnd5e-spells-badge');
+    for (const damage of spell.damage) badge(label(damage, lang));
+    if (spell.save !== null) badge(t('spells.saveBadge', { ability: label(spell.save, lang) }));
+    if (spell.attack !== null) badge(t(`spells.attack.${spell.attack}`));
+    if (spell.concentration) badge(t('spells.concentration'));
+    if (spell.ritual) badge(t('spells.ritual'));
     if (badges.childElementCount === 0) badges.remove();
 
     this.cardText = new Component();
@@ -535,15 +527,14 @@ export class SpellbookView extends ItemView {
     const source = spell.path ?? '';
     void MarkdownRenderer.render(this.app, words.text, text, source, this.cardText);
     if (words.higher !== '') {
-      card.createDiv({ cls: 'dnd5e-spells-section', text: t('spells.higher') });
+      sectionHead(card, t('spells.higher'));
       const higher = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
       void MarkdownRenderer.render(this.app, words.higher, higher, source, this.cardText);
     }
 
-    card.createDiv({ cls: 'dnd5e-spells-section', text: t('spells.classes') });
+    sectionHead(card, t('spells.classes'));
     const classes = card.createDiv({ cls: 'dnd5e-spells-classes' });
-    for (const c of spell.classes)
-      classes.createSpan({ cls: 'dnd5e-spells-tag', text: label(c, lang) });
+    for (const c of spell.classes) pill(classes, label(c, lang));
     card.createDiv({
       cls: 'dnd5e-spells-source',
       text:

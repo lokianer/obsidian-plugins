@@ -18,19 +18,19 @@ wie D&D Beyond, moderner und übersichtlicher"), **all** official subclasses wit
 builder and a level-up database, and **all** spells and monsters. Agreed: the order visual
 refactoring → catalogues → character builder; for the content, catalogues with our own summaries
 in the plugin and full texts only by import (the repository is public). Style C was chosen from
-mockups. **V1** (building blocks, stat block) and **V2** (Battle tab, encounter builder) were
-built and **accepted**; **V3** (faction card, tension panel, warnings dialog) built.
+mockups. **V1** (building blocks, stat block), **V2** (Battle tab, encounter builder) and **V3**
+(faction card, tension panel, warnings dialog) were built and **accepted**; **V4** (Spellbook,
+Monster Manual) built.
 
 ## Where to continue
 
-1. **Check V3 in Obsidian** (installed in `examples/vault`): a faction note (Order of the
-   Lantern: Power / Allies / Enemies tiles, pips still set power, section heads, the collapsibles),
-   a character note (no tiles, short stats), the tension panel, the warnings dialog (command
-   "Show faction warnings"), light theme and a narrow pane. After "passt": tick V3.
-2. **V4 — Monster Manual and Spellbook lists, spell card**: plan from the design (§3); the lists
-   may use `split()` and replace the Spellbook's 640 px container query by the shared fold. Then
-   V5 (Dice tab, deck), V6 (builders and dialogs, including `dnd5e-builder-flag` and the encounter
-   builder's dialog layout).
+1. **Check V4 in Obsidian** (installed in `examples/vault`): the Spellbook and the Monster Manual
+   — filter pills (hover, on, school-tinted), the sticky level / CR heads while scrolling, arrow
+   keys, the spell card's tiles and pills (Fireball), a narrow tab (card replaces the list), light
+   theme. After "passt": tick V4.
+2. **V5 — Dice tab and Deck of Many Things** (the dice stage itself stays), then **V6** (builders
+   and dialogs: New NPC, spell builder with its old `.dnd5e-spells-grid`, monster builder, deck
+   builder, `dnd5e-builder-flag`, the encounter builder's dialog layout).
 3. **Catalogues** (after V6), then the **character builder** — see the roadmap.
 4. Retake the README screenshots in real Obsidian once the look is final.
 5. Older open items as in the roadmap's "Next steps".
@@ -47,17 +47,18 @@ maintainer: keep them (update the tests) or revert them.
 
 - Design `docs/superpowers/specs/2026-11-20-visual-refactoring-design.md` with mockups in
   `assets/`; plans `…-visual-v1-blocks-statblock.md`, `…-visual-v2-battle-encounter.md`,
-  `…-visual-v3-factions.md`.
+  `…-visual-v3-factions.md`, `…-visual-v4-lists.md`.
 - V1: `src/obsidian/ui/blocks.ts`, `src/dice/action-row.ts`, `statblock-parts.ts`.
 - V2: `battle-view.ts` (`renderCard` in named parts), `encounter-builder.ts`; review fixes for
   Obsidian's button styles (`ee8f6cf`).
 - V3: `card-render.ts` (tiles), `tension-view.ts`, `warnings-modal.ts`; section titles share the
   section head; `styles/faction-card.css`, `tensions.css`, `warnings.css`.
-- DECISIONS "Visual refactoring: style C", "… V2", "… V3"; CHANGELOG Unreleased; ROADMAP.
+- V4: `spellbook-view.ts`, `monster-manual-view.ts`, `styles/spellbook.css`.
+- DECISIONS "Visual refactoring: style C", "… V2", "… V3", "… V4"; CHANGELOG Unreleased; ROADMAP.
 
 ## Half-finished — check in Obsidian
 
-V3, see "Where to continue" 1.
+V4, see "Where to continue" 1.
 
 ## Decisions taken this session
 
@@ -67,7 +68,7 @@ approach for all subclasses, spells and monsters.
 
 ## Open questions for the maintainer
 
-- V3's check in Obsidian.
+- V4's check in Obsidian.
 - The uncommitted example-vault changes: keep (tests updated) or revert.
 
 ## Verification

@@ -290,7 +290,9 @@ export class MonsterManualView extends ItemView {
 
   private chip(parent: HTMLElement, text: string, on: boolean): HTMLElement {
     const chip = parent.createEl('button', {
-      cls: on ? ['dnd5e-spells-chip', 'is-active'] : 'dnd5e-spells-chip',
+      cls: on
+        ? ['dnd5e-pill', 'dnd5e-spells-chip', 'is-active']
+        : ['dnd5e-pill', 'dnd5e-spells-chip'],
       attr: { 'aria-pressed': String(on) },
     });
     chip.createSpan({ text });
@@ -346,7 +348,7 @@ export class MonsterManualView extends ItemView {
       if (m.cr !== cr) {
         cr = m.cr;
         const n = this.shown.filter((x) => x.cr === cr).length;
-        const heading = list.createDiv({ cls: 'dnd5e-spells-level' });
+        const heading = list.createDiv({ cls: ['dnd5e-section-head', 'dnd5e-spells-level'] });
         heading.createSpan({ text: t('monsters.cr', { cr }) });
         heading.createSpan({ cls: 'dnd5e-spells-level-count', text: String(n) });
       }

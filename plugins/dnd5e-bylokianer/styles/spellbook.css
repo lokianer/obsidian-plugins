@@ -1,13 +1,14 @@
-/* The spellbook tab, the spell card, spell links in stat blocks.
-   Search and chips on top, the list grouped by level on the left, the picked spell's card on the
-   right, accented by its school; on a narrow tab the card replaces the list. */
+/* The spellbook tab (and the Monster Manual, which shares its layout), the spell card, spell links
+   in stat blocks. Style C: filter pills on top, the list grouped under section heads on the left,
+   the picked spell's card on the right with its numbers as tiles, accented by its school; below
+   560 px of the tab's width the card replaces the list. */
 
 .dnd5e-spells {
   display: flex;
   flex-direction: column;
   padding: 0;
   font-size: 16px;
-  container-type: inline-size;
+  container: dnd5e-list / inline-size;
 }
 
 .dnd5e-spells-header {
@@ -58,39 +59,41 @@
   gap: var(--size-4-1) var(--size-4-2);
 }
 
-.dnd5e-spells-chip {
+/* Filter pills. Obsidian styles every button with `button:not(.clickable-icon)` and its `:hover`;
+   these selectors outrank both. */
+.dnd5e-spells button.dnd5e-spells-chip:not(.clickable-icon) {
   display: inline-flex;
   align-items: center;
   gap: var(--size-4-2);
   height: auto;
+  margin: 0;
   padding: var(--size-4-1) var(--size-4-3);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 999px;
-  background: transparent;
+  border: none;
+  background: var(--background-modifier-hover);
   box-shadow: none;
   color: var(--text-muted);
   font-size: 16px;
   cursor: pointer;
   transition:
     background-color 0.12s ease,
-    border-color 0.12s ease,
     color 0.12s ease;
 }
 
-.dnd5e-spells-chip:hover {
-  border-color: var(--background-modifier-border-hover, var(--interactive-accent));
+.dnd5e-spells button.dnd5e-spells-chip:not(.clickable-icon):hover {
+  background: var(--background-modifier-active-hover);
   color: var(--text-normal);
 }
 
-.dnd5e-spells-chip.is-active {
-  border-color: var(--interactive-accent);
-  background: hsla(var(--interactive-accent-hsl), 0.18);
-  color: var(--text-normal);
+.dnd5e-spells button.dnd5e-spells-chip.is-active:not(.clickable-icon),
+.dnd5e-spells button.dnd5e-spells-chip.is-active:not(.clickable-icon):hover {
+  background: color-mix(in srgb, var(--interactive-accent) 25%, transparent);
+  color: var(--text-accent);
 }
 
-.dnd5e-spells-chip.has-school.is-active {
-  border-color: var(--dnd5e-school);
-  background: rgba(var(--dnd5e-school-rgb), 0.16);
+.dnd5e-spells button.dnd5e-spells-chip.has-school.is-active:not(.clickable-icon),
+.dnd5e-spells button.dnd5e-spells-chip.has-school.is-active:not(.clickable-icon):hover {
+  background: rgba(var(--dnd5e-school-rgb), 0.22);
+  color: var(--text-normal);
 }
 
 .dnd5e-spells-chip.is-empty:not(.is-active) {
@@ -132,21 +135,22 @@
   outline: none;
 }
 
+/* A level (or challenge rating) as a section head that stays on top while its rows scroll. */
 .dnd5e-spells-level {
   position: sticky;
   top: 0;
   z-index: 1;
   display: flex;
   justify-content: space-between;
+  margin: 0 0 var(--size-4-1);
   padding: var(--size-4-3) var(--size-4-2) var(--size-4-1);
   background: var(--background-primary);
-  color: var(--text-muted);
-  font-weight: var(--font-semibold);
 }
 
 .dnd5e-spells-level-count {
   color: var(--text-faint);
   font-weight: var(--font-normal);
+  letter-spacing: normal;
 }
 
 .dnd5e-spells-row {
@@ -165,7 +169,7 @@
 }
 
 .dnd5e-spells-row.is-selected {
-  background: rgba(var(--dnd5e-school-rgb), 0.16);
+  background: color-mix(in srgb, var(--interactive-accent) 18%, transparent);
 }
 
 .dnd5e-spells-list:focus-visible .dnd5e-spells-row.is-selected {
@@ -281,6 +285,11 @@
   font-weight: var(--font-semibold);
 }
 
+.dnd5e-spells-tiles .dnd5e-tile-value {
+  font-size: 1.15em;
+}
+
+/* The spell builder's preview (V6 restyles it). */
 .dnd5e-spells-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -315,24 +324,17 @@
   gap: var(--size-4-1) var(--size-4-2);
 }
 
+.dnd5e-spells-badges .dnd5e-pill,
+.dnd5e-spells-classes .dnd5e-pill {
+  margin: 0;
+}
+
 .dnd5e-spells-badge {
-  padding: 2px var(--size-4-3);
-  border: 1px solid rgba(var(--dnd5e-school-rgb), 0.5);
-  border-radius: 999px;
-  color: var(--text-normal);
+  background: color-mix(in srgb, var(--dnd5e-school, var(--interactive-accent)) 22%, transparent);
 }
 
-.dnd5e-spells-tag {
-  padding: 2px var(--size-4-2);
-  border-radius: var(--tag-radius, 999px);
-  background: var(--tag-background);
-  color: var(--tag-color);
-}
-
-.dnd5e-spells-section {
-  margin-top: var(--size-4-2);
-  color: var(--text-muted);
-  font-weight: var(--font-semibold);
+.dnd5e-spells-card > .dnd5e-section-head {
+  margin: var(--size-4-2) 0 0;
 }
 
 .dnd5e-spells-text p:first-child {
@@ -349,7 +351,7 @@
   border: 1px solid var(--background-modifier-border);
 }
 
-@container (max-width: 640px) {
+@container dnd5e-list (max-width: 560px) {
   /* One line each, scrolled sideways, so the list keeps most of a phone's height. */
   .dnd5e-spells-chips,
   .dnd5e-spells-filters {
@@ -358,7 +360,7 @@
     scrollbar-width: none;
   }
 
-  .dnd5e-spells-chip,
+  .dnd5e-spells button.dnd5e-spells-chip:not(.clickable-icon),
   .dnd5e-spells-filters .dropdown {
     flex: none;
   }

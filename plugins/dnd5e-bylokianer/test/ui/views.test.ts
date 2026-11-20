@@ -754,7 +754,7 @@ describe('spellbook', () => {
     expect(texts(el, '.dnd5e-spells-card-name')).toEqual(['Fireball']);
     expect(texts(el, '.dnd5e-spells-card-other')).toEqual(['Feuerball']);
     expect(texts(el, '.dnd5e-spells-card-level')).toEqual(['3rd-level evocation']);
-    expect(texts(el, '.dnd5e-spells-grid-value')).toEqual([
+    expect(texts(el, '.dnd5e-spells-card .dnd5e-tile-value')).toEqual([
       '1 action',
       '150 feet',
       'V, S, M',
@@ -762,6 +762,23 @@ describe('spellbook', () => {
     ]);
     expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('8d6 fire damage');
     expect(row('Fireball')?.classList.contains('is-selected')).toBe(true);
+    // Style C: casting time, range, components, duration as tiles; badges and classes as pills;
+    // the card's sections and the list's levels as section heads.
+    expect(texts(el, '.dnd5e-spells-card .dnd5e-tile-label')).toEqual([
+      'Casting time',
+      'Range',
+      'Components',
+      'Duration',
+    ]);
+    expect(texts(el, '.dnd5e-spells-badges .dnd5e-pill')).toEqual(['Fire', 'Dexterity save']);
+    expect(texts(el, '.dnd5e-spells-card .dnd5e-section-head')).toEqual([
+      'At higher levels',
+      'Classes',
+    ]);
+    expect(texts(el, '.dnd5e-spells-classes .dnd5e-pill')).toEqual(['Sorcerer', 'Wizard']);
+    expect(el.querySelector('.dnd5e-spells-level')?.classList.contains('dnd5e-section-head')).toBe(
+      true,
+    );
   });
 
   it('filters by level chips and school, and keeps the filters', async () => {
@@ -775,6 +792,9 @@ describe('spellbook', () => {
       ),
     ).toBe(true);
     expect(texts(el, '.dnd5e-spells-level > span:first-child')).toEqual(['Level 3']);
+    const on = chip('Level 3');
+    expect(on?.classList.contains('dnd5e-pill')).toBe(true);
+    expect(on?.classList.contains('is-active')).toBe(true);
     await new Promise((resolve) => window.setTimeout(resolve, 450));
     expect(saved[saved.length - 1]?.filters).toMatchObject({ levels: [3], schools: ['evocation'] });
   });
@@ -789,7 +809,7 @@ describe('spellbook', () => {
     ]);
     row('Magisches Geschoss')?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-spells-card-level')).toEqual(['Hervorrufung des 1. Grades']);
-    expect(texts(el, '.dnd5e-spells-grid-value')).toEqual([
+    expect(texts(el, '.dnd5e-spells-card .dnd5e-tile-value')).toEqual([
       '1 Aktion',
       '36 m',
       'V, G',
@@ -819,7 +839,7 @@ describe('spellbook', () => {
     expect(row('Ember Lance')?.querySelector('.dnd5e-spells-mark.is-own')?.textContent).toBe('own');
     row('Ember Lance')?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-spells-card-other')).toEqual([]);
-    expect(texts(el, '.dnd5e-spells-grid-value')[1]).toBe('18 m');
+    expect(texts(el, '.dnd5e-spells-card .dnd5e-tile-value')[1]).toBe('18 m');
     expect(el.querySelector('.dnd5e-spells-text')?.textContent).toContain('A lance of embers.');
     expect(el.querySelector('.dnd5e-spells-source')?.textContent).toBe(
       'Own spell · Spells/Ember Lance.md',
@@ -1417,6 +1437,9 @@ describe('monster manual', () => {
     expect(rows()).toHaveLength(334);
     expect(el.querySelector('.dnd5e-spells-count')?.textContent).toBe('334 monsters');
     expect(texts(el, '.dnd5e-spells-level > span:first-child')[0]).toBe('CR 0');
+    expect(el.querySelector('.dnd5e-spells-level')?.classList.contains('dnd5e-section-head')).toBe(
+      true,
+    );
     expect(row('Owlbear')?.querySelector('.dnd5e-spells-row-meta')?.textContent).toBe(
       'Monstrosity · Large · AC 13 · HP 59',
     );
