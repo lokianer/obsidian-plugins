@@ -38,7 +38,12 @@ approved; **K1 (spells) and K2 (monsters) built** and pushed.
    header lines some cleaners filled from their own knowledge (Jackalwere, Kuo-toa Archpriest,
    Lizard King/Queen, Draegloth, Drow Matron Mother, Giant Strider, Nilbog — all with a `note`);
    Spiritual Weapon's school in phb24.
-4. **K3 — Heroes of Faerûn** (image-only PDF), then V5/V6, then the character builder.
+4. Deferred review findings (minor): the encounter builder stores only a monster's name, so for
+   "Drow Priestess of Lolth" (in mm14 and fraif) the rule set setting decides which version an
+   encounter resolves to; a 2014 reprint keeps only the newest book's key, so an older book's
+   library note would not apply (no MM/MPMM overlap today, matters for K3); a hand-edited saved
+   book filter with a spell-only book shows an empty list.
+5. **K3 — Heroes of Faerûn** (image-only PDF), then V5/V6, then the character builder.
 
 ## State of the working tree
 
@@ -64,6 +69,10 @@ windows. None of this may enter the repository.
   pill, summary and library line; one Library service shared by both views; the battle tracker
   and encounter builder see SRD + catalogue + own monsters.
 - The spell scripts' batch filter no longer picks up monster batches.
+- Review fixes: own monsters come first when an encounter looks up a name; a library block that is
+  not valid YAML keeps the short block instead of breaking the card and the tracker; the library
+  and extract scripts refuse any output folder inside the repository (the old guard missed paths
+  with spaces and relative paths).
 - Tests: `test/catalogue-monsters.test.ts`, the Monster Manual view test.
 
 ## Decisions taken this session

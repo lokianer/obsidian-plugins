@@ -46,14 +46,18 @@ function statblockOf(text: string): string | null {
   return m?.[1] ?? null;
 }
 
-/** Catalogue monsters with the full stat block of their library section; others stay as they are. */
+/**
+ * Catalogue monsters with the full stat block of their library section; others stay as they are.
+ * A block `parses` rejects (a YAML slip in a GM's note) leaves the short block in place.
+ */
 export function withMonsterLibrary(
   monsters: readonly SrdMonster[],
   sections: ReadonlyMap<string, LibrarySection>,
+  parses: (yaml: string) => boolean,
 ): SrdMonster[] {
   return monsters.map((m) => {
     const section = m.source === undefined ? undefined : sections.get(m.index);
     const yaml = section === undefined ? null : statblockOf(section.text);
-    return yaml === null ? m : { ...m, yaml, fromLibrary: true };
+    return yaml === null || !parses(yaml) ? m : { ...m, yaml, fromLibrary: true };
   });
 }

@@ -2,7 +2,7 @@
 // `type: monster` notes, the monster builder with its import, and putting a monster into a note, a
 // note of its own, a fight or an encounter.
 
-import { MarkdownView, Notice } from 'obsidian';
+import { MarkdownView, Notice, parseYaml } from 'obsidian';
 
 import { byPreference, withMonsterLibrary } from '../../catalogue/merge';
 import { CATALOGUE_MONSTERS } from '../../catalogue/monsters';
@@ -18,6 +18,16 @@ import { newNote } from '../new-note';
 import { OwnMonsters } from '../own-monsters';
 import type { Context } from './context';
 import type { SpellLinker } from './spells';
+
+/** A library block the stat block view can read: YAML that is a mapping with a name. */
+function isStatblock(yaml: string): boolean {
+  try {
+    const data: unknown = parseYaml(yaml);
+    return typeof data === 'object' && data !== null && 'name' in data;
+  } catch {
+    return false;
+  }
+}
 
 const fence = (monster: SrdMonster) => `\`\`\`${BLOCK}\n${monster.yaml}\n\`\`\``;
 
@@ -63,7 +73,7 @@ export function registerMonsters(ctx: Context, spells: SpellLinker, library: Lib
   app.workspace.onLayoutReady(() => void ownMonsters.reload());
   let catalogue: SrdMonster[] | null = null;
   const catalogueMonsters = () =>
-    (catalogue ??= withMonsterLibrary(CATALOGUE_MONSTERS, library.sections));
+    (catalogue ??= withMonsterLibrary(CATALOGUE_MONSTERS, library.sections, isStatblock));
   library.onChange(() => (catalogue = null));
   plugin.registerView(
     MONSTER_VIEW,
@@ -125,9 +135,10 @@ export function registerMonsters(ctx: Context, spells: SpellLinker, library: Lib
     }).open();
   plugin.addCommand({ id: 'new-monster', name: t('command.newMonster'), callback: newMonster });
 
+  // A name in an encounter finds the GM's own monster first, then the SRD's, then the catalogue's.
   return () => [
+    ...ownMonsters.list,
     ...SRD_MONSTERS,
     ...byPreference(catalogueMonsters(), ctx.settings().rules),
-    ...ownMonsters.list,
   ];
 }

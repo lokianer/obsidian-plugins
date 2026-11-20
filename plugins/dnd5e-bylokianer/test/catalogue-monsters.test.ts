@@ -11,6 +11,16 @@ import type { SrdMonster } from '../src/monsters/model';
 import { SRD_MONSTERS } from '../src/monsters/srd-monsters';
 import { parseStatblock } from '../src/npc/statblock';
 
+/** A stat block is YAML that reads as a mapping with a name. */
+const parses = (yaml: string): boolean => {
+  try {
+    const v: unknown = parseYaml(yaml);
+    return typeof v === 'object' && v !== null && 'name' in v;
+  } catch {
+    return false;
+  }
+};
+
 // Invented monsters: no text from any book.
 const gloom: SrdMonster = {
   index: 'mm14/gloom-lantern',
@@ -93,12 +103,22 @@ describe('catalogue monsters', () => {
       ['gloom-hound', { text: '```statblock\nname: x\n```', higher: '' }],
       ['fraif/ember-moth', { text: 'No block here.', higher: '' }],
     ]);
-    const [g, e, s] = withMonsterLibrary([gloom, ember, srd], sections);
+    const [g, e, s] = withMonsterLibrary([gloom, ember, srd], sections, parses);
     expect(g?.yaml).toBe(block);
     expect(g?.fromLibrary).toBe(true);
     expect(e).toBe(ember);
     expect(s).toBe(srd);
     expect((parseYaml(g?.yaml ?? '') as { actions: unknown[] }).actions).toHaveLength(1);
+  });
+
+  it('keeps the short block when the library block is not a stat block', () => {
+    const sections = new Map([
+      ['mm14/gloom-lantern', { text: '```statblock\nname: "x\n  - [\n```', higher: '' }],
+      ['fraif/ember-moth', { text: '```statblock\njust a line\n```', higher: '' }],
+    ]);
+    const [g, e] = withMonsterLibrary([gloom, ember], sections, parses);
+    expect(g).toBe(gloom);
+    expect(e).toBe(ember);
   });
 });
 

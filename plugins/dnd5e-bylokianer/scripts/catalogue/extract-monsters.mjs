@@ -7,6 +7,7 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const raw = String.raw;
 
@@ -36,9 +37,7 @@ export function monsterWindows(text, rules) {
 
 const [book, rules, dump, workDir, size = '20'] = process.argv.slice(2);
 if (book !== undefined) {
-	const repo = resolve(
-		new URL('../../../..', import.meta.url).pathname.replace(/^\/(\w:)/, '$1'),
-	);
+	const repo = fileURLToPath(new URL('../../../..', import.meta.url));
 	if (resolve(workDir).toLowerCase().startsWith(repo.toLowerCase())) {
 		throw new Error('The work folder must be outside the repository.');
 	}

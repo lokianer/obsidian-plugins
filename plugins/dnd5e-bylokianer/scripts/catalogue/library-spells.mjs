@@ -4,7 +4,8 @@
 // repository or the example vault. SRD spells are left out (their text ships with the plugin).
 
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const TITLES = {
 	phb14: ["Player's Handbook (2014)", '2014'],
@@ -15,7 +16,9 @@ const TITLES = {
 };
 
 const [workDir, outDir, book] = process.argv.slice(2);
-if (!workDir || !outDir || !book || !(book in TITLES) || /obsidian-plugins/i.test(outDir)) {
+const repo = fileURLToPath(new URL('../../../..', import.meta.url));
+const inRepo = (dir) => resolve(dir).toLowerCase().startsWith(repo.toLowerCase());
+if (!workDir || !outDir || !book || !(book in TITLES) || inRepo(outDir)) {
 	console.error('usage: library-spells.mjs <workDir> <outDir outside the repository> <book>');
 	process.exit(1);
 }
