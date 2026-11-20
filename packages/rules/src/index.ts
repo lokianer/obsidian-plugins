@@ -4,4 +4,5 @@ export type * from './character';
 export * from './check';
 export * from './data';
 export { derive } from './derive';
+export { SRD_52 } from './srd52';
 export type * from './model';

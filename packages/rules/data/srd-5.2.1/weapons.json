@@ -1,0 +1,474 @@
+[
+	{
+		"id": "club",
+		"name": {
+			"en": "Club"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d4",
+		"type": "bludgeoning",
+		"properties": ["light"],
+		"mastery": "slow"
+	},
+	{
+		"id": "dagger",
+		"name": {
+			"en": "Dagger"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d4",
+		"type": "piercing",
+		"properties": ["finesse", "light", "thrown"],
+		"mastery": "nick",
+		"range": [20, 60]
+	},
+	{
+		"id": "greatclub",
+		"name": {
+			"en": "Greatclub"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "bludgeoning",
+		"properties": ["two-handed"],
+		"mastery": "push"
+	},
+	{
+		"id": "handaxe",
+		"name": {
+			"en": "Handaxe"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "slashing",
+		"properties": ["light", "thrown"],
+		"mastery": "vex",
+		"range": [20, 60]
+	},
+	{
+		"id": "javelin",
+		"name": {
+			"en": "Javelin"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "piercing",
+		"properties": ["thrown"],
+		"mastery": "slow",
+		"range": [30, 120]
+	},
+	{
+		"id": "light-hammer",
+		"name": {
+			"en": "Light Hammer"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d4",
+		"type": "bludgeoning",
+		"properties": ["light", "thrown"],
+		"mastery": "nick",
+		"range": [20, 60]
+	},
+	{
+		"id": "mace",
+		"name": {
+			"en": "Mace"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "bludgeoning",
+		"properties": [],
+		"mastery": "sap"
+	},
+	{
+		"id": "quarterstaff",
+		"name": {
+			"en": "Quarterstaff"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "bludgeoning",
+		"properties": ["versatile"],
+		"mastery": "topple"
+	},
+	{
+		"id": "sickle",
+		"name": {
+			"en": "Sickle"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d4",
+		"type": "slashing",
+		"properties": ["light"],
+		"mastery": "nick"
+	},
+	{
+		"id": "spear",
+		"name": {
+			"en": "Spear"
+		},
+		"category": "simple",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "piercing",
+		"properties": ["thrown", "versatile"],
+		"mastery": "sap",
+		"range": [20, 60]
+	},
+	{
+		"id": "dart",
+		"name": {
+			"en": "Dart"
+		},
+		"category": "simple",
+		"ranged": true,
+		"damage": "1d4",
+		"type": "piercing",
+		"properties": ["finesse", "thrown"],
+		"mastery": "vex",
+		"range": [20, 60]
+	},
+	{
+		"id": "light-crossbow",
+		"name": {
+			"en": "Light Crossbow"
+		},
+		"category": "simple",
+		"ranged": true,
+		"damage": "1d8",
+		"type": "piercing",
+		"properties": ["ammunition", "loading", "two-handed"],
+		"mastery": "slow",
+		"range": [80, 320]
+	},
+	{
+		"id": "shortbow",
+		"name": {
+			"en": "Shortbow"
+		},
+		"category": "simple",
+		"ranged": true,
+		"damage": "1d6",
+		"type": "piercing",
+		"properties": ["ammunition", "two-handed"],
+		"mastery": "vex",
+		"range": [80, 320]
+	},
+	{
+		"id": "sling",
+		"name": {
+			"en": "Sling"
+		},
+		"category": "simple",
+		"ranged": true,
+		"damage": "1d4",
+		"type": "bludgeoning",
+		"properties": ["ammunition"],
+		"mastery": "slow",
+		"range": [30, 120]
+	},
+	{
+		"id": "battleaxe",
+		"name": {
+			"en": "Battleaxe"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "slashing",
+		"properties": ["versatile"],
+		"mastery": "topple"
+	},
+	{
+		"id": "flail",
+		"name": {
+			"en": "Flail"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "bludgeoning",
+		"properties": [],
+		"mastery": "sap"
+	},
+	{
+		"id": "glaive",
+		"name": {
+			"en": "Glaive"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d10",
+		"type": "slashing",
+		"properties": ["heavy", "reach", "two-handed"],
+		"mastery": "graze"
+	},
+	{
+		"id": "greataxe",
+		"name": {
+			"en": "Greataxe"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d12",
+		"type": "slashing",
+		"properties": ["heavy", "two-handed"],
+		"mastery": "cleave"
+	},
+	{
+		"id": "greatsword",
+		"name": {
+			"en": "Greatsword"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "2d6",
+		"type": "slashing",
+		"properties": ["heavy", "two-handed"],
+		"mastery": "graze"
+	},
+	{
+		"id": "halberd",
+		"name": {
+			"en": "Halberd"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d10",
+		"type": "slashing",
+		"properties": ["heavy", "reach", "two-handed"],
+		"mastery": "cleave"
+	},
+	{
+		"id": "lance",
+		"name": {
+			"en": "Lance"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d10",
+		"type": "piercing",
+		"properties": ["heavy", "reach", "two-handed"],
+		"mastery": "topple"
+	},
+	{
+		"id": "longsword",
+		"name": {
+			"en": "Longsword"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "slashing",
+		"properties": ["versatile"],
+		"mastery": "sap"
+	},
+	{
+		"id": "maul",
+		"name": {
+			"en": "Maul"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "2d6",
+		"type": "bludgeoning",
+		"properties": ["heavy", "two-handed"],
+		"mastery": "topple"
+	},
+	{
+		"id": "morningstar",
+		"name": {
+			"en": "Morningstar"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "piercing",
+		"properties": [],
+		"mastery": "sap"
+	},
+	{
+		"id": "pike",
+		"name": {
+			"en": "Pike"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d10",
+		"type": "piercing",
+		"properties": ["heavy", "reach", "two-handed"],
+		"mastery": "push"
+	},
+	{
+		"id": "rapier",
+		"name": {
+			"en": "Rapier"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "piercing",
+		"properties": ["finesse"],
+		"mastery": "vex"
+	},
+	{
+		"id": "scimitar",
+		"name": {
+			"en": "Scimitar"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "slashing",
+		"properties": ["finesse", "light"],
+		"mastery": "nick"
+	},
+	{
+		"id": "shortsword",
+		"name": {
+			"en": "Shortsword"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d6",
+		"type": "piercing",
+		"properties": ["finesse", "light"],
+		"mastery": "vex"
+	},
+	{
+		"id": "trident",
+		"name": {
+			"en": "Trident"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "piercing",
+		"properties": ["thrown", "versatile"],
+		"mastery": "topple",
+		"range": [20, 60]
+	},
+	{
+		"id": "warhammer",
+		"name": {
+			"en": "Warhammer"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "bludgeoning",
+		"properties": ["versatile"],
+		"mastery": "push"
+	},
+	{
+		"id": "war-pick",
+		"name": {
+			"en": "War Pick"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d8",
+		"type": "piercing",
+		"properties": ["versatile"],
+		"mastery": "sap"
+	},
+	{
+		"id": "whip",
+		"name": {
+			"en": "Whip"
+		},
+		"category": "martial",
+		"ranged": false,
+		"damage": "1d4",
+		"type": "slashing",
+		"properties": ["finesse", "reach"],
+		"mastery": "slow"
+	},
+	{
+		"id": "blowgun",
+		"name": {
+			"en": "Blowgun"
+		},
+		"category": "martial",
+		"ranged": true,
+		"damage": "1",
+		"type": "piercing",
+		"properties": ["ammunition", "loading"],
+		"mastery": "vex",
+		"range": [25, 100]
+	},
+	{
+		"id": "hand-crossbow",
+		"name": {
+			"en": "Hand Crossbow"
+		},
+		"category": "martial",
+		"ranged": true,
+		"damage": "1d6",
+		"type": "piercing",
+		"properties": ["ammunition", "light", "loading"],
+		"mastery": "vex",
+		"range": [30, 120]
+	},
+	{
+		"id": "heavy-crossbow",
+		"name": {
+			"en": "Heavy Crossbow"
+		},
+		"category": "martial",
+		"ranged": true,
+		"damage": "1d10",
+		"type": "piercing",
+		"properties": ["ammunition", "heavy", "loading", "two-handed"],
+		"mastery": "push",
+		"range": [100, 400]
+	},
+	{
+		"id": "longbow",
+		"name": {
+			"en": "Longbow"
+		},
+		"category": "martial",
+		"ranged": true,
+		"damage": "1d8",
+		"type": "piercing",
+		"properties": ["ammunition", "heavy", "two-handed"],
+		"mastery": "slow",
+		"range": [150, 600]
+	},
+	{
+		"id": "musket",
+		"name": {
+			"en": "Musket"
+		},
+		"category": "martial",
+		"ranged": true,
+		"damage": "1d12",
+		"type": "piercing",
+		"properties": ["ammunition", "loading", "two-handed"],
+		"mastery": "slow",
+		"range": [40, 120]
+	},
+	{
+		"id": "pistol",
+		"name": {
+			"en": "Pistol"
+		},
+		"category": "martial",
+		"ranged": true,
+		"damage": "1d10",
+		"type": "piercing",
+		"properties": ["ammunition", "loading"],
+		"mastery": "vex",
+		"range": [30, 90]
+	}
+]

@@ -1,0 +1,298 @@
+[
+	{
+		"id": "acolyte",
+		"rules": "2024",
+		"name": {
+			"en": "Acolyte"
+		},
+		"abilities": ["int", "wis", "cha"],
+		"feat": "magic-initiate",
+		"features": [
+			{
+				"id": "acolyte-ability-scores",
+				"name": {
+					"en": "Ability Scores"
+				},
+				"level": 1,
+				"text": {
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+				},
+				"grants": [],
+				"choices": [
+					{
+						"id": "abilities",
+						"name": {
+							"en": "Ability scores"
+						},
+						"count": 3,
+						"gives": "ability",
+						"from": {
+							"abilities": ["int", "wis", "cha"],
+							"max": 20
+						}
+					}
+				]
+			},
+			{
+				"id": "acolyte-proficiencies",
+				"name": {
+					"en": "Proficiencies"
+				},
+				"level": 1,
+				"text": {
+					"en": "Skill Proficiencies: Insight and Religion\n\nTool Proficiency: Calligrapher's Supplies"
+				},
+				"grants": [
+					{
+						"kind": "proficiency",
+						"what": "skill",
+						"ids": ["insight", "religion"]
+					},
+					{
+						"kind": "proficiency",
+						"what": "tool",
+						"ids": ["calligraphers-supplies"]
+					}
+				],
+				"choices": []
+			},
+			{
+				"id": "acolyte-equipment",
+				"name": {
+					"en": "Equipment"
+				},
+				"level": 1,
+				"text": {
+					"en": "Choose A or B: (A) Calligrapher's Supplies, Book (prayers), Holy Symbol, Parchment (10 sheets), Robe, 8 GP; or (B) 50 GP"
+				},
+				"grants": [],
+				"choices": []
+			}
+		]
+	},
+	{
+		"id": "criminal",
+		"rules": "2024",
+		"name": {
+			"en": "Criminal"
+		},
+		"abilities": ["dex", "con", "int"],
+		"feat": "alert",
+		"features": [
+			{
+				"id": "criminal-ability-scores",
+				"name": {
+					"en": "Ability Scores"
+				},
+				"level": 1,
+				"text": {
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+				},
+				"grants": [],
+				"choices": [
+					{
+						"id": "abilities",
+						"name": {
+							"en": "Ability scores"
+						},
+						"count": 3,
+						"gives": "ability",
+						"from": {
+							"abilities": ["dex", "con", "int"],
+							"max": 20
+						}
+					}
+				]
+			},
+			{
+				"id": "criminal-proficiencies",
+				"name": {
+					"en": "Proficiencies"
+				},
+				"level": 1,
+				"text": {
+					"en": "Skill Proficiencies: Sleight of Hand and Stealth\n\nTool Proficiency: Thieves' Tools"
+				},
+				"grants": [
+					{
+						"kind": "proficiency",
+						"what": "skill",
+						"ids": ["sleight-of-hand", "stealth"]
+					},
+					{
+						"kind": "proficiency",
+						"what": "tool",
+						"ids": ["thieves-tools"]
+					}
+				],
+				"choices": []
+			},
+			{
+				"id": "criminal-equipment",
+				"name": {
+					"en": "Equipment"
+				},
+				"level": 1,
+				"text": {
+					"en": "Choose A or B: (A) 2 Daggers, Thieves' Tools, Crowbar, 2 Pouches, Traveler's Clothes, 16 GP; or (B) 50 GP"
+				},
+				"grants": [],
+				"choices": []
+			}
+		]
+	},
+	{
+		"id": "sage",
+		"rules": "2024",
+		"name": {
+			"en": "Sage"
+		},
+		"abilities": ["con", "int", "wis"],
+		"feat": "magic-initiate",
+		"features": [
+			{
+				"id": "sage-ability-scores",
+				"name": {
+					"en": "Ability Scores"
+				},
+				"level": 1,
+				"text": {
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+				},
+				"grants": [],
+				"choices": [
+					{
+						"id": "abilities",
+						"name": {
+							"en": "Ability scores"
+						},
+						"count": 3,
+						"gives": "ability",
+						"from": {
+							"abilities": ["con", "int", "wis"],
+							"max": 20
+						}
+					}
+				]
+			},
+			{
+				"id": "sage-proficiencies",
+				"name": {
+					"en": "Proficiencies"
+				},
+				"level": 1,
+				"text": {
+					"en": "Skill Proficiencies: Arcana and History\n\nTool Proficiency: Calligrapher's Supplies"
+				},
+				"grants": [
+					{
+						"kind": "proficiency",
+						"what": "skill",
+						"ids": ["arcana", "history"]
+					},
+					{
+						"kind": "proficiency",
+						"what": "tool",
+						"ids": ["calligraphers-supplies"]
+					}
+				],
+				"choices": []
+			},
+			{
+				"id": "sage-equipment",
+				"name": {
+					"en": "Equipment"
+				},
+				"level": 1,
+				"text": {
+					"en": "Choose A or B: (A) Quarterstaff, Calligrapher's Supplies, Book (history), Parchment (8 sheets), Robe, 8 GP; or (B) 50 GP"
+				},
+				"grants": [],
+				"choices": []
+			}
+		]
+	},
+	{
+		"id": "soldier",
+		"rules": "2024",
+		"name": {
+			"en": "Soldier"
+		},
+		"abilities": ["str", "dex", "con"],
+		"feat": "savage-attacker",
+		"features": [
+			{
+				"id": "soldier-ability-scores",
+				"name": {
+					"en": "Ability Scores"
+				},
+				"level": 1,
+				"text": {
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+				},
+				"grants": [],
+				"choices": [
+					{
+						"id": "abilities",
+						"name": {
+							"en": "Ability scores"
+						},
+						"count": 3,
+						"gives": "ability",
+						"from": {
+							"abilities": ["str", "dex", "con"],
+							"max": 20
+						}
+					}
+				]
+			},
+			{
+				"id": "soldier-proficiencies",
+				"name": {
+					"en": "Proficiencies"
+				},
+				"level": 1,
+				"text": {
+					"en": "Skill Proficiencies: Athletics and Intimidation\n\nTool Proficiency: Choose one kind of Gaming Set (see \"Equipment\")"
+				},
+				"grants": [
+					{
+						"kind": "proficiency",
+						"what": "skill",
+						"ids": ["athletics", "intimidation"]
+					}
+				],
+				"choices": [
+					{
+						"id": "tool",
+						"name": {
+							"en": "Gaming Set"
+						},
+						"count": 1,
+						"gives": "tool",
+						"from": {
+							"list": [
+								"dice-set",
+								"dragonchess-set",
+								"playing-cards-set",
+								"three-dragon-ante-set"
+							]
+						}
+					}
+				]
+			},
+			{
+				"id": "soldier-equipment",
+				"name": {
+					"en": "Equipment"
+				},
+				"level": 1,
+				"text": {
+					"en": "Choose A or B: (A) Spear, Shortbow, 20 Arrows, Gaming Set (same as above), Healer's Kit, Quiver, Traveler's Clothes, 14 GP; or (B) 50 GP"
+				},
+				"grants": [],
+				"choices": []
+			}
+		]
+	}
+]
