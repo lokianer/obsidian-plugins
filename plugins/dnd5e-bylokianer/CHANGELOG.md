@@ -14,6 +14,8 @@ All notable changes to this plugin are documented here. The format follows
   filters for the rule set (2014 / 2024) and the book, a "2024" pill on 2024 rows, the book on the
   card. **Library notes** (`type: library`, `source: <book>`) in the vault bring the full text of
   books the GM owns. **Rule set** setting: which version a spell name in a stat block opens.
+- **Heroes of Faerûn spells** (catalogues, phase K3): its 19 spells join the Spellbook (569 catalogue
+  spells in all), with their Circle spell options in the library text.
 
 - **Monster catalogue** (catalogues, phase K2): the Monster Manual lists the monsters beyond the
   SRD of the Monster Manual 2014, the DMG 2014, Tasha's, Monsters of the Multiverse and Adventures
@@ -26,7 +28,7 @@ All notable changes to this plugin are documented here. The format follows
 
 - Library texts are English only; a German card shows the English text from the library.
 - Summoned blocks without a challenge rating stay out of the encounter builder.
-- Heroes of Faerûn (K3) follows.
+- Heroes of Faerûn's subclasses, feats and backgrounds come with the character builder.
 
 ### Changed
 

@@ -27,8 +27,8 @@ In order of priority. Items marked **(open)** wait for the maintainer's decision
    (Spellbook, Monster Manual) built, awaiting the check in Obsidian; then V5–V6 (see
    [Visual refactoring](#visual-refactoring--style-c)).
 2. **dnd5e-byLokianer: catalogues of all official spells and monsters** (asked for on 2026-11-20,
-   brought forward before V5/V6 by the maintainer). K1 (spells) and K2 (monsters) built, awaiting
-   the check in Obsidian; then K3 (Heroes of Faerûn). Subclasses come with the character builder.
+   brought forward before V5/V6 by the maintainer). K1 (spells), K2 (monsters) and K3 (Heroes of
+   Faerûn) built, awaiting the check in Obsidian. Subclasses come with the character builder.
    See [Catalogues](#catalogues).
 3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20,
    brainstorm not started): built in style C, after the catalogues.
@@ -174,7 +174,8 @@ library notes (`type: library`), made outside the repository. Books so far: PHB 
 - [ ] **K2 — monsters** (built 2026-11-20, awaiting the check): 429 entries (mm14 108, dmg14 3, tce 18, mpmm 260, fraif 40), a
       short stat block from the facts, the full one from library notes; rule set and book filters,
       the encounter builder and Add to combat. Plan `2026-11-20-catalogue-k2-monsters.md`.
-- [ ] **K3 — Heroes of Faerûn** (spells read from page images).
+- [ ] **K3 — Heroes of Faerûn** (built 2026-11-20, awaiting the check): 19 spells read from page
+      images (the PDF has no text layer); 569 catalogue spells in all.
 - [ ] Subclasses with the character builder.
 
 ### Code quality

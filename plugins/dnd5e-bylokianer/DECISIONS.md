@@ -954,3 +954,13 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
   wide enough to catch a block's actions across two-column interleaving, then LLM cleaning in
   batches with `check-monsters.mjs` (facts, YAML agreeing with the facts, the eight-word copy
   check). The cleaners were told never to estimate a number: a missing part is left out and noted.
+
+## 2026-11-20 · Catalogues K3: Heroes of Faerûn
+
+- The maintainer's copy is a print of the D&D Beyond pages without a text layer, so its 19 spells
+  (chapter 5, PDF pages 167–173) were read from page images, not OCR'd; the transcription is the
+  library note's text and the source of the eight-word copy check.
+- "Casting as a Circle Spell" stays a paragraph of the library text; the catalogue's facts are the
+  normal casting (casting time, range, duration as printed outside the Circle option).
+- Blade of Disaster and Conjure Constructs, also in other books, are their own 2024 entries.
+- Left out: the book's subclasses, feats, backgrounds and species (with the character builder).

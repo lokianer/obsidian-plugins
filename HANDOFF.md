@@ -16,12 +16,13 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 2026-11-20, local (second part). The maintainer noticed that every spell and monster beyond the SRD
 was missing and brought the catalogues forward, before V5/V6: 2014 and 2024, adventure books
 included, from their own PDFs. Design (`docs/superpowers/specs/2026-11-20-catalogues-design.md`)
-approved; **K1 (spells) and K2 (monsters) built** and pushed.
+approved; **K1 (spells), K2 (monsters) and K3 (Heroes of Faerûn's spells) built** and pushed; the
+maintainer's example-vault changes committed with the tests updated.
 
 ## Where to continue
 
-1. **Check K1 and K2 in Obsidian**: copy the library notes from the maintainer's private folder
-   `D:\03 Projekte\Code\Loki\dnd5e-library\` (not the `work` folder) into a vault — four spell
+1. **Check K1–K3 in Obsidian**: copy the library notes from the maintainer's private folder
+   `D:\03 Projekte\Code\Loki\dnd5e-library\` (not the `work` folder) into a vault — five spell
    notes, five "… - Monsters.md" notes. Spellbook: the 2014 / 2024 chips and the book select, a
    2024 row's pill, a catalogue card with summary and with full text, the Rule set setting and a
    stat block link. Monster Manual: the same filters, a catalogue card without its library note
@@ -32,15 +33,14 @@ approved; **K1 (spells) and K2 (monsters) built** and pushed.
    cleaners filled from memory were read from page images (`pdftoppm`) and corrected.
 3. Open check on the data: German names translated rather than official; Spiritual Weapon's
    school in phb24.
-4. **K3 — Heroes of Faerûn** (image-only PDF), then V5/V6, then the character builder.
+4. Then V5/V6 (visual refactoring), then the character builder (with the subclasses, feats and
+   backgrounds of the books, Heroes of Faerûn's included).
 
 ## State of the working tree
 
-`main`. The maintainer's own uncommitted changes in `examples/vault` (Session 14's log lines,
-faction values, two monsters, Session 15) are still left alone; they make 3 `packages/session` and
-5 plugin tests fail locally. `pnpm check` runs green with them stashed
-(`git stash push -u -q -- examples/vault` … `git stash pop -q`). Still to decide: keep them (update
-the tests) or revert them.
+`main`, clean apart from local Obsidian state. The maintainer's play-test changes in
+`examples/vault` are committed (`becfabe`) and the tests expect them; `pnpm check` runs green
+without stashing anything.
 
 **Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\` holds the library
 notes and `work/` (batches, cleaned `norm/` files, `INSTRUCTIONS-spells.md` and
@@ -62,6 +62,8 @@ windows. None of this may enter the repository.
   not valid YAML keeps the short block instead of breaking the card and the tracker; the library
   and extract scripts refuse any output folder inside the repository (the old guard missed paths
   with spaces and relative paths).
+- K3: Heroes of Faerûn's 19 spells, read from page images (`data/spells-frhof.json`, library note
+  "Forgotten Realms - Heroes of Faerûn.md").
 - Second round, asked for by the maintainer: blocks without a challenge rating (Tasha's summons,
   Avatar of Death, Giant Fly, Sacred Statue) in with CR "—", out of the encounter builder; the nine
   incomplete blocks and seven memory-filled headers read from page images (four corrections, Hook
@@ -81,9 +83,8 @@ facts read from page images, never guessed.
 ## Open questions for the maintainer
 
 - The K1/K2 check in Obsidian.
-- The uncommitted example-vault changes: keep (tests updated) or revert.
 
 ## Verification
 
-With the example vault stashed: `pnpm check` exit 0, plugin 451/451 and session 15/15 tests, lint 0
+`pnpm check` exit 0 (nothing stashed), plugin 454/454 and session 15/15 tests, lint 0
 errors (known warnings only). `check-monsters.mjs`: 744 entries, 0 problems. No run of eight words of any of the 858 monster summaries appears in the library notes.
