@@ -15,10 +15,18 @@ All notable changes to this plugin are documented here. The format follows
   card. **Library notes** (`type: library`, `source: <book>`) in the vault bring the full text of
   books the GM owns. **Rule set** setting: which version a spell name in a stat block opens.
 
+- **Monster catalogue** (catalogues, phase K2): the Monster Manual lists the monsters beyond the
+  SRD of the Monster Manual 2014, the DMG 2014, Tasha's, Monsters of the Multiverse and Adventures
+  in Faerûn — 400 entries with their facts, English and German names and a summary in our own
+  words (EN/DE), no book text. A catalogue card shows a short stat block made from the facts; a
+  **library note** with the book's `dnd5e-statblock` blocks brings the full one. Rule set and book
+  filters, the "2024" pill, and catalogue monsters in the encounter builder and Add to combat.
+
 ### Known limitations
 
 - Library texts are English only; a German card shows the English text from the library.
-- Monsters (K2) and Heroes of Faerûn (K3) follow.
+- Tasha's summoned spirits and companions (no challenge rating) are not in the monster catalogue.
+- Heroes of Faerûn (K3) follows.
 
 ### Changed
 

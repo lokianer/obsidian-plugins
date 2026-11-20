@@ -1,5 +1,6 @@
 import { Plugin } from 'obsidian';
 
+import { Library } from './obsidian/library';
 import { createContext } from './obsidian/register/context';
 import { registerBattle } from './obsidian/register/battle';
 import { registerDeck } from './obsidian/register/deck';
@@ -31,11 +32,14 @@ export default class Dnd5ePlugin extends Plugin {
 
     // In this order the ribbon shows world, spellbook, Monster Manual, deck, dice, battle.
     registerFactions(ctx);
-    const spells = registerSpells(ctx);
-    const ownMonsters = registerMonsters(ctx, spells);
+    // The GM's library notes: the full texts of the catalogue's spells and monsters.
+    const library = new Library(this);
+    this.app.workspace.onLayoutReady(() => void library.reload());
+    const spells = registerSpells(ctx, library);
+    const monsters = registerMonsters(ctx, spells, library);
     registerDeck(ctx);
     const party = registerDice(ctx);
-    registerBattle(ctx, ownMonsters, spells, party);
+    registerBattle(ctx, monsters, spells, party);
     registerStatblocks(ctx, spells);
     registerNpcs(ctx);
   }

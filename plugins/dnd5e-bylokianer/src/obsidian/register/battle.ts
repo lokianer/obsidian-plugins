@@ -5,7 +5,6 @@ import { Notice } from 'obsidian';
 
 import { encounterNoteText } from '../../battle/budget';
 import { battleLine } from '../../battle/log';
-import { SRD_MONSTERS } from '../../monsters/srd-monsters';
 import { BattleStore, fromMonster } from '../battle-store';
 import { BATTLE_VIEW, BattleView } from '../battle-view';
 import { confirm } from '../confirm';
@@ -13,19 +12,18 @@ import { cryptoRandom } from '../deck-view';
 import type { PartyChecks } from '../dice-party';
 import { EncounterBuilderModal, EncounterPicker } from '../encounter-builder';
 import { newNote } from '../new-note';
-import type { OwnMonsters } from '../own-monsters';
 import type { Context } from './context';
+import type { MonsterList } from './monsters';
 import type { SpellLinker } from './spells';
 
 export function registerBattle(
   ctx: Context,
-  ownMonsters: OwnMonsters,
+  monsters: MonsterList,
   spells: SpellLinker,
   party: PartyChecks,
 ): void {
   const { plugin, t } = ctx;
   const { app } = plugin;
-  const monsters = () => [...SRD_MONSTERS, ...ownMonsters.list];
   const store = new BattleStore(plugin, ctx.cache, monsters);
   const views = () =>
     app.workspace

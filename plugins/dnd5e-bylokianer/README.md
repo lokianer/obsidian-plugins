@@ -348,6 +348,36 @@ own monsters. The plugin itself ships only the SRD's monsters: creatures outside
 demon lords, beholders and other monsters Wizards of the Coast keeps out of it) are not free to
 include, so bring them from your own books this way.
 
+**The catalogue** adds the monsters beyond the SRD of the Monster Manual (2014), the Dungeon
+Master's Guide (2014), Tasha's Cauldron of Everything, Monsters of the Multiverse (2014 rules) and
+Adventures in Faerûn (2024): 400 entries with their facts (size, type, AC, hit points, speeds,
+the six abilities, challenge rating, legendary, spellcaster), an English and a German name, and a
+short summary in the plugin's own words in both languages. A catalogue card shows the stat block
+the facts allow — header, abilities and challenge — with the summary; the traits and actions come
+from a library note. Like the Spellbook, two more filters narrow the list (rule set and book),
+2024 rows carry a "2024" pill, and the encounter builder and Add to combat find catalogue monsters
+too (the Rule set setting decides which version a name means). Tasha's summoned spirits and
+companions print no challenge rating and are left out.
+
+**Library notes** for monsters work like the Spellbook's: a `type: library` note with the book's
+key as `source:` (`mm14`, `dmg14`, `tce`, `mpmm`, `fraif`) holds one `##` section per monster,
+named as its English name, with the stat block as a `dnd5e-statblock` (or `statblock`) block. The
+card then shows that full block in place of the short one.
+
+````markdown
+---
+type: library
+source: mpmm
+---
+
+## Gloom Lantern
+
+```dnd5e-statblock
+name: Gloom Lantern
+…
+```
+````
+
 ## The battle tracker
 
 **Open battle tracker** (command, or the swords in the left ribbon) opens a tab that runs a fight

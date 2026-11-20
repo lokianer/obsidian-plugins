@@ -1,5 +1,7 @@
 // Monsters for the Monster Manual: the type the SRD data is written in.
 
+import type { BookKey, Rules } from '../catalogue/books';
+
 export type Movement = 'fly' | 'swim' | 'burrow' | 'climb';
 
 export interface SrdMonster {
@@ -20,6 +22,16 @@ export interface SrdMonster {
   yaml: string;
   /** An own monster's note; absent for the SRD's monsters. */
   path?: string;
+  /** The rule set; set on catalogue entries. */
+  rules?: Rules;
+  /** The book a catalogue entry comes from; absent for the SRD's and own monsters. */
+  source?: BookKey;
+  /** A catalogue entry's German name (the SRD's are in `DE_NAMES`). */
+  nameDe?: string;
+  /** A catalogue entry's summary in our own words. */
+  summary?: { en: string; de: string };
+  /** A catalogue entry's `yaml` is the full stat block from the GM's library note. */
+  fromLibrary?: boolean;
 }
 
 /** One entry of a stat block in German: its name and its text. */

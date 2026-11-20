@@ -1,13 +1,17 @@
-// The Monster Manual: the tab, own monsters from `type: monster` notes, the monster builder with
-// its import, and putting a monster into a note, a note of its own, a fight or an encounter.
+// The Monster Manual: the tab, the catalogue with the GM's library notes, own monsters from
+// `type: monster` notes, the monster builder with its import, and putting a monster into a note, a
+// note of its own, a fight or an encounter.
 
 import { MarkdownView, Notice } from 'obsidian';
 
+import { byPreference, withMonsterLibrary } from '../../catalogue/merge';
+import { CATALOGUE_MONSTERS } from '../../catalogue/monsters';
 import { monsterNoteText, statblockYaml } from '../../monsters/draft';
 import type { SrdMonster } from '../../monsters/model';
 import { ownIndex } from '../../monsters/own';
 import { SRD_MONSTERS } from '../../monsters/srd-monsters';
 import { BLOCK } from '../../npc/statblock';
+import type { Library } from '../library';
 import { MonsterBuilderModal } from '../monster-builder';
 import { MONSTER_VIEW, MonsterManualView } from '../monster-manual-view';
 import { newNote } from '../new-note';
@@ -17,7 +21,10 @@ import type { SpellLinker } from './spells';
 
 const fence = (monster: SrdMonster) => `\`\`\`${BLOCK}\n${monster.yaml}\n\`\`\``;
 
-export function registerMonsters(ctx: Context, spells: SpellLinker): OwnMonsters {
+/** Every monster in the order a name finds it: SRD, catalogue (preferred rule set first), own. */
+export type MonsterList = () => readonly SrdMonster[];
+
+export function registerMonsters(ctx: Context, spells: SpellLinker, library: Library): MonsterList {
   const { plugin, t, later } = ctx;
   const { app } = plugin;
   const folder = () => ctx.settings().monsterFolder;
@@ -54,6 +61,10 @@ export function registerMonsters(ctx: Context, spells: SpellLinker): OwnMonsters
 
   const ownMonsters = new OwnMonsters(plugin);
   app.workspace.onLayoutReady(() => void ownMonsters.reload());
+  let catalogue: SrdMonster[] | null = null;
+  const catalogueMonsters = () =>
+    (catalogue ??= withMonsterLibrary(CATALOGUE_MONSTERS, library.sections));
+  library.onChange(() => (catalogue = null));
   plugin.registerView(
     MONSTER_VIEW,
     (leaf) =>
@@ -66,6 +77,8 @@ export function registerMonsters(ctx: Context, spells: SpellLinker): OwnMonsters
         insert,
         own: () => ownMonsters.list,
         onOwnChange: (listener) => ownMonsters.onChange(listener),
+        catalogue: catalogueMonsters,
+        onCatalogueChange: (listener) => library.onChange(listener),
         openNote: (path) => ctx.openNote(path),
         newMonster: () => newMonster(),
         addToCombat: (monster) => later.addToCombat(monster),
@@ -112,5 +125,9 @@ export function registerMonsters(ctx: Context, spells: SpellLinker): OwnMonsters
     }).open();
   plugin.addCommand({ id: 'new-monster', name: t('command.newMonster'), callback: newMonster });
 
-  return ownMonsters;
+  return () => [
+    ...SRD_MONSTERS,
+    ...byPreference(catalogueMonsters(), ctx.settings().rules),
+    ...ownMonsters.list,
+  ];
 }

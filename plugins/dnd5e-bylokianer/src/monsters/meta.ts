@@ -32,8 +32,11 @@ export const TYPES = [
 export const MOVES: readonly Movement[] = ['fly', 'swim', 'burrow', 'climb'];
 
 /** The monster's name in a language; English when there is no German one. */
-export function monsterName(monster: Pick<SrdMonster, 'index' | 'name'>, lang: Lang): string {
-  return lang === 'de' ? (DE_NAMES[monster.index] ?? monster.name) : monster.name;
+export function monsterName(
+  monster: Pick<SrdMonster, 'index' | 'name' | 'nameDe'>,
+  lang: Lang,
+): string {
+  return lang === 'de' ? (DE_NAMES[monster.index] ?? monster.nameDe ?? monster.name) : monster.name;
 }
 
 type Gender = 'm' | 'f' | 'n';

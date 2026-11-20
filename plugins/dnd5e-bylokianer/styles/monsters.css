@@ -75,3 +75,8 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+.dnd5e-monsters-summary {
+  color: var(--text-normal);
+  line-height: var(--line-height-normal);
+}

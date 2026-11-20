@@ -1,0 +1,24 @@
+[
+	{
+		"index": "dmg14/larva",
+		"name": "Larva",
+		"nameDe": "Larve",
+		"cr": "0",
+		"type": "fiend",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "neutral evil",
+		"ac": 9,
+		"acClass": "",
+		"hp": 9,
+		"hitDice": "2d8",
+		"speed": "20 ft.",
+		"stats": [9, 9, 10, 6, 10, 2],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A wormlike, wretched soul in fiend form that crawls about Hades. It is weak and only nips for a single point of damage.",
+			"de": "Eine wurmartige, erbärmliche Unholdseele, die durch Hades kriecht. Sie ist schwach und beißt nur für 1 Schaden."
+		}
+	}
+]

@@ -1,9 +1,12 @@
-// The Monster Manual tab: the 334 SRD monsters, built like the spellbook — a search, challenge
-// rating bands and type chips, size and movement dropdowns, Legendary and Spellcaster chips, a list
+// The Monster Manual tab: the 334 SRD monsters and the catalogue's (other books, both rule sets),
+// built like the spellbook — a search, challenge rating bands and type chips, size and movement
+// dropdowns, Legendary and Spellcaster chips, rule set chips and a book dropdown, a list
 // grouped by challenge rating, and the stat block as the card, in the type's colour. Names and
 // meta follow the dice-text language; the card can switch to the other one. From the card a
 // monster goes into the last note or into a note of its own. The GM's own `type: monster` notes
-// join the list, marked "own"; + opens the monster builder. The filters are kept.
+// join the list, marked "own"; + opens the monster builder. The filters are kept. A catalogue
+// monster shows its summary and the facts' stat block, or the full stat block of the GM's library
+// note.
 
 import {
   Component,
@@ -15,6 +18,7 @@ import {
   type WorkspaceLeaf,
 } from 'obsidian';
 
+import { BOOKS, type BookKey, isBookKey } from '../catalogue/books';
 import { createT, type StringKey, type T } from '../i18n/strings';
 import {
   type Band,
@@ -43,6 +47,7 @@ import type { Lang } from '../npc/races';
 import { parseStatblock } from '../npc/statblock';
 import type { RollCheck } from './statblock-dice';
 import { renderStatblock } from './statblock-view';
+import { pill } from './ui/blocks';
 
 export const MONSTER_VIEW = 'dnd5e-monster-manual';
 
@@ -85,6 +90,9 @@ export interface MonsterManualDeps {
   /** The GM's own `type: monster` notes, and a way to hear when they change. */
   own: () => readonly SrdMonster[];
   onOwnChange: (listener: () => void) => () => void;
+  /** The catalogue's monsters (library stat blocks applied), and a way to hear when they change. */
+  catalogue: () => readonly SrdMonster[];
+  onCatalogueChange: (listener: () => void) => () => void;
   openNote: (path: string) => void;
   /** Opens the monster builder. */
   newMonster: () => void;
@@ -139,10 +147,9 @@ export class MonsterManualView extends ItemView {
     return 'skull';
   }
 
-  /** Every monster: the SRD's and the GM's own. */
+  /** Every monster: the SRD's, the catalogue's and the GM's own. */
   private get monsters(): readonly SrdMonster[] {
-    const own = this.deps.own();
-    return own.length === 0 ? SRD_MONSTERS : [...SRD_MONSTERS, ...own];
+    return [...SRD_MONSTERS, ...this.deps.catalogue(), ...this.deps.own()];
   }
 
   /** Opens a monster's card (one just built, say), clearing filters that would hide it. */
@@ -154,6 +161,7 @@ export class MonsterManualView extends ItemView {
 
   async onOpen(): Promise<void> {
     this.register(this.deps.onOwnChange(() => this.render()));
+    this.register(this.deps.onCatalogueChange(() => this.render()));
     const stored = this.deps.state() as Partial<MonsterManualState> | undefined;
     this.filters = readFilters(stored?.filters);
     this.selected = typeof stored?.selected === 'string' ? stored.selected : null;
@@ -286,6 +294,28 @@ export class MonsterManualView extends ItemView {
     caster.addEventListener('click', () =>
       this.setFilters({ spellcaster: !this.filters.spellcaster }),
     );
+    this.renderSourceFilters(more);
+  }
+
+  /** The rule set pills and the book dropdown (the SRD, then the books the catalogue draws on). */
+  private renderSourceFilters(more: HTMLElement): void {
+    for (const rules of ['2014', '2024'] as const) {
+      const chip = this.chip(more, rules, this.filters.rules.includes(rules));
+      chip.addEventListener('click', () =>
+        this.setFilters({ rules: toggle(this.filters.rules, rules) }),
+      );
+    }
+    const present = new Set(this.deps.catalogue().map((m) => m.source));
+    const books = (Object.keys(BOOKS) as BookKey[]).filter((b) => present.has(b));
+    this.select(
+      more,
+      'spells.book',
+      ['srd', ...books] as const,
+      this.filters.sources,
+      (v) => (isBookKey(v) ? BOOKS[v][this.lang] : this.deps.t('spells.srdBook')),
+      (v) => this.setFilters({ sources: v === null ? [] : [v] }),
+    );
+    more.lastElementChild?.addClass('dnd5e-spells-book');
   }
 
   private chip(parent: HTMLElement, text: string, on: boolean): HTMLElement {
@@ -383,6 +413,7 @@ export class MonsterManualView extends ItemView {
     if (m.legendary) mark('L', 'monsters.legendary');
     if (m.moves.includes('fly')) mark('✈', 'monsters.moves.fly');
     if (m.spellcaster) mark('✦', 'monsters.spellcaster');
+    if (m.rules === '2024') pill(marks, '2024').addClass('dnd5e-spells-rules');
     if (m.path !== undefined) {
       marks.createSpan({ cls: ['dnd5e-spells-mark', 'is-own'], text: t('spells.own') });
     }
@@ -496,6 +527,7 @@ export class MonsterManualView extends ItemView {
       action('file-text', 'spells.openNote', () => this.deps.openNote(path), 'dnd5e-monsters-open');
     }
 
+    this.renderCatalogueLines(card, m, lang);
     const raw = parseStatblock(parseYaml(m.yaml));
     const block =
       lang === 'de' ? germanBlock(germanTexts(raw, m.index), monsterName(m, 'de')) : raw;
@@ -509,10 +541,27 @@ export class MonsterManualView extends ItemView {
       roll: this.deps.roll,
       lang,
     });
+    card.createDiv({ cls: 'dnd5e-spells-source', text: this.sourceLine(m, lang) });
+  }
+
+  /** Above a catalogue monster's stat block: its summary and how to get the full block. */
+  private renderCatalogueLines(card: HTMLElement, m: SrdMonster, lang: Lang): void {
+    if (m.source === undefined || m.fromLibrary === true) return;
+    const t = lang === this.lang ? this.deps.t : createT(lang);
+    if (m.summary !== undefined) {
+      card.createDiv({ cls: 'dnd5e-monsters-summary', text: m.summary[lang] });
+    }
     card.createDiv({
-      cls: 'dnd5e-spells-source',
-      text: path === undefined ? t('spells.source') : t('monsters.ownSource', { path }),
+      cls: 'dnd5e-spells-library',
+      text: t('spells.noLibrary', { book: BOOKS[m.source][lang] }),
     });
+  }
+
+  private sourceLine(m: SrdMonster, lang: Lang): string {
+    const { t } = this.deps;
+    if (m.path !== undefined) return t('monsters.ownSource', { path: m.path });
+    if (m.source !== undefined) return BOOKS[m.source][lang];
+    return t('spells.source');
   }
 }
 

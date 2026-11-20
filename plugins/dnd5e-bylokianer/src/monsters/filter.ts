@@ -1,6 +1,7 @@
 // Searching and filtering the Monster Manual, like the spellbook: groups combine with AND, the values
 // inside a group with OR. The search finds English and German names, ignoring case and accents. Pure.
 
+import { type BookKey, isBookKey, type Rules } from '../catalogue/books';
 import { crValue } from '../npc/statblock';
 import { DE_NAMES } from './de';
 import type { Movement, SrdMonster } from './model';
@@ -17,6 +18,10 @@ export interface MonsterFilters {
   moves: Movement[];
   legendary: boolean;
   spellcaster: boolean;
+  /** Rule sets; own monsters pass every one, the SRD's are 2014. */
+  rules: Rules[];
+  /** Books; `srd` for the SRD's monsters. */
+  sources: (BookKey | 'srd')[];
 }
 
 export const NO_FILTERS: MonsterFilters = {
@@ -27,6 +32,8 @@ export const NO_FILTERS: MonsterFilters = {
   moves: [],
   legendary: false,
   spellcaster: false,
+  rules: [],
+  sources: [],
 };
 
 /** The band a challenge rating falls in. */
@@ -47,13 +54,16 @@ function passes(m: SrdMonster, f: MonsterFilters, skip?: keyof MonsterFilters): 
   const any = <V>(key: keyof MonsterFilters, chosen: readonly V[], has: (v: V) => boolean) =>
     key === skip || chosen.length === 0 || chosen.some(has);
   const words = fold(f.query).split(/\s+/).filter(Boolean);
-  const names = fold(`${m.name} ${DE_NAMES[m.index] ?? ''}`);
+  const names = fold(`${m.name} ${DE_NAMES[m.index] ?? m.nameDe ?? ''}`);
+  const source = m.path !== undefined ? null : (m.source ?? 'srd');
   return (
     words.every((w) => names.includes(w)) &&
     any('bands', f.bands, (b) => bandOf(m.cr) === b) &&
     any('types', f.types, (t) => m.type === t) &&
     any('sizes', f.sizes, (s) => m.size === s) &&
     any('moves', f.moves, (v) => m.moves.includes(v)) &&
+    any('rules', f.rules, (r) => m.path !== undefined || (m.rules ?? '2014') === r) &&
+    any('sources', f.sources, (b) => source === b) &&
     (!f.legendary || m.legendary) &&
     (!f.spellcaster || m.spellcaster)
   );
@@ -99,5 +109,7 @@ export function readFilters(data: unknown): MonsterFilters {
     moves: list(d.moves) as Movement[],
     legendary: d.legendary === true,
     spellcaster: d.spellcaster === true,
+    rules: list(d.rules).filter((v): v is Rules => v === '2014' || v === '2024'),
+    sources: list(d.sources).filter((v): v is BookKey | 'srd' => v === 'srd' || isBookKey(v)),
   };
 }

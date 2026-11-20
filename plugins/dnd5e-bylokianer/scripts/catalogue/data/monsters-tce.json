@@ -1,0 +1,24 @@
+[
+	{
+		"index": "tce/juvenile-mimic",
+		"name": "Juvenile Mimic",
+		"nameDe": "Junger Mimic",
+		"cr": "0",
+		"type": "monstrosity",
+		"subtype": "shapechanger",
+		"size": "Tiny",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "",
+		"hp": 7,
+		"hitDice": "2d4 + 2",
+		"speed": "10 ft., climb 10 ft.",
+		"stats": [1, 12, 13, 10, 13, 10],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A baby mimic that passes for a harmless object until it moves. Its nibble does a point of damage with a little acid, and it can climb walls and ceilings.",
+			"de": "Ein junger Mimic, der sich als harmloser Gegenstand tarnt, bis er sich bewegt. Sein Biss richtet einen Punkt Schaden samt etwas Säure an, und er klettert Wände und Decken entlang."
+		}
+	}
+]

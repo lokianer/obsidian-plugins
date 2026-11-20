@@ -921,3 +921,28 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
   check script; counts compared with the books' spell lists (phb24 391 of 391, xge 95, tce 21,
   phb14 all non-SRD spells).
 - Left out: Heroes of Faerûn (image-only PDF, K3), monsters (K2), German library texts.
+
+## 2026-11-20 · Catalogues K2: monsters
+
+Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
+`docs/superpowers/plans/2026-11-20-catalogue-k2-monsters.md`.
+
+- **What ships:** facts, names (EN/DE) and summaries in our own words for 400 monsters
+  (mm14 108, dmg14 1, tce 1, mpmm 254, fraif 36). Each entry carries a stat block made from its facts alone — header, abilities,
+  challenge — so the card, the encounter builder and the tracker work without a library note. The
+  traits and actions, which are the book's text, come only from the GM's library note.
+- **Library notes** hold one `##` section per monster with a `dnd5e-statblock` (or `statblock`)
+  block; that block replaces the short one wholesale (`withMonsterLibrary`), marked `fromLibrary`.
+- **SRD first:** a 2014 book never repeats an SRD monster; the 2024 Adventures in Faerûn entries are
+  their own, also where an SRD creature shares the name, and keep the SRD's German name.
+- **One Library service** (`src/obsidian/library.ts`) serves the Spellbook and the Monster Manual;
+  the monster list the battle tracker and encounter builder see is SRD + catalogue (by rule set
+  preference) + own monsters.
+- **Left out:** Tasha's summoned spirits and companions and two DMG blocks (Avatar of Death, the
+  figurine's Giant Fly) — no challenge rating or no fixed hit points; a placeholder would mislead
+  the encounter budget. Blocks whose facts the scan did not give completely wait for a look at the
+  book rather than ship with a guess.
+- **Extraction:** pdftotext, windows cut at each armour class (2014) or initiative line (2024),
+  wide enough to catch a block's actions across two-column interleaving, then LLM cleaning in
+  batches with `check-monsters.mjs` (facts, YAML agreeing with the facts, the eight-word copy
+  check). The cleaners were told never to estimate a number: a missing part is left out and noted.

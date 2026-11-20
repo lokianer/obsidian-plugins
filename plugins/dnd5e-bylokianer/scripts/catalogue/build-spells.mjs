@@ -61,7 +61,8 @@ function fromWork(workDir, books) {
 	const nameDe = (e) => deNames.get(srdIndex.get(fold(e.name)) ?? '') ?? e.nameDe;
 	for (const book of books) {
 		const files = readdirSync(norm).filter(
-			(f) => f.startsWith(`${book}-`) && /-\d+\.json$/.test(f),
+			// `<book>-<n>.json`; monster batches are `<book>-m-<n>.json`.
+			(f) => f.startsWith(`${book}-`) && /^[a-z0-9]+-\d+\.json$/.test(f),
 		);
 		const entries = files
 			.flatMap((f) => JSON.parse(readFileSync(join(norm, f), 'utf8')))

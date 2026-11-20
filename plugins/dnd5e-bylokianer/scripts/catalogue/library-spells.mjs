@@ -22,7 +22,8 @@ if (!workDir || !outDir || !book || !(book in TITLES) || /obsidian-plugins/i.tes
 const [title, rules] = TITLES[book];
 const norm = join(workDir, 'norm');
 const entries = readdirSync(norm)
-	.filter((f) => f.startsWith(`${book}-`) && /-\d+\.json$/.test(f))
+	// `<book>-<n>.json`; monster batches are `<book>-m-<n>.json`.
+	.filter((f) => f.startsWith(`${book}-`) && /^[a-z0-9]+-\d+\.json$/.test(f))
 	.flatMap((f) => JSON.parse(readFileSync(join(norm, f), 'utf8')))
 	.filter((e) => e.srd == null && e.note !== 'not a spell')
 	.sort((a, b) => a.name.localeCompare(b.name));

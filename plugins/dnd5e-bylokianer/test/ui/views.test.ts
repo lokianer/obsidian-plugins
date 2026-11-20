@@ -1480,7 +1480,12 @@ describe('spell builder', () => {
 });
 
 describe('monster manual', () => {
-  async function open(lang: 'en' | 'de', state: unknown = null, own: SrdMonster[] = []) {
+  async function open(
+    lang: 'en' | 'de',
+    state: unknown = null,
+    own: SrdMonster[] = [],
+    catalogue: SrdMonster[] = [],
+  ) {
     const saved: MonsterManualState[] = [];
     const inserted: string[] = [];
     const notes: string[] = [];
@@ -1496,6 +1501,8 @@ describe('monster manual', () => {
       makeNote: (m) => notes.push(m.index),
       own: () => own,
       onOwnChange: () => () => undefined,
+      catalogue: () => catalogue,
+      onCatalogueChange: () => () => undefined,
       openNote: (path) => opened.push(path),
       newMonster: () => builders.push(1),
       addToCombat: (m) => fights.push(m.index),
@@ -1576,6 +1583,78 @@ describe('monster manual', () => {
       ?.dispatchEvent(new MouseEvent('click'));
     expect(texts(el, '.dnd5e-sb-name')).toEqual(['Owlbear']);
     expect(el.querySelector('.dnd5e-statblock')?.textContent).toContain('Multiattack');
+  });
+
+  it('lists catalogue monsters with rule set and book, a summary or the library block', async () => {
+    // Invented catalogue entries: no text from any book.
+    const minimal = [
+      'name: "Gloom Lantern"',
+      'size: Medium',
+      'type: "aberration"',
+      'ac: 15',
+      'hp: 45',
+      'speed: "30 ft."',
+      'stats: [10, 14, 16, 8, 12, 6]',
+      'cr: "3"',
+    ].join('\n');
+    const gloom: SrdMonster = {
+      index: 'mpmm/gloom-lantern',
+      name: 'Gloom Lantern',
+      nameDe: 'Düsterlaterne',
+      cr: '3',
+      type: 'aberration',
+      size: 'Medium',
+      ac: 15,
+      hp: 45,
+      moves: [],
+      legendary: false,
+      spellcaster: false,
+      rules: '2014',
+      source: 'mpmm',
+      summary: { en: 'A lamp that drinks light.', de: 'Eine Lampe, die Licht trinkt.' },
+      yaml: minimal,
+    };
+    const moth: SrdMonster = {
+      ...gloom,
+      index: 'fraif/ember-moth',
+      name: 'Ember Moth',
+      nameDe: 'Glutmotte',
+      rules: '2024',
+      source: 'fraif',
+      fromLibrary: true,
+      yaml: [
+        minimal.replace('Gloom Lantern', 'Ember Moth'),
+        'actions:',
+        '  - name: "Singe"',
+        '    desc: "Melee Attack Roll: +5, reach 5 ft. Hit: 4 (1d8) Fire damage."',
+      ].join('\n'),
+    };
+    const { el, rows, row } = await open('en', null, [], [gloom, moth]);
+    expect(rows()).toHaveLength(336);
+    expect(row('Ember Moth')?.querySelector('.dnd5e-spells-rules')?.textContent).toBe('2024');
+    expect(row('Gloom Lantern')?.querySelector('.dnd5e-spells-rules')).toBeNull();
+    const book = el.querySelector<HTMLSelectElement>('.dnd5e-spells-book');
+    expect([...(book?.options ?? [])].map((o) => o.value)).toEqual(['', 'srd', 'mpmm', 'fraif']);
+    if (book === null) throw new Error('no book filter');
+    book.value = 'mpmm';
+    book.dispatchEvent(new Event('change'));
+    expect(rows().map((r) => r.dataset.monster)).toEqual(['mpmm/gloom-lantern']);
+    rows()[0]?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector('.dnd5e-monsters-summary')?.textContent).toBe(
+      'A lamp that drinks light.',
+    );
+    expect(el.querySelector('.dnd5e-spells-library')?.textContent).toContain(
+      'Mordenkainen Presents: Monsters of the Multiverse',
+    );
+    book.value = 'fraif';
+    book.dispatchEvent(new Event('change'));
+    rows()[0]?.dispatchEvent(new MouseEvent('click'));
+    expect(el.querySelector('.dnd5e-monsters-summary')).toBeNull();
+    expect(el.querySelector('.dnd5e-spells-library')).toBeNull();
+    expect(el.textContent).toContain('Singe');
+    expect(el.querySelector('.dnd5e-spells-source')?.textContent).toBe(
+      'Forgotten Realms: Adventures in Faerûn',
+    );
   });
 
   it('lists own monsters marked "own", opens their note and the builder', async () => {

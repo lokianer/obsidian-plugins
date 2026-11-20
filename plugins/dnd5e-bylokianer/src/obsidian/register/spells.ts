@@ -10,7 +10,7 @@ import type { SrdSpell } from '../../spells/model';
 import { spellFinder } from '../../spells/links';
 import { ownIndex } from '../../spells/own';
 import { SRD_SPELLS } from '../../spells/srd-spells';
-import { Library } from '../library';
+import type { Library } from '../library';
 import { newNote } from '../new-note';
 import { OwnSpells } from '../own-spells';
 import { SpellBuilderModal } from '../spell-builder';
@@ -21,15 +21,11 @@ import type { Context } from './context';
 /** Links the spell names of a rendered Spellcasting entry to the spellbook. */
 export type SpellLinker = (el: HTMLElement) => void;
 
-export function registerSpells(ctx: Context): SpellLinker {
+export function registerSpells(ctx: Context, library: Library): SpellLinker {
   const { plugin, t } = ctx;
   const { app } = plugin;
   const ownSpells = new OwnSpells(plugin);
-  const library = new Library(plugin);
-  app.workspace.onLayoutReady(() => {
-    void ownSpells.reload();
-    void library.reload();
-  });
+  app.workspace.onLayoutReady(() => void ownSpells.reload());
   let catalogue: SrdSpell[] | null = null;
   const catalogueSpells = () => (catalogue ??= withLibrary(CATALOGUE_SPELLS, library.sections));
   library.onChange(() => (catalogue = null));
