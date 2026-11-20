@@ -11,6 +11,7 @@ import {
   type WarningGroup,
 } from '../factions/warning-groups';
 import type { T } from '../i18n/strings';
+import { pill, sectionHead, tile, tiles } from './ui/blocks';
 
 const FACTION_NOTE = 'factions.md';
 
@@ -54,7 +55,8 @@ export class WarningsModal extends Modal {
     }
 
     const entities = [...world.entities.values()];
-    const stats = contentEl.createDiv({ cls: 'dnd5e-warnings-stats' });
+    const stats = tiles(contentEl);
+    stats.addClass('dnd5e-warnings-stats');
     const factions = entities.filter((e) => e.kind === 'faction' && !e.pseudo).length;
     const characters = entities.filter((e) => e.kind === 'character').length;
     const warnings = world.warnings.length;
@@ -80,11 +82,7 @@ export class WarningsModal extends Modal {
   }
 
   private renderStat(parent: HTMLElement, value: number, label: string, alert = false): void {
-    const stat = parent.createDiv({
-      cls: alert ? 'dnd5e-warnings-stat is-alert' : 'dnd5e-warnings-stat',
-    });
-    stat.createDiv({ cls: 'dnd5e-warnings-stat-value', text: String(value) });
-    stat.createDiv({ cls: 'dnd5e-warnings-stat-label', text: label });
+    tile(parent, String(value), label).el.toggleClass('is-alert', alert);
   }
 
   private renderNote(parent: HTMLElement, note: NoteWarnings): void {
@@ -101,10 +99,10 @@ export class WarningsModal extends Modal {
     if (file !== null) {
       title.createSpan({ cls: 'dnd5e-warnings-file', text: ` · ${file}` });
     }
-    head.createSpan({ cls: 'dnd5e-warnings-badge', text: String(note.count) });
+    pill(head, String(note.count)).addClass('dnd5e-warnings-badge');
 
     for (const { group, warnings } of note.groups) {
-      card.createDiv({ cls: 'dnd5e-warnings-group', text: this.t(`group.${group}`) });
+      sectionHead(card, this.t(`group.${group}`)).addClass('dnd5e-warnings-group');
       for (const warning of warnings) {
         this.renderRow(card, group, warning);
       }
@@ -118,7 +116,7 @@ export class WarningsModal extends Modal {
     const body = row.createDiv({ cls: 'dnd5e-warnings-body' });
     const subject = warning.key ?? warning.field;
     if (subject !== undefined) {
-      body.createSpan({ cls: 'dnd5e-warnings-chip', text: subject });
+      pill(body, subject).addClass('dnd5e-warnings-chip');
     }
     if (warning.field === 'secret_relations') {
       body.createSpan({ cls: 'dnd5e-warnings-secret', text: t('field.secret') });

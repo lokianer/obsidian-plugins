@@ -17,23 +17,22 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 wie D&D Beyond, moderner und übersichtlicher"), **all** official subclasses with a character
 builder and a level-up database, and **all** spells and monsters. Agreed: the order visual
 refactoring → catalogues → character builder; for the content, catalogues with our own summaries
-in the plugin and full texts only by import (the repository is public). The visual refactoring was
-brainstormed with mockups (style C chosen), designed and planned. **V1** (building blocks, stat
-block) was built and **accepted** ("passt weiter"); **V2** (Battle tab, encounter builder card)
-built.
+in the plugin and full texts only by import (the repository is public). Style C was chosen from
+mockups. **V1** (building blocks, stat block) and **V2** (Battle tab, encounter builder) were
+built and **accepted**; **V3** (faction card, tension panel, warnings dialog) built.
 
 ## Where to continue
 
-1. **Check V2 in Obsidian** (installed in `examples/vault`): the Battle tab on the encounter
-   "Ambush under the second arch" — start, roll, next turns, damage, a condition with rounds, a
-   combatant down (death saves), the tab narrow in the right sidebar; the encounter builder
-   (Battle tab ⋮ or the command) with and without experience points. After "passt": tick V2.
-2. **V3 — faction card, faction world, tensions, popover, warnings**: plan from the design (§3),
-   building blocks in `src/obsidian/ui/blocks.ts`. Then V4 (Monster Manual and Spellbook lists,
-   spell card; these may use `split()`), V5 (Dice tab, deck), V6 (builders and dialogs, including
-   `dnd5e-builder-flag` and the encounter builder's dialog layout).
+1. **Check V3 in Obsidian** (installed in `examples/vault`): a faction note (Order of the
+   Lantern: Power / Allies / Enemies tiles, pips still set power, section heads, the collapsibles),
+   a character note (no tiles, short stats), the tension panel, the warnings dialog (command
+   "Show faction warnings"), light theme and a narrow pane. After "passt": tick V3.
+2. **V4 — Monster Manual and Spellbook lists, spell card**: plan from the design (§3); the lists
+   may use `split()` and replace the Spellbook's 640 px container query by the shared fold. Then
+   V5 (Dice tab, deck), V6 (builders and dialogs, including `dnd5e-builder-flag` and the encounter
+   builder's dialog layout).
 3. **Catalogues** (after V6), then the **character builder** — see the roadmap.
-4. Retake the README screenshots in real Obsidian once the look is final (after V6, or per view).
+4. Retake the README screenshots in real Obsidian once the look is final.
 5. Older open items as in the roadmap's "Next steps".
 
 ## State of the working tree
@@ -47,75 +46,33 @@ maintainer: keep them (update the tests) or revert them.
 ## Done this session
 
 - Design `docs/superpowers/specs/2026-11-20-visual-refactoring-design.md` with mockups in
-  `assets/`; plans `…-visual-v1-blocks-statblock.md`, `…-visual-v2-battle-encounter.md`.
-- V1 (accepted): `src/obsidian/ui/blocks.ts`, `src/dice/action-row.ts`, `statblock-parts.ts`,
-  `styles/statblock.css`; fixes from the final review (Markdown italics, tools over the row).
-- V2: `battle-view.ts` (`renderCard` in named parts, tiles, pills, section heads),
-  `encounter-builder.ts` (`drawPreview` in budget, meter, rating), `styles/battle.css`,
-  `styles/encounter-builder.css`, short tile labels.
-- DECISIONS "Visual refactoring: style C" and "… V2"; CHANGELOG Unreleased; ROADMAP.
+  `assets/`; plans `…-visual-v1-blocks-statblock.md`, `…-visual-v2-battle-encounter.md`,
+  `…-visual-v3-factions.md`.
+- V1: `src/obsidian/ui/blocks.ts`, `src/dice/action-row.ts`, `statblock-parts.ts`.
+- V2: `battle-view.ts` (`renderCard` in named parts), `encounter-builder.ts`; review fixes for
+  Obsidian's button styles (`ee8f6cf`).
+- V3: `card-render.ts` (tiles), `tension-view.ts`, `warnings-modal.ts`; section titles share the
+  section head; `styles/faction-card.css`, `tensions.css`, `warnings.css`.
+- DECISIONS "Visual refactoring: style C", "… V2", "… V3"; CHANGELOG Unreleased; ROADMAP.
 
 ## Half-finished — check in Obsidian
 
-V2, see "Where to continue" 1.
+V3, see "Where to continue" 1.
 
 ## Decisions taken this session
 
-In `plugins/dnd5e-bylokianer/DECISIONS.md`: "Visual refactoring: style C", "Visual refactoring V2:
-Battle tab and encounter builder". Agreed in the conversation and in the roadmap: the catalogue
-approach for all subclasses, spells and monsters. The V1 small things (Spellcasting row, `d` in
-German rows, row names as plain text) were accepted with V1 as they are.
+In `plugins/dnd5e-bylokianer/DECISIONS.md`: style C, V2, V3 (graph, faction view, matrix and
+popover deliberately unchanged). Agreed in the conversation and in the roadmap: the catalogue
+approach for all subclasses, spells and monsters.
 
 ## Open questions for the maintainer
 
-- V2's check in Obsidian.
+- V3's check in Obsidian.
 - The uncommitted example-vault changes: keep (tests updated) or revert.
-
-## Watch out
-
-- Verify with `pnpm check`; never chain verification and commit with `;`. Clean up before every
-  commit (CLAUDE.md).
-- Obsidian's `createEl` / `createSvg`: an array `cls` goes to `classList.add`, so every entry must be
-  a single token. The preview harness's DOM shim now behaves the same.
-- Prettier is enforced (`pnpm format`; the `pre-commit` hook and CI refuse otherwise). It is not
-  idempotent on inline code spanning two lines in Markdown — keep such spans on one line.
-- The Write tool and shell heredocs can turn a backslash-u escape (the BOM) into the literal
-  character; check with grep for the raw bytes after writing such code.
-- In a fresh clone run `git config core.hooksPath .githooks`.
-- TypeScript stays at 6.0.3 until typescript-eslint supports a newer version.
-- `test/world.example.test.ts` and the session package's tests treat the example vault as the
-  contract; notes broken on purpose live in `plugins/dnd5e-bylokianer/test/fixtures/vault`.
-- `eslint-plugin-obsidianmd` forbids disabling its rules; settings implement both `display()` and
-  `getSettingDefinitions()`.
-- UI checks live in `test/ui/` (happy-dom). Add a test there for every new view; extend
-  `test/ui/obsidian.ts` when a renderer imports more of `obsidian`. Screenshots still need a browser
-  (Playwright is preinstalled in cloud sessions).
-- No lookbehind in regular expressions (iOS before 16.4): the lint rule catches literals; write
-  `new RegExp` strings without one too (match the character before instead).
-- The Pages site has one page per plugin: `site/index.html` (overview), `site/<id>/index.html`
-  (dnd5e-bylokianer, daggerheart); all share `site/style.css`. Sections fade in by scroll
-  (`animation-timeline: view()`): render screenshots with reduced motion or they look empty.
-- Screenshots live in `plugins/<id>/screenshots/` (each plugin's README shows them); the Pages
-  workflow copies them to `site/assets/<id>/`, which is git-ignored. To preview the page locally,
-  copy them there first (`cp plugins/dnd5e-bylokianer/screenshots/* site/assets/dnd5e-bylokianer/`).
-- Styles are edited in `plugins/dnd5e-bylokianer/styles/`; `styles.css` is built (`pnpm build`) and
-  git-ignored. The screenshot harnesses link the built `styles.css`: build before rendering.
-- The phone-width screenshot harness for the Battle tab, the Dice tab and the encounter builder
-  lives in the scratchpad (`preview/tabs.ts`, `tabshot.cjs`, bundled with the UI test stub
-  `test/ui/obsidian.ts` as `obsidian`); its page defines Obsidian's size variables, without them
-  spacing looks wrong.
-- Python on Windows writes CRLF in text mode: open files with `newline=''` (or run `pnpm format`
-  afterwards), else Prettier flags them.
-- The stat block screenshot harness is in the session scratchpad only (`preview/statblocks.ts`,
-  `page.html`, bundled with `node_modules/.bin/esbuild … --alias:obsidian=./test/ui/obsidian.ts
---alias:@p=. --alias:@v=../../examples/vault --loader:.md=text`, shot with headless Chrome
-  `--screenshot`, a separate `--user-data-dir` per shot). Headless Chrome lays out narrow windows
-  wider than asked: set the stage's width in the page instead (`&w=328`).
-- `.impeccable/` (a design-hook cache) is git- and prettier-ignored.
 
 ## Verification
 
-With the example vault as committed: `pnpm check` exit 0, plugin 426/426 and session 15/15 tests,
+With the example vault as committed: `pnpm check` exit 0, plugin 428/428 and session 15/15 tests,
 lint 0 errors; the warnings are the known complexity list, now without `renderStatblock`, the
 Battle tab's `renderCard` and the encounter builder's `drawPreview` (the `drawPreview` still listed
 is the New NPC dialog's), plus four sentence-case warnings in tests. Screenshots: stat blocks (900

@@ -864,3 +864,19 @@ encounter builder's summary card (plan `docs/superpowers/plans/2026-11-20-visual
   until V6.
 
 Left out: a combatant's portrait, colour-coded initiative numbers.
+
+## 2026-11-20 · Visual refactoring V3: faction views
+
+V2 accepted by the maintainer ("weiter"). V3 applies style C to the faction card, the tension
+panel and the warnings dialog (plan `docs/superpowers/plans/2026-11-20-visual-v3-factions.md`).
+
+- A faction card's power, allies and enemies are tiles; the power tile keeps its five pips (a click
+  still writes `power`) and `data-focus="power"`. Allies and enemies count the public relations
+  above and below 0. A character's card has no tiles: it keeps its short stats under the name.
+- Section titles (card sections, the collapsible toggles, the tension rules, the warning groups)
+  are section heads; relation rows and tension findings are rows on `--background-secondary`.
+- **Unchanged:** the world graph and the faction view (SVG drawings with their own language, D38),
+  the matrix (its cells already are tinted tiles) and the value popover (a slider and one line; a
+  tile would only make it taller).
+
+Left out: a tile for members or for the number of secret relations.

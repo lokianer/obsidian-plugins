@@ -21,6 +21,12 @@ All notable changes to this plugin are documented here. The format follows
   one column below 560 px of its own width (a container query; before, the window's 700 px). The
   encounter builder's card shows budget, spent and what is left (or over) as tiles and the
   difficulty as a pill. Tile labels are short (HP, Temp, AC, Init; TP, Temp., RK, Init.).
+- **Faction views in style C** (phase V3): a faction card shows its power (with the pips, still
+  clickable), its allies and its enemies (public relations above and below 0) as tiles; Relations,
+  Secret relations and Other fields as section heads; relation rows on their own background. The
+  tension panel shows the mode as a pill, each rule under a section head and each finding as a
+  row; the warnings dialog its numbers as tiles, its groups under section heads and the subjects
+  as pills. The graph, the faction view, the matrix and the value popover are unchanged.
 
 ## [0.1.0] - 2026-10-26
 

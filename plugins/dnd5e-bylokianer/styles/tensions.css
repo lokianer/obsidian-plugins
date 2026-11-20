@@ -1,4 +1,4 @@
-/* The tension panel. */
+/* The tension panel: the mode as a pill, each rule under a section head, findings as rows. */
 
 .dnd5e-tensions-head {
   margin-bottom: var(--size-4-2);
@@ -8,18 +8,16 @@
   margin-top: var(--size-4-4);
 }
 
-.dnd5e-tensions-group > .dnd5e-card-section-title {
-  margin-bottom: var(--size-4-1);
+.dnd5e-tensions-group > .dnd5e-section-head {
+  margin-top: 0;
 }
 
 .dnd5e-tensions-line {
-  padding: var(--size-4-2) 0;
-  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: var(--size-4-1);
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
   line-height: 1.6;
-}
-
-.dnd5e-tensions-line:last-child {
-  border-bottom: none;
 }
 
 .dnd5e-tensions-name {

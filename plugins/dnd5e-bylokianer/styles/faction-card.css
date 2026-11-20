@@ -15,7 +15,7 @@
   line-height: 1.5;
 }
 
-/* Head: kind and place, then the name with power on the right. */
+/* Head: kind and place, the name, then a faction's power, allies and enemies as tiles. */
 
 .dnd5e-card-meta {
   display: flex;
@@ -70,16 +70,15 @@
   background: var(--background-modifier-hover);
 }
 
-.dnd5e-card-power {
-  display: flex;
-  align-items: center;
-  gap: var(--size-4-2);
-  color: var(--text-muted);
+.dnd5e-card-head > .dnd5e-tiles {
+  margin-top: var(--size-4-3);
 }
 
 .dnd5e-card-pips {
   display: flex;
+  justify-content: center;
   gap: 3px;
+  margin: 2px 0 var(--size-4-1);
 }
 
 .dnd5e-card .dnd5e-card-pip {
@@ -102,11 +101,6 @@
   background: var(--interactive-accent);
 }
 
-.dnd5e-card-number {
-  min-width: 1ch;
-  font-variant-numeric: tabular-nums;
-}
-
 /* Sections: relations open, secret relations and other fields collapsible. */
 
 .dnd5e-card-section,
@@ -114,21 +108,26 @@
   margin-top: var(--size-4-3);
 }
 
-.dnd5e-card-section > .dnd5e-card-section-title {
-  padding: 0 var(--size-4-1) var(--size-4-1);
+.dnd5e-card-section > .dnd5e-section-head {
+  margin-top: 0;
 }
 
+/* A collapsible's toggle is a section head that is a button: Obsidian's button look removed. */
 .dnd5e-card .dnd5e-card-section-title.is-toggle {
   display: flex;
   align-items: center;
   gap: var(--size-4-1);
   width: 100%;
   height: auto;
-  padding: var(--size-4-1);
-  border: none;
-  border-radius: var(--radius-s);
+  margin: 0;
+  padding: var(--size-4-1) var(--size-4-1) var(--size-4-1) 0;
+  border-width: 0 0 1px;
+  border-style: solid;
+  border-color: var(--background-modifier-border);
+  border-radius: 0;
   background: transparent;
   box-shadow: none;
+  color: var(--text-accent);
   font-size: 16px;
   text-align: left;
   cursor: pointer;
@@ -136,7 +135,6 @@
 
 .dnd5e-card .dnd5e-card-section-title.is-toggle:hover {
   background: var(--background-modifier-hover);
-  color: var(--text-normal);
 }
 
 .dnd5e-card-section-detail {
@@ -144,7 +142,9 @@
   margin-left: var(--size-4-2);
   color: var(--text-faint);
   font-weight: var(--font-normal);
+  letter-spacing: normal;
   text-overflow: ellipsis;
+  text-transform: none;
   white-space: nowrap;
 }
 
@@ -161,8 +161,10 @@
 /* Relation rows. */
 
 .dnd5e-card-row {
+  margin-bottom: var(--size-4-1);
   padding: var(--size-4-1) var(--size-4-2);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
 }
 
 .dnd5e-card-row:hover,

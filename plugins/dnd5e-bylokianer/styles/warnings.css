@@ -1,4 +1,5 @@
-/* The faction warnings modal. */
+/* The faction warnings modal: the numbers as tiles, each note a box with its groups under
+   section heads, the subjects as pills. */
 
 .dnd5e-warnings-modal {
   width: min(640px, 92vw);
@@ -9,29 +10,13 @@
 }
 
 .dnd5e-warnings-stats {
-  display: flex;
-  gap: var(--size-4-2);
   margin-bottom: var(--size-4-4);
 }
 
-.dnd5e-warnings-stat {
-  flex: 1;
-  padding: var(--size-4-2) var(--size-4-3);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
-}
-
-.dnd5e-warnings-stat-value {
-  font-size: 1.5em;
-  font-weight: var(--font-bold);
-  line-height: 1.2;
-}
-
-.dnd5e-warnings-stat.is-alert .dnd5e-warnings-stat-value {
+.dnd5e-warnings-stats .dnd5e-tile.is-alert .dnd5e-tile-value {
   color: var(--text-warning);
 }
 
-.dnd5e-warnings-stat-label,
 .dnd5e-warnings-file,
 .dnd5e-warnings-message,
 .dnd5e-warnings-empty {
@@ -65,8 +50,7 @@
 
 .dnd5e-warnings-badge {
   min-width: 1.6em;
-  padding: 0 var(--size-4-2);
-  border-radius: 999px;
+  margin: 0;
   background: color-mix(in srgb, var(--text-warning) 18%, transparent);
   color: var(--text-warning);
   font-weight: var(--font-semibold);
@@ -74,9 +58,7 @@
 }
 
 .dnd5e-warnings-group {
-  padding: var(--size-4-2) var(--size-4-3) 0;
-  color: var(--text-muted);
-  font-weight: var(--font-semibold);
+  margin: var(--size-4-2) var(--size-4-3) var(--size-4-1);
 }
 
 .dnd5e-warnings-row {
@@ -115,10 +97,9 @@
 }
 
 .dnd5e-warnings-chip {
-  padding: 0 var(--size-4-1);
-  border-radius: var(--radius-s);
-  background: var(--background-modifier-hover);
-  font-family: var(--font-monospace);
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .dnd5e-warnings-secret {

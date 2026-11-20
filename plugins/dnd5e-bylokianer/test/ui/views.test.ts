@@ -72,6 +72,7 @@ import { ValuePopover } from '../../src/obsidian/popover';
 import { linkEntryDice } from '../../src/obsidian/statblock-dice';
 import { renderFolded, renderInvalid, renderStatblock } from '../../src/obsidian/statblock-view';
 import { TensionView } from '../../src/obsidian/tension-view';
+import { WarningsModal } from '../../src/obsidian/warnings-modal';
 import type { WorldCache } from '../../src/obsidian/world-cache';
 import { WorldGraphSvg } from '../../src/obsidian/world-graph-svg';
 import { renderMatrix } from '../../src/obsidian/world-matrix';
@@ -173,6 +174,22 @@ describe('faction card', () => {
       'WIS+1',
       'CHA+2',
     ]);
+  });
+
+  it('shows a faction’s power, allies and enemies as tiles, the power with its pips', () => {
+    render(`${ORDER}/factions.md`);
+    expect(texts(root, '.dnd5e-card .dnd5e-tile-label')).toEqual(['Power', 'Allies', 'Enemies']);
+    expect(texts(root, '.dnd5e-card .dnd5e-tile-value')).toEqual(['4', '1', '1']);
+    const power = root.querySelector('.dnd5e-tile.dnd5e-card-power');
+    expect(power?.getAttribute('data-focus')).toBe('power');
+    expect(power?.querySelectorAll('.dnd5e-card-pip').length).toBe(5);
+    expect(power?.querySelectorAll('.dnd5e-card-pip.is-on').length).toBe(4);
+    expect(
+      root.querySelector('.dnd5e-card-section-title')?.classList.contains('dnd5e-section-head'),
+    ).toBe(true);
+    root.empty();
+    render(`${COURT}/Sable.md`);
+    expect(root.querySelector('.dnd5e-card .dnd5e-tiles')).toBeNull();
   });
 
   it('keeps a character’s secret section closed', () => {
@@ -655,6 +672,39 @@ describe('tension panel', () => {
     await view.onOpen();
     expect(root.querySelectorAll('.dnd5e-tensions-line').length).toBeGreaterThan(0);
     expect(texts(root, '.dnd5e-tensions-name')).toContain('Mira Voss');
+    expect(root.querySelector('.dnd5e-tensions-head .dnd5e-pill')?.textContent).toBe('Public');
+    expect(
+      [...root.querySelectorAll('.dnd5e-tensions-group > .dnd5e-card-section-title')].every((h) =>
+        h.classList.contains('dnd5e-section-head'),
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('warnings dialog', () => {
+  it('shows the numbers as tiles, groups under section heads, subjects as pills', () => {
+    const modal = new WarningsModal(app, world, t, () => {});
+    root.appendChild(modal.modalEl);
+    modal.onOpen();
+    const el = modal.contentEl;
+    const entities = [...world.entities.values()];
+    expect(texts(el, '.dnd5e-warnings-stats .dnd5e-tile-value')).toEqual([
+      String(entities.filter((e) => e.kind === 'faction' && !e.pseudo).length),
+      String(entities.filter((e) => e.kind === 'character').length),
+      String(world.warnings.length),
+    ]);
+    expect(texts(el, '.dnd5e-warnings-stats .dnd5e-tile-label')).toEqual([
+      'factions',
+      'characters',
+      'warnings',
+    ]);
+    expect(el.querySelector('.dnd5e-warnings-stats .dnd5e-tile.is-alert')).not.toBeNull();
+    const groups = [...el.querySelectorAll('.dnd5e-warnings-group')];
+    expect(groups.length).toBeGreaterThan(0);
+    expect(groups.every((g) => g.classList.contains('dnd5e-section-head'))).toBe(true);
+    const chips = [...el.querySelectorAll('.dnd5e-warnings-chip')];
+    expect(chips.length).toBeGreaterThan(0);
+    expect(chips.every((c) => c.classList.contains('dnd5e-pill'))).toBe(true);
   });
 });
 

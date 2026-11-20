@@ -10,6 +10,7 @@ import type { EditTarget } from '../factions/model';
 import type { StringKey, T } from '../i18n/strings';
 import type { ModeStore } from './mode-store';
 import type { WorldCache } from './world-cache';
+import { pill, sectionHead } from './ui/blocks';
 
 export const TENSION_VIEW = 'dnd5e-tensions';
 
@@ -76,10 +77,7 @@ export class TensionView extends ItemView {
     const mode = this.deps.modes.mode;
     this.contentEl.empty();
     const head = this.contentEl.createDiv({ cls: 'dnd5e-tensions-head' });
-    head.createSpan({
-      cls: 'dnd5e-card-tag',
-      text: t(mode === 'true' ? 'world.true' : 'world.public'),
-    });
+    pill(head, t(mode === 'true' ? 'world.true' : 'world.public'), mode === 'true');
     if (world.campaign === null) {
       this.contentEl.createDiv({ cls: 'dnd5e-tensions-empty', text: t('modal.noCampaign') });
       return;
@@ -93,7 +91,7 @@ export class TensionView extends ItemView {
       const list = found.filter((f) => f.rule === rule);
       if (list.length === 0) continue;
       const group = this.contentEl.createDiv({ cls: 'dnd5e-tensions-group' });
-      group.createDiv({ cls: 'dnd5e-card-section-title', text: t(`tension.${rule}` as StringKey) });
+      sectionHead(group, t(`tension.${rule}` as StringKey)).addClass('dnd5e-card-section-title');
       for (const tension of list) {
         this.renderLine(group.createDiv({ cls: 'dnd5e-tensions-line' }), world, pieces(tension, t));
       }

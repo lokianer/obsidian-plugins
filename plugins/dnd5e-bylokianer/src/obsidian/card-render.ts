@@ -24,6 +24,7 @@ import { renderShortStats } from './statblock-view';
 import { TargetSuggest } from './target-suggest';
 import type { ValueChange } from './session-log';
 import { editInSource, undoableWrite, writeOp } from './write';
+import { sectionHead, tile, tiles } from './ui/blocks';
 
 /** What survives a rebuild of the same card: which sections are open. */
 export interface CardUiState {
@@ -186,9 +187,7 @@ export class CardRenderer extends Component {
       name.addEventListener('click', edit);
       name.addEventListener('keydown', (e) => e.key === 'Enter' && edit());
     }
-    if (card.power !== null) {
-      this.renderPower(title, head, card.power);
-    }
+    if (card.kind === 'faction') this.renderTiles(head);
     if (this.ctx.statblock !== null) renderShortStats(head, this.ctx.statblock, this.t);
   }
 
@@ -198,14 +197,26 @@ export class CardRenderer extends Component {
     return p.name;
   }
 
+  /** A faction's power (with its pips), allies and enemies as tiles. */
+  private renderTiles(head: HTMLElement): void {
+    const { card } = this.ctx;
+    const grid = tiles(head);
+    if (card.power !== null) this.renderPower(grid, head, card.power);
+    const values = card.sections.relations.rows.map((r) => r.value ?? 0);
+    tile(grid, String(values.filter((v) => v > 0).length), this.t('card.allies'));
+    tile(grid, String(values.filter((v) => v < 0).length), this.t('card.enemies'));
+  }
+
   private renderPower(
-    parent: HTMLElement,
+    grid: HTMLElement,
     warningsParent: HTMLElement,
     power: NonNullable<CardModel['power']>,
   ): void {
-    const box = parent.createDiv({ cls: 'dnd5e-card-power', attr: { 'data-focus': 'power' } });
-    box.createSpan({ cls: 'dnd5e-card-label', text: this.t('card.power') });
-    const pips = box.createDiv({ cls: 'dnd5e-card-pips' });
+    const box = tile(grid, String(power.value), this.t('card.power')).el;
+    box.addClass('dnd5e-card-power');
+    box.setAttr('data-focus', 'power');
+    const pips = createDiv({ cls: 'dnd5e-card-pips' });
+    box.insertBefore(pips, box.querySelector('.dnd5e-tile-label'));
     for (let i = 1; i <= 5; i++) {
       const pip = pips.createEl('button', {
         cls: i <= power.value ? 'dnd5e-card-pip is-on' : 'dnd5e-card-pip',
@@ -217,7 +228,6 @@ export class CardRenderer extends Component {
         }
       });
     }
-    box.createSpan({ cls: 'dnd5e-card-number', text: String(power.value) });
     for (const warning of power.warnings) {
       this.renderWarning(warningsParent, warning, {
         label: this.t('card.write', { value: power.value }),
@@ -255,7 +265,7 @@ export class CardRenderer extends Component {
       attr: { 'data-field': section.field },
     });
     if (withTitle) {
-      box.createDiv({ cls: 'dnd5e-card-section-title', text: this.t('card.relations') });
+      sectionHead(box, this.t('card.relations')).addClass('dnd5e-card-section-title');
     }
     for (const warning of section.warnings) {
       this.renderWarning(box, warning);
@@ -577,7 +587,7 @@ export class CardRenderer extends Component {
   ): void {
     const box = parent.createDiv({ cls: `dnd5e-card-collapsible ${cls}`.trim() });
     const head = box.createEl('button', {
-      cls: 'dnd5e-card-section-title is-toggle',
+      cls: ['dnd5e-section-head', 'dnd5e-card-section-title', 'is-toggle'],
       attr: { 'aria-expanded': String(open) },
     });
     setIcon(head.createSpan({ cls: 'dnd5e-card-icon' }), open ? 'chevron-down' : 'chevron-right');

@@ -42,12 +42,6 @@
   height: 16px;
 }
 
-/* A plain heading for a group of things. */
-.dnd5e-card-section-title {
-  color: var(--text-muted);
-  font-weight: var(--font-semibold);
-}
-
 /* A small neutral pill: "unknown", "secret", the mode in the tension panel. */
 .dnd5e-card-tag {
   padding: 0 var(--size-4-2);
