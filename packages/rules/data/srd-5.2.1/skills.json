@@ -3,126 +3,144 @@
 		"id": "acrobatics",
 		"ability": "dex",
 		"name": {
-			"en": "Acrobatics"
+			"en": "Acrobatics",
+			"de": "Akrobatik"
 		}
 	},
 	{
 		"id": "animal-handling",
 		"ability": "wis",
 		"name": {
-			"en": "Animal Handling"
+			"en": "Animal Handling",
+			"de": "Mit Tieren umgehen"
 		}
 	},
 	{
 		"id": "arcana",
 		"ability": "int",
 		"name": {
-			"en": "Arcana"
+			"en": "Arcana",
+			"de": "Arkane Kunde"
 		}
 	},
 	{
 		"id": "athletics",
 		"ability": "str",
 		"name": {
-			"en": "Athletics"
+			"en": "Athletics",
+			"de": "Athletik"
 		}
 	},
 	{
 		"id": "deception",
 		"ability": "cha",
 		"name": {
-			"en": "Deception"
+			"en": "Deception",
+			"de": "Täuschen"
 		}
 	},
 	{
 		"id": "history",
 		"ability": "int",
 		"name": {
-			"en": "History"
+			"en": "History",
+			"de": "Geschichte"
 		}
 	},
 	{
 		"id": "insight",
 		"ability": "wis",
 		"name": {
-			"en": "Insight"
+			"en": "Insight",
+			"de": "Motiv erkennen"
 		}
 	},
 	{
 		"id": "intimidation",
 		"ability": "cha",
 		"name": {
-			"en": "Intimidation"
+			"en": "Intimidation",
+			"de": "Einschüchtern"
 		}
 	},
 	{
 		"id": "investigation",
 		"ability": "int",
 		"name": {
-			"en": "Investigation"
+			"en": "Investigation",
+			"de": "Nachforschungen"
 		}
 	},
 	{
 		"id": "medicine",
 		"ability": "wis",
 		"name": {
-			"en": "Medicine"
+			"en": "Medicine",
+			"de": "Heilkunde"
 		}
 	},
 	{
 		"id": "nature",
 		"ability": "int",
 		"name": {
-			"en": "Nature"
+			"en": "Nature",
+			"de": "Naturkunde"
 		}
 	},
 	{
 		"id": "perception",
 		"ability": "wis",
 		"name": {
-			"en": "Perception"
+			"en": "Perception",
+			"de": "Wahrnehmung"
 		}
 	},
 	{
 		"id": "performance",
 		"ability": "cha",
 		"name": {
-			"en": "Performance"
+			"en": "Performance",
+			"de": "Auftreten"
 		}
 	},
 	{
 		"id": "persuasion",
 		"ability": "cha",
 		"name": {
-			"en": "Persuasion"
+			"en": "Persuasion",
+			"de": "Überzeugen"
 		}
 	},
 	{
 		"id": "religion",
 		"ability": "int",
 		"name": {
-			"en": "Religion"
+			"en": "Religion",
+			"de": "Religion"
 		}
 	},
 	{
 		"id": "sleight-of-hand",
 		"ability": "dex",
 		"name": {
-			"en": "Sleight of Hand"
+			"en": "Sleight of Hand",
+			"de": "Fingerfertigkeit"
 		}
 	},
 	{
 		"id": "stealth",
 		"ability": "dex",
 		"name": {
-			"en": "Stealth"
+			"en": "Stealth",
+			"de": "Heimlichkeit"
 		}
 	},
 	{
 		"id": "survival",
 		"ability": "wis",
 		"name": {
-			"en": "Survival"
+			"en": "Survival",
+			"de": "Überlebenskunst"
 		}
 	}
 ]

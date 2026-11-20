@@ -3,7 +3,8 @@
 		"id": "acolyte",
 		"rules": "2024",
 		"name": {
-			"en": "Acolyte"
+			"en": "Acolyte",
+			"de": "Akolyth"
 		},
 		"abilities": ["int", "wis", "cha"],
 		"feat": "magic-initiate",
@@ -11,18 +12,21 @@
 			{
 				"id": "acolyte-ability-scores",
 				"name": {
-					"en": "Ability Scores"
+					"en": "Ability Scores",
+					"de": "Attributswerte"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1.",
+					"de": "Erhöhe einen davon um 2 und einen anderen um 1, oder alle drei um 1."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 3,
 						"gives": "ability",
@@ -36,11 +40,13 @@
 			{
 				"id": "acolyte-proficiencies",
 				"name": {
-					"en": "Proficiencies"
+					"en": "Proficiencies",
+					"de": "Übung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Skill Proficiencies: Insight and Religion\n\nTool Proficiency: Calligrapher's Supplies"
+					"en": "Skill Proficiencies: Insight and Religion\n\nTool Proficiency: Calligrapher's Supplies",
+					"de": "Fertigkeiten, in denen du geübt bist: Motiv erkennen und Religion\n\nÜbung im Umgang mit Werkzeug: Kalligrafiewerkzeug"
 				},
 				"grants": [
 					{
@@ -59,11 +65,13 @@
 			{
 				"id": "acolyte-equipment",
 				"name": {
-					"en": "Equipment"
+					"en": "Equipment",
+					"de": "Ausrüstung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Choose A or B: (A) Calligrapher's Supplies, Book (prayers), Holy Symbol, Parchment (10 sheets), Robe, 8 GP; or (B) 50 GP"
+					"en": "Choose A or B: (A) Calligrapher's Supplies, Book (prayers), Holy Symbol, Parchment (10 sheets), Robe, 8 GP; or (B) 50 GP",
+					"de": "Wähle A oder B aus: (A) Kalligrafiewerkzeug, Buch (Gebete), Heiliges Symbol, Pergament (10 Blätter), Robe und 8 GM oder (B) 50 GM"
 				},
 				"grants": [],
 				"choices": []
@@ -74,7 +82,8 @@
 		"id": "criminal",
 		"rules": "2024",
 		"name": {
-			"en": "Criminal"
+			"en": "Criminal",
+			"de": "Krimineller"
 		},
 		"abilities": ["dex", "con", "int"],
 		"feat": "alert",
@@ -82,18 +91,21 @@
 			{
 				"id": "criminal-ability-scores",
 				"name": {
-					"en": "Ability Scores"
+					"en": "Ability Scores",
+					"de": "Attributswerte"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1.",
+					"de": "Erhöhe einen davon um 2 und einen anderen um 1, oder alle drei um 1."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 3,
 						"gives": "ability",
@@ -107,11 +119,13 @@
 			{
 				"id": "criminal-proficiencies",
 				"name": {
-					"en": "Proficiencies"
+					"en": "Proficiencies",
+					"de": "Übung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Skill Proficiencies: Sleight of Hand and Stealth\n\nTool Proficiency: Thieves' Tools"
+					"en": "Skill Proficiencies: Sleight of Hand and Stealth\n\nTool Proficiency: Thieves' Tools",
+					"de": "Fertigkeiten, in denen du geübt bist: Fingerfertigkeit und Heimlichkeit\n\nÜbung im Umgang mit Werkzeug: Diebeswerkzeug"
 				},
 				"grants": [
 					{
@@ -130,11 +144,13 @@
 			{
 				"id": "criminal-equipment",
 				"name": {
-					"en": "Equipment"
+					"en": "Equipment",
+					"de": "Ausrüstung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Choose A or B: (A) 2 Daggers, Thieves' Tools, Crowbar, 2 Pouches, Traveler's Clothes, 16 GP; or (B) 50 GP"
+					"en": "Choose A or B: (A) 2 Daggers, Thieves' Tools, Crowbar, 2 Pouches, Traveler's Clothes, 16 GP; or (B) 50 GP",
+					"de": "Wähle A oder B aus: (A) Zwei Dolche, Diebeswerkzeug, Brechstange, zwei Beutel, Reisekleidung und 16 GM oder (B) 50 GM"
 				},
 				"grants": [],
 				"choices": []
@@ -145,7 +161,8 @@
 		"id": "sage",
 		"rules": "2024",
 		"name": {
-			"en": "Sage"
+			"en": "Sage",
+			"de": "Weiser"
 		},
 		"abilities": ["con", "int", "wis"],
 		"feat": "magic-initiate",
@@ -153,18 +170,21 @@
 			{
 				"id": "sage-ability-scores",
 				"name": {
-					"en": "Ability Scores"
+					"en": "Ability Scores",
+					"de": "Attributswerte"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1.",
+					"de": "Erhöhe einen davon um 2 und einen anderen um 1, oder alle drei um 1."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 3,
 						"gives": "ability",
@@ -178,11 +198,13 @@
 			{
 				"id": "sage-proficiencies",
 				"name": {
-					"en": "Proficiencies"
+					"en": "Proficiencies",
+					"de": "Übung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Skill Proficiencies: Arcana and History\n\nTool Proficiency: Calligrapher's Supplies"
+					"en": "Skill Proficiencies: Arcana and History\n\nTool Proficiency: Calligrapher's Supplies",
+					"de": "Fertigkeiten, in denen du geübt bist: Arkane Kunde und Geschichte\n\nÜbung im Umgang mit Werkzeug: Kalligrafiewerkzeug"
 				},
 				"grants": [
 					{
@@ -201,11 +223,13 @@
 			{
 				"id": "sage-equipment",
 				"name": {
-					"en": "Equipment"
+					"en": "Equipment",
+					"de": "Ausrüstung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Choose A or B: (A) Quarterstaff, Calligrapher's Supplies, Book (history), Parchment (8 sheets), Robe, 8 GP; or (B) 50 GP"
+					"en": "Choose A or B: (A) Quarterstaff, Calligrapher's Supplies, Book (history), Parchment (8 sheets), Robe, 8 GP; or (B) 50 GP",
+					"de": "Wähle A oder B aus: (A) Kampfstab, Kalligrafiewerkzeug, Buch (Geschichte), Pergament (8 Blätter), Robe und 8 GM oder (B) 50 GM"
 				},
 				"grants": [],
 				"choices": []
@@ -216,7 +240,8 @@
 		"id": "soldier",
 		"rules": "2024",
 		"name": {
-			"en": "Soldier"
+			"en": "Soldier",
+			"de": "Soldat"
 		},
 		"abilities": ["str", "dex", "con"],
 		"feat": "savage-attacker",
@@ -224,18 +249,21 @@
 			{
 				"id": "soldier-ability-scores",
 				"name": {
-					"en": "Ability Scores"
+					"en": "Ability Scores",
+					"de": "Attributswerte"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1."
+					"en": "Increase one of these scores by 2 and another by 1, or increase all three by 1.",
+					"de": "Erhöhe einen davon um 2 und einen anderen um 1, oder alle drei um 1."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 3,
 						"gives": "ability",
@@ -249,11 +277,13 @@
 			{
 				"id": "soldier-proficiencies",
 				"name": {
-					"en": "Proficiencies"
+					"en": "Proficiencies",
+					"de": "Übung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Skill Proficiencies: Athletics and Intimidation\n\nTool Proficiency: Choose one kind of Gaming Set (see \"Equipment\")"
+					"en": "Skill Proficiencies: Athletics and Intimidation\n\nTool Proficiency: Choose one kind of Gaming Set (see \"Equipment\")",
+					"de": "Fertigkeiten, in denen du geübt bist: Athletik und Einschüchtern\n\nÜbung im Umgang mit Werkzeug: Wähle eine Art von Spielset aus (siehe „Ausrüstung“)"
 				},
 				"grants": [
 					{
@@ -266,7 +296,8 @@
 					{
 						"id": "tool",
 						"name": {
-							"en": "Gaming Set"
+							"en": "Gaming Set",
+							"de": "Spielset"
 						},
 						"count": 1,
 						"gives": "tool",
@@ -284,11 +315,13 @@
 			{
 				"id": "soldier-equipment",
 				"name": {
-					"en": "Equipment"
+					"en": "Equipment",
+					"de": "Ausrüstung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Choose A or B: (A) Spear, Shortbow, 20 Arrows, Gaming Set (same as above), Healer's Kit, Quiver, Traveler's Clothes, 14 GP; or (B) 50 GP"
+					"en": "Choose A or B: (A) Spear, Shortbow, 20 Arrows, Gaming Set (same as above), Healer's Kit, Quiver, Traveler's Clothes, 14 GP; or (B) 50 GP",
+					"de": "Wähle A oder B aus: (A) Speer, Kurzbogen, 20 Pfeile, Spielset (wie oben), Heilerausrüstung, Köcher, Reisekleidung und 14 GM oder (B) 50 GM"
 				},
 				"grants": [],
 				"choices": []

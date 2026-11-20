@@ -3,7 +3,8 @@
 		"id": "alert",
 		"rules": "2024",
 		"name": {
-			"en": "Alert"
+			"en": "Alert",
+			"de": "Wachsam"
 		},
 		"category": "origin",
 		"repeatable": false,
@@ -11,11 +12,13 @@
 			{
 				"id": "alert-initiative-proficiency",
 				"name": {
-					"en": "Initiative Proficiency"
+					"en": "Initiative Proficiency",
+					"de": "Initiative-Übung"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you roll Initiative, you can add your Proficiency Bonus to the roll."
+					"en": "When you roll Initiative, you can add your Proficiency Bonus to the roll.",
+					"de": "Wenn du die Initiative auswürfelst, kannst du dem Ergebnis deinen Übungsbonus hinzufügen."
 				},
 				"grants": [
 					{
@@ -30,11 +33,13 @@
 			{
 				"id": "alert-initiative-swap",
 				"name": {
-					"en": "Initiative Swap"
+					"en": "Initiative Swap",
+					"de": "Initiativetausch"
 				},
 				"level": 1,
 				"text": {
-					"en": "Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition."
+					"en": "Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.",
+					"de": "Sofort nach dem Auswürfeln der Initiative kannst du deine Initiative mit der eines bereitwilligen Verbündeten im selben Kampf tauschen. Der Tausch ist nicht möglich, wenn mindestens einer von euch beiden kampfunfähig ist."
 				},
 				"grants": [],
 				"choices": []
@@ -45,7 +50,8 @@
 		"id": "magic-initiate",
 		"rules": "2024",
 		"name": {
-			"en": "Magic Initiate"
+			"en": "Magic Initiate",
+			"de": "Eingeweihter der Magie"
 		},
 		"category": "origin",
 		"repeatable": true,
@@ -53,11 +59,13 @@
 			{
 				"id": "magic-initiate-two-cantrips",
 				"name": {
-					"en": "Two Cantrips"
+					"en": "Two Cantrips",
+					"de": "Zwei Zaubertricks"
 				},
 				"level": 1,
 				"text": {
-					"en": "You learn two cantrips of your choice from the Cleric, Druid, or Wizard spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat)."
+					"en": "You learn two cantrips of your choice from the Cleric, Druid, or Wizard spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for this feat's spells (choose when you select this feat).",
+					"de": "Du beherrschst zwei Zaubertricks deiner Wahl aus der Zauberliste des Druiden, des Klerikers oder des Magiers. Dein Attribut zum Wirken der Zauber dieses Talents ist Intelligenz, Weisheit oder Charisma (wähle aus, wenn du dieses Talent auswählst)."
 				},
 				"grants": [],
 				"choices": []
@@ -65,11 +73,13 @@
 			{
 				"id": "magic-initiate-level-1-spell",
 				"name": {
-					"en": "Level 1 Spell"
+					"en": "Level 1 Spell",
+					"de": "Zauber des 1. Grades"
 				},
 				"level": 1,
 				"text": {
-					"en": "Choose a level 1 spell from the same list you selected for this feat's cantrips. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have."
+					"en": "Choose a level 1 spell from the same list you selected for this feat's cantrips. You always have that spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have.",
+					"de": "Wähle einen Zauber des 1. Grades von der Liste aus, die du für die Zaubertricks dieses Talents ausgewählt hast. Du hast diesen Zauber stets vorbereitet. Du kannst ihn einmal wirken, ohne einen Zauberplatz zu verbrauchen. Diese Fähigkeit erhältst du nach einer langen Rast zurück. Du kannst den Zauber auch mit einem beliebigen verfügbaren Zauberplatz wirken."
 				},
 				"grants": [],
 				"choices": []
@@ -77,11 +87,13 @@
 			{
 				"id": "magic-initiate-spell-change",
 				"name": {
-					"en": "Spell Change"
+					"en": "Spell Change",
+					"de": "Zauberwechsel"
 				},
 				"level": 1,
 				"text": {
-					"en": "Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list."
+					"en": "Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.",
+					"de": "Wann immer du eine neue Stufe erhältst, kannst du einen der Zauber, die du für dieses Talent ausgewählt hast, durch einen anderen Zauber des gleichen Grades von der ausgewählten Zauberliste ersetzen."
 				},
 				"grants": [],
 				"choices": []
@@ -89,11 +101,13 @@
 			{
 				"id": "magic-initiate-repeatable",
 				"name": {
-					"en": "Repeatable"
+					"en": "Repeatable",
+					"de": "Kann wiederholt werden"
 				},
 				"level": 1,
 				"text": {
-					"en": "You can take this feat more than once, but you must choose a different spell list each time."
+					"en": "You can take this feat more than once, but you must choose a different spell list each time.",
+					"de": "Du kannst dieses Talent mehr als einmal verwenden, aber du musst jedes Mal eine andere Zauberliste auswählen."
 				},
 				"grants": [],
 				"choices": []
@@ -104,7 +118,8 @@
 		"id": "savage-attacker",
 		"rules": "2024",
 		"name": {
-			"en": "Savage Attacker"
+			"en": "Savage Attacker",
+			"de": "Wilder Angreifer"
 		},
 		"category": "origin",
 		"repeatable": false,
@@ -112,11 +127,13 @@
 			{
 				"id": "savage-attacker",
 				"name": {
-					"en": "Savage Attacker"
+					"en": "Savage Attacker",
+					"de": "Wilder Angreifer"
 				},
 				"level": 1,
 				"text": {
-					"en": "You've trained to deal particularly damaging strikes. Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll against the target."
+					"en": "You've trained to deal particularly damaging strikes. Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll against the target.",
+					"de": "Du bist darin ausgebildet, besonders schadensintensive Schläge auszuführen. Einmal pro Zug kannst du, wenn du ein Ziel mit einer Waffe triffst, zweimal mit den Schadenswürfeln der Waffe würfeln und dir eins der Ergebnisse aussuchen."
 				},
 				"grants": [],
 				"choices": []
@@ -127,7 +144,8 @@
 		"id": "skilled",
 		"rules": "2024",
 		"name": {
-			"en": "Skilled"
+			"en": "Skilled",
+			"de": "Begabt"
 		},
 		"category": "origin",
 		"repeatable": true,
@@ -135,11 +153,13 @@
 			{
 				"id": "skilled",
 				"name": {
-					"en": "Skilled"
+					"en": "Skilled",
+					"de": "Begabt"
 				},
 				"level": 1,
 				"text": {
-					"en": "You gain proficiency in any combination of three skills or tools of your choice.\n\nRepeatable. You can take this feat more than once."
+					"en": "You gain proficiency in any combination of three skills or tools of your choice.\n\nRepeatable. You can take this feat more than once.",
+					"de": "Du bist in drei Fertigkeiten oder Werkzeugen deiner Wahl in beliebiger Kombination geübt.\n\nKann wiederholt werden: Du kannst dieses Talent mehr als einmal verwenden."
 				},
 				"grants": [],
 				"choices": []
@@ -150,7 +170,8 @@
 		"id": "ability-score-improvement",
 		"rules": "2024",
 		"name": {
-			"en": "Ability Score Improvement"
+			"en": "Ability Score Improvement",
+			"de": "Attributswerterhöhung"
 		},
 		"category": "general",
 		"repeatable": true,
@@ -161,18 +182,21 @@
 			{
 				"id": "ability-score-improvement",
 				"name": {
-					"en": "Ability Score Improvement"
+					"en": "Ability Score Improvement",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one ability score of your choice by 2, or increase two ability scores of your choice by 1. This feat can't increase an ability score above 20.\n\nRepeatable. You can take this feat more than once."
+					"en": "Increase one ability score of your choice by 2, or increase two ability scores of your choice by 1. This feat can't increase an ability score above 20.\n\nRepeatable. You can take this feat more than once.",
+					"de": "Erhöhe einen Attributswert deiner Wahl um 2 Punkte oder zwei Attributswerte deiner Wahl um je 1 Punkt. Kein Attribut kann dadurch einen Wert von 20 überschreiten.\n\nKann wiederholt werden: Du kannst dieses Talent mehr als einmal verwenden."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 2,
 						"gives": "ability",
@@ -189,7 +213,8 @@
 		"id": "grappler",
 		"rules": "2024",
 		"name": {
-			"en": "Grappler"
+			"en": "Grappler",
+			"de": "Ringer"
 		},
 		"category": "general",
 		"repeatable": false,
@@ -200,18 +225,21 @@
 			{
 				"id": "grappler-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase your Strength or Dexterity score by 1, to a maximum of 20."
+					"en": "Increase your Strength or Dexterity score by 1, to a maximum of 20.",
+					"de": "Dein Stärke- oder dein Geschicklichkeitswert wird um 1 Punkt erhöht (auf höchstens 20)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -225,11 +253,13 @@
 			{
 				"id": "grappler-punch-and-grab",
 				"name": {
-					"en": "Punch and Grab"
+					"en": "Punch and Grab",
+					"de": "Zuschlagen und packen"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can use both the Damage and the Grapple option. You can use this benefit only once per turn."
+					"en": "When you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can use both the Damage and the Grapple option. You can use this benefit only once per turn.",
+					"de": "Wenn du eine Kreatur als Teil der Angriffsaktion in deinem Zug mit einem waffenlosen Angriff triffst, kannst du sowohl den Schaden bewirken als auch die Packen-Option verwenden. Du kannst diesen Vorzug nur einmal pro Zug anwenden."
 				},
 				"grants": [],
 				"choices": []
@@ -237,11 +267,13 @@
 			{
 				"id": "grappler-attack-advantage",
 				"name": {
-					"en": "Attack Advantage"
+					"en": "Attack Advantage",
+					"de": "Angriffsvorteil"
 				},
 				"level": 1,
 				"text": {
-					"en": "You have Advantage on attack rolls against a creature Grappled by you."
+					"en": "You have Advantage on attack rolls against a creature Grappled by you.",
+					"de": "Du bist bei Angriffswürfen gegen eine Kreatur, die du gepackt hältst, im Vorteil."
 				},
 				"grants": [],
 				"choices": []
@@ -249,11 +281,13 @@
 			{
 				"id": "grappler-fast-wrestler",
 				"name": {
-					"en": "Fast Wrestler"
+					"en": "Fast Wrestler",
+					"de": "Flinker Ringer"
 				},
 				"level": 1,
 				"text": {
-					"en": "You don't have to spend extra movement to move a creature Grappled by you if the creature is your size or smaller."
+					"en": "You don't have to spend extra movement to move a creature Grappled by you if the creature is your size or smaller.",
+					"de": "Du musst keine zusätzliche Bewegung verbrauchen, wenn du eine Kreatur bewegst, die du gepackt hältst, sofern die Kreatur höchstens so groß ist wie du."
 				},
 				"grants": [],
 				"choices": []
@@ -264,7 +298,8 @@
 		"id": "archery",
 		"rules": "2024",
 		"name": {
-			"en": "Archery"
+			"en": "Archery",
+			"de": "Bogenschießen"
 		},
 		"category": "fighting-style",
 		"repeatable": false,
@@ -272,11 +307,13 @@
 			{
 				"id": "archery",
 				"name": {
-					"en": "Archery"
+					"en": "Archery",
+					"de": "Bogenschießen"
 				},
 				"level": 1,
 				"text": {
-					"en": "You gain a +2 bonus to attack rolls you make with Ranged weapons."
+					"en": "You gain a +2 bonus to attack rolls you make with Ranged weapons.",
+					"de": "Du erhältst einen Bonus von +2 auf alle Angriffswürfe mit Fernkampfwaffen."
 				},
 				"grants": [
 					{
@@ -293,7 +330,8 @@
 		"id": "defense",
 		"rules": "2024",
 		"name": {
-			"en": "Defense"
+			"en": "Defense",
+			"de": "Verteidigung"
 		},
 		"category": "fighting-style",
 		"repeatable": false,
@@ -301,11 +339,13 @@
 			{
 				"id": "defense",
 				"name": {
-					"en": "Defense"
+					"en": "Defense",
+					"de": "Verteidigung"
 				},
 				"level": 1,
 				"text": {
-					"en": "While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class."
+					"en": "While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class.",
+					"de": "Wenn du leichte, mittelschwere oder schwere Rüstung trägst, erhältst du einen Bonus von +1 auf die Rüstungsklasse."
 				},
 				"grants": [
 					{
@@ -322,7 +362,8 @@
 		"id": "great-weapon-fighting",
 		"rules": "2024",
 		"name": {
-			"en": "Great Weapon Fighting"
+			"en": "Great Weapon Fighting",
+			"de": "Kampf mit großen Waffen"
 		},
 		"category": "fighting-style",
 		"repeatable": false,
@@ -330,11 +371,13 @@
 			{
 				"id": "great-weapon-fighting",
 				"name": {
-					"en": "Great Weapon Fighting"
+					"en": "Great Weapon Fighting",
+					"de": "Kampf mit großen Waffen"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you roll damage for an attack you make with a Melee weapon that you are holding with two hands, you can treat any 1 or 2 on a damage die as a 3. The weapon must have the Two-Handed or Versatile property to gain this benefit."
+					"en": "When you roll damage for an attack you make with a Melee weapon that you are holding with two hands, you can treat any 1 or 2 on a damage die as a 3. The weapon must have the Two-Handed or Versatile property to gain this benefit.",
+					"de": "Wenn du den Schaden eines Angriffs mit einer Nahkampfwaffe auswürfelst, die du mit beiden Händen hältst, kannst du alle Ergebnisse des Schadenswürfels von 1 oder 2 als 3 werten. Die Waffe muss die Eigenschaft Zweihändig oder Vielseitig besitzen, damit du diesen Vorzug erhältst."
 				},
 				"grants": [],
 				"choices": []
@@ -345,7 +388,8 @@
 		"id": "two-weapon-fighting",
 		"rules": "2024",
 		"name": {
-			"en": "Two-Weapon Fighting"
+			"en": "Two-Weapon Fighting",
+			"de": "Zwei-Waffen-Kampf"
 		},
 		"category": "fighting-style",
 		"repeatable": false,
@@ -353,11 +397,13 @@
 			{
 				"id": "two-weapon-fighting",
 				"name": {
-					"en": "Two-Weapon Fighting"
+					"en": "Two-Weapon Fighting",
+					"de": "Zwei-Waffen-Kampf"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you make an extra attack as a result of using a weapon that has the Light property, you can add your ability modifier to the damage of that attack if you aren't already adding it to the damage."
+					"en": "When you make an extra attack as a result of using a weapon that has the Light property, you can add your ability modifier to the damage of that attack if you aren't already adding it to the damage.",
+					"de": "Wenn du als Ergebnis der Eigenschaft Leicht einer Waffe einen zusätzlichen Angriff ausführst, kannst du dem Angriffsschaden deinen Attributsmodifikator hinzufügen, sofern du dies nicht ohnehin schon tust."
 				},
 				"grants": [],
 				"choices": []
@@ -368,7 +414,8 @@
 		"id": "boon-of-combat-prowess",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of Combat Prowess"
+			"en": "Boon of Combat Prowess",
+			"de": "Gabe der Kampffertigkeit"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -379,18 +426,21 @@
 			{
 				"id": "boon-of-combat-prowess-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one ability score of your choice by 1, to a maximum of 30."
+					"en": "Increase one ability score of your choice by 1, to a maximum of 30.",
+					"de": "Ein Attributswert deiner Wahl wird um 1 Punkt erhöht (auf höchstens 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -404,11 +454,13 @@
 			{
 				"id": "boon-of-combat-prowess-peerless-aim",
 				"name": {
-					"en": "Peerless Aim"
+					"en": "Peerless Aim",
+					"de": "Unübertroffenes Zielen"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you miss with an attack roll, you can hit instead. Once you use this benefit, you can't use it again until the start of your next turn."
+					"en": "When you miss with an attack roll, you can hit instead. Once you use this benefit, you can't use it again until the start of your next turn.",
+					"de": "Wenn du bei einem Angriffswurf nicht triffst, kannst du den Wurf in einen Treffer verwandeln. Wenn du diesen Vorzug angewendet hast, ist dies erst nach Beginn deines nächsten Zugs erneut möglich."
 				},
 				"grants": [],
 				"choices": []
@@ -419,7 +471,8 @@
 		"id": "boon-of-dimensional-travel",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of Dimensional Travel"
+			"en": "Boon of Dimensional Travel",
+			"de": "Gabe des Dimensionsreisens"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -430,18 +483,21 @@
 			{
 				"id": "boon-of-dimensional-travel-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one ability score of your choice by 1, to a maximum of 30."
+					"en": "Increase one ability score of your choice by 1, to a maximum of 30.",
+					"de": "Ein Attributswert deiner Wahl wird um 1 Punkt erhöht (auf höchstens 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -455,11 +511,13 @@
 			{
 				"id": "boon-of-dimensional-travel-blink-steps",
 				"name": {
-					"en": "Blink Steps"
+					"en": "Blink Steps",
+					"de": "Flimmerschritte"
 				},
 				"level": 1,
 				"text": {
-					"en": "Immediately after you take the Attack action or the Magic action, you can teleport up to 30 feet to an unoccupied space you can see."
+					"en": "Immediately after you take the Attack action or the Magic action, you can teleport up to 30 feet to an unoccupied space you can see.",
+					"de": "Sofort, nachdem du die Angriffsaktion oder die magische Aktion ausgeführt hast, kannst du dich bis zu neun Meter weit in einen freien Bereich teleportieren, den du sehen kannst."
 				},
 				"grants": [],
 				"choices": []
@@ -470,7 +528,8 @@
 		"id": "boon-of-fate",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of Fate"
+			"en": "Boon of Fate",
+			"de": "Gabe des Schicksals"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -481,18 +540,21 @@
 			{
 				"id": "boon-of-fate-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one ability score of your choice by 1, to a maximum of 30."
+					"en": "Increase one ability score of your choice by 1, to a maximum of 30.",
+					"de": "Ein Attributswert deiner Wahl wird um 1 Punkt erhöht (auf höchstens 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -506,11 +568,13 @@
 			{
 				"id": "boon-of-fate-improve-fate",
 				"name": {
-					"en": "Improve Fate"
+					"en": "Improve Fate",
+					"de": "Schicksal verbessern"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you or another creature within 60 feet of you succeeds on or fails a D20 Test, you can roll 2d4 and apply the total rolled as a bonus or penalty to the d20 roll. Once you use this benefit, you can't use it again until you roll Initiative or finish a Short or Long Rest."
+					"en": "When you or another creature within 60 feet of you succeeds on or fails a D20 Test, you can roll 2d4 and apply the total rolled as a bonus or penalty to the d20 roll. Once you use this benefit, you can't use it again until you roll Initiative or finish a Short or Long Rest.",
+					"de": "Wenn du oder eine andere Kreatur im Abstand von bis zu 18 Metern von dir eine W20-Prüfung ausführt, kannst du mit 2W4 würfeln und der W20-Prüfung das Gesamtergebnis als Bonus oder Malus hinzufügen. Du kannst diesen Vorzug erst nach einem Initiativewurf oder einer kurzen oder langen Rast erneut verwenden."
 				},
 				"grants": [],
 				"choices": []
@@ -521,7 +585,8 @@
 		"id": "boon-of-irresistible-offense",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of Irresistible Offense"
+			"en": "Boon of Irresistible Offense",
+			"de": "Gabe des Unwiderstehlichen Angriffs"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -532,18 +597,21 @@
 			{
 				"id": "boon-of-irresistible-offense-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase your Strength or Dexterity score by 1, to a maximum of 30."
+					"en": "Increase your Strength or Dexterity score by 1, to a maximum of 30.",
+					"de": "Dein Stärke- oder dein Geschicklichkeitswert wird um 1 Punkt erhöht (auf höchstens 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -557,11 +625,13 @@
 			{
 				"id": "boon-of-irresistible-offense-overcome-defenses",
 				"name": {
-					"en": "Overcome Defenses"
+					"en": "Overcome Defenses",
+					"de": "Verteidigung überwinden"
 				},
 				"level": 1,
 				"text": {
-					"en": "The Bludgeoning, Piercing, and Slashing damage you deal always ignores Resistance."
+					"en": "The Bludgeoning, Piercing, and Slashing damage you deal always ignores Resistance.",
+					"de": "Jeder Hieb-, Stich- und Wuchtschaden, den du bewirkst, ignoriert entsprechende Resistenzen."
 				},
 				"grants": [],
 				"choices": []
@@ -569,11 +639,13 @@
 			{
 				"id": "boon-of-irresistible-offense-overwhelming-strike",
 				"name": {
-					"en": "Overwhelming Strike"
+					"en": "Overwhelming Strike",
+					"de": "Überwältigender Schlag"
 				},
 				"level": 1,
 				"text": {
-					"en": "When you roll a 20 on the d20 for an attack roll, you can deal extra damage to the target equal to the ability score increased by this feat. The extra damage's type is the same as the attack's type."
+					"en": "When you roll a 20 on the d20 for an attack roll, you can deal extra damage to the target equal to the ability score increased by this feat. The extra damage's type is the same as the attack's type.",
+					"de": "Wenn du bei einem Angriffswurf mit dem W20 eine 20 würfelst, kannst du dem Ziel zusätzlichen Schaden in Höhe des durch dieses Talent erhöhten Attributswerts zufügen. Der zusätzliche Schaden ist von der gleichen Art wie der Schaden des Angriffs."
 				},
 				"grants": [],
 				"choices": []
@@ -584,7 +656,8 @@
 		"id": "boon-of-spell-recall",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of Spell Recall"
+			"en": "Boon of Spell Recall",
+			"de": "Gabe der Zaubererinnerung"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -595,18 +668,21 @@
 			{
 				"id": "boon-of-spell-recall-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 30."
+					"en": "Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 30.",
+					"de": "Dein Intelligenz-, dein Weisheits- oder dein Charismawert wird um 1 Punkt erhöht (auf maximal 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -620,11 +696,13 @@
 			{
 				"id": "boon-of-spell-recall-free-casting",
 				"name": {
-					"en": "Free Casting"
+					"en": "Free Casting",
+					"de": "Freies Zauberwirken"
 				},
 				"level": 1,
 				"text": {
-					"en": "Whenever you cast a spell with a level 1-4 spell slot, roll 1d4. If the number you roll is the same as the slot's level, the slot isn't expended."
+					"en": "Whenever you cast a spell with a level 1-4 spell slot, roll 1d4. If the number you roll is the same as the slot's level, the slot isn't expended.",
+					"de": "Wann immer du einen Zauber mit einem Zauberplatz des 1. bis 4. Grades wirkst, würfle mit 1W4. Wenn das Würfelergebnis dem Grad des Zauberplatzes entspricht, so wird dieser nicht verbraucht."
 				},
 				"grants": [],
 				"choices": []
@@ -635,7 +713,8 @@
 		"id": "boon-of-the-night-spirit",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of the Night Spirit"
+			"en": "Boon of the Night Spirit",
+			"de": "Gabe des Nachtgeists"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -646,18 +725,21 @@
 			{
 				"id": "boon-of-the-night-spirit-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one ability score of your choice by 1, to a maximum of 30."
+					"en": "Increase one ability score of your choice by 1, to a maximum of 30.",
+					"de": "Ein Attributswert deiner Wahl wird um 1 Punkt erhöht (auf höchstens 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -671,11 +753,13 @@
 			{
 				"id": "boon-of-the-night-spirit-merge-with-shadows",
 				"name": {
-					"en": "Merge with Shadows"
+					"en": "Merge with Shadows",
+					"de": "Schattentarnung"
 				},
 				"level": 1,
 				"text": {
-					"en": "While within Dim Light or Darkness, you can give yourself the Invisible condition as a Bonus Action. The condition ends on you immediately after you take an action, a Bonus Action, or a Reaction."
+					"en": "While within Dim Light or Darkness, you can give yourself the Invisible condition as a Bonus Action. The condition ends on you immediately after you take an action, a Bonus Action, or a Reaction.",
+					"de": "In dämmrigem Licht oder Dunkelheit kannst du dich als Bonusaktion unsichtbar machen. Der Zustand endet sofort, nachdem du eine Aktion, eine Bonusaktion oder eine Reaktion ausgeführt hast."
 				},
 				"grants": [],
 				"choices": []
@@ -683,11 +767,13 @@
 			{
 				"id": "boon-of-the-night-spirit-shadowy-form",
 				"name": {
-					"en": "Shadowy Form"
+					"en": "Shadowy Form",
+					"de": "Schattige Gestalt"
 				},
 				"level": 1,
 				"text": {
-					"en": "While within Dim Light or Darkness, you have Resistance to all damage except Psychic and Radiant."
+					"en": "While within Dim Light or Darkness, you have Resistance to all damage except Psychic and Radiant.",
+					"de": "In dämmrigem Licht oder Dunkelheit bist du gegen alle Schadensarten außer Gleißend und Psychisch resistent."
 				},
 				"grants": [],
 				"choices": []
@@ -698,7 +784,8 @@
 		"id": "boon-of-truesight",
 		"rules": "2024",
 		"name": {
-			"en": "Boon of Truesight"
+			"en": "Boon of Truesight",
+			"de": "Gabe des Wahren Blicks"
 		},
 		"category": "epic-boon",
 		"repeatable": false,
@@ -709,18 +796,21 @@
 			{
 				"id": "boon-of-truesight-ability-score-increase",
 				"name": {
-					"en": "Ability Score Increase"
+					"en": "Ability Score Increase",
+					"de": "Attributswerterhöhung"
 				},
 				"level": 1,
 				"text": {
-					"en": "Increase one ability score of your choice by 1, to a maximum of 30."
+					"en": "Increase one ability score of your choice by 1, to a maximum of 30.",
+					"de": "Ein Attributswert deiner Wahl wird um 1 Punkt erhöht (auf höchstens 30)."
 				},
 				"grants": [],
 				"choices": [
 					{
 						"id": "abilities",
 						"name": {
-							"en": "Ability scores"
+							"en": "Ability scores",
+							"de": "Attributswerte"
 						},
 						"count": 1,
 						"gives": "ability",
@@ -734,11 +824,13 @@
 			{
 				"id": "boon-of-truesight-truesight",
 				"name": {
-					"en": "Truesight"
+					"en": "Truesight",
+					"de": "Wahrer Blick"
 				},
 				"level": 1,
 				"text": {
-					"en": "You have Truesight with a range of 60 feet."
+					"en": "You have Truesight with a range of 60 feet.",
+					"de": "Du hast Wahrer Blick mit einer Reichweite von 18 Metern."
 				},
 				"grants": [
 					{

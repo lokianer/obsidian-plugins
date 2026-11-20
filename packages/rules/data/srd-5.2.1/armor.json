@@ -2,7 +2,8 @@
 	{
 		"id": "padded",
 		"name": {
-			"en": "Padded Armor"
+			"en": "Padded Armor",
+			"de": "Gepolsterte Rüstung"
 		},
 		"category": "light",
 		"ac": 11,
@@ -12,7 +13,8 @@
 	{
 		"id": "leather",
 		"name": {
-			"en": "Leather Armor"
+			"en": "Leather Armor",
+			"de": "Lederrüstung"
 		},
 		"category": "light",
 		"ac": 11,
@@ -22,7 +24,8 @@
 	{
 		"id": "studded-leather",
 		"name": {
-			"en": "Studded Leather Armor"
+			"en": "Studded Leather Armor",
+			"de": "Beschlagene Lederrüstung"
 		},
 		"category": "light",
 		"ac": 12,
@@ -32,7 +35,8 @@
 	{
 		"id": "hide",
 		"name": {
-			"en": "Hide Armor"
+			"en": "Hide Armor",
+			"de": "Fellrüstung"
 		},
 		"category": "medium",
 		"ac": 12,
@@ -42,7 +46,8 @@
 	{
 		"id": "chain-shirt",
 		"name": {
-			"en": "Chain Shirt"
+			"en": "Chain Shirt",
+			"de": "Kettenhemd"
 		},
 		"category": "medium",
 		"ac": 13,
@@ -52,7 +57,8 @@
 	{
 		"id": "scale-mail",
 		"name": {
-			"en": "Scale Mail"
+			"en": "Scale Mail",
+			"de": "Schuppenpanzer"
 		},
 		"category": "medium",
 		"ac": 14,
@@ -62,7 +68,8 @@
 	{
 		"id": "breastplate",
 		"name": {
-			"en": "Breastplate"
+			"en": "Breastplate",
+			"de": "Brustplatte"
 		},
 		"category": "medium",
 		"ac": 14,
@@ -72,7 +79,8 @@
 	{
 		"id": "half-plate",
 		"name": {
-			"en": "Half Plate Armor"
+			"en": "Half Plate Armor",
+			"de": "Plattenpanzer"
 		},
 		"category": "medium",
 		"ac": 15,
@@ -82,7 +90,8 @@
 	{
 		"id": "ring-mail",
 		"name": {
-			"en": "Ring Mail"
+			"en": "Ring Mail",
+			"de": "Ringpanzer"
 		},
 		"category": "heavy",
 		"ac": 14,
@@ -92,7 +101,8 @@
 	{
 		"id": "chain-mail",
 		"name": {
-			"en": "Chain Mail"
+			"en": "Chain Mail",
+			"de": "Kettenpanzer"
 		},
 		"category": "heavy",
 		"ac": 16,
@@ -103,7 +113,8 @@
 	{
 		"id": "splint",
 		"name": {
-			"en": "Splint Armor"
+			"en": "Splint Armor",
+			"de": "Schienenpanzer"
 		},
 		"category": "heavy",
 		"ac": 17,
@@ -114,7 +125,8 @@
 	{
 		"id": "plate",
 		"name": {
-			"en": "Plate Armor"
+			"en": "Plate Armor",
+			"de": "Ritterrüstung"
 		},
 		"category": "heavy",
 		"ac": 18,
@@ -125,7 +137,8 @@
 	{
 		"id": "shield",
 		"name": {
-			"en": "Shield"
+			"en": "Shield",
+			"de": "Schild"
 		},
 		"category": "shield",
 		"ac": 2,

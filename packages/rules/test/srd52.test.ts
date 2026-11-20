@@ -5,11 +5,20 @@ import {
   checkRules,
   derive,
   germanProblems,
+  type Feature,
   type Grant,
   loadRules,
   SRD_52,
   type Text,
 } from '../src/index';
+
+/** Every `{ en, de? }` text in a value, with its path. */
+const texts = (value: unknown, path: string): [string, Text][] => {
+  if (Array.isArray(value)) return value.flatMap((v, i) => texts(v, `${path}[${i}]`));
+  if (typeof value !== 'object' || value === null) return [];
+  if ('en' in value && typeof value.en === 'string') return [[path, value as Text]];
+  return Object.entries(value).flatMap(([k, v]) => texts(v, `${path}.${k}`));
+};
 
 const rules = loadRules([SRD_52]);
 const grants = (classId: string): Grant[] =>
@@ -115,16 +124,85 @@ describe('SRD 5.2.1 weapon training and multiclassing', () => {
 });
 
 describe('SRD 5.2.1 German texts', () => {
-  const texts = (value: unknown, path: string): [string, Text][] => {
-    if (Array.isArray(value)) return value.flatMap((v, i) => texts(v, `${path}[${i}]`));
-    if (typeof value !== 'object' || value === null) return [];
-    if ('en' in value && typeof value.en === 'string') return [[path, value as Text]];
-    return Object.entries(value).flatMap(([k, v]) => texts(v, `${path}.${k}`));
-  };
-
   // Skipped until every text has its German (phase C1b, task 3 turns it on).
   it.skip('every rules text has its German', () => {
     const problems = texts(SRD_52, 'srd').flatMap(([path, text]) =>
+      germanProblems(text).map((p) => `${path}: ${p}`),
+    );
+    expect(problems).toEqual([]);
+  });
+});
+
+describe('SRD 5.2.1 German names from the official German SRD', () => {
+  const de = (list: readonly { id: string; name: Text }[]) =>
+    Object.fromEntries(list.map((e) => [e.id, e.name.de]));
+  const features = (list: readonly { id: string; features: readonly Feature[] }[]) =>
+    Object.fromEntries(list.flatMap((e) => e.features.map((f) => [f.id, f.name.de])));
+
+  it('names the armour', () => {
+    expect(de(SRD_52.armor)).toMatchObject({
+      leather: 'Lederrüstung',
+      shield: 'Schild',
+      'chain-mail': 'Kettenpanzer',
+      'chain-shirt': 'Kettenhemd',
+      'half-plate': 'Plattenpanzer',
+      plate: 'Ritterrüstung',
+    });
+  });
+
+  it('names the weapons', () => {
+    expect(de(SRD_52.weapons)).toMatchObject({
+      dagger: 'Dolch',
+      longsword: 'Langschwert',
+      mace: 'Streitkolben',
+      battleaxe: 'Streitaxt',
+      scimitar: 'Krummsäbel',
+      quarterstaff: 'Kampfstab',
+      handaxe: 'Beil',
+    });
+  });
+
+  it('names the skills', () => {
+    expect(de(SRD_52.skills)).toMatchObject({
+      acrobatics: 'Akrobatik',
+      arcana: 'Arkane Kunde',
+      athletics: 'Athletik',
+      stealth: 'Heimlichkeit',
+      'sleight-of-hand': 'Fingerfertigkeit',
+      performance: 'Auftreten',
+    });
+  });
+
+  it('names species, backgrounds, feats and their features', () => {
+    expect(de(SRD_52.species)).toMatchObject({ dwarf: 'Zwerg', gnome: 'Gnom' });
+    expect(features(SRD_52.species)).toMatchObject({
+      'dwarf-darkvision': 'Dunkelsicht',
+      'dwarf-dwarven-toughness': 'Zwergische Zähigkeit',
+      'dwarf-dwarven-resilience': 'Zwergische Unverwüstlichkeit',
+    });
+    expect(de(SRD_52.backgrounds)).toMatchObject({ acolyte: 'Akolyth', soldier: 'Soldat' });
+    expect(de(SRD_52.feats)).toMatchObject({
+      alert: 'Wachsam',
+      'magic-initiate': 'Eingeweihter der Magie',
+      'savage-attacker': 'Wilder Angreifer',
+      skilled: 'Begabt',
+    });
+    expect(features(SRD_52.feats)).toMatchObject({
+      'alert-initiative-proficiency': 'Initiative-Übung',
+      'alert-initiative-swap': 'Initiativetausch',
+    });
+  });
+
+  it('passes the German data check for armour, weapons, skills, species, backgrounds and feats', () => {
+    const six = {
+      armor: SRD_52.armor,
+      weapons: SRD_52.weapons,
+      skills: SRD_52.skills,
+      species: SRD_52.species,
+      backgrounds: SRD_52.backgrounds,
+      feats: SRD_52.feats,
+    };
+    const problems = texts(six, 'srd').flatMap(([path, text]) =>
       germanProblems(text).map((p) => `${path}: ${p}`),
     );
     expect(problems).toEqual([]);
