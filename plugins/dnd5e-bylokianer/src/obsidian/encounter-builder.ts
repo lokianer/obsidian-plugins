@@ -16,7 +16,7 @@ import {
 } from '../battle/budget';
 import type { T } from '../i18n/strings';
 import { filterMonsters, NO_FILTERS } from '../monsters/filter';
-import { monsterName, typeLabel } from '../monsters/meta';
+import { encounterName, monsterName, typeLabel } from '../monsters/meta';
 import type { SrdMonster } from '../monsters/model';
 import { experience } from '../npc/statblock';
 import type { Lang } from '../npc/races';
@@ -219,7 +219,9 @@ export class EncounterBuilderModal extends Modal {
   private drawTiles(parent: HTMLElement): void {
     const { t, lang } = this.deps;
     parent.empty();
-    const found = filterMonsters(this.deps.monsters, { ...NO_FILTERS, query: this.query }, (m) =>
+    // A block without a challenge rating (a summoned spirit) has no place in an XP budget.
+    const budgeted = this.deps.monsters.filter((m) => experience(m.cr) !== null);
+    const found = filterMonsters(budgeted, { ...NO_FILTERS, query: this.query }, (m) =>
       monsterName(m, lang),
     ).slice(0, TILES);
     for (const m of found) {
@@ -381,7 +383,10 @@ export class EncounterBuilderModal extends Modal {
       location: this.location,
       difficulty: this.difficulty,
       party: this.deps.party.length === 0 || this.members.size > 0,
-      monsters: this.picks.map((p) => ({ name: p.monster.name, count: p.count })),
+      monsters: this.picks.map((p) => ({
+        name: encounterName(p.monster, this.deps.monsters),
+        count: p.count,
+      })),
     });
     this.close();
   }

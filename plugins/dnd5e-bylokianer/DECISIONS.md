@@ -927,8 +927,8 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 `docs/superpowers/plans/2026-11-20-catalogue-k2-monsters.md`.
 
-- **What ships:** facts, names (EN/DE) and summaries in our own words for 400 monsters
-  (mm14 108, dmg14 1, tce 1, mpmm 254, fraif 36). Each entry carries a stat block made from its facts alone — header, abilities,
+- **What ships:** facts, names (EN/DE) and summaries in our own words for 429 monsters
+  (mm14 108, dmg14 3, tce 18, mpmm 260, fraif 40). Each entry carries a stat block made from its facts alone — header, abilities,
   challenge — so the card, the encounter builder and the tracker work without a library note. The
   traits and actions, which are the book's text, come only from the GM's library note.
 - **Library notes** hold one `##` section per monster with a `dnd5e-statblock` (or `statblock`)
@@ -938,10 +938,18 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 - **One Library service** (`src/obsidian/library.ts`) serves the Spellbook and the Monster Manual;
   the monster list the battle tracker and encounter builder see is SRD + catalogue (by rule set
   preference) + own monsters.
-- **Left out:** Tasha's summoned spirits and companions and two DMG blocks (Avatar of Death, the
-  figurine's Giant Fly) — no challenge rating or no fixed hit points; a placeholder would mislead
-  the encounter budget. Blocks whose facts the scan did not give completely wait for a look at the
-  book rather than ship with a guess.
+- **Blocks without a challenge rating** (Tasha's summoned spirits and companions, the Avatar of
+  Death, the figurine's Giant Fly; asked for by the maintainer) are in with CR "—": no CR line in
+  their short block, base hit points as printed (the scaling rule in `hit_dice`), and no tiles in
+  the encounter builder, whose XP budget has no value for them. A placeholder CR 0 would have lied
+  to the budget.
+- **Own monsters first** when a name in an encounter is looked up, then the SRD, then the catalogue
+  by rule set preference. For a name in both rule sets the encounter builder and Add to encounter
+  write the catalogue key (`fraif/…`), which the tracker also resolves.
+- **Reprints:** a 2014 monster reprinted in a newer 2014 book keeps one entry under the newest key
+  and lists the older books in `reprints`, so an older book's library note still applies.
+- Blocks whose facts the scan did not give completely were read from the page images instead of
+  guessed.
 - **Extraction:** pdftotext, windows cut at each armour class (2014) or initiative line (2024),
   wide enough to catch a block's actions across two-column interleaving, then LLM cleaning in
   batches with `check-monsters.mjs` (facts, YAML agreeing with the facts, the eight-word copy

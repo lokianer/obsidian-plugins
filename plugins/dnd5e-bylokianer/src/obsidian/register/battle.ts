@@ -5,6 +5,7 @@ import { Notice } from 'obsidian';
 
 import { encounterNoteText } from '../../battle/budget';
 import { battleLine } from '../../battle/log';
+import { encounterName } from '../../monsters/meta';
 import { BattleStore, fromMonster } from '../battle-store';
 import { BATTLE_VIEW, BattleView } from '../battle-view';
 import { confirm } from '../confirm';
@@ -105,7 +106,7 @@ export function registerBattle(
         return;
       }
       new EncounterPicker(app, t, encounters, (encounter) => {
-        void store.addToEncounter(encounter.path, monster.name).then(() => {
+        void store.addToEncounter(encounter.path, encounterName(monster, monsters())).then(() => {
           new Notice(
             t('encounterBuilder.addedTo', { name: monster.name, encounter: encounter.title }),
           );

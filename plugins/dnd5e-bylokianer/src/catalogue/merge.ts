@@ -56,7 +56,10 @@ export function withMonsterLibrary(
   parses: (yaml: string) => boolean,
 ): SrdMonster[] {
   return monsters.map((m) => {
-    const section = m.source === undefined ? undefined : sections.get(m.index);
+    if (m.source === undefined) return m;
+    const slug = m.index.slice(m.index.indexOf('/') + 1);
+    const keys = [m.index, ...(m.reprints ?? []).map((b) => `${b}/${slug}`)];
+    const section = keys.map((k) => sections.get(k)).find((x) => x !== undefined);
     const yaml = section === undefined ? null : statblockOf(section.text);
     return yaml === null || !parses(yaml) ? m : { ...m, yaml, fromLibrary: true };
   });

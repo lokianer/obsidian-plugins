@@ -162,7 +162,11 @@ export class BattleStore implements BattleSource {
   private monster(name: string): SrdMonster | undefined {
     const key = name.trim().toLowerCase();
     return this.monsters().find(
-      (x) => x.name.toLowerCase() === key || monsterName(x, 'de').toLowerCase() === key,
+      (x) =>
+        x.name.toLowerCase() === key ||
+        monsterName(x, 'de').toLowerCase() === key ||
+        // `fraif/drow-priestess-of-lolth`: the encounter builder's key for a name in both rule sets
+        (x.source !== undefined && x.index === key),
     );
   }
 

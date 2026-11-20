@@ -171,7 +171,7 @@ library notes (`type: library`), made outside the repository. Books so far: PHB 
 - [ ] **K1 — spells** (built 2026-11-20, awaiting the check): 550 entries (phb14 43, xge 95, tce 21,
       phb24 391), rule set and book filters, library notes, Rule set setting. Plan
       `2026-11-20-catalogue-k1-spells.md`.
-- [ ] **K2 — monsters** (built 2026-11-20, awaiting the check): 400 entries (mm14 108, dmg14 1, tce 1, mpmm 254, fraif 36), a
+- [ ] **K2 — monsters** (built 2026-11-20, awaiting the check): 429 entries (mm14 108, dmg14 3, tce 18, mpmm 260, fraif 40), a
       short stat block from the facts, the full one from library notes; rule set and book filters,
       the encounter builder and Add to combat. Plan `2026-11-20-catalogue-k2-monsters.md`.
 - [ ] **K3 — Heroes of Faerûn** (spells read from page images).

@@ -484,6 +484,28 @@
 		}
 	},
 	{
+		"index": "mpmm/bard",
+		"name": "Bard",
+		"nameDe": "Barde",
+		"cr": "2",
+		"type": "humanoid",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "any alignment",
+		"ac": 15,
+		"acClass": "chain shirt",
+		"hp": 44,
+		"hitDice": "8d8 + 8",
+		"speed": "30 ft.",
+		"stats": [11, 14, 12, 10, 13, 14],
+		"legendary": false,
+		"spellcaster": true,
+		"summary": {
+			"en": "A travelling performer who fights with a short blade or bow and can blast a ring of foes with a thunderous din. It also taunts a target and casts a few trickster spells.",
+			"de": "Ein reisender Künstler, der mit Kurzschwert oder Bogen kämpft und einen Kreis von Gegnern mit donnerndem Lärm wegschleudern kann. Dazu verspottet er Ziele und wirkt einige Gaukler-Zauber."
+		}
+	},
+	{
 		"index": "mpmm/barghest",
 		"name": "Barghest",
 		"nameDe": "Barghest",
@@ -1430,6 +1452,28 @@
 		}
 	},
 	{
+		"index": "mpmm/diviner-wizard",
+		"name": "Diviner Wizard",
+		"nameDe": "Wahrsager-Magier",
+		"cr": "8",
+		"type": "humanoid",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "any alignment",
+		"ac": 12,
+		"acClass": "15 with mage armor",
+		"hp": 90,
+		"hitDice": "20d8",
+		"speed": "30 ft.",
+		"stats": [9, 14, 11, 18, 12, 11],
+		"legendary": false,
+		"spellcaster": true,
+		"summary": {
+			"en": "A seer-wizard who hits with radiant bolts and a blinding burst of insight that stuns on a failed save. It can swap any nearby d20 roll for a stored one, and casts divination and utility spells.",
+			"de": "Ein Seher-Magier mit Strahlungsblitzen und einem gleißenden Erkenntnisausbruch, der bei misslungenem Rettungswurf betäubt. Er kann einen nahen W20-Wurf durch einen vorherbestimmten ersetzen und wirkt Erkenntnis- und Hilfszauber."
+		}
+	},
+	{
 		"index": "mpmm/dolphin",
 		"name": "Dolphin",
 		"nameDe": "Delfin",
@@ -1589,9 +1633,9 @@
 		"nameDe": "Drow-Matronenmutter",
 		"cr": "20",
 		"type": "humanoid",
-		"subtype": "elf",
+		"subtype": "cleric, elf",
 		"size": "Medium",
-		"alignment": "typically chaotic evil",
+		"alignment": "typically neutral evil",
 		"ac": 17,
 		"acClass": "half plate",
 		"hp": 247,
@@ -2314,7 +2358,7 @@
 		"name": "Giant Strider",
 		"nameDe": "Riesenläufer",
 		"cr": "1",
-		"type": "monstrosity",
+		"type": "elemental",
 		"subtype": "",
 		"size": "Large",
 		"alignment": "unaligned",
@@ -2948,6 +2992,28 @@
 		}
 	},
 	{
+		"index": "mpmm/kobold-dragonshield",
+		"name": "Kobold Dragonshield",
+		"nameDe": "Kobold-Drachenschild",
+		"cr": "1",
+		"type": "dragon",
+		"subtype": "",
+		"size": "Small",
+		"alignment": "any alignment",
+		"ac": 15,
+		"acClass": "leather, shield",
+		"hp": 44,
+		"hitDice": "8d6 + 16",
+		"speed": "20 ft.",
+		"stats": [12, 15, 14, 8, 9, 10],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A kobold champion who guards dragon eggs with a scale-covered shield. It fights with a spear, resists one damage type tied to its patron dragon, and rallies kobolds around it out of fear effects.",
+			"de": "Ein Kobold-Held, der mit einem Schild aus Drachenschuppen Dracheneier bewacht. Er kämpft mit dem Speer, widersteht einer vom Drachen abhängigen Schadensart und befreit sich und andere Kobolde aus Furcht."
+		}
+	},
+	{
 		"index": "mpmm/kobold-inventor",
 		"name": "Kobold Inventor",
 		"nameDe": "Kobold-Erfinder",
@@ -3165,6 +3231,28 @@
 		"summary": {
 			"en": "The smaller, weaker steeder, normally a draft animal: it leaps, climbs ceilings, delivers a poisonous bite and can stick a Small or tinier creature to its leg.",
 			"de": "Der kleinere, schwächere Steeder, meist ein Zugtier: Er springt, klettert an Decken, beißt giftig und klebt eine kleine oder winzige Kreatur an sein Bein."
+		}
+	},
+	{
+		"index": "mpmm/martial-arts-adept",
+		"name": "Martial Arts Adept",
+		"nameDe": "Kampfkunstadept",
+		"cr": "3",
+		"type": "humanoid",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "any alignment",
+		"ac": 16,
+		"acClass": "Unarmored Defense",
+		"hp": 60,
+		"hitDice": "11d8 + 11",
+		"speed": "40 ft.",
+		"stats": [11, 17, 13, 11, 16, 10],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A disciplined monk fighter that strikes three times a turn or hurls five darts, can knock a foe down or shove it away, and can catch a missile that hits it.",
+			"de": "Ein disziplinierter Mönchskämpfer, der dreimal pro Runde zuschlägt oder fünf Darts wirft, Gegner umwerfen oder wegstoßen kann und Geschosse aus der Luft fängt."
 		}
 	},
 	{
@@ -3657,9 +3745,9 @@
 		"nameDe": "Nilbog",
 		"cr": "1",
 		"type": "fey",
-		"subtype": "",
+		"subtype": "goblinoid",
 		"size": "Small",
-		"alignment": "",
+		"alignment": "typically chaotic neutral",
 		"ac": 13,
 		"acClass": "leather armor",
 		"hp": 7,
@@ -4045,6 +4133,28 @@
 		"summary": {
 			"en": "A warped demon that hunts in mobs, freezing non-demons in place with fear. Its one bite carries a disease that kills victims and turns them into manes.",
 			"de": "Ein verformter Dämon, der in Horden jagt und Nicht-Dämonen vor Furcht erstarren lässt. Sein einziger Biss überträgt eine Krankheit, die Opfer tötet und in Manes verwandelt."
+		}
+	},
+	{
+		"index": "mpmm/sacred-statue",
+		"name": "Sacred Statue",
+		"nameDe": "Heilige Statue",
+		"cr": "—",
+		"type": "construct",
+		"subtype": "",
+		"size": "Large",
+		"alignment": "as the eidolon's alignment",
+		"ac": 19,
+		"acClass": "natural armor",
+		"hp": 95,
+		"hitDice": "10d10 + 40",
+		"speed": "25 ft.",
+		"stats": [19, 8, 19, 14, 19, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "The stone body an eidolon animates. It strikes twice per turn with huge slams or thrown rocks, and can pass for an ordinary statue until it moves.",
+			"de": "Der Steinkörper, den ein Eidolon belebt. Pro Runde schlägt er zweimal mit gewaltigen Hieben zu oder wirft Felsen und kann bis zur ersten Bewegung als gewöhnliche Statue durchgehen."
 		}
 	},
 	{
@@ -5497,6 +5607,28 @@
 		"summary": {
 			"en": "A sly yuan-ti warlock devoted to Sseth that bites with poison, uses a scimitar or psychic spectral fangs, gains temporary hit points from kills, casts mind-bending spells and can turn into a snake.",
 			"de": "Ein listiger Yuan-ti-Hexenmeister im Dienst Ssseths, der giftig beißt, Krummsäbel oder psychische Geisterzähne einsetzt, durch Tötungen temporäre Trefferpunkte erhält, Geisteszauber wirkt und sich in eine Schlange verwandeln kann."
+		}
+	},
+	{
+		"index": "mpmm/yuan-ti-nightmare-speaker",
+		"name": "Yuan-ti Nightmare Speaker",
+		"nameDe": "Yuan-ti-Albtraumsprecher",
+		"cr": "4",
+		"type": "monstrosity",
+		"subtype": "warlock",
+		"size": "Medium",
+		"alignment": "typically neutral evil",
+		"ac": 14,
+		"acClass": "natural armor",
+		"hp": 71,
+		"hitDice": "13d8 + 13",
+		"speed": "30 ft.",
+		"stats": [16, 14, 13, 14, 12, 16],
+		"legendary": false,
+		"spellcaster": true,
+		"summary": {
+			"en": "A yuan-ti priest serving the Night Serpent. It crushes with coils or blades, hurls necrotic spectral fangs, and can plant an illusion of a creature's worst fear that wounds and terrifies it.",
+			"de": "Ein Yuan-ti-Priester der Nachtschlange. Er würgt mit Schlangenleib oder Klinge, schleudert nekrotische Geisterzähne und kann die größte Angst eines Wesens als Trugbild erscheinen lassen, das verletzt und erschreckt."
 		}
 	},
 	{

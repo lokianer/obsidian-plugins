@@ -30,6 +30,8 @@ export interface SrdMonster {
   nameDe?: string;
   /** A catalogue entry's summary in our own words. */
   summary?: { en: string; de: string };
+  /** Older books of the same rule set the entry was reprinted from; their library notes apply. */
+  reprints?: BookKey[];
   /** A catalogue entry's `yaml` is the full stat block from the GM's library note. */
   fromLibrary?: boolean;
 }

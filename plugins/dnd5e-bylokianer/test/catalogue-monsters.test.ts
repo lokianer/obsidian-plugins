@@ -6,7 +6,7 @@ import { catalogueSlug } from '../src/catalogue/library';
 import { withMonsterLibrary } from '../src/catalogue/merge';
 import { CATALOGUE_MONSTERS } from '../src/catalogue/monsters';
 import { filterMonsters, NO_FILTERS, readFilters } from '../src/monsters/filter';
-import { monsterName } from '../src/monsters/meta';
+import { encounterName, monsterName } from '../src/monsters/meta';
 import type { SrdMonster } from '../src/monsters/model';
 import { SRD_MONSTERS } from '../src/monsters/srd-monsters';
 import { parseStatblock } from '../src/npc/statblock';
@@ -90,7 +90,10 @@ describe('catalogue monsters', () => {
 
   it('reads old filters without rule set or book, and drops unknown values', () => {
     expect(readFilters({ query: 'x' }).rules).toEqual([]);
-    const read = readFilters({ rules: ['2024', '1999'], sources: ['mpmm', 'toString', 'srd'] });
+    const read = readFilters({
+      rules: ['2024', '1999'],
+      sources: ['mpmm', 'toString', 'xge', 'srd'],
+    });
     expect(read.rules).toEqual(['2024']);
     expect(read.sources).toEqual(['mpmm', 'srd']);
   });
@@ -109,6 +112,29 @@ describe('catalogue monsters', () => {
     expect(e).toBe(ember);
     expect(s).toBe(srd);
     expect((parseYaml(g?.yaml ?? '') as { actions: unknown[] }).actions).toHaveLength(1);
+  });
+
+  it('takes the full block from an older book a reprint replaced', () => {
+    const reprint: SrdMonster = {
+      ...gloom,
+      index: 'mpmm/gloom-lantern',
+      source: 'mpmm',
+      reprints: ['mm14'],
+    };
+    const sections = new Map([
+      [
+        'mm14/gloom-lantern',
+        { text: ['```statblock', 'name: "Gloom Lantern"', '```'].join('\n'), higher: '' },
+      ],
+    ]);
+    const [r] = withMonsterLibrary([reprint], sections, parses);
+    expect(r?.fromLibrary).toBe(true);
+  });
+
+  it('writes a monster into an encounter by name, by key only when two share the name', () => {
+    const twin: SrdMonster = { ...ember, index: 'fraif/gloom-lantern', name: 'Gloom Lantern' };
+    expect(encounterName(ember, [gloom, ember, srd])).toBe('Ember Moth');
+    expect(encounterName(twin, [gloom, twin])).toBe('fraif/gloom-lantern');
   });
 
   it('keeps the short block when the library block is not a stat block', () => {
@@ -133,7 +159,10 @@ describe('the monster catalogue', () => {
       expect(m.summary?.en.length).toBeGreaterThan(20);
       expect(m.summary?.de.length).toBeGreaterThan(20);
       const block = parseStatblock(parseYaml(m.yaml));
-      expect([block.name, block.ac, block.hp, block.cr]).toEqual([m.name, m.ac, m.hp, m.cr]);
+      // A summoned block prints no challenge rating and may scale its hit points.
+      const cr = m.cr === '—' ? null : m.cr;
+      const hp = m.hp === 0 ? null : m.hp;
+      expect([block.name, block.ac, block.hp, block.cr]).toEqual([m.name, m.ac, hp, cr]);
       expect(block.actions).toEqual([]);
     }
   });

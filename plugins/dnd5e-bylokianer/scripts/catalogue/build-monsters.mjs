@@ -63,18 +63,20 @@ function srdNames() {
 
 const SIZES = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'];
 
-/** Every fact the minimal stat block needs is there. */
+/** The challenge rating of a block that prints none: summoned spirits, companions, artifacts. */
+export const NO_CR = '—';
+/** The cleaners mark such a block with this note (its `cr` is a placeholder). */
+const summoned = (e) => /^No CR printed/i.test(e.note ?? '');
+
+/** Every fact the minimal stat block needs is there (a summoned block may scale its hit points). */
 const complete = (e) =>
 	SIZES.includes(e.size) &&
 	e.ac > 0 &&
-	e.hp > 0 &&
+	(e.hp > 0 || (summoned(e) && e.hp === 0)) &&
 	Array.isArray(e.stats) &&
 	e.stats.length === 6 &&
 	e.stats.every((n) => n > 0) &&
-	String(e.cr ?? '') !== '' &&
-	// Summoned and companion blocks (Tasha's) print no CR; their placeholder 0 would lie to the
-	// encounter builder.
-	!/^No CR printed/i.test(e.note ?? '');
+	(summoned(e) || String(e.cr ?? '') !== '');
 
 function fromWork(workDir, books) {
 	const norm = join(workDir, 'norm');
@@ -98,7 +100,10 @@ function fromWork(workDir, books) {
 			.map((e) =>
 				Object.fromEntries([
 					['index', `${book}/${slug(e.name)}`],
-					...FACTS.map((k) => [k, k === 'nameDe' ? nameDe(e) : e[k]]),
+					...FACTS.map((k) => [
+						k,
+						k === 'nameDe' ? nameDe(e) : k === 'cr' && summoned(e) ? NO_CR : e[k],
+					]),
 				]),
 			)
 			.sort((a, b) => a.index.localeCompare(b.index))
@@ -125,11 +130,11 @@ function minimalYaml(m) {
 		m.alignment ? `alignment: ${q(m.alignment)}` : null,
 		`ac: ${m.ac}`,
 		m.acClass ? `ac_class: ${q(m.acClass)}` : null,
-		`hp: ${m.hp}`,
+		m.hp > 0 ? `hp: ${m.hp}` : null,
 		m.hitDice ? `hit_dice: ${q(m.hitDice)}` : null,
 		m.speed ? `speed: ${q(m.speed)}` : null,
 		`stats: [${m.stats.join(', ')}]`,
-		`cr: ${q(m.cr)}`,
+		m.cr === NO_CR ? null : `cr: ${q(m.cr)}`,
 	];
 	return lines.filter((l) => l !== null).join('\n');
 }
@@ -141,11 +146,11 @@ function toSource() {
 		for (const m of JSON.parse(
 			readFileSync(new URL(`monsters-${book}.json`, dataDir), 'utf8'),
 		)) {
-			newest.set(`${RULES[book]}:${slug(m.name)}`, {
-				...m,
-				rules: RULES[book],
-				source: book,
-			});
+			const key = `${RULES[book]}:${slug(m.name)}`;
+			// A reprint keeps the older books' keys, so their library notes still apply.
+			const older = newest.get(key);
+			const reprints = older === undefined ? [] : [...older.reprints, older.source];
+			newest.set(key, { ...m, rules: RULES[book], source: book, reprints });
 		}
 	}
 	const all = [...newest.values()]
@@ -164,6 +169,7 @@ function toSource() {
 			rules: m.rules,
 			source: m.source,
 			summary: m.summary,
+			...(m.reprints.length > 0 ? { reprints: m.reprints } : {}),
 			yaml: minimalYaml(m),
 		}))
 		.sort((a, b) => a.index.localeCompare(b.index));

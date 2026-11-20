@@ -1193,7 +1193,7 @@
 		"nameDe": "Schakalwer",
 		"cr": "1/2",
 		"type": "humanoid",
-		"subtype": "human, shapechanger",
+		"subtype": "shapechanger",
 		"size": "Medium",
 		"alignment": "chaotic evil",
 		"ac": 12,

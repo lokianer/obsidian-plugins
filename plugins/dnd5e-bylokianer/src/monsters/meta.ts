@@ -32,6 +32,17 @@ export const TYPES = [
 export const MOVES: readonly Movement[] = ['fly', 'swim', 'burrow', 'climb'];
 
 /** The monster's name in a language; English when there is no German one. */
+/**
+ * How an encounter note names a monster: its English name, or its catalogue key when another
+ * monster of the list has the same name (a 2014 and a 2024 version), so the encounter finds the
+ * picked one.
+ */
+export function encounterName(m: SrdMonster, all: readonly SrdMonster[]): string {
+  const name = m.name.toLowerCase();
+  const twin = all.some((x) => x !== m && x.name.toLowerCase() === name);
+  return twin && m.source !== undefined ? m.index : m.name;
+}
+
 export function monsterName(
   monster: Pick<SrdMonster, 'index' | 'name' | 'nameDe'>,
   lang: Lang,

@@ -1,5 +1,49 @@
 [
 	{
+		"index": "dmg14/avatar-of-death",
+		"name": "Avatar of Death",
+		"nameDe": "Avatar des Todes",
+		"cr": "—",
+		"type": "undead",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "neutral evil",
+		"ac": 20,
+		"acClass": "",
+		"hp": 0,
+		"hitDice": "half the hit point maximum of its summoner",
+		"speed": "60 ft., fly 60 ft. (hover)",
+		"stats": [16, 16, 16, 16, 16, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A skeletal wraith summoned by the Skull card of the Deck of Many Things. It drifts through creatures and objects and cuts a single foe down with a spectral scythe until one of them falls.",
+			"de": "Ein skelettartiger Wiedergänger, der von der Totenkopf-Karte des Kartendecks beschworen wird. Er gleitet durch Wesen und Gegenstände und mäht mit einer Geistersense einen einzelnen Gegner nieder, bis einer von beiden fällt."
+		}
+	},
+	{
+		"index": "dmg14/giant-fly",
+		"name": "Giant Fly",
+		"nameDe": "Riesenfliege",
+		"cr": "—",
+		"type": "beast",
+		"subtype": "",
+		"size": "Large",
+		"alignment": "unaligned",
+		"ac": 11,
+		"acClass": "",
+		"hp": 19,
+		"hitDice": "3d10 + 3",
+		"speed": "30 ft., fly 60 ft.",
+		"stats": [14, 13, 13, 2, 10, 3],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "An ebony horsefly statuette come alive, big enough to carry a rider. The Figurine of Wondrous Power block lists no attacks for it, only a fast flying speed and darkvision.",
+			"de": "Eine zum Leben erwachte Ebenholz-Fliege, groß genug als Reittier. Der Eintrag der Figur der wundersamen Macht nennt keine Angriffe, nur eine hohe Fluggeschwindigkeit und Dunkelsicht."
+		}
+	},
+	{
 		"index": "dmg14/larva",
 		"name": "Larva",
 		"nameDe": "Larve",

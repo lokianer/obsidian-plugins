@@ -1,5 +1,269 @@
 [
 	{
+		"index": "tce/aberrant-spirit",
+		"name": "Aberrant Spirit",
+		"nameDe": "Aberranter Geist",
+		"cr": "—",
+		"type": "aberration",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "natural armor; 11 + the level of the spell",
+		"hp": 40,
+		"hitDice": "40 + 10 for each spell level above 4th",
+		"speed": "30 ft.; fly 30 ft. (hover) (beholderkin only)",
+		"stats": [16, 10, 15, 16, 10, 6],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned aberration that takes one of three forms: a clawing slaad, a hovering beholderkin with a psychic ray, or a star spawn that hurts nearby foes. It attacks more often at higher spell levels.",
+			"de": "Eine beschworene Aberration in einer von drei Formen: Slaad mit Klauen, schwebende Beholder-Abart mit Psychostrahl oder Sternenbrut, die Nahestehende quält. Bei höheren Zaubergraden greift sie öfter an."
+		}
+	},
+	{
+		"index": "tce/beast-of-the-land",
+		"name": "Beast of the Land",
+		"nameDe": "Tier des Landes",
+		"cr": "—",
+		"type": "beast",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 13,
+		"acClass": "natural armor; 13 + PB",
+		"hp": 5,
+		"hitDice": "5 + five times your ranger level (Hit Dice d8s equal to your ranger level)",
+		"speed": "40 ft., climb 40 ft.",
+		"stats": [14, 14, 15, 8, 14, 11],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A ranger's primal land companion that can climb. It mauls foes and, after a running start, can bowl them over.",
+			"de": "Der ursprüngliche Landbegleiter eines Waldläufers, der klettern kann. Er zerfleischt Gegner und kann sie nach Anlauf zu Boden werfen."
+		}
+	},
+	{
+		"index": "tce/beast-of-the-sea",
+		"name": "Beast of the Sea",
+		"nameDe": "Tier des Meeres",
+		"cr": "—",
+		"type": "beast",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 13,
+		"acClass": "natural armor; 13 + PB",
+		"hp": 5,
+		"hitDice": "5 + five times your ranger level (Hit Dice d8s equal to your ranger level)",
+		"speed": "5 ft., swim 60 ft.",
+		"stats": [14, 14, 15, 8, 14, 11],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A ranger's primal water companion, a fast swimmer. It seizes one enemy at a time and holds it fast.",
+			"de": "Der ursprüngliche Wasserbegleiter eines Waldläufers und ein schneller Schwimmer. Er packt jeweils einen Gegner und hält ihn fest."
+		}
+	},
+	{
+		"index": "tce/beast-of-the-sky",
+		"name": "Beast of the Sky",
+		"nameDe": "Tier der Lüfte",
+		"cr": "—",
+		"type": "beast",
+		"subtype": "",
+		"size": "Small",
+		"alignment": "",
+		"ac": 13,
+		"acClass": "natural armor; 13 + PB",
+		"hp": 4,
+		"hitDice": "4 + four times your ranger level (Hit Dice d6s equal to your ranger level)",
+		"speed": "10 ft., fly 60 ft.",
+		"stats": [6, 16, 13, 8, 14, 11],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A ranger's primal flying companion. It slashes in passing and flits out of reach without drawing opportunity attacks.",
+			"de": "Der ursprüngliche Flugbegleiter eines Waldläufers. Er schlitzt im Vorbeiflug auf und entkommt ohne Gelegenheitsangriffe."
+		}
+	},
+	{
+		"index": "tce/bestial-spirit",
+		"name": "Bestial Spirit",
+		"nameDe": "Tiergeist",
+		"cr": "—",
+		"type": "beast",
+		"subtype": "",
+		"size": "Small",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "natural armor; 11 + the level of the spell",
+		"hp": 20,
+		"hitDice": "20 (Air only) or 30 (Land and Water only) + 5 for each spell level above 2nd",
+		"speed": "30 ft.; climb 30 ft. (land only); fly 60 ft. (air only); swim 30 ft. (water only)",
+		"stats": [18, 11, 16, 4, 14, 5],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned animal spirit of air, land or water, with the matching movement. It mauls foes, more often at higher spell levels.",
+			"de": "Ein beschworener Tiergeist der Luft, des Landes oder des Wassers mit passender Bewegungsart. Bei höheren Zaubergraden beißt er öfter zu."
+		}
+	},
+	{
+		"index": "tce/celestial-spirit",
+		"name": "Celestial Spirit",
+		"nameDe": "Himmlischer Geist",
+		"cr": "—",
+		"type": "celestial",
+		"subtype": "",
+		"size": "Large",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "natural armor; 11 + the level of the spell, +2 (Defender only)",
+		"hp": 40,
+		"hitDice": "40 + 10 for each spell level above 5th",
+		"speed": "30 ft., fly 40 ft.",
+		"stats": [16, 14, 16, 10, 14, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned angelic spirit, either an Avenger with a radiant bow or a sturdier Defender with a mace that grants temporary hit points. Once a day it can heal a creature.",
+			"de": "Ein beschworener Engelsgeist: entweder ein Rächer mit Strahlenbogen oder ein robusterer Verteidiger mit Streitkolben, der temporäre Trefferpunkte verleiht. Einmal täglich heilt er eine Kreatur."
+		}
+	},
+	{
+		"index": "tce/construct-spirit",
+		"name": "Construct Spirit",
+		"nameDe": "Konstruktgeist",
+		"cr": "—",
+		"type": "construct",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 13,
+		"acClass": "natural armor; 13 + the level of the spell",
+		"hp": 40,
+		"hitDice": "40 + 15 for each spell level above 3rd",
+		"speed": "30 ft.",
+		"stats": [18, 10, 18, 14, 11, 5],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned golem or modron of clay, metal or stone. It slams foes, and each material adds a twist: lashing back when hurt, burning attackers, or slowing nearby enemies.",
+			"de": "Ein beschworener Golem oder Modron aus Lehm, Metall oder Stein. Er schlägt zu, und je nach Material schlägt er blind zurück, verbrennt Angreifer oder bremst Gegner in der Nähe."
+		}
+	},
+	{
+		"index": "tce/dancing-item",
+		"name": "Dancing Item",
+		"nameDe": "Tanzender Gegenstand",
+		"cr": "—",
+		"type": "construct",
+		"subtype": "",
+		"size": "Large",
+		"alignment": "",
+		"ac": 16,
+		"acClass": "natural armor",
+		"hp": 10,
+		"hitDice": "10 + five times your bard level",
+		"speed": "30 ft., fly 30 ft. (hover)",
+		"stats": [18, 14, 16, 4, 10, 6],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "An everyday object brought to life by a bard of creation. It hovers, slams with force, and can speed up or slow down creatures standing near it.",
+			"de": "Ein Alltagsgegenstand, den ein Barde der Schöpfung belebt hat. Er schwebt, schlägt mit Energie zu und kann Kreaturen in seiner Nähe schneller oder langsamer machen."
+		}
+	},
+	{
+		"index": "tce/elemental-spirit",
+		"name": "Elemental Spirit",
+		"nameDe": "Elementargeist",
+		"cr": "—",
+		"type": "elemental",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "natural armor; 11 + the level of the spell",
+		"hp": 50,
+		"hitDice": "50 + 10 for each spell level above 4th",
+		"speed": "40 ft.; burrow 40 ft. (earth only); fly 40 ft. (hover) (air only); swim 40 ft. (water only)",
+		"stats": [18, 15, 17, 4, 10, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned spirit of air, earth, fire or water that slams enemies. Its element decides its resistances and movement, and it hits more often at higher spell levels.",
+			"de": "Ein beschworener Geist von Luft, Erde, Feuer oder Wasser, der Gegner rammt. Das Element bestimmt Resistenzen und Bewegung, und bei höheren Zaubergraden schlägt er öfter zu."
+		}
+	},
+	{
+		"index": "tce/fey-spirit",
+		"name": "Fey Spirit",
+		"nameDe": "Feengeist",
+		"cr": "—",
+		"type": "fey",
+		"subtype": "",
+		"size": "Small",
+		"alignment": "",
+		"ac": 12,
+		"acClass": "natural armor; 12 + the level of the spell",
+		"hp": 30,
+		"hitDice": "30 + 10 for each spell level above 3rd",
+		"speed": "40 ft.",
+		"stats": [13, 16, 14, 14, 11, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned fey that fights with a blade, then teleports short hops. Depending on its mood it gains an attack edge, charms a nearby foe, or drops a patch of darkness.",
+			"de": "Ein beschworener Feengeist, der mit der Klinge kämpft und kurze Sprünge teleportiert. Je nach Stimmung erhält er einen Angriffsvorteil, bezaubert einen Gegner oder erzeugt Dunkelheit."
+		}
+	},
+	{
+		"index": "tce/fiendish-spirit",
+		"name": "Fiendish Spirit",
+		"nameDe": "Unholdgeist",
+		"cr": "—",
+		"type": "fiend",
+		"subtype": "",
+		"size": "Large",
+		"alignment": "",
+		"ac": 12,
+		"acClass": "natural armor; 12 + the level of the spell",
+		"hp": 50,
+		"hitDice": "50 (Demon only) or 40 (Devil only) or 60 (Yugoloth only) + 15 for each spell level above 6th",
+		"speed": "40 ft.; climb 40 ft. (demon only); fly 60 ft. (devil only)",
+		"stats": [13, 16, 15, 10, 10, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned demon, devil or yugoloth. The demon bites and explodes on death, the devil hurls flame and flies, and the yugoloth claws and teleports. It resists spells well.",
+			"de": "Ein beschworener Dämon, Teufel oder Yugoloth. Der Dämon beißt und explodiert beim Tod, der Teufel schleudert Flammen und fliegt, der Yugoloth kratzt und teleportiert. Er widersteht Zaubern gut."
+		}
+	},
+	{
+		"index": "tce/homunculus-servant",
+		"name": "Homunculus Servant",
+		"nameDe": "Homunkulus-Diener",
+		"cr": "—",
+		"type": "construct",
+		"subtype": "",
+		"size": "Tiny",
+		"alignment": "",
+		"ac": 13,
+		"acClass": "natural armor",
+		"hp": 1,
+		"hitDice": "1 + your Intelligence modifier + your artificer level (Hit Dice d4s equal to your artificer level)",
+		"speed": "20 ft., fly 30 ft.",
+		"stats": [4, 15, 12, 10, 10, 7],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A tiny flying helper bound to an artificer. It shoots small bolts of force and can carry its master's touch spells to a target.",
+			"de": "Ein winziger fliegender Helfer eines Artificers. Er feuert kleine Kraftgeschosse ab und kann Berührungszauber seines Meisters zum Ziel tragen."
+		}
+	},
+	{
 		"index": "tce/juvenile-mimic",
 		"name": "Juvenile Mimic",
 		"nameDe": "Junger Mimic",
@@ -19,6 +283,116 @@
 		"summary": {
 			"en": "A baby mimic that passes for a harmless object until it moves. Its nibble does a point of damage with a little acid, and it can climb walls and ceilings.",
 			"de": "Ein junger Mimic, der sich als harmloser Gegenstand tarnt, bis er sich bewegt. Sein Biss richtet einen Punkt Schaden samt etwas Säure an, und er klettert Wände und Decken entlang."
+		}
+	},
+	{
+		"index": "tce/mighty-servant-of-leuk-o",
+		"name": "Mighty Servant of Leuk-O",
+		"nameDe": "Mächtiger Diener von Leuk-O",
+		"cr": "—",
+		"type": "construct",
+		"subtype": "",
+		"size": "Huge",
+		"alignment": "",
+		"ac": 22,
+		"acClass": "natural armor",
+		"hp": 310,
+		"hitDice": "27d12 + 135",
+		"speed": "60 ft.",
+		"stats": [30, 14, 20, 1, 14, 10],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A giant artifact construct piloted from inside. It punches or throws force blows from afar and can leap onto groups, crushing them. Nearly impervious and self-repairing.",
+			"de": "Ein riesiges Artefakt-Konstrukt, das von innen gesteuert wird. Es schlägt oder wirft mit Kraftschlägen aus der Ferne, springt auf Gruppen und zermalmt sie. Kaum zu beschädigen und selbstheilend."
+		}
+	},
+	{
+		"index": "tce/shadow-spirit",
+		"name": "Shadow Spirit",
+		"nameDe": "Schattengeist",
+		"cr": "—",
+		"type": "monstrosity",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "natural armor; 11 + the level of the spell",
+		"hp": 35,
+		"hitDice": "35 + 15 for each spell level above 3rd",
+		"speed": "40 ft.",
+		"stats": [13, 16, 15, 4, 10, 16],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned misshapen shadow marked by fury, despair or fear. It rends with cold, screams once a day to frighten everyone close, and each emotion adds a small edge.",
+			"de": "Ein beschworener, missgestalteter Schatten, geprägt von Wut, Verzweiflung oder Furcht. Er reißt mit Kälte, schreit einmal täglich alle Nahen in Furcht, und jede Emotion gibt einen kleinen Vorteil."
+		}
+	},
+	{
+		"index": "tce/steel-defender",
+		"name": "Steel Defender",
+		"nameDe": "Stahlverteidiger",
+		"cr": "—",
+		"type": "construct",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 15,
+		"acClass": "natural armor",
+		"hp": 2,
+		"hitDice": "2 + your Intelligence modifier + five times your artificer level (Hit Dice d8s equal to your artificer level)",
+		"speed": "40 ft.",
+		"stats": [14, 12, 14, 4, 10, 6],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "An artificer's loyal metal companion. It strikes with force, mends constructs or objects three times a day, and can spoil an attack aimed at an ally.",
+			"de": "Der treue Metallbegleiter eines Artificers. Er schlägt mit Energie zu, repariert dreimal täglich Konstrukte oder Gegenstände und kann einen Angriff auf einen Verbündeten stören."
+		}
+	},
+	{
+		"index": "tce/undead-spirit",
+		"name": "Undead Spirit",
+		"nameDe": "Untotengeist",
+		"cr": "—",
+		"type": "undead",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "",
+		"ac": 11,
+		"acClass": "natural armor; 11 + the level of the spell",
+		"hp": 30,
+		"hitDice": "30 (Ghostly and Putrid only) or 20 (Skeletal only) + 10 for each spell level above 3rd",
+		"speed": "30 ft.; fly 40 ft. (hover) (ghostly only)",
+		"stats": [12, 16, 15, 4, 10, 9],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A summoned undead in a ghostly, putrid or skeletal form: a ghost that frightens, a rotter that poisons and paralyzes, or a skeleton that shoots necrotic bolts.",
+			"de": "Ein beschworener Untoter als Geist, Verwesender oder Skelett: der Geist schüchtert ein, der Verwesende vergiftet und lähmt, das Skelett schießt nekrotische Geschosse."
+		}
+	},
+	{
+		"index": "tce/wildfire-spirit",
+		"name": "Wildfire Spirit",
+		"nameDe": "Wildfeuergeist",
+		"cr": "—",
+		"type": "elemental",
+		"subtype": "",
+		"size": "Small",
+		"alignment": "",
+		"ac": 13,
+		"acClass": "natural armor",
+		"hp": 5,
+		"hitDice": "5 + five times your druid level",
+		"speed": "30 ft., fly 30 ft. (hover)",
+		"stats": [10, 14, 14, 13, 15, 11],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "The flame-bodied companion of a wildfire druid. It hurls seeds of fire and can hop its allies short distances, scorching those it leaves behind.",
+			"de": "Der Flammenbegleiter eines Wildfeuer-Druiden. Er schleudert Feuersamen und versetzt Verbündete über kurze Strecken, wobei er Zurückgelassene versengt."
 		}
 	}
 ]

@@ -1,10 +1,13 @@
 // Searching and filtering the Monster Manual, like the spellbook: groups combine with AND, the values
 // inside a group with OR. The search finds English and German names, ignoring case and accents. Pure.
 
-import { type BookKey, isBookKey, type Rules } from '../catalogue/books';
+import type { BookKey, Rules } from '../catalogue/books';
 import { crValue } from '../npc/statblock';
 import { DE_NAMES } from './de';
 import type { Movement, SrdMonster } from './model';
+
+/** The books the Monster Manual's book filter offers. */
+const MONSTER_SOURCES: readonly string[] = ['srd', 'mm14', 'dmg14', 'tce', 'mpmm', 'fraif'];
 
 /** Challenge ratings in five bands: 0–½, 1–4, 5–10, 11–16, 17 and up. */
 export const BANDS = ['0', '1', '5', '11', '17'] as const;
@@ -110,6 +113,6 @@ export function readFilters(data: unknown): MonsterFilters {
     legendary: d.legendary === true,
     spellcaster: d.spellcaster === true,
     rules: list(d.rules).filter((v): v is Rules => v === '2014' || v === '2024'),
-    sources: list(d.sources).filter((v): v is BookKey | 'srd' => v === 'srd' || isBookKey(v)),
+    sources: list(d.sources).filter((v): v is BookKey | 'srd' => MONSTER_SOURCES.includes(v)),
   };
 }

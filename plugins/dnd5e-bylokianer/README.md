@@ -350,14 +350,17 @@ include, so bring them from your own books this way.
 
 **The catalogue** adds the monsters beyond the SRD of the Monster Manual (2014), the Dungeon
 Master's Guide (2014), Tasha's Cauldron of Everything, Monsters of the Multiverse (2014 rules) and
-Adventures in Faerûn (2024): 400 entries with their facts (size, type, AC, hit points, speeds,
+Adventures in Faerûn (2024): 429 entries with their facts (size, type, AC, hit points, speeds,
 the six abilities, challenge rating, legendary, spellcaster), an English and a German name, and a
 short summary in the plugin's own words in both languages. A catalogue card shows the stat block
 the facts allow — header, abilities and challenge — with the summary; the traits and actions come
 from a library note. Like the Spellbook, two more filters narrow the list (rule set and book),
 2024 rows carry a "2024" pill, and the encounter builder and Add to combat find catalogue monsters
-too (the Rule set setting decides which version a name means). Tasha's summoned spirits and
-companions print no challenge rating and are left out.
+too (the Rule set setting decides which version a name means; the own monster comes first, and
+for a name in both rule sets the encounter builder writes the picked one's key, such as
+`fraif/drow-priestess-of-lolth`). Summoned spirits and companions (Tasha's) and a few DMG blocks
+print no challenge rating: they show "CR —", can join a fight, and stay out of the encounter
+builder's budget.
 
 **Library notes** for monsters work like the Spellbook's: a `type: library` note with the book's
 key as `source:` (`mm14`, `dmg14`, `tce`, `mpmm`, `fraif`) holds one `##` section per monster,

@@ -35,6 +35,8 @@ function copied(summary, source) {
 export function problems(e, window) {
 	if (e.note === 'not a monster' || typeof e.srd === 'string') return [];
 	const out = [];
+	// A block that prints no challenge rating (summoned spirits): CR "—", hit points may scale.
+	const summoned = /^No CR printed/i.test(e.note ?? '');
 	const need = (ok, msg) => ok || out.push(msg);
 	need(
 		typeof e.name === 'string' && e.name.length > 1 && e.name !== e.name.toUpperCase(),
@@ -44,14 +46,14 @@ export function problems(e, window) {
 	need(SIZES.includes(e.size), `size ${e.size}`);
 	need(typeof e.type === 'string' && e.type === e.type.toLowerCase() && e.type !== '', 'type');
 	need(Number.isInteger(e.ac) && e.ac > 0 && e.ac < 30, 'ac');
-	need(Number.isInteger(e.hp) && e.hp > 0, 'hp');
+	need(Number.isInteger(e.hp) && (e.hp > 0 || (summoned && e.hp === 0)), 'hp');
 	need(
 		Array.isArray(e.stats) &&
 			e.stats.length === 6 &&
 			e.stats.every((n) => Number.isInteger(n) && n > 0 && n <= 30),
 		'stats',
 	);
-	need(CR.test(String(e.cr)), `cr ${e.cr}`);
+	need(summoned ? e.cr === '—' || CR.test(String(e.cr)) : CR.test(String(e.cr)), `cr ${e.cr}`);
 	need(typeof e.legendary === 'boolean' && typeof e.spellcaster === 'boolean', 'flags');
 	for (const lang of ['en', 'de']) {
 		const s = e.summary?.[lang];
@@ -68,10 +70,13 @@ export function problems(e, window) {
 	if (block !== null && typeof block === 'object') {
 		need(block.name === e.name, 'yaml name ≠ name');
 		need(Number(block.ac) === e.ac, 'yaml ac ≠ ac');
-		need(Number(block.hp) === e.hp, 'yaml hp ≠ hp');
-		need(String(block.cr) === String(e.cr), 'yaml cr ≠ cr');
+		need(e.hp === 0 || Number(block.hp) === e.hp, 'yaml hp ≠ hp');
+		need(e.cr === '—' || String(block.cr) === String(e.cr), 'yaml cr ≠ cr');
 		need(JSON.stringify(block.stats) === JSON.stringify(e.stats), 'yaml stats ≠ stats');
-		need(Array.isArray(block.actions) && block.actions.length > 0, 'yaml has no actions');
+		need(
+			summoned || (Array.isArray(block.actions) && block.actions.length > 0),
+			'yaml has no actions',
+		);
 		need(
 			!e.legendary || Array.isArray(block.legendary_actions),
 			'legendary without legendary_actions',

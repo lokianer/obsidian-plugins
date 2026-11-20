@@ -66,6 +66,28 @@
 		}
 	},
 	{
+		"index": "fraif/ancient-spirit-dragon",
+		"name": "Ancient Spirit Dragon",
+		"nameDe": "Uralter Geisterdrache",
+		"cr": "22",
+		"type": "dragon",
+		"subtype": "",
+		"size": "Gargantuan",
+		"alignment": "neutral",
+		"ac": 21,
+		"acClass": "",
+		"hp": 420,
+		"hitDice": "24d20 + 168",
+		"speed": "40 ft., burrow 30 ft., fly 80 ft.",
+		"stats": [26, 14, 25, 24, 18, 23],
+		"legendary": true,
+		"spellcaster": true,
+		"summary": {
+			"en": "An enormous dragon that embodies a vanished empire. Gigantic reach with necrotic claws, a vast decay breath, a time-slowing cone, spellcasting, and legendary actions that quake the ground or raise ruins.",
+			"de": "Ein riesiger Drache, der ein untergegangenes Reich verkörpert. Große Reichweite mit nekrotischen Klauen, ein gewaltiger Zerfallsatem, ein Zeit verlangsamender Kegel, Zauberei und legendäre Aktionen, die Boden erschüttern oder Ruinen aufwerfen."
+		}
+	},
+	{
 		"index": "fraif/aranea",
 		"name": "Aranea",
 		"nameDe": "Aranea",
@@ -528,6 +550,28 @@
 		}
 	},
 	{
+		"index": "fraif/rusted-behemoth",
+		"name": "Rusted Behemoth",
+		"nameDe": "Verrosteter Behemoth",
+		"cr": "9",
+		"type": "construct",
+		"subtype": "",
+		"size": "Huge",
+		"alignment": "Neutral",
+		"ac": 18,
+		"acClass": "",
+		"hp": 157,
+		"hitDice": "15d12 + 60",
+		"speed": "40 ft.",
+		"stats": [22, 10, 19, 6, 12, 6],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A giant turned into a hulking iron juggernaut by a curse. It batters foes with huge fists or lobs rusted boulders, and its flaking hide poisons attackers who hurt it.",
+			"de": "Ein Riese, den ein Fluch in einen eisernen Koloss verwandelt hat. Er drischt mit gewaltigen Fäusten zu oder schleudert verrostete Brocken, und seine bröckelnde Haut vergiftet Angreifer, die ihn verletzen."
+		}
+	},
+	{
 		"index": "fraif/rusted-berserker",
 		"name": "Rusted Berserker",
 		"nameDe": "Verrosteter Berserker",
@@ -572,6 +616,28 @@
 		}
 	},
 	{
+		"index": "fraif/sammaster-dracolich-form",
+		"name": "Sammaster (Dracolich Form)",
+		"nameDe": "Sammaster (Drakolichform)",
+		"cr": "22",
+		"type": "undead",
+		"subtype": "",
+		"size": "Huge",
+		"alignment": "chaotic evil",
+		"ac": 20,
+		"acClass": "",
+		"hp": 276,
+		"hitDice": "24d12 + 120",
+		"speed": "40 ft., burrow 30 ft., fly 80 ft.",
+		"stats": [25, 10, 21, 23, 15, 21],
+		"legendary": true,
+		"spellcaster": true,
+		"summary": {
+			"en": "The undead dragon form of a cult-founding lich. Three rending claws laced with necrotic power, an acid breath, and spells like Power Word Kill; it frightens foes and snatches extra actions out of turn.",
+			"de": "Die untote Drachengestalt eines kultgründenden Lichs. Drei Klauenhiebe mit nekrotischer Kraft, ein Säureatem und Zauber wie Wort der Macht: Tod; er verängstigt Gegner und handelt zusätzlich außerhalb seines Zuges."
+		}
+	},
+	{
 		"index": "fraif/sammaster-lich-form",
 		"name": "Sammaster (Lich Form)",
 		"nameDe": "Sammaster (Lichform)",
@@ -591,6 +657,28 @@
 		"summary": {
 			"en": "The wizard-lich who leads a dragon cult. He blasts with acid or necrotic bursts, paralyzes by touch, and casts high-level magic; if slain he returns later as a dracolich unless his gem is broken.",
 			"de": "Der Magier-Lich, der einen Drachenkult anführt. Er schleudert Säure- oder Nekrotikstöße, lähmt durch Berührung und wirkt mächtige Zauber; stirbt er, kehrt er als Drakolich zurück, solange sein Edelstein existiert."
+		}
+	},
+	{
+		"index": "fraif/spirit-dragon-wyrmling",
+		"name": "Spirit Dragon Wyrmling",
+		"nameDe": "Geisterdrachen-Wyrmling",
+		"cr": "2",
+		"type": "dragon",
+		"subtype": "",
+		"size": "Medium",
+		"alignment": "neutral",
+		"ac": 16,
+		"acClass": "",
+		"hp": 52,
+		"hitDice": "8d8 + 16",
+		"speed": "30 ft., burrow 20 ft., fly 60 ft.",
+		"stats": [15, 12, 15, 14, 11, 14],
+		"legendary": false,
+		"spellcaster": false,
+		"summary": {
+			"en": "A newly hatched dragon of fallen empires. It rends with necrotic-edged claws, breathes a cone of decay, or slows enemies with a breath that warps their sense of time.",
+			"de": "Ein frisch geschlüpfter Drache untergegangener Reiche. Er zerfetzt mit nekrotisch geladenen Klauen, speit einen Zerfallskegel oder verlangsamt Gegner mit einem Atem, der ihr Zeitgefühl verzerrt."
 		}
 	},
 	{
