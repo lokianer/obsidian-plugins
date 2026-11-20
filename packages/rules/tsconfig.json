@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"target": "ES2021",
+		"strict": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"moduleResolution": "bundler",
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": [],
+		"lib": ["ES2021"]
+	},
+	"include": ["src/**/*.ts", "data/**/*.json"]
+}
