@@ -4,7 +4,7 @@
 // dice button. A built character's numbers come from the rules engine; a hand-written note shows
 // its own values. In a narrow pane the ability column becomes a row of six boxes above the tabs.
 
-import { ABILITIES, type Rules, type Sheet } from '@obsidian-plugins/rules';
+import { ABILITIES, local, type Rules, type Sheet } from '@obsidian-plugins/rules';
 import { type Component, ItemView, type ViewStateResult, type WorkspaceLeaf } from 'obsidian';
 
 import type { SheetData } from '../character/note';
@@ -145,7 +145,7 @@ export class CharacterSheetView extends ItemView {
       r.background(id) ??
       r.armor(id) ??
       r.weapon(id);
-    if (named !== undefined) return named.name.en;
+    if (named !== undefined) return local(named.name, this.lang());
     if (r.skill(id) !== undefined) return skillName(id.replace(/-/g, '_'), this.lang());
     return ABILITY_NAMES[id]?.[this.lang() === 'de' ? 1 : 0] ?? id;
   }
@@ -308,7 +308,7 @@ export class CharacterSheetView extends ItemView {
       sectionHead(el, t('sheet.attacks'));
       for (const attack of sheet.attacks) {
         const row = el.createDiv({ cls: 'dnd5e-cs-attack' });
-        const name = attack.name.en;
+        const name = local(attack.name, this.lang());
         row.createSpan({ cls: 'dnd5e-cs-attack-name', text: name });
         this.rollButton(
           row,
@@ -327,7 +327,7 @@ export class CharacterSheetView extends ItemView {
       sectionHead(el, t('sheet.resources'));
       for (const r of sheet.resources) {
         const row = el.createDiv({ cls: 'dnd5e-cs-resource' });
-        row.createSpan({ cls: 'dnd5e-cs-resource-name', text: r.name.en });
+        row.createSpan({ cls: 'dnd5e-cs-resource-name', text: local(r.name, this.lang()) });
         const rest = t(r.recharge === 'short' ? 'sheet.rest.short' : 'sheet.rest.long');
         const uses = t('sheet.uses', { n: r.uses, rest });
         row.createSpan({
@@ -386,8 +386,12 @@ export class CharacterSheetView extends ItemView {
       sectionHead(el, this.nameOf(from));
       for (const f of features) {
         const item = el.createEl('details', { cls: 'dnd5e-cs-feature' });
-        item.createEl('summary', { text: f.name.en });
-        this.deps.render(f.text.en, item.createDiv({ cls: 'dnd5e-cs-feature-text' }), this);
+        item.createEl('summary', { text: local(f.name, this.lang()) });
+        this.deps.render(
+          local(f.text, this.lang()),
+          item.createDiv({ cls: 'dnd5e-cs-feature-text' }),
+          this,
+        );
       }
     }
     el.createDiv({ cls: 'dnd5e-cs-muted dnd5e-cs-attribution', text: this.deps.t('sheet.srd') });

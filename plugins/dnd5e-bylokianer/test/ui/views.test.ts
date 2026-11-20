@@ -2621,6 +2621,22 @@ describe('character sheet', () => {
     expect(texts(el, '.dnd5e-cs-resource .dnd5e-cs-resource-name')).toContain('Bardic Inspiration');
   });
 
+  it('shows the sheet in German', async () => {
+    const { el } = await open('Wren Ashdown', 'de');
+    expect(texts(el, '.dnd5e-cs-sub')[0]).toContain('Halbling · Barde 6 (Schule des Wissens)');
+    tab(el, 'Aktionen');
+    expect(texts(el, '.dnd5e-cs-attack-name')).toContain('Dolch');
+    expect(texts(el, '.dnd5e-cs-resource-name')).toContain('Bardische Inspiration');
+    tab(el, 'Merkmale');
+    expect(texts(el, '.dnd5e-cs-feature summary')).toContain('Bardische Inspiration');
+    tab(el, 'Stufen');
+    expect(
+      [...el.querySelectorAll<HTMLElement>('.dnd5e-cs-level')].map((r) => r.textContent).join('|'),
+    ).toContain('Schule des Wissens');
+    const english = await open('Wren Ashdown', 'en');
+    expect(texts(english.el, '.dnd5e-cs-sub')[0]).toContain('Bard 6 (College of Lore)');
+  });
+
   it('marks expertise in the Skills tab and lists every level', async () => {
     const { el } = await open('Wren Ashdown');
     tab(el, 'Skills');
