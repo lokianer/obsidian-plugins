@@ -179,7 +179,9 @@ export class EncounterBuilderModal extends Modal {
             : t('encounterBuilder.member', { name: m.name, level: m.level }),
       });
       const paint = () => {
-        chip.className = on() ? 'dnd5e-builder-flag is-active' : 'dnd5e-builder-flag';
+        chip.className = on()
+          ? 'dnd5e-builder-flag dnd5e-pill is-active'
+          : 'dnd5e-builder-flag dnd5e-pill';
         chip.setAttr('aria-pressed', String(on()));
       };
       paint();

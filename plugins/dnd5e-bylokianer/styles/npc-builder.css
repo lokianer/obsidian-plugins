@@ -55,8 +55,13 @@
   color: var(--text-accent);
 }
 
+/* The form's headings as section heads (base.css), in every builder. */
 .dnd5e-npc-form .setting-item-heading .setting-item-name {
-  font-size: var(--font-ui-medium);
+  color: var(--text-accent);
+  font-size: 16px;
+  font-weight: var(--font-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .dnd5e-npc-picker {
@@ -154,10 +159,9 @@
   background-color: var(--background-secondary);
 }
 
-.dnd5e-npc-card-eyebrow {
-  color: var(--text-accent);
-  font-size: 16px;
-  font-weight: var(--font-semibold);
+/* Section heads in the card: the card's gap does the spacing. */
+.dnd5e-npc-card .dnd5e-section-head {
+  margin: 0 0 var(--size-4-1);
 }
 
 .dnd5e-npc-card-name {
@@ -188,15 +192,11 @@
   display: none;
 }
 
-.dnd5e-npc-card-tag {
-  padding: 2px var(--size-4-2);
-  border-radius: var(--tag-radius);
-  color: var(--tag-color);
-  background-color: var(--tag-background);
+.dnd5e-npc-card-tags .dnd5e-pill {
+  margin: 0;
   font-size: 16px;
 }
 
-.dnd5e-npc-card-archetype,
 .dnd5e-npc-card-line {
   padding-top: var(--size-4-3);
   border-top: 1px solid var(--background-modifier-border);

@@ -43,11 +43,6 @@
   padding-bottom: var(--size-4-3);
 }
 
-.dnd5e-deck-builder .setting-item-heading .setting-item-name,
-.dnd5e-spell-builder .setting-item-heading .setting-item-name {
-  font-size: var(--font-ui-medium);
-}
-
 .dnd5e-builder-count {
   margin-left: var(--size-4-2);
   padding: 0 var(--size-4-2);
@@ -135,28 +130,34 @@
   gap: var(--size-2-3);
 }
 
-.dnd5e-builder-flag {
+/* Level, component, class, damage and party chips as pills; these selectors outrank Obsidian's
+   `button:not(.clickable-icon)` and its `:hover`. */
+.dnd5e-builder-flag.dnd5e-pill:not(.clickable-icon) {
   height: auto;
-  padding: var(--size-2-1) var(--size-4-3);
-  border: 1px solid var(--background-modifier-border);
+  margin: 0;
+  padding: var(--size-4-1) var(--size-4-3);
+  border: none;
   border-radius: var(--radius-l);
-  background-color: var(--background-primary);
+  background: var(--background-modifier-hover);
   box-shadow: none;
-  color: var(--text-muted);
-  font-size: 16px;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
-}
-
-.dnd5e-builder-flag:hover {
-  border-color: var(--interactive-accent);
-}
-
-.dnd5e-builder-flag.is-active {
-  border-color: var(--interactive-accent);
-  background-color: hsla(var(--interactive-accent-hsl), 0.15);
   color: var(--text-normal);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dnd5e-builder-flag.dnd5e-pill:not(.clickable-icon):hover {
+  background: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-modifier-hover));
+}
+
+.dnd5e-builder-flag.dnd5e-pill.is-active:not(.clickable-icon) {
+  background: color-mix(in srgb, var(--interactive-accent) 30%, transparent);
+  color: var(--text-accent);
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-builder-flag.dnd5e-pill:not(.clickable-icon):focus-visible {
+  box-shadow: 0 0 0 2px var(--background-modifier-border-focus, var(--interactive-accent));
 }
 
 .dnd5e-builder-row-chips,

@@ -27,6 +27,7 @@ import {
   spellName,
 } from '../spells/meta';
 import type { School, SrdSpell } from '../spells/model';
+import { pill, sectionHead, tile, tiles } from './ui/blocks';
 import { hue } from './spellbook-view';
 
 /** How many SRD spells the start-from tiles show at once. */
@@ -325,7 +326,9 @@ export class SpellBuilderModal extends Modal {
 
   private chip(parent: HTMLElement, text: string, on: boolean, click: () => void): HTMLElement {
     const chip = parent.createEl('button', {
-      cls: on ? ['dnd5e-builder-flag', 'is-active'] : 'dnd5e-builder-flag',
+      cls: on
+        ? ['dnd5e-builder-flag', 'dnd5e-pill', 'is-active']
+        : ['dnd5e-builder-flag', 'dnd5e-pill'],
       text,
       attr: { 'aria-pressed': String(on) },
     });
@@ -383,21 +386,18 @@ export class SpellBuilderModal extends Modal {
     this.previewEl.empty();
     const card = this.previewEl.createDiv({ cls: ['dnd5e-npc-card', 'dnd5e-spell-preview'] });
     hue(card, d.school);
-    card.createDiv({ cls: 'dnd5e-npc-card-eyebrow', text: t('npc.preview') });
+    sectionHead(card, t('npc.preview')).addClass('dnd5e-npc-card-eyebrow');
     card.createDiv({
       cls: d.name.trim() === '' ? ['dnd5e-npc-card-name', 'is-empty'] : 'dnd5e-npc-card-name',
       text: d.name.trim() === '' ? t('spellBuilder.unnamed') : d.name,
     });
     card.createDiv({ cls: 'dnd5e-npc-card-sub', text: levelLine(spell, lang) });
-    const grid = card.createDiv({ cls: 'dnd5e-spells-grid' });
+    const grid = tiles(card);
+    grid.addClass('dnd5e-spells-tiles');
     const cell = (
       key: 'spells.castingTime' | 'spells.range' | 'spells.components' | 'spells.duration',
       value: string,
-    ) => {
-      const c = grid.createDiv();
-      c.createDiv({ cls: 'dnd5e-spells-grid-label', text: t(key) });
-      c.createDiv({ cls: 'dnd5e-spells-grid-value', text: value === '' ? '—' : value });
-    };
+    ) => tile(grid, value === '' ? '—' : value, t(key));
     cell('spells.castingTime', castingTime(spell, lang));
     cell('spells.range', range(spell, lang));
     cell('spells.components', components(spell, lang));
@@ -409,19 +409,13 @@ export class SpellBuilderModal extends Modal {
       });
     }
     const tags = card.createDiv({ cls: 'dnd5e-npc-card-tags' });
-    for (const damage of d.damage)
-      tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: label(damage, lang) });
+    for (const damage of d.damage) pill(tags, label(damage, lang));
     if (d.save !== null) {
-      tags.createSpan({
-        cls: 'dnd5e-npc-card-tag',
-        text: t('spells.saveBadge', { ability: label(d.save, lang) }),
-      });
+      pill(tags, t('spells.saveBadge', { ability: label(d.save, lang) }));
     }
-    if (d.attack !== null)
-      tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: t(`spells.attack.${d.attack}`) });
-    if (d.concentration)
-      tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: t('spells.concentration') });
-    for (const c of d.classes) tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: label(c, lang) });
+    if (d.attack !== null) pill(tags, t(`spells.attack.${d.attack}`));
+    if (d.concentration) pill(tags, t('spells.concentration'));
+    for (const c of d.classes) pill(tags, label(c, lang));
     if (d.text.trim() === '') {
       card.createDiv({ cls: 'dnd5e-npc-card-hint', text: t('spellBuilder.previewHint') });
       return;
@@ -429,7 +423,7 @@ export class SpellBuilderModal extends Modal {
     const text = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
     void MarkdownRenderer.render(this.app, d.text, text, '', this.preview);
     if (d.higher.trim() !== '') {
-      card.createDiv({ cls: 'dnd5e-npc-card-label', text: t('spells.higher') });
+      sectionHead(card, t('spells.higher'));
       const higher = card.createDiv({ cls: ['dnd5e-spells-text', 'markdown-rendered'] });
       void MarkdownRenderer.render(this.app, d.higher, higher, '', this.preview);
     }

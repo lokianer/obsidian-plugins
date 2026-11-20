@@ -39,6 +39,7 @@ import {
 import type { SrdMonster } from '../monsters/model';
 import type { Lang } from '../npc/races';
 import { type Entry, findStatblocks, parseStatblock, type Statblock } from '../npc/statblock';
+import { sectionHead } from './ui/blocks';
 import { renderStatblock } from './statblock-view';
 
 /** How many SRD monsters the start-from tiles show at once. */
@@ -522,7 +523,7 @@ export class MonsterBuilderModal extends Modal {
     const text = this.preview;
     this.previewEl.empty();
     const card = this.previewEl.createDiv({ cls: ['dnd5e-npc-card', 'dnd5e-monster-preview'] });
-    card.createDiv({ cls: 'dnd5e-npc-card-eyebrow', text: t('npc.preview') });
+    sectionHead(card, t('npc.preview')).addClass('dnd5e-npc-card-eyebrow');
     const b = this.block;
     const named = (b.name ?? '').trim() !== '';
     const shown: Statblock = { ...b, name: named ? b.name : t('monsterBuilder.unnamed') };

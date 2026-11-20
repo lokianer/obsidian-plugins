@@ -16,6 +16,7 @@ import {
 } from '../deck/own';
 import type { T } from '../i18n/strings';
 import type { Lang } from '../npc/races';
+import { pill, sectionHead } from './ui/blocks';
 
 export interface DeckBuilderDeps {
   t: T;
@@ -282,7 +283,9 @@ export class DeckBuilderModal extends Modal {
 
   private flag(parent: HTMLElement, card: DraftCard, key: 'leaves' | 'ends', text: string): void {
     const chip = parent.createEl('button', {
-      cls: card[key] ? ['dnd5e-builder-flag', 'is-active'] : 'dnd5e-builder-flag',
+      cls: card[key]
+        ? ['dnd5e-builder-flag', 'dnd5e-pill', 'is-active']
+        : ['dnd5e-builder-flag', 'dnd5e-pill'],
       text,
       attr: { 'aria-pressed': String(card[key]) },
     });
@@ -310,7 +313,7 @@ export class DeckBuilderModal extends Modal {
     this.preview.load();
     this.previewEl.empty();
     const card = this.previewEl.createDiv({ cls: ['dnd5e-npc-card', 'dnd5e-deck-preview'] });
-    card.createDiv({ cls: 'dnd5e-npc-card-eyebrow', text: t('npc.preview') });
+    sectionHead(card, t('npc.preview')).addClass('dnd5e-npc-card-eyebrow');
     const name = this.deck.name.trim();
     card.createDiv({
       cls: name === '' ? ['dnd5e-npc-card-name', 'is-empty'] : 'dnd5e-npc-card-name',
@@ -344,7 +347,7 @@ export class DeckBuilderModal extends Modal {
     face.createDiv({ cls: ['dnd5e-deck-corner', 'is-bottom'], text: String(this.current + 1) });
 
     const tags = card.createDiv({ cls: 'dnd5e-npc-card-tags' });
-    for (const c of this.named()) tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: c.name });
+    for (const c of this.named()) pill(tags, c.name);
     if (n === 0) card.createDiv({ cls: 'dnd5e-npc-card-hint', text: t('builder.previewHint') });
   }
 

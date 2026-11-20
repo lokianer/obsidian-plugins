@@ -572,6 +572,11 @@ describe('New NPC dialog', () => {
     expect(name).not.toBe('');
     expect(preview()?.querySelector('.dnd5e-npc-card-name')?.textContent).toBe(name);
     expect(preview()?.querySelector('.dnd5e-npc-card-sub')?.textContent).toContain('Dwarf');
+    // Style C: the preview's head is a section head, its tags are pills.
+    expect(
+      preview()?.querySelector('.dnd5e-npc-card-eyebrow.dnd5e-section-head')?.textContent,
+    ).toBe('Preview');
+    expect(texts(preview() ?? el, '.dnd5e-npc-card-tags .dnd5e-pill')).toContain('Barbarian');
     expect(preview()?.textContent).toContain('A whisper like dry paper');
     expect(preview()?.querySelector('.is-secret')?.textContent).toContain(
       tablesFor('en').secret[0],
@@ -1334,6 +1339,7 @@ describe('deck builder', () => {
     expect(texts(el, '.dnd5e-npc-card-sub')[0]).toContain(
       'Each card drawn stays out until the deck is reset.',
     );
+    expect(el.querySelector('.dnd5e-builder-flag')?.classList.contains('dnd5e-pill')).toBe(true);
     press('.dnd5e-builder-flag');
     expect(el.querySelector('.dnd5e-builder-count')?.textContent).toBe('1 card');
     press('button', 'Create deck');
@@ -1371,7 +1377,7 @@ describe('deck builder', () => {
     press('[data-source="standard"]');
     expect(names()).toHaveLength(22);
     expect(names()[0]).toBe('Wesir');
-    expect(texts(el, '.dnd5e-npc-card-tag')).toHaveLength(22);
+    expect(texts(el, '.dnd5e-npc-card-tags .dnd5e-pill')).toHaveLength(22);
   });
 });
 
@@ -1405,11 +1411,21 @@ describe('spell builder', () => {
     expect(el.querySelector<HTMLInputElement>('.dnd5e-spell-name')?.value).toBe('Feuerball');
     expect(texts(el, '.dnd5e-npc-card-name')).toEqual(['Feuerball']);
     expect(texts(el, '.dnd5e-npc-card-sub')[0]).toBe('Hervorrufung des 3. Grades');
-    expect(texts(el, '.dnd5e-spells-grid-value')).toEqual([
+    expect(texts(el, '.dnd5e-spell-preview .dnd5e-tile-value')).toEqual([
       '1 Aktion',
       '45 m',
       'V, G, M',
       'Unmittelbar',
+    ]);
+    expect(texts(el, '.dnd5e-spell-preview .dnd5e-tile-label')).toEqual([
+      'Zauberzeit',
+      'Reichweite',
+      'Komponenten',
+      'Wirkungsdauer',
+    ]);
+    expect(texts(el, '.dnd5e-spell-preview .dnd5e-section-head')).toEqual([
+      'Vorschau',
+      'Auf höheren Graden',
     ]);
     expect(el.querySelector<HTMLTextAreaElement>('.dnd5e-spell-text')?.value).toContain('8W6');
     const casting = el.querySelector<HTMLSelectElement>('.dnd5e-spell-casting');
@@ -1421,7 +1437,7 @@ describe('spell builder', () => {
     if (lasting === null) throw new Error('no duration');
     lasting.value = 'Up to 1 minute';
     lasting.dispatchEvent(new Event('change'));
-    expect(texts(el, '.dnd5e-spells-grid-value')[3]).toBe('Bis zu 1 Minute');
+    expect(texts(el, '.dnd5e-spell-preview .dnd5e-tile-value')[3]).toBe('Bis zu 1 Minute');
     expect(el.querySelector('.dnd5e-spell-schools .is-selected')?.textContent).toBe('Hervorrufung');
   });
 
@@ -1447,7 +1463,12 @@ describe('spell builder', () => {
     text.value = 'A lance of embers.';
     text.dispatchEvent(new Event('input'));
     expect(texts(el, '.dnd5e-npc-card-sub')[0]).toBe('2nd-level abjuration');
-    expect(texts(el, '.dnd5e-npc-card-tag')).toEqual(['Fire', 'Wizard']);
+    expect(texts(el, '.dnd5e-npc-card-tags .dnd5e-pill')).toEqual(['Fire', 'Wizard']);
+    expect(
+      [...el.querySelectorAll('.dnd5e-builder-flag')].every((f) =>
+        f.classList.contains('dnd5e-pill'),
+      ),
+    ).toBe(true);
     [...el.querySelectorAll<HTMLElement>('button')]
       .find((b) => b.textContent === 'Create spell')
       ?.dispatchEvent(new MouseEvent('click'));
@@ -1481,7 +1502,11 @@ describe('spell builder', () => {
       }),
     );
     expect(el.querySelector<HTMLInputElement>('.dnd5e-spell-name')?.value).toBe('Frost Needle');
-    expect(texts(el, '.dnd5e-npc-card-tag')).toEqual(['Cold', 'Ranged spell attack', 'Wizard']);
+    expect(texts(el, '.dnd5e-npc-card-tags .dnd5e-pill')).toEqual([
+      'Cold',
+      'Ranged spell attack',
+      'Wizard',
+    ]);
   });
 });
 

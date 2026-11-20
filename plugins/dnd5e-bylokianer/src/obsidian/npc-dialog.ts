@@ -13,6 +13,7 @@ import { type Lang, type Race, rollAge, rollLooks, searchRaces } from '../npc/ra
 import { SRD_RACES } from '../npc/srd-races';
 import { parseStatblock, type Statblock } from '../npc/statblock';
 import { pick, type TableName } from '../npc/tables';
+import { pill, sectionHead } from './ui/blocks';
 import { raceLabel, type Tables } from './npc-modal';
 import { renderShortStats } from './statblock-view';
 
@@ -510,7 +511,7 @@ export class NewNpcModal extends Modal {
     const v = (field: TextField) => this.values[field].trim();
     this.previewEl.empty();
     const card = this.previewEl.createDiv({ cls: 'dnd5e-npc-card' });
-    card.createDiv({ cls: 'dnd5e-npc-card-eyebrow', text: t('npc.preview') });
+    sectionHead(card, t('npc.preview')).addClass('dnd5e-npc-card-eyebrow');
     const name = v('name');
     card.createDiv({
       cls: name === '' ? ['dnd5e-npc-card-name', 'is-empty'] : 'dnd5e-npc-card-name',
@@ -528,7 +529,7 @@ export class NewNpcModal extends Modal {
     const tags = card.createDiv({ cls: 'dnd5e-npc-card-tags' });
     const cls = this.cls === null ? this.freeClass : this.cls.label[lang];
     for (const tag of [faction?.trim() ?? '', cls, v('alignment')]) {
-      if (tag !== '') tags.createSpan({ cls: 'dnd5e-npc-card-tag', text: tag });
+      if (tag !== '') pill(tags, tag);
     }
     if (this.race !== null && this.race.traits.length > 0) {
       card.createDiv({
@@ -539,7 +540,7 @@ export class NewNpcModal extends Modal {
     if (this.archetype !== null) {
       const block = this.block(this.archetype);
       const stats = card.createDiv({ cls: 'dnd5e-npc-card-archetype' });
-      stats.createDiv({ cls: 'dnd5e-npc-card-label', text: this.archetype.name });
+      sectionHead(stats, this.archetype.name);
       if (block !== null) renderShortStats(stats, block, t);
     }
     for (const field of LINES) {

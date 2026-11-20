@@ -62,6 +62,11 @@ All notable changes to this plugin are documented here. The format follows
   verdict as a green or red pill, rolls and draws as zebra rows; the deck shows its cards, the
   cards gone for good and the draws as tiles, and this drawing's cards as pills. The dice stage
   and the playing card are unchanged.
+- **Builders and dialogs in style C** (phase V6): in the New NPC dialog and the spell, monster
+  and deck builders the form's headings and the preview's heads are section heads, level,
+  component, class, damage and party chips are pills (tinted with the accent when on), the
+  preview's tags are pills, and the spell preview shows casting time, range, components and
+  duration as tiles, as the spell card does.
 
 ## [0.1.0] - 2026-10-26
 

@@ -18,7 +18,7 @@ was missing and brought the catalogues forward, before V5/V6: 2014 and 2024, adv
 included, from their own PDFs. Design (`docs/superpowers/specs/2026-11-20-catalogues-design.md`)
 approved; **K1 (spells), K2 (monsters) and K3 (Heroes of Faerûn's spells) built** and pushed; the
 maintainer's example-vault changes committed with the tests updated; visual refactoring V5 (Dice
-tab, deck) built.
+tab, deck) and V6 (builders) built.
 
 ## Where to continue
 
@@ -36,8 +36,11 @@ tab, deck) built.
    school in phb24.
 4. **V5 (Dice tab, Deck of Many Things) built** (plan `2026-11-20-visual-v5-dice-deck.md`):
    check it in Obsidian together with V4 — the Dice tab's heads, pills, total tiles and verdict
-   pills, the deck's three tiles, heads, drawn pills and zebra draws, in dark and light. Then V6
-   (builders and dialogs), then the character builder (with the subclasses, feats and
+   pills, the deck's three tiles, heads, drawn pills and zebra draws, in dark and light.
+5. **V6 (builders and dialogs) built** (plan `2026-11-20-visual-v6-builders.md`): check the New
+   NPC dialog and the spell, monster and deck builders — section-head form headings, chips and
+   preview tags as pills, the spell preview's tiles. After V4–V6 are accepted: release 0.2.0
+   (spec §6: only after V6 and the go-ahead). Then the character builder (with the subclasses, feats and
    backgrounds of the books, Heroes of Faerûn's included).
 
 ## State of the working tree
