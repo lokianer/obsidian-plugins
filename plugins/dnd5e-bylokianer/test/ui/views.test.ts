@@ -370,6 +370,8 @@ describe('stat block', () => {
     );
     type(ac?.querySelector('.dnd5e-tile-value.is-editable'), '17');
     expect(edit.scalar).toHaveBeenCalledWith('ac', 18, 17);
+    // While editing, the row leaves room for the entry's tools, which sit at its top right.
+    expect(root.querySelectorAll('.dnd5e-sb-entry.has-tools').length).toBeGreaterThan(0);
     type(root.querySelectorAll('.dnd5e-sb-ability .is-editable')[1], '14');
     expect(edit.ability).toHaveBeenCalledWith(1, 11, 14);
     type(root.querySelector('.dnd5e-sb-name'), 'Aldric the Brave');

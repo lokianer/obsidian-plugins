@@ -130,6 +130,14 @@
   background: var(--background-secondary);
 }
 
+.dnd5e-sb-entry.has-tools > .dnd5e-sb-action-row {
+  padding-right: calc(var(--size-4-2) + 64px);
+}
+
+.is-mobile .dnd5e-sb-entry.has-tools > .dnd5e-sb-action-row {
+  padding-right: var(--size-4-2);
+}
+
 .dnd5e-sb-action-name {
   flex: 1 1 8em;
   font-weight: var(--font-bold);

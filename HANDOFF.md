@@ -74,6 +74,11 @@ about 480 px (flex-wrap for list | details, a container query for the stat block
 
 - V1's check in Obsidian.
 - The uncommitted example-vault changes: keep (tests updated) or revert.
+- Small things the final review found, left for the check (decide after seeing them in Obsidian):
+  a Spellcasting trait gets a row with its spell attack (`+6`) and its name leaves the text; German
+  rows show `d` (`18d6`) while the text under them says `W`; row names show as plain text (a
+  `[[link]]` in an entry's name would show its brackets); narrow blocks show the abilities as a
+  grid of three, not a row of six as the plan said.
 
 ## Watch out
 

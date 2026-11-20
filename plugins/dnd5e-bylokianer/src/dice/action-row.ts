@@ -1,7 +1,9 @@
 // What a stat block entry's row shows beside its name: the attack bonus, every damage part and the
 // saving throw DC, read from the entry's text in English or German (`DC 18 Constitution saving
 // throw`, `Dexterity Saving Throw: DC 15`, `Stärkerettungswurf mit SG 14`). A `spell save DC`
-// names no ability and is no row DC. Pure.
+// names no ability and is no row DC. Markdown emphasis is dropped first, so the SRD 5.2's
+// `*Melee Attack Roll:* +7` and `*Dexterity Saving Throw*: DC 21` read too; the parts' offsets
+// therefore refer to that plain text, not to the entry's. Pure.
 
 import { rollParts, type RollPart } from './statblock';
 
@@ -54,7 +56,8 @@ function readDc(text: string): ActionRow['dc'] {
 }
 
 /** The row of an entry, or null when its text has no attack, damage or DC. */
-export function actionRow(text: string): ActionRow | null {
+export function actionRow(markdown: string): ActionRow | null {
+  const text = markdown.replace(/[*_]/g, '');
   const parts = rollParts(text);
   const row: ActionRow = {
     attack: parts.find((p) => p.kind === 'attack') ?? null,

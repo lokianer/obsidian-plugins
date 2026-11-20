@@ -317,6 +317,17 @@ describe('actionRow', () => {
     });
   });
 
+  it('reads the SRD 5.2 texts with Markdown italics', () => {
+    expect(
+      formulas('*Melee Attack Roll:* +7, reach 5 ft. *Hit:* 10 (1d10 + 5) Piercing damage.'),
+    ).toEqual({ attack: 'd20+7', damage: ['1d10+5'], dc: null });
+    expect(
+      formulas(
+        '*Dexterity Saving Throw*: DC 21, each creature in a 60-foot cone. *Failure:* 59 (17d6) Fire damage.',
+      ).dc,
+    ).toEqual({ dc: 21, ability: 'dex' });
+  });
+
   it('gives no row for an entry without attack, damage or a DC', () => {
     expect(
       actionRow('The owlbear makes two attacks: one with its beak and one with its claws.'),

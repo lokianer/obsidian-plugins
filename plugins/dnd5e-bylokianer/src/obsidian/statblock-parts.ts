@@ -295,7 +295,9 @@ function renderActionRow(
   el.createSpan({ cls: 'dnd5e-sb-action-name', text: name });
   const parts = [...(row.attack === null ? [] : [row.attack]), ...row.damage];
   for (const part of parts) {
-    const text = part.kind === 'attack' ? desc.slice(part.start, part.end) : part.formula;
+    // The attack bonus from its formula (`d20+7` → `+7`): the offsets refer to the plain text.
+    const bonus = part.formula === 'd20' ? '+0' : part.formula.slice(3);
+    const text = part.kind === 'attack' ? bonus : part.formula;
     if (roll === undefined) el.createSpan({ cls: 'dnd5e-sb-action-value', text });
     else {
       checkButton(el, text, partCheck(part, who, name, t), roll, t).addClass('dnd5e-sb-row-roll');
@@ -369,7 +371,10 @@ function renderEntry(
   ctx: StatblockContext,
 ): void {
   const { t, edit, roll, spells } = ctx;
-  const el = section.createDiv({ cls: 'dnd5e-sb-entry' });
+  // With tools the row leaves room for them at its right end (they sit at the entry's top right).
+  const el = section.createDiv({
+    cls: edit === undefined ? 'dnd5e-sb-entry' : ['dnd5e-sb-entry', 'has-tools'],
+  });
   const name = entry.name.trim().replace(/\.$/, '');
   const draw = () => {
     el.empty();
