@@ -10,6 +10,11 @@ export interface Text {
   de?: string;
 }
 
+/** The text in the language asked for; the English one when the German is missing or empty. */
+export function local(text: Text, lang: 'en' | 'de'): string {
+  return lang === 'de' && text.de !== undefined && text.de !== '' ? text.de : text.en;
+}
+
 /**
  * A number that may depend on the character: fixed, an ability's modifier, the proficiency bonus,
  * or by class level (index 0 = level 1; 20 entries).

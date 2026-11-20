@@ -5,4 +5,5 @@ export * from './check';
 export * from './data';
 export { derive } from './derive';
 export { SRD_52 } from './srd52';
+export { local } from './model';
 export type * from './model';

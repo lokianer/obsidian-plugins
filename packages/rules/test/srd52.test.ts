@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { type Character, checkRules, derive, type Grant, loadRules, SRD_52 } from '../src/index';
+import {
+  type Character,
+  checkRules,
+  derive,
+  germanProblems,
+  type Grant,
+  loadRules,
+  SRD_52,
+  type Text,
+} from '../src/index';
 
 const rules = loadRules([SRD_52]);
 const grants = (classId: string): Grant[] =>
@@ -102,5 +111,22 @@ describe('SRD 5.2.1 weapon training and multiclassing', () => {
   it('asks a multiclass rogue for its skill', () => {
     const sheet = derive(hero(['fighter', 'rogue'], []), rules);
     expect(sheet.missing).toContain('level 2: rogue-multiclass/skills');
+  });
+});
+
+describe('SRD 5.2.1 German texts', () => {
+  const texts = (value: unknown, path: string): [string, Text][] => {
+    if (Array.isArray(value)) return value.flatMap((v, i) => texts(v, `${path}[${i}]`));
+    if (typeof value !== 'object' || value === null) return [];
+    if ('en' in value && typeof value.en === 'string') return [[path, value as Text]];
+    return Object.entries(value).flatMap(([k, v]) => texts(v, `${path}.${k}`));
+  };
+
+  // Skipped until every text has its German (phase C1b, task 3 turns it on).
+  it.skip('every rules text has its German', () => {
+    const problems = texts(SRD_52, 'srd').flatMap(([path, text]) =>
+      germanProblems(text).map((p) => `${path}: ${p}`),
+    );
+    expect(problems).toEqual([]);
   });
 });

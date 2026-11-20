@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import fixture from '../data/fixture/fixture.json';
-import { checkRules, loadRules, type RulesData } from '../src/index';
+import { checkRules, germanProblems, loadRules, type RulesData } from '../src/index';
 
 const base = fixture as RulesData;
 const copy = (): RulesData => structuredClone(base);
@@ -53,5 +53,48 @@ describe('the data check', () => {
     expect(checkRules(loadRules([data]))).toEqual([
       "class tester tester-core: unknown weapon proficiency 'martial-lite'",
     ]);
+  });
+
+  it('reports an empty German text', () => {
+    const data = copy();
+    data.classes[0]!.features[0]!.text.de = '';
+    expect(checkRules(loadRules([data]))).toEqual([
+      'classes[0].features[0].text: empty German text',
+    ]);
+  });
+});
+
+describe('the German text check', () => {
+  const problems = (en: string, de: string) => germanProblems({ en, de });
+
+  it('accepts a sound translation, dice written with W', () => {
+    expect(problems('Deal 2d6 + 1d8 damage.', 'Verursache 2W6 + 1W8 Schaden.')).toEqual([]);
+    expect(problems('Roll a d20.', 'Wirf einen W20.')).toEqual([]);
+  });
+
+  it('reports an empty or missing translation', () => {
+    expect(germanProblems({ en: 'Rage' })).toEqual(['no German text']);
+    expect(problems('Rage', '  ')).toEqual(['no German text']);
+  });
+
+  it('reports dice that differ', () => {
+    expect(problems('Deal 2d6 damage.', 'Verursache 1W6 Schaden.')).toHaveLength(1);
+    expect(problems('Deal 1d8 damage.', 'Verursache 1d8 Schaden.')).toHaveLength(1);
+  });
+
+  it('reports imperial units', () => {
+    expect(problems('30 feet.', '30 feet.')).not.toEqual([]);
+    expect(problems('5 lb.', '5 lb. schwer')).not.toEqual([]);
+    expect(problems('30 feet', '9 Meter')).toEqual([]);
+  });
+
+  it('reports a split word fragment but not ordinary German', () => {
+    expect(problems('Cleric', 'K leriker')).not.toEqual([]);
+    expect(problems('A', 'Der Kleriker wirkt einen Zauber auf sich selbst.')).toEqual([]);
+    expect(problems('A', 'Ein Hieb, a und (A) Lederrüstung')).toEqual([]);
+  });
+
+  it('reports a hyphen at a line break', () => {
+    expect(problems('A', 'Zau-\nber')).not.toEqual([]);
   });
 });

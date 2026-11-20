@@ -2,7 +2,7 @@
 // every level table complete. Returns readable problems; none means the data is sound. Pure.
 
 import type { Rules } from './data';
-import type { Feature, Grant } from './model';
+import type { Feature, Grant, Text } from './model';
 
 const byLevelProblem = (where: string, value: unknown): string | null =>
   typeof value === 'object' &&
@@ -74,6 +74,45 @@ function featureProblems(owner: string, feature: Feature, rules: Rules): string[
   return found;
 }
 
+/** Every `Text` in the data with its path; an empty `de` is a mistake (absent means not yet translated). */
+function emptyGerman(value: unknown, path: string, found: string[]): void {
+  if (Array.isArray(value)) {
+    value.forEach((item, i) => emptyGerman(item, `${path}[${i}]`, found));
+  } else if (typeof value === 'object' && value !== null) {
+    if ('en' in value && 'de' in value && value.de === '') {
+      found.push(`${path.replace(/^./, '')}: empty German text`);
+    }
+    for (const [key, child] of Object.entries(value)) emptyGerman(child, `${path}.${key}`, found);
+  }
+}
+
+const DICE = /\b\d*d\d+\b/g;
+const GERMAN_DICE = /\b\d*W\d+\b/g;
+/** A word cut after its first capital ("K leriker"); a lone lower-case "a" or "o" is German. */
+const SPLIT_FRAGMENT = /\b\p{Lu} \p{Ll}{2,}/u;
+const IMPERIAL = /ft\.|feet|Fuß|lb\.|pound/i;
+
+const sortedDice = (text: string, pattern: RegExp, from: string, to: string): string =>
+  (text.match(pattern) ?? [])
+    .map((d) => d.replace(from, to))
+    .sort()
+    .join(' ');
+
+/** What is wrong with a German text next to its English: empty, other dice, feet, split words. */
+export function germanProblems(text: Text): string[] {
+  const de = text.de ?? '';
+  if (de.trim() === '') return ['no German text'];
+  const found: string[] = [];
+  const english = sortedDice(text.en, DICE, 'd', 'W');
+  const german = sortedDice(de, GERMAN_DICE, 'W', 'W');
+  if (english !== german) found.push(`dice differ: '${english}' against '${german}'`);
+  if (IMPERIAL.test(de)) found.push('imperial unit left in the German text');
+  const fragment = SPLIT_FRAGMENT.exec(de);
+  if (fragment !== null) found.push(`split word fragment '${fragment[0]}'`);
+  if (de.includes('-\n')) found.push('hyphen at a line break');
+  return found;
+}
+
 export function checkRules(rules: Rules): string[] {
   const found: string[] = [];
   const { data } = rules;
@@ -123,5 +162,6 @@ export function checkRules(rules: Rules): string[] {
   for (const feat of data.feats) {
     for (const f of feat.features) found.push(...featureProblems(`feat ${feat.id}`, f, rules));
   }
+  emptyGerman(data, '', found);
   return found;
 }
