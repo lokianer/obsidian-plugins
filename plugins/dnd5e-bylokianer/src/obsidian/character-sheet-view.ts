@@ -4,7 +4,7 @@
 // dice button. A built character's numbers come from the rules engine; a hand-written note shows
 // its own values. In a narrow pane the ability column becomes a row of six boxes above the tabs.
 
-import { ABILITIES, local, type Rules, type Sheet } from '@obsidian-plugins/rules';
+import { ABILITIES, local, type Rules, type Sheet, type Text } from '@obsidian-plugins/rules';
 import { type Component, ItemView, type ViewStateResult, type WorkspaceLeaf } from 'obsidian';
 
 import type { SheetData } from '../character/note';
@@ -147,7 +147,28 @@ export class CharacterSheetView extends ItemView {
       r.weapon(id);
     if (named !== undefined) return local(named.name, this.lang());
     if (r.skill(id) !== undefined) return skillName(id.replace(/-/g, '_'), this.lang());
+    const option = this.optionName(id);
+    if (option !== undefined) return local(option, this.lang());
     return ABILITY_NAMES[id]?.[this.lang() === 'de' ? 1 : 0] ?? id;
+  }
+
+  /** The name of an option id (a divine order, a fighting style, …) in any choice of the rules. */
+  private optionName(id: string): Text | undefined {
+    const { data } = this.deps.rules();
+    const owners = [data.classes, data.subclasses, data.species, data.backgrounds, data.feats];
+    for (const owner of owners) {
+      for (const entry of owner) {
+        for (const feature of entry.features) {
+          for (const choice of feature.choices) {
+            if ('options' in choice.from) {
+              const found = choice.from.options.find((o) => o.id === id);
+              if (found !== undefined) return found.name;
+            }
+          }
+        }
+      }
+    }
+    return undefined;
   }
 
   private check(who: string, name: string, english: string, formula: string, d20Roll: boolean) {

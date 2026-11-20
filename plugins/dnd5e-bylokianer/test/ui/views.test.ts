@@ -2679,6 +2679,16 @@ describe('character sheet', () => {
     expect(texts(el, '.dnd5e-cs-skill button')).toEqual(['+7', '+7', '+4', '+5']);
   });
 
+  it('shows a chosen option by its name on the Levels tab', async () => {
+    const fm = structuredClone(front('Wren Ashdown'));
+    const levels = fm.levels as { choices?: Record<string, unknown> }[];
+    levels[0]!.choices = { 'cleric-divine-order/divine-order': 'cleric-divine-order-protector' };
+    const { el } = await open('Wren Ashdown', 'de', fm);
+    tab(el, 'Stufen');
+    const first = el.querySelector<HTMLElement>('.dnd5e-cs-level .dnd5e-cs-level-choices');
+    expect(first?.textContent).toBe('Beschützer');
+  });
+
   it('warns about an unknown feat, and speaks German', async () => {
     const fm = structuredClone(front('Wren Ashdown'));
     const levels = fm.levels as { choices?: Record<string, unknown> }[];

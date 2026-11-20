@@ -1001,7 +1001,7 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 - **Alignment:** by id. The PDF text was cleaned into JSON per slice (15 slices, five cleaning
   agents) in a private work folder and merged into the `de` fields of `packages/rules/data/`. The
   repository JSON is the source from now on.
-- **Checks** (`srd52.test.ts`, `local`): known English/German pairs per slice; every die of the
+- **Checks** (`srd52.test.ts`, `germanProblems` in `packages/rules/src/check.ts`): known English/German pairs per slice; every die of the
   English appears in the German (inclusion, not equal multisets, since the German names dice more
   often, e.g. W20 for "the roll"; a bare d20 reads as 1d20); number-plus-unit pairs; no split
   fragments left by the PDF (a lone letter before a lower-case word).
@@ -1010,6 +1010,9 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
   names ("Mystisches Arkanum (Zauber des N. Grades)"), the `Merkmal | Wert` table headers, the
   background proficiency features named "Übung" (the German has no heading), "Attributswerte" and
   "Spielset".
+- **Data edits that are not verbatim:** the Mystic Arcanum per-level sentences were rebuilt from one
+  combined German paragraph; the Oath of Devotion spell levels come from the English table (lost in
+  the PDF text); the Circle of the Land tables keep the German order.
 - **Official typos kept**, so the text stays verbatim (for example "Ab die 5. Charakterstufe",
   omissions in Cunning Strike and Feral Senses). **One correction:** "Dire Musikinstrumente" to
   "Drei Musikinstrumente" (barbarian and bard source).

@@ -1470,7 +1470,7 @@ export const de: Record<StringKey, string> = {
     '{class}: die Zauberliste {list}. Zauber wählen kommt in einer späteren Version.',
   'sheet.noSpells': 'Kein Zauberwirken.',
   'sheet.srd':
-    'Texte der Merkmale aus dem System Reference Document 5.2.1 von Wizards of the Coast LLC, lizenziert unter CC-BY-4.0.',
+    'Texte der Merkmale aus dem Systemreferenzdokument 5.2.1 von Wizards of the Coast LLC, lizenziert unter CC-BY-4.0.',
   'sheet.equipped': 'angelegt',
   'sheet.noItems': 'Noch keine Gegenstände.',
   'sheet.openNote': 'Notiz öffnen',

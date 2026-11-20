@@ -31,7 +31,8 @@ for all of that data, shown on the sheet with German Obsidian (C1b).
    (hand-written) shows his own values. Check in dark and light and a narrow pane. **In German**
    (Obsidian set to German): class, subclass, species, background, feature texts, choice labels
    and tables are the official German SRD; damage types on the Actions tab are German; anything
-   without a German text falls back to English.
+   without a German text falls back to English. Check the sheet in German too, and expect tool and
+   language ids (`lute, flute, drum`) to show raw on the Levels tab (no names in the data).
 2. **Still waiting for the check from earlier:** V4–V6 (style C for the lists, Dice tab, deck and
    builders) and the catalogues K1–K3. Release 0.2.0 only after the maintainer's go-ahead.
 3. **Next phase:** C2 (create and level up in a dialog) after the check; it needs its plan first.
@@ -49,8 +50,8 @@ for all of that data, shown on the sheet with German Obsidian (C1b).
    drops YAML comments (processFrontMatter); a subclass of another class is reported as unknown
    rather than mismatched.
 6. **Deferred minors from C1b:** the split-fragment check misses lower-case fragments and the unit
-   check hyphenated units ("5-foot"); `nameOf` falls back to the raw id for unknown choice kinds
-   (languages, tools); dragonborn option names mix "Schwarzer Drache" and "Messingdrache"; the
+   check hyphenated units ("5-foot"); `nameOf` falls back to the raw id for choice values without a name in
+   the data (tools, languages; option ids are resolved); dragonborn option names mix "Schwarzer Drache" and "Messingdrache"; the
    forest gnome's option text comes from running text; the official German terms may differ from
    the plugin's own S2/M2 German (spells, monsters), which stays unchanged.
 
@@ -92,6 +93,11 @@ as data, pure engine), both rule sets with 2024 first, options 1b (show 2014 for
 C7) and 2a (German SRD texts, C1b); choices keyed `<feature>/<choice>` per level; computed keys
 written only when they differ; spellcasting always its own feature; layout A.
 
+C1b (in `DECISIONS.md`): the official German SRD 5.2.1 verbatim, not our own translation; the dice
+inclusion rule (every die of the English appears in the German, not equal multisets); composed
+labels (where no official wording exists) are listed in DECISIONS; one typo corrected, "Dire" to
+"Drei" Musikinstrumente; the spell and monster German stays the plugin's own (S2/M2).
+
 ## Open questions for the maintainer
 
 - The C1 and C1b check in Obsidian (German too); then C2.
@@ -101,10 +107,12 @@ written only when they differ; spellcasting always its own feature; layout A.
 
 ## Verification
 
-Final whole-branch review (most capable model): no critical, five important findings; four fixed
-(write-back only with every rules id known and a readable level, heavy armour ignores Dexterity,
-weapon training by property, multiclass skill choices), the fifth is item 4 above.
-`pnpm check` exit 0: plugin 467/467, rules 39/39, session 15/15 tests, lint 0 errors (13 known
-warnings), typecheck and build clean. Screenshots of the sheet (dark 1100 px, light German 900 px,
-380 px, features, hand-written) from the scratchpad harness; mid-word label breaks, raw ability ids
-and the German save names fixed from them.
+C1: final whole-branch review (most capable model): no critical, five important findings; four
+fixed (write-back only with every rules id known and a readable level, heavy armour ignores
+Dexterity, weapon training by property, multiclass skill choices), the fifth is item 4 above.
+C1b: final whole-branch review: no critical, one important (the Archdruid English text carried the
+whole druid spell list glued on; cut, with a regression test that no English text contains "Spell
+List"), plus minors fixed (option ids shown by name on the Levels tab, the German SRD attribution
+wording, CHANGELOG and DECISIONS wording, a redundant test removed). Screenshots of the sheet
+(dark 1100 px, light German 900 px, 380 px, features, hand-written) from the scratchpad harness.
+`pnpm check` after the fix, exit 0: plugin 469/469, rules 58/58, session 15/15 tests, typecheck and build clean.

@@ -21,7 +21,7 @@ All notable changes to this plugin are documented here. The format follows
 - **German rules texts on the character sheet** (character builder, phase C1b): with German
   Obsidian, class, subclass, species, background, feat, armour, weapon and skill names and all
   feature texts, choice labels and tables come from the official German SRD 5.2.1 (1,223 strings),
-  aligned by id and checked against the English (numbers, dice, units). English stays the
+  aligned by id and checked against the English (dice and units, plus known pairs and PDF artefacts). English stays the
   fallback for anything without a German text. Damage types on the Actions tab are German too.
 
 - **Spell catalogue** (catalogues, phase K1): the Spellbook lists the spells beyond the SRD of the

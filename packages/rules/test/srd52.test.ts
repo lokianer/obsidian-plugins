@@ -130,6 +130,13 @@ describe('SRD 5.2.1 German texts', () => {
     );
     expect(problems).toEqual([]);
   });
+
+  it('keeps no spell list glued onto an English text', () => {
+    const glued = texts(SRD_52, 'srd')
+      .filter(([, text]) => text.en.includes('Spell List'))
+      .map(([path]) => path);
+    expect(glued).toEqual([]);
+  });
 });
 
 describe('SRD 5.2.1 German names from the official German SRD', () => {
@@ -190,21 +197,6 @@ describe('SRD 5.2.1 German names from the official German SRD', () => {
       'alert-initiative-proficiency': 'Initiative-Übung',
       'alert-initiative-swap': 'Initiativetausch',
     });
-  });
-
-  it('passes the German data check for armour, weapons, skills, species, backgrounds and feats', () => {
-    const six = {
-      armor: SRD_52.armor,
-      weapons: SRD_52.weapons,
-      skills: SRD_52.skills,
-      species: SRD_52.species,
-      backgrounds: SRD_52.backgrounds,
-      feats: SRD_52.feats,
-    };
-    const problems = texts(six, 'srd').flatMap(([path, text]) =>
-      germanProblems(text).map((p) => `${path}: ${p}`),
-    );
-    expect(problems).toEqual([]);
   });
 
   it('names the classes, their first features and the subclasses', () => {
