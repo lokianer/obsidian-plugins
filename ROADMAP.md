@@ -14,7 +14,7 @@ phase plans in `docs/superpowers/plans/` and each plugin's `DECISIONS.md`.
 
 | Plugin                                            | State                                                   | Released                                                                                                        |
 | ------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; visual refactoring V4 built     | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
+| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; visual refactoring V5 built     | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
 | [Daggerheart plugin](#daggerheart-plugin-planned) | Planned: research done, design not started, no code yet | —                                                                                                               |
 
 Neither plugin is in Obsidian's community directory yet.
@@ -24,7 +24,7 @@ Neither plugin is in Obsidian's community directory yet.
 In order of priority. Items marked **(open)** wait for the maintainer's decision.
 
 1. **dnd5e-byLokianer: visual refactoring, style C** (asked for on 2026-11-20). V1–V3 accepted, V4
-   (Spellbook, Monster Manual) built, awaiting the check in Obsidian; then V5–V6 (see
+   (Spellbook, Monster Manual) and V5 (Dice tab, deck) built, awaiting the check in Obsidian; then V6 (see
    [Visual refactoring](#visual-refactoring--style-c)).
 2. **dnd5e-byLokianer: catalogues of all official spells and monsters** (asked for on 2026-11-20,
    brought forward before V5/V6 by the maintainer). K1 (spells), K2 (monsters) and K3 (Heroes of
@@ -156,7 +156,8 @@ D&D Beyond) on 2026-11-20. One view per phase, each checked in Obsidian; no rele
       and popover deliberately unchanged.
 - [ ] **V4 — Monster Manual and Spellbook lists, spell card** (built 2026-11-20, awaiting the
       check). Plan `2026-11-20-visual-v4-lists.md`.
-- [ ] **V5 — Dice tab and Deck of Many Things** (the dice stage stays).
+- [ ] **V5 — Dice tab and Deck of Many Things** (built 2026-11-20, awaiting the check; the dice
+      stage stays). Plan `2026-11-20-visual-v5-dice-deck.md`.
 - [ ] **V6 — Builders and dialogs.**
 
 ### Catalogues

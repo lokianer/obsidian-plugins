@@ -17,7 +17,8 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 was missing and brought the catalogues forward, before V5/V6: 2014 and 2024, adventure books
 included, from their own PDFs. Design (`docs/superpowers/specs/2026-11-20-catalogues-design.md`)
 approved; **K1 (spells), K2 (monsters) and K3 (Heroes of Faerûn's spells) built** and pushed; the
-maintainer's example-vault changes committed with the tests updated.
+maintainer's example-vault changes committed with the tests updated; visual refactoring V5 (Dice
+tab, deck) built.
 
 ## Where to continue
 
@@ -33,7 +34,10 @@ maintainer's example-vault changes committed with the tests updated.
    cleaners filled from memory were read from page images (`pdftoppm`) and corrected.
 3. Open check on the data: German names translated rather than official; Spiritual Weapon's
    school in phb24.
-4. Then V5/V6 (visual refactoring), then the character builder (with the subclasses, feats and
+4. **V5 (Dice tab, Deck of Many Things) built** (plan `2026-11-20-visual-v5-dice-deck.md`):
+   check it in Obsidian together with V4 — the Dice tab's heads, pills, total tiles and verdict
+   pills, the deck's three tiles, heads, drawn pills and zebra draws, in dark and light. Then V6
+   (builders and dialogs), then the character builder (with the subclasses, feats and
    backgrounds of the books, Heroes of Faerûn's included).
 
 ## State of the working tree

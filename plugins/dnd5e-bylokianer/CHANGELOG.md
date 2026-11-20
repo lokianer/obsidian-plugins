@@ -57,6 +57,11 @@ All notable changes to this plugin are documented here. The format follows
   tiles, its damage, save and other badges and its classes as pills, and "At higher levels" and
   "Classes" as section heads. Both tabs fold to one column below 560 px of their own width
   (before: 640).
+- **Dice tab and Deck of Many Things in style C** (phase V5): section heads (Party, Tables, Rolls;
+  The deck, Draws), quick dice and table buttons as pills, each roll's total as a tile and its
+  verdict as a green or red pill, rolls and draws as zebra rows; the deck shows its cards, the
+  cards gone for good and the draws as tiles, and this drawing's cards as pills. The dice stage
+  and the playing card are unchanged.
 
 ## [0.1.0] - 2026-10-26
 

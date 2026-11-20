@@ -1158,6 +1158,10 @@ describe('deck of many things', () => {
     const { el, notes, click } = await open('en', picks([1, 22], [6, 22]));
     expect(el.querySelectorAll('.dnd5e-deck-tile')).toHaveLength(22);
     expect(el.querySelector('.dnd5e-deck-empty')?.textContent).toBe('No card drawn yet.');
+    // Style C: the deck's numbers as tiles, its sections as heads.
+    expect(texts(el, '.dnd5e-deck-tiles .dnd5e-tile-label')).toEqual(['Cards', 'Gone', 'Draws']);
+    expect(texts(el, '.dnd5e-deck-tiles .dnd5e-tile-value')).toEqual(['22', '0', '0']);
+    expect(texts(el, '.dnd5e-section-head.dnd5e-deck-section')).toEqual(['The deck', 'Draws']);
     const input = el.querySelector<HTMLInputElement>('.dnd5e-deck-setup input');
     if (input === null) throw new Error('no input');
     input.value = 'Mira';
@@ -1180,6 +1184,8 @@ describe('deck of many things', () => {
       '2026-10-25 · [[Mira]] · Throne',
     ]);
     expect(texts(el, '.dnd5e-deck-history-card')).toEqual(['K♥ Throne', 'K♦ Sun']);
+    expect(texts(el, '.dnd5e-deck-tiles .dnd5e-tile-value')[2]).toBe('2');
+    expect(el.querySelectorAll('.dnd5e-deck-drawn .dnd5e-pill')).toHaveLength(2);
     expect(texts(el, '.dnd5e-deck-history-meta')).toEqual([
       'Mira · 2026-10-25',
       'Mira · 2026-10-25',
@@ -2398,6 +2404,15 @@ describe('dice', () => {
     expect(history[0]?.roll.text).toBe('2d20kh1+5 → 21 ([7], 16, +5)');
     expect(history[0]?.dc).toBe(20);
     expect(texts(el, '.dnd5e-dice-verdict')).toEqual(['DC 20 · Success']);
+    // Style C: heads for the sections, the total as a tile, pills for the verdict and the dice.
+    expect(texts(el, '.dnd5e-section-head.dnd5e-dice-section > span')).toEqual([
+      'Party',
+      'Tables',
+      'Rolls',
+    ]);
+    expect(texts(el, '.dnd5e-dice-row .dnd5e-tile.dnd5e-dice-total')).toEqual(['21']);
+    expect(el.querySelector('.dnd5e-dice-verdict')?.classList.contains('dnd5e-pill')).toBe(true);
+    expect(el.querySelectorAll('.dnd5e-dice-quick .dnd5e-pill').length).toBeGreaterThan(5);
     expect(el.querySelector('.dnd5e-stage-banner')?.textContent).toBe('Success');
     expect(logged).toHaveLength(1);
     input.value = 'hello';

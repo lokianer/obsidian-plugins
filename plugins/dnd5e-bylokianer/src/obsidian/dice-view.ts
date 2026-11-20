@@ -20,6 +20,7 @@ import { DiceStage, type RenderText, VERDICT_KEYS } from './dice-stage';
 import type { PartySource } from './dice-party';
 import type { TableSource } from './dice-tables';
 import { renderChecks } from './statblock-dice';
+import { sectionHead } from './ui/blocks';
 
 export const DICE_VIEW = 'dnd5e-dice';
 
@@ -145,7 +146,10 @@ export class DiceView extends ItemView {
     const bar = root.createDiv({ cls: 'dnd5e-dice-bar' });
     const quick = bar.createDiv({ cls: 'dnd5e-dice-quick' });
     for (const sides of QUICK) {
-      const b = quick.createEl('button', { cls: 'dnd5e-dice-die', text: `d${sides}` });
+      const b = quick.createEl('button', {
+        cls: ['dnd5e-pill', 'dnd5e-dice-die'],
+        text: `d${sides}`,
+      });
       b.addEventListener('click', () => void this.rollText(`1d${sides}`));
     }
     const edges = bar.createDiv({
@@ -187,7 +191,8 @@ export class DiceView extends ItemView {
     } else this.stage = null;
 
     const section = (key: StringKey, load: () => Promise<void>) => {
-      const head = root.createDiv({ cls: 'dnd5e-dice-section' });
+      const head = sectionHead(root, '');
+      head.addClass('dnd5e-dice-section');
       head.createSpan({ text: t(key) });
       const refresh = head.createEl('button', {
         cls: 'clickable-icon',
@@ -202,7 +207,8 @@ export class DiceView extends ItemView {
     this.tablesEl = section('dice.tables', () => this.loadTables());
     void this.loadTables();
 
-    const historyHead = root.createDiv({ cls: 'dnd5e-dice-section' });
+    const historyHead = sectionHead(root, '');
+    historyHead.addClass('dnd5e-dice-section');
     historyHead.createSpan({ text: t('dice.history') });
     const more = historyHead.createEl('button', {
       cls: ['clickable-icon', 'dnd5e-dice-more'],
@@ -266,7 +272,10 @@ export class DiceView extends ItemView {
       group.createDiv({ cls: 'dnd5e-dice-table-title', text: note.title });
       const buttons = group.createDiv({ cls: 'dnd5e-dice-table-buttons' });
       for (const table of note.tables) {
-        const b = buttons.createEl('button', { cls: 'dnd5e-dice-table', text: table.heading });
+        const b = buttons.createEl('button', {
+          cls: ['dnd5e-pill', 'dnd5e-dice-table'],
+          text: table.heading,
+        });
         b.addEventListener('click', () => void this.rollTable(table));
       }
     }
@@ -334,7 +343,7 @@ export class DiceView extends ItemView {
     }
     for (const record of this.deps.history) {
       const row = list.createDiv({ cls: 'dnd5e-dice-row' });
-      row.createDiv({ cls: 'dnd5e-dice-total', text: String(record.roll.total) });
+      row.createDiv({ cls: ['dnd5e-tile', 'dnd5e-dice-total'], text: String(record.roll.total) });
       const main = row.createDiv({ cls: 'dnd5e-dice-main' });
       main.createDiv({ cls: 'dnd5e-dice-label', text: record.label });
       if (record.table !== undefined) {
@@ -346,7 +355,11 @@ export class DiceView extends ItemView {
       const v = verdict(record.roll, record.dc);
       if (v !== null) {
         main.createDiv({
-          cls: ['dnd5e-dice-verdict', v.endsWith('success') ? 'is-success' : 'is-failure'],
+          cls: [
+            'dnd5e-pill',
+            'dnd5e-dice-verdict',
+            v.endsWith('success') ? 'is-success' : 'is-failure',
+          ],
           text:
             (record.dc === null ? '' : `${t('dice.dcShort')} ${record.dc} · `) + t(VERDICT_KEYS[v]),
         });

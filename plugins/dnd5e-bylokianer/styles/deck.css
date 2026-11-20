@@ -33,12 +33,9 @@
   color: var(--text-muted);
 }
 
-.dnd5e-deck-size {
-  padding: var(--size-2-1) var(--size-4-2);
-  border-radius: var(--radius-l);
-  background: var(--background-modifier-hover);
-  color: var(--text-muted);
-  white-space: nowrap;
+/* The deck's numbers as tiles (base.css), under the header. */
+.dnd5e-deck-tiles {
+  max-width: 420px;
 }
 
 .dnd5e-deck-body {
@@ -189,8 +186,7 @@
   width: 100%;
 }
 
-.dnd5e-deck-label,
-.dnd5e-deck-section {
+.dnd5e-deck-label {
   color: var(--text-muted);
   font-weight: var(--font-semibold);
 }
@@ -298,12 +294,43 @@
   flex-direction: column;
 }
 
+.dnd5e-deck-side .dnd5e-section-head {
+  margin: 0;
+}
+
+/* Zebra rows, as the stat block's action rows. */
 .dnd5e-deck-history-row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--size-4-3);
-  padding: var(--size-4-1) 0;
-  border-bottom: 1px solid var(--background-modifier-border);
+  gap: 0 var(--size-4-3);
+  padding: var(--size-4-1) var(--size-4-2);
+  border-radius: var(--radius-s);
+}
+
+.dnd5e-deck-history-row:nth-child(odd) {
+  background: color-mix(in srgb, var(--background-secondary) 60%, transparent);
+}
+
+/* This drawing's cards as pills; Obsidian's button rules are outranked. */
+.dnd5e-deck button.dnd5e-deck-chip:not(.clickable-icon) {
+  height: auto;
+  margin: 0;
+  padding: var(--size-4-1) var(--size-4-3);
+  border: none;
+  border-radius: var(--radius-l);
+  background: var(--background-modifier-hover);
+  box-shadow: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dnd5e-deck button.dnd5e-deck-chip:not(.clickable-icon):hover {
+  background: color-mix(in srgb, var(--interactive-accent) 25%, transparent);
+}
+
+.dnd5e-deck button.dnd5e-deck-chip:not(.clickable-icon):focus-visible {
+  box-shadow: 0 0 0 2px var(--background-modifier-border-focus, var(--interactive-accent));
 }
 
 .dnd5e-deck-history-card {

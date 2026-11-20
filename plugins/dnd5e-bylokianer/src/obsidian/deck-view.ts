@@ -29,6 +29,7 @@ import {
   type Drawer,
   STANDARD,
 } from './deck-store';
+import { sectionHead, tile, tiles } from './ui/blocks';
 
 export const DECK_VIEW = 'dnd5e-deck';
 
@@ -229,6 +230,7 @@ export class DeckView extends ItemView {
     // For hyphenation of the long card names.
     root.setAttr('lang', this.lang);
     this.renderHeader(root);
+    this.renderTiles(root);
 
     const body = root.createDiv({ cls: 'dnd5e-deck-body' });
     const stage = body.createDiv({ cls: 'dnd5e-deck-stage' });
@@ -278,13 +280,6 @@ export class DeckView extends ItemView {
       select.value = this.state.key;
       select.addEventListener('change', () => void this.show(select.value));
     }
-    tools.createSpan({
-      cls: 'dnd5e-deck-size',
-      text:
-        this.cards.length === 1
-          ? t('deck.cards.one')
-          : t('deck.cards', { count: this.cards.length }),
-    });
     const button = (icon: string, label: string, action: () => void, cls: string) => {
       const b = tools.createEl('button', {
         cls: ['clickable-icon', cls],
@@ -299,6 +294,16 @@ export class DeckView extends ItemView {
       button('rotate-ccw', t('deck.reset'), () => void this.reset(), 'dnd5e-deck-reset');
       button('file-text', t('deck.openNote'), () => this.deps.source.open(path), 'dnd5e-deck-note');
     }
+  }
+
+  /** The deck's numbers: its cards, those gone for good, the draws so far. */
+  private renderTiles(root: HTMLElement): void {
+    const { t } = this.deps;
+    const row = tiles(root);
+    row.addClass('dnd5e-deck-tiles');
+    tile(row, String(this.cards.length), t('deck.tile.cards'));
+    tile(row, String(this.state.out.length), t('deck.tile.gone'));
+    tile(row, String(this.state.draws.length), t('deck.tile.draws'));
   }
 
   private renderCard(parent: HTMLElement, card: PlayCard | null): HTMLElement {
@@ -351,7 +356,9 @@ export class DeckView extends ItemView {
         const c = this.cards.find((x) => x.index === index);
         if (c === undefined) continue;
         const chip = row.createEl('button', {
-          cls: c.red ? ['dnd5e-deck-chip', 'is-red'] : 'dnd5e-deck-chip',
+          cls: c.red
+            ? ['dnd5e-pill', 'dnd5e-deck-chip', 'is-red']
+            : ['dnd5e-pill', 'dnd5e-deck-chip'],
           text: `${c.corner} ${c.name}`,
         });
         chip.addEventListener('click', () => {
@@ -453,7 +460,7 @@ export class DeckView extends ItemView {
 
   private renderGrid(side: HTMLElement): void {
     const { t } = this.deps;
-    side.createDiv({ cls: 'dnd5e-deck-section', text: t('deck.inDeck') });
+    sectionHead(side, t('deck.inDeck')).addClass('dnd5e-deck-section');
     const grid = side.createDiv({ cls: 'dnd5e-deck-grid' });
     for (const c of this.cards) {
       const out = this.state.out.includes(c.index);
@@ -479,7 +486,7 @@ export class DeckView extends ItemView {
 
   private renderHistory(side: HTMLElement): void {
     const { t } = this.deps;
-    side.createDiv({ cls: 'dnd5e-deck-section', text: t('deck.history') });
+    sectionHead(side, t('deck.history')).addClass('dnd5e-deck-section');
     const draws = this.state.draws.slice(-HISTORY).reverse();
     if (draws.length === 0) {
       side.createDiv({ cls: 'dnd5e-deck-empty', text: t('deck.noHistory') });
