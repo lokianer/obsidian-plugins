@@ -23,6 +23,10 @@ function grantProblems(where: string, grant: Grant): string[] {
     found.push(byLevelProblem(where, grant.prepared), byLevelProblem(where, grant.cantrips));
   }
   if (grant.kind === 'initiative') found.push(byLevelProblem(where, grant.add));
+  if (grant.kind === 'speed') found.push(byLevelProblem(where, grant.value));
+  if (grant.kind === 'scale' && grant.values.length !== 20) {
+    found.push(`${where}: scale ${grant.id} has ${grant.values.length} values, not 20`);
+  }
   return found.filter((p): p is string => p !== null);
 }
 

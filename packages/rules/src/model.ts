@@ -27,7 +27,15 @@ export type Grant =
   | { kind: 'expertise'; ids: string[] }
   /** An increase; the score never goes past `max` (20 when not given). */
   | { kind: 'ability'; ability: Ability; value: number; max?: number }
-  | { kind: 'speed'; value: number }
+  /** Walking speed added; `when` limits it (Fast Movement, Unarmored Movement). */
+  | { kind: 'speed'; value: Amount; when?: 'no-armor' | 'no-heavy-armor' }
+  /** A flat bonus to AC, only while wearing armour when `when` says so (Defense). */
+  | { kind: 'ac-bonus'; value: number; when?: 'armored' }
+  /** A bonus to attack rolls with ranged or melee weapons (Archery). */
+  | { kind: 'attack-bonus'; value: number; ranged: boolean }
+  | { kind: 'resistance'; ids: string[] }
+  /** A number or die the class table scales by level: Sneak Attack, Martial Arts, Rage Damage. */
+  | { kind: 'scale'; id: string; name: Text; values: (number | string)[] }
   | { kind: 'sense'; id: string; range: number }
   | { kind: 'initiative'; add: Amount }
   /** Hit points per character level (Dwarven Toughness). */
@@ -59,7 +67,7 @@ export type OptionSource =
   /** Skills: any, these, or (for expertise) the ones the character is proficient in. */
   | { skills: 'any' | 'proficient' | string[] }
   /** One ability per point; `count` is the number of points. */
-  | { abilities: Ability[] }
+  | { abilities: Ability[]; max?: number }
   | { feats: FeatCategory }
   | { subclasses: string }
   | { spells: string; level: number | 'cantrip' }
@@ -82,6 +90,7 @@ export interface Choice {
     | 'feat'
     | 'subclass'
     | 'spell'
+    | 'mastery'
     | 'option';
   from: OptionSource;
 }

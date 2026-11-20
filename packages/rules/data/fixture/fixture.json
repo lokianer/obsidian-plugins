@@ -14,7 +14,7 @@
 			},
 			"features": [
 				{
-					"id": "tester-start",
+					"id": "tester-core",
 					"name": { "en": "Tester proficiencies" },
 					"level": 1,
 					"text": { "en": "What every tester knows." },

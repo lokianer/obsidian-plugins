@@ -40,7 +40,7 @@ describe('the data check', () => {
       recharge: 'long',
     });
     expect(checkRules(loadRules([data]))).toEqual([
-      'class tester tester-start: byLevel has 19 entries, not 20',
+      'class tester tester-core: byLevel has 19 entries, not 20',
     ]);
   });
 });
