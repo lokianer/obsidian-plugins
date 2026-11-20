@@ -14,7 +14,7 @@ phase plans in `docs/superpowers/plans/` and each plugin's `DECISIONS.md`.
 
 | Plugin                                            | State                                                   | Released                                                                                                        |
 | ------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; visual refactoring V6 built     | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
+| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; V4–V6, K1–K3 and C1 built       | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
 | [Daggerheart plugin](#daggerheart-plugin-planned) | Planned: research done, design not started, no code yet | —                                                                                                               |
 
 Neither plugin is in Obsidian's community directory yet.
@@ -31,8 +31,10 @@ In order of priority. Items marked **(open)** wait for the maintainer's decision
    brought forward before V5/V6 by the maintainer). K1 (spells), K2 (monsters) and K3 (Heroes of
    Faerûn) built, awaiting the check in Obsidian. Subclasses come with the character builder.
    See [Catalogues](#catalogues).
-3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20,
-   brainstorm not started): built in style C, after the catalogues.
+3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20).
+   Design approved; C1 (engine, SRD 5.2.1 data, the sheet) built, awaiting the check in Obsidian;
+   next C1b (German SRD texts) or C2 (create and level up). See
+   [Character builder](#character-builder).
 4. **dnd5e-byLokianer: code quality.** Reduce complexity, steps 2 and 3 (see
    [Code quality](#code-quality)); afterwards turn the lint limits into errors and tighten them.
 5. **dnd5e-byLokianer: performance (open).** Load the SRD data (80 % of the 2 MB `main.js`) on first
@@ -179,7 +181,26 @@ library notes (`type: library`), made outside the repository. Books so far: PHB 
       the encounter builder and Add to combat. Plan `2026-11-20-catalogue-k2-monsters.md`.
 - [ ] **K3 — Heroes of Faerûn** (built 2026-11-20, awaiting the check): 19 spells read from page
       images (the PDF has no text layer); 569 catalogue spells in all.
-- [ ] Subclasses with the character builder.
+- [ ] Subclasses with the character builder (C6).
+
+### Character builder
+
+Design [`2026-11-20-character-builder-design.md`](docs/superpowers/specs/2026-11-20-character-builder-design.md):
+the maintainer's own character builder too; rules as data plus a pure engine (`packages/rules`);
+both rule sets per character, 2024 first; every option of a level visible when choosing; a
+character sheet in layout A (D&D Beyond style) to play from; multiclassing.
+
+- [ ] **C1 — engine and sheet** (built 2026-11-20, awaiting the check): `packages/rules` (model,
+      `derive`, armour class and attacks, slots and pact slots, resources, `checkRules`), the SRD
+      5.2.1 data (12 classes and subclasses, 9 species, 4 backgrounds, 17 feats, armour, weapons,
+      skills), built character notes with computed keys, the character sheet; example character
+      Wren Ashdown. Plan `2026-11-20-character-c1-engine-sheet.md`.
+- [ ] **C1b — German SRD texts** from the official German SRD (option 2a).
+- [ ] **C2 — create and level up** in a dialog, every option of a level as a tile.
+- [ ] **C3 — spells** (lists, known and prepared). **C4 — play state** (hit points, slots,
+      resources, rests; the Battle tab writes `hp_current`). **C5 — inventory**. **C6 — the books'
+      subclasses, feats and backgrounds** as data with summaries. **C7 — 2014 content and mixing
+      rule sets** (option 1b). Order and scope per the spec §9.
 
 ### Code quality
 

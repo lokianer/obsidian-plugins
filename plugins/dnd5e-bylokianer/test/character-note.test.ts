@@ -2,6 +2,7 @@ import { loadRules, SRD_52 } from '@obsidian-plugins/rules';
 import { describe, expect, it } from 'vitest';
 
 import { computedKeys, differs, readCharacter } from '../src/character/note';
+import { loadExampleVault } from './fixture';
 
 const rules = loadRules([SRD_52]);
 
@@ -112,6 +113,15 @@ describe('the character note', () => {
     expect(differs(fm, keys(fm))).toBe(false);
     fm.ac = 13;
     expect(differs(fm, keys(fm))).toBe(true);
+  });
+
+  it('finds Wren Ashdown in the example vault already up to date', () => {
+    const fm = loadExampleVault().find((n) =>
+      n.path.endsWith('Party/Wren Ashdown.md'),
+    )?.frontmatter;
+    if (fm === undefined) throw new Error('no Wren Ashdown in the example vault');
+    expect(differs(fm, keys(fm))).toBe(false);
+    expect(readCharacter(fm)?.levels).toHaveLength(6);
   });
 
   it('names a multiclass by its classes and levels', () => {

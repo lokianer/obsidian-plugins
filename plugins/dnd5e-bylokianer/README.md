@@ -13,7 +13,8 @@ plugin shows and suggests, the GM decides. Everything is plain Markdown and YAML
 
 ## Modules
 
-All seven are accepted in Obsidian (the last three on 2026-10-26).
+The first seven are accepted in Obsidian (the last three on 2026-10-26); the character sheet is
+new and waits for its check.
 
 | Module                                                                                                                     | In this README                                                 |
 | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
@@ -24,6 +25,7 @@ All seven are accepted in Obsidian (the last three on 2026-10-26).
 | 🐉 **Monster Manual:** the SRD's 334 monsters and 429 from the books, German traits and actions, your own monsters, import | [The Monster Manual](#the-monster-manual)                      |
 | 🛡️ **Battle tracker:** the fight kept in the encounter note, logged to the session, an encounter builder                   | [The battle tracker](#the-battle-tracker)                      |
 | 🎲 **Dice:** a stage modelled on Baldur's Gate 3, `dice:` in notes, rollable tables, stat block rolls                      | [Dice](#dice)                                                  |
+| 🧝 **Character sheet:** characters built from the SRD 5.2.1 rules, every number computed, every roll a button              | [The character sheet](#the-character-sheet)                    |
 
 ## Screenshots
 
@@ -527,7 +529,50 @@ session**. Removing lines asks first and touches only the lines the battle track
 under `## Log`; relation changes, your own lines and `[!gm]` callouts stay. Both removals are
 commands too.
 
-## Commands
+## The character sheet
+
+A **built character** is a note with `type: character` whose frontmatter keeps the choices, level
+by level; the plugin computes everything else from the SRD 5.2.1 rules and writes the numbers the
+other modules read (`class`, `subclass`, `level`, `ac`, `hp`, `initiative`, `passive_perception`,
+`race`, `saves`, `skills`) back into the note whenever a choice changes:
+
+```yaml
+type: character
+rules: '2024'
+species: halfling
+background: criminal
+abilities: { str: 8, dex: 14, con: 12, int: 10, wis: 13, cha: 15 } # before any increase
+choices:
+  criminal-ability-scores/abilities: [dex, dex, con] # +2 Dexterity, +1 Constitution
+levels:
+  - class: bard
+    hp: max
+    choices:
+      bard-core/skills: [deception, performance, persuasion]
+  - class: bard
+    hp: average # or the number rolled
+    choices:
+      bard-expertise/expertise: [persuasion, deception]
+inventory:
+  - { item: leather, equipped: true }
+  - { item: dagger, equipped: true }
+hp_current: 31
+```
+
+A choice is named `<feature>/<choice>` and stored at the level that made it. **Open character
+sheet** (command, or a character note's file menu) shows the sheet: hit points and the key numbers
+as tiles, the abilities with their saves and senses in a column, and the tabs Actions (attacks,
+resources, spellcasting), Spells (save DC, spell attack, slots), Features (with their SRD text),
+Inventory, Skills, Notes and Levels. Every ability check, save, skill, attack and damage is a dice
+button (Shift for advantage or a critical hit, Alt for disadvantage). Missing choices and unknown
+ids show as a warning above the tiles. A hand-written character note (no `levels`) keeps working
+as before; its sheet shows its own values.
+
+The engine lives in the shared package `packages/rules`: armour class from armour, shield and
+unarmoured formulas; multiclass spell slots (2024 rounds half casters up, 2014 down) and pact
+slots apart; resources with their die and rest. Not yet: creating and levelling up in a dialog,
+spending hit points, slots and resources, choosing spells, German names of the rules' content, the
+books' subclasses and feats (phases C1b–C7).
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
   that opens the note's card on the broken entry.
@@ -543,6 +588,7 @@ commands too.
 - **Open battle tracker** — run a fight from an encounter note.
 - **New encounter** — the encounter builder.
 - **Open dice** — the Dice tab.
+- **Open character sheet** — the sheet of the active character note.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F
 for Edit faction data).
@@ -640,7 +686,9 @@ https://creativecommons.org/licenses/by/4.0/legalcode. See `src/npc/NOTICE.md` (
 `src/spells/NOTICE.md` (spells; the German names are this plugin's own translation, under the same
 licence).
 
-The encounter builder's XP Budget per Character table is taken from the System Reference Document
+The character rules (classes, subclasses, species, backgrounds, feats, armour, weapons and their
+feature texts, `packages/rules/data/srd-5.2.1/`) and the encounter builder's XP Budget per
+Character table are taken from the System Reference Document
 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at
 https://www.dndbeyond.com/srd, licensed under the Creative Commons Attribution 4.0 International
 License, available at https://creativecommons.org/licenses/by/4.0/legalcode.

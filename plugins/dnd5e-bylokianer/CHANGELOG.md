@@ -8,6 +8,16 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Added
 
+- **Character sheet** (character builder, phase C1): a character note with `levels` is a built
+  character — its choices level by level, computed from the SRD 5.2.1 rules (12 classes and their
+  subclasses, 9 species, 4 backgrounds, 17 feats, armour and weapons) by the new shared package
+  `packages/rules`. The plugin writes the computed keys (`ac`, `hp`, `saves`, `skills` …) back into
+  the note whenever a choice changes, so the party, battle and dice modules read it unchanged.
+  **Open character sheet** shows layout A: hit points and key numbers as tiles, the abilities with
+  saves and senses, tabs for actions, spells (DC, attack, slots and pact slots), features with
+  their SRD text, inventory, skills, notes and levels; every check, save, attack and damage rolls.
+  The example vault gains Wren Ashdown, a built bard.
+
 - **Spell catalogue** (catalogues, phase K1): the Spellbook lists the spells beyond the SRD of the
   Player's Handbook 2014, Xanathar's, Tasha's and the Player's Handbook 2024 — 550 entries with
   their facts, English and German names and a summary in our own words (EN/DE), no book text. New
@@ -26,6 +36,11 @@ All notable changes to this plugin are documented here. The format follows
 
 ### Known limitations
 
+- The character sheet cannot create or level up a character yet (a dialog follows in C2), nor
+  spend hit points, slots or resources (C4); species, class and feature names are English.
+- Rests that give back only part of a resource (Rage, Channel Divinity, Wild Shape on a short
+  rest), either-or prerequisites, Magic Initiate's and Skilled's choices and versatile damage are
+  text on the sheet, not computed.
 - Library texts are English only; a German card shows the English text from the library.
 - Summoned blocks without a challenge rating stay out of the encounter builder.
 - Heroes of Faerûn's subclasses, feats and backgrounds come with the character builder.

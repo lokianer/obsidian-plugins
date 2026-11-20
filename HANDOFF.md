@@ -13,85 +13,72 @@ Read order for a new session: `ROADMAP.md` → this file → `CLAUDE.md` → the
 
 ## Session
 
-2026-11-20, local (second part). The maintainer noticed that every spell and monster beyond the SRD
-was missing and brought the catalogues forward, before V5/V6: 2014 and 2024, adventure books
-included, from their own PDFs. Design (`docs/superpowers/specs/2026-11-20-catalogues-design.md`)
-approved; **K1 (spells), K2 (monsters) and K3 (Heroes of Faerûn's spells) built** and pushed; the
-maintainer's example-vault changes committed with the tests updated; visual refactoring V5 (Dice
-tab, deck) and V6 (builders) built.
+2026-11-20, local (third part). After V5 and V6 the maintainer started the character builder:
+brainstorm, design `docs/superpowers/specs/2026-11-20-character-builder-design.md` (approved), plan
+`docs/superpowers/plans/2026-11-20-character-c1-engine-sheet.md` (approved, executed natively).
+**Phase C1 built and pushed**: the shared package `packages/rules`, the SRD 5.2.1 rules data, built
+character notes and the character sheet.
 
 ## Where to continue
 
-1. **Check K1–K3 in Obsidian**: copy the library notes from the maintainer's private folder
-   `D:\03 Projekte\Code\Loki\dnd5e-library\` (not the `work` folder) into a vault — five spell
-   notes, five "… - Monsters.md" notes. Spellbook: the 2014 / 2024 chips and the book select, a
-   2024 row's pill, a catalogue card with summary and with full text, the Rule set setting and a
-   stat block link. Monster Manual: the same filters, a catalogue card without its library note
-   (short block + summary + "add the library note") and with it (the full block), the encounter
-   builder's tiles and Add to combat with a catalogue monster. Never put these notes in
-   `examples/vault`.
-2. Done this session too: the nine blocks the scan could not give completely and the header lines
-   cleaners filled from memory were read from page images (`pdftoppm`) and corrected.
-3. Open check on the data: German names translated rather than official; Spiritual Weapon's
-   school in phb24.
-4. **V5 (Dice tab, Deck of Many Things) built** (plan `2026-11-20-visual-v5-dice-deck.md`):
-   check it in Obsidian together with V4 — the Dice tab's heads, pills, total tiles and verdict
-   pills, the deck's three tiles, heads, drawn pills and zebra draws, in dark and light.
-5. **V6 (builders and dialogs) built** (plan `2026-11-20-visual-v6-builders.md`): check the New
-   NPC dialog and the spell, monster and deck builders — section-head form headings, chips and
-   preview tags as pills, the spell preview's tiles. After V4–V6 are accepted: release 0.2.0
-   (spec §6: only after V6 and the go-ahead). Then the character builder (with the subclasses, feats and
-   backgrounds of the books, Heroes of Faerûn's included).
+1. **Check C1 in Obsidian** (`pnpm --filter dnd5e-bylokianer install-example`, then the example vault): open
+   [[Wren Ashdown]] → **Open character sheet** (command or the file menu). Expected: HP 31 / 39,
+   AC 14, initiative +6, speed 30 ft., proficiency +3, passive Perception 14; the dagger rolls +6
+   and 1d4+3; Bardic Inspiration 3 per short rest · d8; Skills with Persuasion and Deception +9;
+   Levels with College of Lore at 3. Change `cha: 15` to `16` in the note: the computed keys
+   (`skills:`, `saves:`) follow, and the sheet with them. Orrin Quill (hand-written) shows his own
+   values. Check in dark and light, German, and a narrow pane (the abilities as six boxes).
+2. **Still waiting for the check from earlier:** V4–V6 (style C for the lists, Dice tab, deck and
+   builders) and the catalogues K1–K3. Release 0.2.0 only after the maintainer's go-ahead.
+3. **Next phase:** C1b (German SRD texts, from the official German SRD) or C2 (create and level up
+   in a dialog); the maintainer picks. Each needs its plan first.
+4. **Final review of C1 still open:** the plan's executing skill ends with a whole-branch review on
+   the most capable model (`.superpowers/sdd/2026-11-20-character-c1-engine-sheet/progress.md` has
+   the rulings it should weigh). Not run in this session.
 
 ## State of the working tree
 
-`main`, clean apart from local Obsidian state. The maintainer's play-test changes in
-`examples/vault` are committed (`becfabe`) and the tests expect them; `pnpm check` runs green
-without stashing anything.
+`main`, clean apart from local Obsidian state; everything pushed. The ledger of the C1 plan is in
+`.superpowers/sdd/2026-11-20-character-c1-engine-sheet/` (git-ignored).
 
-**Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\` holds the library
-notes and `work/` (batches, cleaned `norm/` files, `INSTRUCTIONS-spells.md` and
-`INSTRUCTIONS-monsters.md` for the cleaning agents). The book dumps were in the session scratchpad
-and may be gone; `pdftotext -enc UTF-8 <pdf> <out>` recreates them, `extract-monsters.mjs` cuts the
-windows. None of this may enter the repository.
+**Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\work\srd52\` holds the
+SRD 5.2.1 PDF, its `pdftotext` slices per class (`src/`) and the cleaning agents' JSON (`out/`),
+which the assembly merged into `packages/rules/data/srd-5.2.1/`. From now on the repository's JSON
+is the source; edit it there.
 
 ## Done this session
 
-- K1: `src/catalogue/` (books, merge, library, spells), `scripts/catalogue/` spell scripts, the
-  Library service, Spellbook filters, the Rule set setting.
-- K2: `src/catalogue/monsters.ts` (generated, 429 entries), `withMonsterLibrary` in `merge.ts`,
-  `scripts/catalogue/extract-monsters.mjs`, `check-monsters.mjs`, `build-monsters.mjs`,
-  `library-monsters.mjs`, `data/monsters-*.json`; the Monster Manual's rule set and book filters,
-  pill, summary and library line; one Library service shared by both views; the battle tracker
-  and encounter builder see SRD + catalogue + own monsters.
-- The spell scripts' batch filter no longer picks up monster batches.
-- Review fixes: own monsters come first when an encounter looks up a name; a library block that is
-  not valid YAML keeps the short block instead of breaking the card and the tracker; the library
-  and extract scripts refuse any output folder inside the repository (the old guard missed paths
-  with spaces and relative paths).
-- K3: Heroes of Faerûn's 19 spells, read from page images (`data/spells-frhof.json`, library note
-  "Forgotten Realms - Heroes of Faerûn.md").
-- Second round, asked for by the maintainer: blocks without a challenge rating (Tasha's summons,
-  Avatar of Death, Giant Fly, Sacred Statue) in with CR "—", out of the encounter builder; the nine
-  incomplete blocks and seven memory-filled headers read from page images (four corrections, Hook
-  Horror's darkvision 10 ft.); the encounter builder writes the catalogue key for a name in both
-  rule sets; reprints keep older books' library keys; the saved book filter only keeps monster
-  books.
-- Tests: `test/catalogue-monsters.test.ts`, the Monster Manual view test.
+- `packages/rules`: `basics` (modifier, proficiency bonus), `model` (records, grants, choices),
+  `data` (`loadRules`, lookups), `check` (`checkRules`), `collect` (which features a character
+  has, where their choices live; multiclass levels take the multiclass proficiencies), `derive`
+  (scores, saves, skills with expertise and half proficiency, passive scores, initiative, speed,
+  senses, resistances, hit points), `combat` (armour class, attacks), `spellcasting` (DC, attack,
+  slots single/multi/pact, resources with die, rest and minimum), `srd52` (`SRD_52`).
+- SRD 5.2.1 data: 12 classes with their subclass, 9 species, 4 backgrounds, 17 feats, 13 armours,
+  38 weapons, 18 skills; the class tables compared against the SRD for all 12 classes.
+- Plugin: `src/character/note.ts` (`readCharacter`, `computedKeys`, `differs`, `sheetData`),
+  `register/character.ts` (keys written back on change, the view, the command, the file menu),
+  `character-sheet-view.ts` and `styles/character-sheet.css`.
+- Example vault: `Silverstadt/Party/Wren Ashdown.md` (built bard 6), a row in `Home.md`; three
+  counting tests updated for the fifth party member.
 
 ## Decisions taken this session
 
-In `plugins/dnd5e-bylokianer/DECISIONS.md` ("Catalogues K1", "Catalogues K2") and the spec: full
-texts privately as library notes, one note per book, the 2024 text translated to English, German
-names too; for monsters a short stat block from the facts, the full block only from the library;
-blocks without a challenge rating in with CR "—" and kept out of the encounter budget; missing
-facts read from page images, never guessed.
+In `plugins/dnd5e-bylokianer/DECISIONS.md` ("Character builder C1") and the spec: approach 1 (rules
+as data, pure engine), both rule sets with 2024 first, options 1b (show 2014 for a 2024 character,
+C7) and 2a (German SRD texts, C1b); choices keyed `<feature>/<choice>` per level; computed keys
+written only when they differ; spellcasting always its own feature; layout A.
 
 ## Open questions for the maintainer
 
-- The K1/K2 check in Obsidian.
+- The C1 check in Obsidian, and C1b or C2 next.
+- Data gaps kept as text for now: partial short-rest recharge (Rage, Channel Divinity, Wild
+  Shape), either-or prerequisites (Grappler, the fighter's multiclass), Magic Initiate's and
+  Skilled's choices, versatile damage, language lists and the musical instrument list.
 
 ## Verification
 
-`pnpm check` exit 0 (nothing stashed), plugin 454/454 and session 15/15 tests, lint 0
-errors (known warnings only). `check-monsters.mjs`: 744 entries, 0 problems. No run of eight words of any of the 858 monster summaries appears in the library notes.
+`pnpm check` exit 0: plugin 466/466, rules 35/35, session 15/15 tests, lint 0 errors (13 known
+warnings), typecheck and build clean. Screenshots of the sheet (dark 1100 px, light German 900 px,
+380 px, features, hand-written) from the scratchpad harness; mid-word label breaks, raw ability ids
+and the German save names fixed from them.

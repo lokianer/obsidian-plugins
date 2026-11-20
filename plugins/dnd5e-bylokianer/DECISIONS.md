@@ -955,6 +955,34 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
   batches with `check-monsters.mjs` (facts, YAML agreeing with the facts, the eight-word copy
   check). The cleaners were told never to estimate a number: a missing part is left out and noted.
 
+## 2026-11-20 · Character builder C1: the engine and the sheet
+
+- **Approach 1, rules as data plus a pure engine** (the maintainer's choice): every class,
+  subclass, species, background and feat is a record of features with grants (what changes a
+  number or list: proficiencies, AC formulas, speed, senses, resources, spellcasting, scaling
+  values) and choices (skills, expertise, feats, options, subclass). `derive(character, rules)`
+  turns the choices into the sheet, each number with its sources; missing choices and unknown ids
+  are listed, never thrown. Lives in `packages/rules`, pure and unit-tested.
+- **Both rule sets per character, 2024 first**; a 2024 character may later show 2014 subclasses
+  and feats with a level mapping (option 1b, phase C7); German SRD texts from the official German
+  SRD (option 2a, phase C1b).
+- **The note stores choices, not numbers.** A choice is keyed `<feature id>/<choice id>` and kept
+  at the level that made it (creation choices at the top), so a level can be re-chosen. The
+  computed keys are written back with `processFrontMatter` only when one differs, which keeps the
+  change event from looping; a hand-written note (no `levels`) is never touched.
+- **Multiclassing:** a later class's first level takes that class's multiclass proficiencies
+  instead of its core ones, so spellcasting is always its own feature. Slots follow the
+  multiclass table: half and third casters round up in 2024 and down in 2014; pact slots apart.
+- **Data from the SRD 5.2.1 text**, cleaned by agents into JSON from `pdftotext` slices following
+  `packages/rules/scripts/srd52-instructions.md`, then checked by `checkRules` and compared against
+  the class tables; numbers are never estimated. The SRD's feature texts ship (CC-BY-4.0).
+- **The sheet** is layout A: tiles for the key numbers, abilities with saves and senses in a
+  column, tabs as pills; every check a dice button through the existing dice stage. The save list
+  names the ability (German save names are too long for the column); German speed in metres.
+- Left out of C1: creating and levelling up (C2), spells (C2/C3), spending and rests (C4),
+  partial short-rest recharge, either-or prerequisites, Magic Initiate's and Skilled's choices,
+  versatile damage.
+
 ## 2026-11-20 · Catalogues K3: Heroes of Faerûn
 
 - The maintainer's copy is a print of the D&D Beyond pages without a text layer, so its 19 spells
