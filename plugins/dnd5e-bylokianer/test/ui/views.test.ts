@@ -2626,9 +2626,11 @@ describe('character sheet', () => {
     expect(texts(el, '.dnd5e-cs-sub')[0]).toContain('Halbling · Barde 6 (Schule des Wissens)');
     tab(el, 'Aktionen');
     expect(texts(el, '.dnd5e-cs-attack-name')).toContain('Dolch');
+    expect(texts(el, '.dnd5e-cs-attack-type')).toEqual(['Stich']);
     expect(texts(el, '.dnd5e-cs-resource-name')).toContain('Bardische Inspiration');
     tab(el, 'Merkmale');
     expect(texts(el, '.dnd5e-cs-feature summary')).toContain('Bardische Inspiration');
+    expect(texts(el, '.dnd5e-cs-feature-text').join(' ')).toContain('Du bist bei Rettungswürfen');
     tab(el, 'Stufen');
     expect(
       [...el.querySelectorAll<HTMLElement>('.dnd5e-cs-level')].map((r) => r.textContent).join('|'),

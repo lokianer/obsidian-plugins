@@ -17,7 +17,7 @@ import {
   skillName,
 } from '../dice/checks';
 import { d20 } from '../dice/statblock';
-import type { StringKey, T } from '../i18n/strings';
+import { en, type StringKey, type T } from '../i18n/strings';
 import type { Lang } from '../npc/races';
 import type { Bonus } from '../npc/statblock';
 import { checkButton, type RollCheck } from './statblock-dice';
@@ -163,6 +163,11 @@ export class CharacterSheetView extends ItemView {
 
   private rollButton(parent: HTMLElement, text: string, check: Check): HTMLElement {
     return checkButton(parent, text, check, this.deps.roll, this.deps.t);
+  }
+
+  private damageType(type: string): string {
+    const key = `sheet.damage.${type}`;
+    return key in en ? this.deps.t(key as StringKey) : type;
   }
 
   private speed(feet: number): string {
@@ -320,7 +325,7 @@ export class CharacterSheetView extends ItemView {
           ...this.check(who, damage, `${name} damage`, attack.damage, false),
           damage: true,
         });
-        row.createSpan({ cls: 'dnd5e-cs-attack-type', text: attack.type });
+        row.createSpan({ cls: 'dnd5e-cs-attack-type', text: this.damageType(attack.type) });
       }
     }
     if (sheet.resources.length > 0) {
