@@ -719,7 +719,9 @@ export const en = {
   'sheet.slots': 'Spell slots',
   'sheet.slotLevel': 'Level {n}',
   'sheet.pact': 'Pact slots, level {n}',
-  'sheet.spellList': '{class}: the {list} spell list. Choosing spells comes in a later version.',
+  'sheet.spellList': '{class}: the {list} spell list.',
+  'sheet.cantrips': 'Cantrips',
+  'sheet.spells': 'Spells',
   'sheet.noSpells': 'No spellcasting.',
   'sheet.srd':
     'Feature texts from the System Reference Document 5.2.1 by Wizards of the Coast LLC, licensed under CC-BY-4.0.',
@@ -1466,8 +1468,9 @@ export const de: Record<StringKey, string> = {
   'sheet.slots': 'Zauberplätze',
   'sheet.slotLevel': 'Grad {n}',
   'sheet.pact': 'Paktplätze, Grad {n}',
-  'sheet.spellList':
-    '{class}: die Zauberliste {list}. Zauber wählen kommt in einer späteren Version.',
+  'sheet.spellList': '{class}: die Zauberliste {list}.',
+  'sheet.cantrips': 'Zaubertricks',
+  'sheet.spells': 'Zauber',
   'sheet.noSpells': 'Kein Zauberwirken.',
   'sheet.srd':
     'Texte der Merkmale aus dem Systemreferenzdokument 5.2.1 von Wizards of the Coast LLC, lizenziert unter CC-BY-4.0.',

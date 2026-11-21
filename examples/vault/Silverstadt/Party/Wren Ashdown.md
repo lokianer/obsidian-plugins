@@ -14,24 +14,34 @@ levels:
     choices:
       bard-core/skills: [deception, performance, persuasion]
       bard-core/tools: [lute, flute, drum]
+      bard-spellcasting/cantrips: [vicious-mockery, minor-illusion]
+      bard-spellcasting/spells: [healing-word, charm-person, thunderwave, sleep]
   - class: bard
     hp: average
     choices:
       bard-expertise/expertise: [persuasion, deception]
+      bard-spellcasting/spells: [detect-magic]
   - class: bard
     hp: average
     choices:
       bard-subclass/subclass: bard/college-of-lore
       lore-bonus-proficiencies/skills: [arcana, insight, perception]
+      bard-spellcasting/spells: [shatter]
   - class: bard
     hp: average
     choices:
       bard-asi-4/feat: ability-score-improvement
       ability-score-improvement/abilities: [cha, cha]
+      bard-spellcasting/cantrips: [mage-hand]
+      bard-spellcasting/spells: [invisibility]
   - class: bard
     hp: average
+    choices:
+      bard-spellcasting/spells: [hypnotic-pattern, dispel-magic]
   - class: bard
     hp: average
+    choices:
+      bard-spellcasting/spells: [sending]
 inventory:
   - { item: leather, equipped: true }
   - { item: dagger, equipped: true }

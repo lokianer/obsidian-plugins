@@ -7,8 +7,10 @@ import {
   derive,
   type Grant,
   loadRules,
+  maxSpellLevel,
   type RuleSet,
   type RulesData,
+  SRD_52,
 } from '../src/index';
 
 /** The fixture plus casters made from the tester: `full`, `half` and `pact`, all on Charisma. */
@@ -69,7 +71,16 @@ describe('spellcasting', () => {
     const sheet = derive(character('2024', ['full', 6]), casters());
     expect(sheet.slots).toEqual([4, 3, 3]);
     expect(sheet.spellcasting).toEqual([
-      { class: 'full', ability: 'cha', dc: 14, attack: 6, prepared: 7, cantrips: 2, list: 'full' },
+      {
+        class: 'full',
+        ability: 'cha',
+        dc: 14,
+        attack: 6,
+        prepared: 7,
+        cantrips: 2,
+        list: 'full',
+        known: [],
+      },
     ]);
   });
 
@@ -88,6 +99,65 @@ describe('spellcasting', () => {
     const both = derive(character('2024', ['pact', 5], ['full', 1]), casters());
     expect(both.pact).toEqual({ level: 3, count: 2 });
     expect(both.slots).toEqual([2]);
+  });
+});
+
+describe('maxSpellLevel', () => {
+  it('reads the highest slot level from the slot tables', () => {
+    expect(maxSpellLevel('full', 1)).toBe(1);
+    expect(maxSpellLevel('full', 5)).toBe(3);
+    expect(maxSpellLevel('half', 1)).toBe(1);
+    expect(maxSpellLevel('half', 5)).toBe(2);
+    expect(maxSpellLevel('pact', 5)).toBe(3);
+    expect(maxSpellLevel('third', 0)).toBe(0);
+  });
+});
+
+describe('chosen cantrips and spells', () => {
+  const srd = loadRules([SRD_52]);
+  const wizard = (spells: string[]): Character => ({
+    ...character('2024', ['wizard', 1]),
+    species: 'human',
+    background: 'sage',
+    levels: [
+      {
+        class: 'wizard',
+        hp: 'max',
+        choices: {
+          'wizard-spellcasting/cantrips': ['fire-bolt', 'light', 'mage-hand'],
+          'wizard-spellcasting/spells': spells,
+        },
+      },
+    ],
+  });
+  const own = (sheet: ReturnType<typeof derive>) =>
+    sheet.missing.filter((m) => m.includes('spellcasting'));
+
+  it('lists what a wizard chose, in order, as known', () => {
+    const sheet = derive(wizard(['sleep', 'shield', 'magic-missile', 'identify']), srd);
+    expect(own(sheet)).toEqual([]);
+    expect(sheet.spellcasting[0]?.known).toEqual([
+      'fire-bolt',
+      'light',
+      'mage-hand',
+      'sleep',
+      'shield',
+      'magic-missile',
+      'identify',
+    ]);
+  });
+
+  it('reports the spells still to choose', () => {
+    expect(own(derive(wizard(['sleep', 'shield']), srd))).toEqual([
+      'level 1: wizard-spellcasting/spells',
+    ]);
+  });
+
+  it('asks no cantrips of a class that has none', () => {
+    const paladin = loadRules([SRD_52]).class('paladin')!;
+    const keys = paladin.features.flatMap((f) => f.choices.map((c) => `${f.id}/${c.id}`));
+    expect(keys).toContain('paladin-spellcasting/spells');
+    expect(keys).not.toContain('paladin-spellcasting/cantrips');
   });
 });
 

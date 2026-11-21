@@ -29,6 +29,8 @@ export interface CharacterSheetDeps {
   t: T;
   lang: () => Lang;
   rules: () => Rules;
+  /** A spell's names and level, or undefined for an id that is not a known spell. */
+  spell: (id: string) => { name: Text; level: number } | undefined;
   load: (path: string) => Promise<SheetData | null>;
   roll: RollCheck;
   openNote: (path: string) => void;
@@ -393,11 +395,41 @@ export class CharacterSheetView extends ItemView {
       sectionHead(el, t('sheet.pact', { n: sheet.pact.level }));
       this.slotRow(el, '', sheet.pact.count);
     }
+    this.knownSpells(
+      el,
+      sheet.spellcasting.flatMap((s) => s.known),
+    );
     for (const s of sheet.spellcasting) {
       el.createDiv({
         cls: 'dnd5e-cs-muted',
         text: t('sheet.spellList', { class: this.nameOf(s.class), list: this.nameOf(s.list) }),
       });
+    }
+  }
+
+  /** The chosen cantrips and spells, grouped by spell level; an unknown id shows as it is. */
+  private knownSpells(el: HTMLElement, ids: readonly string[]): void {
+    const { t, spell } = this.deps;
+    const groups = new Map<number, string[]>();
+    for (const id of ids) {
+      const found = spell(id);
+      const level = found?.level ?? -1;
+      groups.set(level, [
+        ...(groups.get(level) ?? []),
+        found ? local(found.name, this.lang()) : id,
+      ]);
+    }
+    const heads = (level: number) =>
+      level === 0
+        ? t('sheet.cantrips')
+        : level < 0
+          ? t('sheet.spells')
+          : t('sheet.slotLevel', { n: level });
+    // Cantrips first, then level by level, unknown ids last.
+    const order = [...groups.keys()].sort((a, b) => (a < 0 ? 1 : b < 0 ? -1 : a - b));
+    for (const level of order) {
+      sectionHead(el, heads(level));
+      for (const name of groups.get(level)!) el.createDiv({ cls: 'dnd5e-cs-spell', text: name });
     }
   }
 

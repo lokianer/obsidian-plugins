@@ -65,6 +65,7 @@ export function derive(character: Character, rules: Rules): Sheet {
   const resistances = new Set<string>();
   const grants: { grant: Grant; p: Placed }[] = [];
   const missing: string[] = [];
+  const known = new Map<string, string[]>();
   const add = (list: string[], ids: readonly string[]) => {
     for (const id of ids) if (!list.includes(id)) list.push(id);
   };
@@ -113,6 +114,9 @@ export function derive(character: Character, rules: Rules): Sheet {
       else if (choice.gives === 'tool') add(lists.tool, values);
       else if (choice.gives === 'language') add(lists.language, values);
       else if (choice.gives === 'mastery') add(masteries, values);
+      else if (choice.gives === 'spell' && p.owner !== null) {
+        known.set(p.owner, [...(known.get(p.owner) ?? []), ...values]);
+      }
     }
   }
 
@@ -181,7 +185,7 @@ export function derive(character: Character, rules: Rules): Sheet {
     }
   }
 
-  const context = { character, rules, mod, proficiency, amount, classLevel, grants, lists };
+  const context = { character, rules, mod, proficiency, amount, classLevel, grants, lists, known };
   const casting = spellcasting(context, classes);
   return {
     level,
@@ -236,4 +240,6 @@ export interface Context {
   classLevel: (owner: string | null) => number;
   grants: { grant: Grant; p: Placed }[];
   lists: Sheet['proficiencies'];
+  /** The spell ids chosen, by class. */
+  known: Map<string, string[]>;
 }

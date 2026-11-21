@@ -2555,6 +2555,10 @@ describe('character sheet', () => {
       t: createT(lang),
       lang: () => lang,
       rules: () => rules,
+      spell: (id) => {
+        const s = SRD_SPELLS.find((x) => x.index === id);
+        return s === undefined ? undefined : { name: { en: s.name, de: s.nameDe }, level: s.level };
+      },
       load: (p) => Promise.resolve(sheetData(p, fm, rules)),
       roll,
       openNote,
@@ -2663,6 +2667,12 @@ describe('character sheet', () => {
         (s) => s.querySelectorAll('.dnd5e-cs-slot').length,
       ),
     ).toEqual([4, 3, 3]);
+    const heads = texts(el, '.dnd5e-section-head');
+    expect(heads).toContain('Cantrips');
+    expect(heads).toContain('Level 3');
+    const names = texts(el, '.dnd5e-cs-spell');
+    expect(names.slice(0, 3)).toEqual(['Vicious Mockery', 'Minor Illusion', 'Mage Hand']);
+    expect(names).toContain('Hypnotic Pattern');
     tab(el, 'Notes');
     el.querySelector<HTMLElement>('.dnd5e-cs-open-note')?.dispatchEvent(new MouseEvent('click'));
     expect(openNote).toHaveBeenCalledWith('Silverstadt/Party/Wren Ashdown.md');
@@ -2700,7 +2710,7 @@ describe('character sheet', () => {
   it('warns about an unknown feat, and speaks German', async () => {
     const fm = structuredClone(front('Wren Ashdown'));
     const levels = fm.levels as { choices?: Record<string, unknown> }[];
-    levels[3]!.choices = { 'bard-asi-4/feat': 'no-such-feat' };
+    levels[3]!.choices = { ...levels[3]!.choices, 'bard-asi-4/feat': 'no-such-feat' };
     const { el } = await open('Wren Ashdown', 'de', fm);
     expect(texts(el, '.dnd5e-cs-warning')).toHaveLength(1);
     expect(texts(el, '.dnd5e-cs-tiles .dnd5e-tile-label')).toEqual([

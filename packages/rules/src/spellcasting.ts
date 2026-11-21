@@ -35,7 +35,32 @@ function pactSlots(level: number): Sheet['pact'] {
   return { level: Math.min(5, Math.ceil(level / 2)), count };
 }
 
-type Casting = Extract<Grant, { kind: 'spellcasting' }>;
+type Progression = Extract<Grant, { kind: 'spellcasting' }>['progression'];
+
+/** What a class level adds to the caster level; pact casters have their own slots. */
+function casterShare(
+  progression: Progression,
+  level: number,
+  round: (n: number) => number,
+): number {
+  return progression === 'full'
+    ? level
+    : progression === 'half'
+      ? round(level / 2)
+      : progression === 'third'
+        ? round(level / 3)
+        : 0;
+}
+
+/**
+ * The highest spell level a single-class character of `progression` has a slot for at
+ * `classLevel` (2024 rounding): 0 for none.
+ */
+export function maxSpellLevel(progression: Progression, classLevel: number): number {
+  if (progression === 'pact') return pactSlots(classLevel)?.level ?? 0;
+  const level = Math.min(20, casterShare(progression, classLevel, Math.ceil));
+  return level > 0 ? (SLOTS[level - 1]?.length ?? 0) : 0;
+}
 
 export function spellcasting(
   ctx: Context,
@@ -54,20 +79,16 @@ export function spellcasting(
     prepared: ctx.amount(grant.prepared, owner),
     cantrips: ctx.amount(grant.cantrips, owner),
     list: grant.list,
+    known: ctx.known.get(owner) ?? [],
   }));
 
   // Half and third casters round up in 2024 and down in 2014; a 2014 single-class half caster
   // has no slots at level 1.
   const round = ctx.character.rules === '2024' ? Math.ceil : Math.floor;
-  const share = (g: Casting, level: number) =>
-    g.progression === 'full'
-      ? level
-      : g.progression === 'half'
-        ? round(level / 2)
-        : g.progression === 'third'
-          ? round(level / 3)
-          : 0;
-  const casterLevel = casting.reduce((n, { grant, owner }) => n + share(grant, levelOf(owner)), 0);
+  const casterLevel = casting.reduce(
+    (n, { grant, owner }) => n + casterShare(grant.progression, levelOf(owner), round),
+    0,
+  );
   const pact = casting.find(({ grant }) => grant.progression === 'pact');
   return {
     spellcasting,

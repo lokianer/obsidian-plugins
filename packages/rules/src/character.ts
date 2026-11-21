@@ -54,6 +54,8 @@ export interface Spellcasting {
   prepared: number;
   cantrips: number;
   list: string;
+  /** The cantrip and spell ids chosen for this class, in order. */
+  known: string[];
 }
 
 export interface Resource {

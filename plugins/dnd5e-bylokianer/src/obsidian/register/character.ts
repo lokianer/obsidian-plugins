@@ -9,6 +9,7 @@ import { MarkdownRenderer, TFile } from 'obsidian';
 
 import { computedKeys, differs, readCharacter, sheetData } from '../../character/note';
 import { CHARACTER_VIEW, CharacterSheetView } from '../character-sheet-view';
+import { SRD_SPELLS } from '../../spells/srd-spells';
 import type { Context } from './context';
 
 export function registerCharacters(ctx: Context): void {
@@ -16,6 +17,7 @@ export function registerCharacters(ctx: Context): void {
   const { app } = plugin;
   let loaded: Rules | null = null;
   const rules = () => (loaded ??= loadRules([SRD_52]));
+  const spellsById = new Map(SRD_SPELLS.map((s) => [s.index, s]));
   const frontmatter = (file: TFile) => app.metadataCache.getFileCache(file)?.frontmatter;
 
   plugin.registerEvent(
@@ -39,6 +41,12 @@ export function registerCharacters(ctx: Context): void {
         t,
         lang: ctx.lang,
         rules,
+        spell: (id) => {
+          const s = spellsById.get(id);
+          return s === undefined
+            ? undefined
+            : { name: { en: s.name, de: s.nameDe }, level: s.level };
+        },
         load: (path) => {
           const file = app.vault.getFileByPath(path);
           return Promise.resolve(
