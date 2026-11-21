@@ -1031,3 +1031,21 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 - **Left out:** the full list repeated at every level (easier to read in the note, but duplicated
   and open to drift). Replacing an earlier pick on level-up (a warlock swapping an invocation) is
   C3's to design. Built in C2, which writes new characters this way.
+
+## 2026-11-21 · Character builder C2: the New character dialog
+
+- **Increments in the engine.** Growing choices (invocations, metamagic, weapon mastery, spells)
+  are stored per level and checked cumulatively, so a note with all of them at the first level stays
+  valid. Wren got her languages and her bard spells as increments; Sable Thorn is the example.
+- **Only 2024 in the dialog** until C7 (mixing rule sets); the data of both stays.
+- **Starting equipment is text.** The class's equipment is shown as written; armour, a shield and
+  weapons are picked from the SRD tables. Packages and coins come with C5 (inventory).
+- **Layout.** The Create button sits in the preview card; the preview is above the form when the
+  pane is narrow.
+- **Spells** come from the plugin's SRD 5.1 spell list (`SRD_SPELLS`) filtered by class and level;
+  the rules package knows only the counts and the highest level. Swapping prepared spells and
+  re-choosing are C3.
+- **Dialog contract.** `levelOptions(character, rules, at)` returns every allowed option for every
+  open choice and drops values the character already has; the draft prunes choices that no longer
+  exist when species, background or class change.
+- **Left out:** levelling up in a dialog (C3), the books' content (C6), packages and coins (C5).

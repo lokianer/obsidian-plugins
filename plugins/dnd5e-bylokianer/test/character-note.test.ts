@@ -1,4 +1,4 @@
-import { loadRules, SRD_52 } from '@obsidian-plugins/rules';
+import { derive, loadRules, SRD_52 } from '@obsidian-plugins/rules';
 import { describe, expect, it } from 'vitest';
 
 import { computedKeys, differs, readCharacter } from '../src/character/note';
@@ -136,6 +136,15 @@ describe('the character note', () => {
     if (fm === undefined) throw new Error('no Wren Ashdown in the example vault');
     expect(differs(fm, keys(fm))).toBe(false);
     expect(readCharacter(fm)?.levels).toHaveLength(6);
+  });
+
+  it('finds Sable Thorn in the example vault complete and up to date', () => {
+    const fm = loadExampleVault().find((n) => n.path.endsWith('Party/Sable Thorn.md'))?.frontmatter;
+    if (fm === undefined) throw new Error('no Sable Thorn in the example vault');
+    const character = readCharacter(fm);
+    expect(character?.levels).toHaveLength(5);
+    expect(derive(character!, rules)).toMatchObject({ missing: [], unknown: [] });
+    expect(differs(fm, keys(fm))).toBe(false);
   });
 
   it('never writes numbers it could not compute', () => {

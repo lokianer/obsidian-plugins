@@ -23,6 +23,7 @@ describe('buildGraph', () => {
       'Dagny',
       'Ilex',
       'Orrin Quill',
+      'Sable Thorn',
       'Tessaly Vane',
       'Wren Ashdown',
     ]);

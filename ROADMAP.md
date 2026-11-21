@@ -14,7 +14,7 @@ phase plans in `docs/superpowers/plans/` and each plugin's `DECISIONS.md`.
 
 | Plugin                                            | State                                                   | Released                                                                                                        |
 | ------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; V4–V6, K1–K3 and C1 built       | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
+| [dnd5e-byLokianer](plugins/dnd5e-bylokianer/)     | Seven modules accepted; V4–V6, K1–K3, C1 and C2 built   | [0.1.0](https://github.com/lokianer/obsidian-plugins/releases/tag/dnd5e-bylokianer-0.1.0) on GitHub, 2026-10-26 |
 | [Daggerheart plugin](#daggerheart-plugin-planned) | Planned: research done, design not started, no code yet | —                                                                                                               |
 
 Neither plugin is in Obsidian's community directory yet.
@@ -33,7 +33,7 @@ In order of priority. Items marked **(open)** wait for the maintainer's decision
    See [Catalogues](#catalogues).
 3. **dnd5e-byLokianer: character builder with a level-up database** (asked for on 2026-11-20).
    Design approved; C1 (engine, SRD 5.2.1 data, the sheet) and C1b (German SRD texts) built,
-   awaiting the check in Obsidian; next C2 (create and level up) after the check. See
+   C2 (the New character dialog) built 2026-11-21; all awaiting the check in Obsidian; next C3. See
    [Character builder](#character-builder).
 4. **dnd5e-byLokianer: code quality.** Reduce complexity, steps 2 and 3 (see
    [Code quality](#code-quality)); afterwards turn the lint limits into errors and tighten them.
@@ -198,7 +198,11 @@ character sheet in layout A (D&D Beyond style) to play from; multiclassing.
 - [ ] **C1b — German SRD texts** (built 2026-11-20, awaiting the check with C1): the official German
       SRD 5.2.1 for every name and text C1 ships, aligned by id and checked; the sheet shows it with
       German Obsidian, damage types German. Plan `2026-11-20-character-c1b-german-texts.md`.
-- [ ] **C2 — create and level up** in a dialog, every option of a level as a tile.
+- [ ] **C2 — create a character** in a dialog (built 2026-11-21, awaiting the check): the command
+      **New character**, form and live preview, ability methods, every first-level choice with all
+      options, Create into the character folder; growing choices stored as increments in the engine
+      and in Wren's note; example character Sable Thorn (warlock 5). Plan
+      `2026-11-21-character-c2-create.md`. Levelling up in a dialog moves to C3.
 - [ ] **C3 — spells** (lists, known and prepared). **C4 — play state** (hit points, slots,
       resources, rests; the Battle tab writes `hp_current`). **C5 — inventory**. **C6 — the books'
       subclasses, feats and backgrounds** as data with summaries. **C7 — 2014 content and mixing

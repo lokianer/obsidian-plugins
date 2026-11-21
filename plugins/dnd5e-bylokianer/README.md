@@ -568,9 +568,19 @@ button (Shift for advantage or a critical hit, Alt for disadvantage). Missing ch
 ids show as a warning above the tiles. A hand-written character note (no `levels`) keeps working
 as before; its sheet shows its own values.
 
+**New character.** The command opens a dialog: the form on the left (name, player, species,
+background, class, the ability scores, every open choice of the first level with all allowed options,
+armour, shield and weapons) and the sheet's head, tiles and abilities as a preview on the right,
+above the form in a narrow pane. **Create** is disabled until everything is chosen; it writes the note
+into the **Folder for built characters** (Settings, default `Party`, inside the campaign) and opens it. Ability
+scores: the standard array, point buy (27 points), rolled (4d6, drop the lowest) or typed (3-18).
+Spells come from the plugin's SRD spell list filtered by class and level. Choices whose count grows
+with the level (Eldritch Invocations, Metamagic, spells) are stored per level as what that level adds.
+Only the 2024 rules in the dialog for now; the starting equipment is shown as text.
+
 The engine lives in the shared package `packages/rules`: armour class from armour, shield and
 unarmoured formulas; multiclass spell slots (2024 rounds half casters up, 2014 down) and pact
-slots apart; resources with their die and rest. Not yet: creating and levelling up in a dialog,
+slots apart; resources with their die and rest. Not yet: levelling up in a dialog,
 spending hit points, slots and resources, choosing spells, German names of the rules' content, the
 books' subclasses and feats (phases C1b–C7).
 
@@ -588,6 +598,7 @@ books' subclasses and feats (phases C1b–C7).
 - **Open battle tracker** — run a fight from an encounter note.
 - **New encounter** — the encounter builder.
 - **Open dice** — the Dice tab.
+- **New character** — the dialog that builds a level-1 character note.
 - **Open character sheet** — the sheet of the active character note.
 
 No default hotkeys are set; assign your own under Settings → Hotkeys (for example Ctrl/Cmd+Shift+F

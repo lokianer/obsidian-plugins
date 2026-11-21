@@ -18,6 +18,22 @@ All notable changes to this plugin are documented here. The format follows
   their SRD text, inventory, skills, notes and levels; every check, save, attack and damage rolls.
   The example vault gains Wren Ashdown, a built bard.
 
+- **New character** (character builder, phase C2): the command **New character** opens a dialog:
+  name, player, species, background and class from the SRD 5.2.1, the ability scores by standard
+  array, point buy (27 points), rolled (4d6, drop the lowest) or typed (3-18), then every open
+  choice of the first level (skills, tools, languages, background ability points, species options,
+  invocations, cantrips and spells from the SRD spell list of the class) with all allowed options
+  listed. A preview on the right shows the sheet's head, tiles and abilities as you choose; **Create**
+  writes the note into the new setting **Folder for built characters** (default `Party`, in the campaign) and
+  opens it. Starting equipment is shown as text; armour, a shield and weapons are picked from the SRD
+  tables. The Spells tab of the sheet lists the chosen spells by level, and tools and languages
+  show by name, in German too. Only the 2024 rules in the dialog.
+- **Choices that grow with the level** (rules): Eldritch Invocations, Metamagic, Weapon Mastery
+  and spells are stored per level as the increment and checked cumulatively; cantrips and spells
+  are per-level choices on every spellcasting feature; background ability points are limited to 2
+  per ability; the rules data gains tools, languages and the origin languages. The example vault
+  gains Sable Thorn, a built warlock 5 with invocations as increments.
+
 - **German rules texts on the character sheet** (character builder, phase C1b): with German
   Obsidian, class, subclass, species, background, feat, armour, weapon and skill names and all
   feature texts, choice labels and tables come from the official German SRD 5.2.1 (1,223 strings),
