@@ -297,3 +297,70 @@ describe('SRD 5.2.1 German names from the official German SRD', () => {
     });
   });
 });
+
+describe('SRD 5.2.1 tools and languages', () => {
+  const toolDe = (id: string) => rules.tool(id)?.name.de;
+  const languageDe = (id: string) => rules.language(id)?.name.de;
+
+  it('names tools as the German SRD does', () => {
+    expect(toolDe('thieves-tools')).toBe('Diebeswerkzeug');
+    expect(toolDe('lute')).toBe('Laute');
+    expect(toolDe('calligraphers-supplies')).toBe('Kalligrafiewerkzeug');
+    expect(toolDe('herbalism-kit')).toBe('Kräuterkundeausrüstung');
+    expect(toolDe('dragonchess-set')).toBe('Drachenschach');
+    expect(rules.tool('lute')?.category).toBe('musical-instrument');
+    expect(rules.tool('smiths-tools')?.category).toBe('artisans-tools');
+  });
+
+  it('names languages as the German SRD does, rare ones marked', () => {
+    expect(languageDe('common')).toBe('Gemeinsprache');
+    expect(languageDe('dwarvish')).toBe('Zwergisch');
+    expect(languageDe('thieves-cant')).toBe('Diebessprache');
+    expect(languageDe('undercommon')).toBe('Gemeinsprache der Unterreiche');
+    expect(rules.language('elvish')?.rare).toBe(false);
+    expect(rules.language('druidic')?.rare).toBe(true);
+  });
+
+  it('knows every tool and language the data grants or offers', () => {
+    const categories = new Set(['musical-instrument', 'artisans-tools', 'gaming-set']);
+    const unknown: string[] = [];
+    const walk = (value: unknown): void => {
+      if (Array.isArray(value)) return value.forEach(walk);
+      if (typeof value !== 'object' || value === null) return;
+      const o = value as Record<string, unknown>;
+      if (o.kind === 'proficiency' && (o.what === 'tool' || o.what === 'language')) {
+        for (const id of o.ids as string[]) {
+          const known = o.what === 'tool' ? rules.tool(id) : rules.language(id);
+          if (known === undefined) unknown.push(`${o.what} ${id}`);
+        }
+      }
+      if ((o.gives === 'tool' || o.gives === 'language') && typeof o.from === 'object') {
+        const from = o.from as { list?: string[] };
+        for (const id of from.list ?? []) {
+          const known = o.gives === 'tool' ? rules.tool(id) : rules.language(id);
+          if (known === undefined && !categories.has(id)) unknown.push(`${o.gives} ${id}`);
+        }
+      }
+      Object.values(o).forEach(walk);
+    };
+    walk(SRD_52);
+    expect(unknown).toEqual([]);
+  });
+
+  it('gives every new character Common and two standard languages to choose', () => {
+    const [origin] = SRD_52.creation;
+    expect(origin).toMatchObject({
+      id: 'origin-languages',
+      name: { en: 'Languages', de: 'Sprachen' },
+      grants: [{ kind: 'proficiency', what: 'language', ids: ['common'] }],
+      choices: [{ id: 'languages', count: 2, gives: 'language', from: { list: [] } }],
+    });
+  });
+
+  it('limits each background increase to two points on one ability', () => {
+    for (const b of SRD_52.backgrounds) {
+      const choice = b.features.flatMap((f) => f.choices).find((c) => c.gives === 'ability');
+      expect(choice?.from).toMatchObject({ each: 2 });
+    }
+  });
+});

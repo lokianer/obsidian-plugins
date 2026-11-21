@@ -30,6 +30,18 @@ describe('the data check', () => {
     expect(checkRules(loadRules([data]))).toContain("duplicate class id 'tester'");
   });
 
+  it('reports a duplicated tool or language id', () => {
+    const data = copy();
+    data.tools.push({ id: 'kit', name: { en: 'Kit' }, category: 'other' });
+    data.tools.push({ id: 'kit', name: { en: 'Kit' }, category: 'other' });
+    data.languages.push({ id: 'elvish', name: { en: 'Elvish' }, rare: false });
+    data.languages.push({ id: 'elvish', name: { en: 'Elvish' }, rare: false });
+    expect(checkRules(loadRules([data]))).toEqual([
+      "duplicate tool id 'kit'",
+      "duplicate language id 'elvish'",
+    ]);
+  });
+
   it('reports a level table that is not 20 long', () => {
     const data = copy();
     data.classes[0]!.features[0]!.grants.push({

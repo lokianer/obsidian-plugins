@@ -162,3 +162,28 @@ describe('growing choices stored per level as the increment', () => {
     expect(derive(c, srd).masteries).toEqual(['club', 'dagger', 'greatclub', 'longsword']);
   });
 });
+
+describe('the languages of a new character', () => {
+  const srd = loadRules([SRD_52]);
+  const wren = (languages: string[]): Character => ({
+    rules: '2024',
+    species: 'halfling',
+    background: 'criminal',
+    abilities: { str: 8, dex: 14, con: 12, int: 10, wis: 13, cha: 15 },
+    choices: {
+      'criminal-ability-scores/abilities': ['dex', 'dex', 'con'],
+      ...(languages.length > 0 ? { 'origin-languages/languages': languages } : {}),
+    },
+    levels: [{ class: 'bard', hp: 'max', choices: {} }],
+    inventory: [],
+    bonuses: [],
+  });
+  const missing = (c: Character) =>
+    derive(c, srd).missing.filter((m) => m.includes('origin-languages'));
+
+  it('asks for two languages until they are chosen', () => {
+    expect(missing(wren([]))).toEqual(['origin-languages/languages']);
+    expect(missing(wren(['elvish']))).toEqual(['origin-languages/languages']);
+    expect(missing(wren(['elvish', 'halfling']))).toEqual([]);
+  });
+});

@@ -134,7 +134,7 @@ export class CharacterSheetView extends ItemView {
     return this.deps.lang();
   }
 
-  /** A rules id's display name: a class, subclass, species, background, feat, skill or item. */
+  /** A rules id's display name: a class, subclass, species, background, feat, skill, tool, language or item. */
   private nameOf(id: string): string {
     const r = this.deps.rules();
     const named =
@@ -144,7 +144,9 @@ export class CharacterSheetView extends ItemView {
       r.species(id) ??
       r.background(id) ??
       r.armor(id) ??
-      r.weapon(id);
+      r.weapon(id) ??
+      r.tool(id) ??
+      r.language(id);
     if (named !== undefined) return local(named.name, this.lang());
     if (r.skill(id) !== undefined) return skillName(id.replace(/-/g, '_'), this.lang());
     const option = this.optionName(id);

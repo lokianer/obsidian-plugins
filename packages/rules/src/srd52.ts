@@ -4,10 +4,13 @@
 import armor from '../data/srd-5.2.1/armor.json';
 import backgrounds from '../data/srd-5.2.1/backgrounds.json';
 import classes from '../data/srd-5.2.1/classes.json';
+import creation from '../data/srd-5.2.1/creation.json';
 import feats from '../data/srd-5.2.1/feats.json';
+import languages from '../data/srd-5.2.1/languages.json';
 import skills from '../data/srd-5.2.1/skills.json';
 import species from '../data/srd-5.2.1/species.json';
 import subclasses from '../data/srd-5.2.1/subclasses.json';
+import tools from '../data/srd-5.2.1/tools.json';
 import weapons from '../data/srd-5.2.1/weapons.json';
 import type { RulesData } from './model';
 
@@ -20,4 +23,7 @@ export const SRD_52 = {
   armor,
   weapons,
   skills,
+  tools,
+  languages,
+  creation,
 } as unknown as RulesData;

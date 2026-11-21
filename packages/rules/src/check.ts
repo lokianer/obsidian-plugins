@@ -139,6 +139,8 @@ export function checkRules(rules: Rules): string[] {
   unique('armor', data.armor);
   unique('weapon', data.weapons);
   unique('skill', data.skills);
+  unique('tool', data.tools);
+  unique('language', data.languages);
 
   for (const c of data.classes) {
     for (const f of c.features) found.push(...featureProblems(`class ${c.id}`, f, rules));
@@ -167,6 +169,7 @@ export function checkRules(rules: Rules): string[] {
     }
     for (const f of b.features) found.push(...featureProblems(`background ${b.id}`, f, rules));
   }
+  for (const f of data.creation) found.push(...featureProblems('creation', f, rules));
   for (const feat of data.feats) {
     for (const f of feat.features) found.push(...featureProblems(`feat ${feat.id}`, f, rules));
   }

@@ -32,7 +32,8 @@
 						"gives": "ability",
 						"from": {
 							"abilities": ["int", "wis", "cha"],
-							"max": 20
+							"max": 20,
+							"each": 2
 						}
 					}
 				]
@@ -111,7 +112,8 @@
 						"gives": "ability",
 						"from": {
 							"abilities": ["dex", "con", "int"],
-							"max": 20
+							"max": 20,
+							"each": 2
 						}
 					}
 				]
@@ -190,7 +192,8 @@
 						"gives": "ability",
 						"from": {
 							"abilities": ["con", "int", "wis"],
-							"max": 20
+							"max": 20,
+							"each": 2
 						}
 					}
 				]
@@ -269,7 +272,8 @@
 						"gives": "ability",
 						"from": {
 							"abilities": ["str", "dex", "con"],
-							"max": 20
+							"max": 20,
+							"each": 2
 						}
 					}
 				]

@@ -7,6 +7,7 @@ background: criminal
 abilities: { str: 8, dex: 14, con: 12, int: 10, wis: 13, cha: 15 }
 choices:
   criminal-ability-scores/abilities: [dex, dex, con]
+  origin-languages/languages: [elvish, halfling]
 levels:
   - class: bard
     hp: max

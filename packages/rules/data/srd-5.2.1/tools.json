@@ -1,0 +1,298 @@
+[
+	{
+		"id": "alchemists-supplies",
+		"name": {
+			"en": "Alchemist's Supplies",
+			"de": "Alchemistenausrüstung"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "brewers-supplies",
+		"name": {
+			"en": "Brewer's Supplies",
+			"de": "Brauereizubehör"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "calligraphers-supplies",
+		"name": {
+			"en": "Calligrapher's Supplies",
+			"de": "Kalligrafiewerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "carpenters-tools",
+		"name": {
+			"en": "Carpenter's Tools",
+			"de": "Schreinerwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "cartographers-tools",
+		"name": {
+			"en": "Cartographer's Tools",
+			"de": "Kartografenwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "cobblers-tools",
+		"name": {
+			"en": "Cobbler's Tools",
+			"de": "Schusterwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "cooks-utensils",
+		"name": {
+			"en": "Cook's Utensils",
+			"de": "Kochutensilien"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "glassblowers-tools",
+		"name": {
+			"en": "Glassblower's Tools",
+			"de": "Glasbläserwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "jewelers-tools",
+		"name": {
+			"en": "Jeweler's Tools",
+			"de": "Juwelierwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "leatherworkers-tools",
+		"name": {
+			"en": "Leatherworker's Tools",
+			"de": "Ledererwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "masons-tools",
+		"name": {
+			"en": "Mason's Tools",
+			"de": "Maurerwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "painters-supplies",
+		"name": {
+			"en": "Painter's Supplies",
+			"de": "Malutensilien"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "potters-tools",
+		"name": {
+			"en": "Potter's Tools",
+			"de": "Töpferwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "smiths-tools",
+		"name": {
+			"en": "Smith's Tools",
+			"de": "Schmiedewerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "tinkers-tools",
+		"name": {
+			"en": "Tinker's Tools",
+			"de": "Tüftlerwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "weavers-tools",
+		"name": {
+			"en": "Weaver's Tools",
+			"de": "Weberwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "woodcarvers-tools",
+		"name": {
+			"en": "Woodcarver's Tools",
+			"de": "Holzschnitzwerkzeug"
+		},
+		"category": "artisans-tools"
+	},
+	{
+		"id": "bagpipes",
+		"name": {
+			"en": "Bagpipes",
+			"de": "Dudelsack"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "drum",
+		"name": {
+			"en": "Drum",
+			"de": "Trommel"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "dulcimer",
+		"name": {
+			"en": "Dulcimer",
+			"de": "Hackbrett"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "flute",
+		"name": {
+			"en": "Flute",
+			"de": "Flöte"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "horn",
+		"name": {
+			"en": "Horn",
+			"de": "Horn"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "lute",
+		"name": {
+			"en": "Lute",
+			"de": "Laute"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "lyre",
+		"name": {
+			"en": "Lyre",
+			"de": "Leier"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "pan-flute",
+		"name": {
+			"en": "Pan Flute",
+			"de": "Panflöte"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "shawm",
+		"name": {
+			"en": "Shawm",
+			"de": "Schalmei"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "viol",
+		"name": {
+			"en": "Viol",
+			"de": "Gambe"
+		},
+		"category": "musical-instrument"
+	},
+	{
+		"id": "dice-set",
+		"name": {
+			"en": "Dice",
+			"de": "Würfel"
+		},
+		"category": "gaming-set"
+	},
+	{
+		"id": "dragonchess-set",
+		"name": {
+			"en": "Dragonchess",
+			"de": "Drachenschach"
+		},
+		"category": "gaming-set"
+	},
+	{
+		"id": "playing-cards-set",
+		"name": {
+			"en": "Playing Cards",
+			"de": "Spielkarten"
+		},
+		"category": "gaming-set"
+	},
+	{
+		"id": "three-dragon-ante-set",
+		"name": {
+			"en": "Three-Dragon Ante",
+			"de": "Drei-Drachen-Ante"
+		},
+		"category": "gaming-set"
+	},
+	{
+		"id": "disguise-kit",
+		"name": {
+			"en": "Disguise Kit",
+			"de": "Verkleidungsausrüstung"
+		},
+		"category": "other"
+	},
+	{
+		"id": "forgery-kit",
+		"name": {
+			"en": "Forgery Kit",
+			"de": "Fälscherausrüstung"
+		},
+		"category": "other"
+	},
+	{
+		"id": "herbalism-kit",
+		"name": {
+			"en": "Herbalism Kit",
+			"de": "Kräuterkundeausrüstung"
+		},
+		"category": "other"
+	},
+	{
+		"id": "navigators-tools",
+		"name": {
+			"en": "Navigator's Tools",
+			"de": "Navigationswerkzeug"
+		},
+		"category": "other"
+	},
+	{
+		"id": "poisoners-kit",
+		"name": {
+			"en": "Poisoner's Kit",
+			"de": "Giftmischerausrüstung"
+		},
+		"category": "other"
+	},
+	{
+		"id": "thieves-tools",
+		"name": {
+			"en": "Thieves' Tools",
+			"de": "Diebeswerkzeug"
+		},
+		"category": "other"
+	}
+]

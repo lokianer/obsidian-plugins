@@ -2689,6 +2689,14 @@ describe('character sheet', () => {
     expect(first?.textContent).toBe('Beschützer');
   });
 
+  it('names tools by the rules on the Levels tab', async () => {
+    const { el } = await open('Wren Ashdown', 'de');
+    tab(el, 'Stufen');
+    const first = el.querySelector<HTMLElement>('.dnd5e-cs-level .dnd5e-cs-level-choices');
+    expect(first?.textContent).toContain('Laute');
+    expect(first?.textContent).not.toContain('lute');
+  });
+
   it('warns about an unknown feat, and speaks German', async () => {
     const fm = structuredClone(front('Wren Ashdown'));
     const levels = fm.levels as { choices?: Record<string, unknown> }[];

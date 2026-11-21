@@ -5,10 +5,12 @@ import type {
   BackgroundDef,
   ClassDef,
   FeatDef,
+  LanguageDef,
   RulesData,
   SkillDef,
   SpeciesDef,
   SubclassDef,
+  ToolDef,
   WeaponDef,
 } from './model';
 
@@ -22,6 +24,8 @@ export interface Rules {
   armor(id: string): ArmorDef | undefined;
   weapon(id: string): WeaponDef | undefined;
   skill(id: string): SkillDef | undefined;
+  tool(id: string): ToolDef | undefined;
+  language(id: string): LanguageDef | undefined;
 }
 
 const KEYS = [
@@ -33,6 +37,9 @@ const KEYS = [
   'armor',
   'weapons',
   'skills',
+  'tools',
+  'languages',
+  'creation',
 ] as const;
 
 export function loadRules(sets: readonly RulesData[]): Rules {
@@ -54,5 +61,7 @@ export function loadRules(sets: readonly RulesData[]): Rules {
     armor: index(data.armor),
     weapon: index(data.weapons),
     skill: index(data.skills),
+    tool: index(data.tools),
+    language: index(data.languages),
   };
 }

@@ -1,0 +1,154 @@
+[
+	{
+		"id": "common",
+		"name": {
+			"en": "Common",
+			"de": "Gemeinsprache"
+		},
+		"rare": false
+	},
+	{
+		"id": "common-sign-language",
+		"name": {
+			"en": "Common Sign Language",
+			"de": "Gebärden-Gemeinsprache"
+		},
+		"rare": false
+	},
+	{
+		"id": "draconic",
+		"name": {
+			"en": "Draconic",
+			"de": "Drakonisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "dwarvish",
+		"name": {
+			"en": "Dwarvish",
+			"de": "Zwergisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "elvish",
+		"name": {
+			"en": "Elvish",
+			"de": "Elfisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "giant",
+		"name": {
+			"en": "Giant",
+			"de": "Riesisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "gnomish",
+		"name": {
+			"en": "Gnomish",
+			"de": "Gnomisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "goblin",
+		"name": {
+			"en": "Goblin",
+			"de": "Goblinisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "halfling",
+		"name": {
+			"en": "Halfling",
+			"de": "Halblingisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "orc",
+		"name": {
+			"en": "Orc",
+			"de": "Orkisch"
+		},
+		"rare": false
+	},
+	{
+		"id": "abyssal",
+		"name": {
+			"en": "Abyssal",
+			"de": "Abyssisch"
+		},
+		"rare": true
+	},
+	{
+		"id": "celestial",
+		"name": {
+			"en": "Celestial",
+			"de": "Celestisch"
+		},
+		"rare": true
+	},
+	{
+		"id": "deep-speech",
+		"name": {
+			"en": "Deep Speech",
+			"de": "Tiefensprache"
+		},
+		"rare": true
+	},
+	{
+		"id": "druidic",
+		"name": {
+			"en": "Druidic",
+			"de": "Druidisch"
+		},
+		"rare": true
+	},
+	{
+		"id": "infernal",
+		"name": {
+			"en": "Infernal",
+			"de": "Infernalisch"
+		},
+		"rare": true
+	},
+	{
+		"id": "primordial",
+		"name": {
+			"en": "Primordial",
+			"de": "Urtümlich"
+		},
+		"rare": true
+	},
+	{
+		"id": "sylvan",
+		"name": {
+			"en": "Sylvan",
+			"de": "Sylvanisch"
+		},
+		"rare": true
+	},
+	{
+		"id": "thieves-cant",
+		"name": {
+			"en": "Thieves' Cant",
+			"de": "Diebessprache"
+		},
+		"rare": true
+	},
+	{
+		"id": "undercommon",
+		"name": {
+			"en": "Undercommon",
+			"de": "Gemeinsprache der Unterreiche"
+		},
+		"rare": true
+	}
+]

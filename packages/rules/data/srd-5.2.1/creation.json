@@ -1,0 +1,35 @@
+[
+	{
+		"id": "origin-languages",
+		"name": {
+			"en": "Languages",
+			"de": "Sprachen"
+		},
+		"level": 1,
+		"text": {
+			"en": "Your character knows Common plus two languages you choose from the Standard Languages table.",
+			"de": "Dein Charakter kennt die Gemeinsprache plus zwei Sprachen, die du aus der Tabelle „Standardsprachen“ auswählst."
+		},
+		"grants": [
+			{
+				"kind": "proficiency",
+				"what": "language",
+				"ids": ["common"]
+			}
+		],
+		"choices": [
+			{
+				"id": "languages",
+				"name": {
+					"en": "Languages",
+					"de": "Sprachen"
+				},
+				"count": 2,
+				"gives": "language",
+				"from": {
+					"list": []
+				}
+			}
+		]
+	}
+]

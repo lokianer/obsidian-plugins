@@ -73,12 +73,15 @@ export type Grant =
 export type OptionSource =
   /** Skills: any, these, or (for expertise) the ones the character is proficient in. */
   | { skills: 'any' | 'proficient' | string[] }
-  /** One ability per point; `count` is the number of points. */
-  | { abilities: Ability[]; max?: number }
+  /** One ability per point; `count` is the number of points; `each` is the most points one ability may take. */
+  | { abilities: Ability[]; max?: number; each?: number }
   | { feats: FeatCategory }
   | { subclasses: string }
   | { spells: string; level: number | 'cantrip' }
-  /** Plain ids: tools, languages, armour or weapon kinds. */
+  /**
+   * Plain ids: tools, languages, armour or weapon kinds. A tool category id stands for every tool of
+   * it; an empty list for a language choice means any standard language.
+   */
   | { list: string[] }
   /** Options with their own grants: a fighting style, an invocation, a draconic ancestry. */
   | { options: Feature[] };
@@ -197,6 +200,19 @@ export interface SkillDef {
   name: Text;
 }
 
+export interface ToolDef {
+  id: string;
+  name: Text;
+  category: 'artisans-tools' | 'musical-instrument' | 'gaming-set' | 'other';
+}
+
+export interface LanguageDef {
+  id: string;
+  name: Text;
+  /** Not in the Standard Languages table: secret or from another plane. */
+  rare: boolean;
+}
+
 /** One rule set's (or one book's) records. */
 export interface RulesData {
   classes: ClassDef[];
@@ -207,4 +223,8 @@ export interface RulesData {
   armor: ArmorDef[];
   weapons: WeaponDef[];
   skills: SkillDef[];
+  tools: ToolDef[];
+  languages: LanguageDef[];
+  /** What every new character gets, whatever the class, species or background (2024). */
+  creation: Feature[];
 }

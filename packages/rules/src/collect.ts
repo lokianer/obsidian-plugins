@@ -1,5 +1,5 @@
 // Which features a character has, and where each one's choices are stored: the species', the
-// background's and its origin feat's in the creation choices; a class feature's in the level at
+// background's, the creation features' and its origin feat's in the creation choices; a class feature's in the level at
 // which the class reached the feature's level; a feat's or an option's where it was chosen.
 // Unknown ids are collected, never thrown. Pure.
 
@@ -105,6 +105,9 @@ export function collect(character: Character, rules: Rules): Collected {
     if (f.level <= Math.max(1, level)) {
       place({ feature: f, from: species!.id, choices: character.choices, at: null, owner: null });
     }
+  }
+  for (const f of rules.data.creation) {
+    place({ feature: f, from: 'creation', choices: character.choices, at: null, owner: null });
   }
   const background = rules.background(character.background);
   if (background === undefined) miss(character.background);

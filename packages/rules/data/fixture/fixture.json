@@ -3,34 +3,58 @@
 		{
 			"id": "tester",
 			"rules": "2024",
-			"name": { "en": "Tester" },
+			"name": {
+				"en": "Tester"
+			},
 			"hitDie": 10,
 			"primary": ["str"],
 			"saves": ["str", "con"],
 			"subclassLevel": 3,
 			"multiclass": {
-				"requires": { "str": 13 },
-				"grants": [{ "kind": "proficiency", "what": "armor", "ids": ["light"] }]
+				"requires": {
+					"str": 13
+				},
+				"grants": [
+					{
+						"kind": "proficiency",
+						"what": "armor",
+						"ids": ["light"]
+					}
+				]
 			},
 			"features": [
 				{
 					"id": "tester-core",
-					"name": { "en": "Tester proficiencies" },
+					"name": {
+						"en": "Tester proficiencies"
+					},
 					"level": 1,
-					"text": { "en": "What every tester knows." },
+					"text": {
+						"en": "What every tester knows."
+					},
 					"grants": [
-						{ "kind": "proficiency", "what": "save", "ids": ["str", "con"] },
+						{
+							"kind": "proficiency",
+							"what": "save",
+							"ids": ["str", "con"]
+						},
 						{
 							"kind": "proficiency",
 							"what": "armor",
 							"ids": ["light", "medium", "shield"]
 						},
-						{ "kind": "proficiency", "what": "weapon", "ids": ["simple"] }
+						{
+							"kind": "proficiency",
+							"what": "weapon",
+							"ids": ["simple"]
+						}
 					],
 					"choices": [
 						{
 							"id": "skills",
-							"name": { "en": "Skills" },
+							"name": {
+								"en": "Skills"
+							},
 							"count": 2,
 							"gives": "skill",
 							"from": {
@@ -41,57 +65,90 @@
 				},
 				{
 					"id": "tester-expertise",
-					"name": { "en": "Expertise" },
+					"name": {
+						"en": "Expertise"
+					},
 					"level": 2,
-					"text": { "en": "Double proficiency in one skill." },
+					"text": {
+						"en": "Double proficiency in one skill."
+					},
 					"grants": [],
 					"choices": [
 						{
 							"id": "skills",
-							"name": { "en": "Expertise" },
+							"name": {
+								"en": "Expertise"
+							},
 							"count": 1,
 							"gives": "expertise",
-							"from": { "skills": "proficient" }
+							"from": {
+								"skills": "proficient"
+							}
 						}
 					]
 				},
 				{
 					"id": "tester-jack",
-					"name": { "en": "Jack of tests" },
+					"name": {
+						"en": "Jack of tests"
+					},
 					"level": 2,
-					"text": { "en": "Half proficiency on other checks." },
-					"grants": [{ "kind": "half-proficiency", "to": "checks" }],
+					"text": {
+						"en": "Half proficiency on other checks."
+					},
+					"grants": [
+						{
+							"kind": "half-proficiency",
+							"to": "checks"
+						}
+					],
 					"choices": []
 				},
 				{
 					"id": "tester-subclass",
-					"name": { "en": "Tester subclass" },
+					"name": {
+						"en": "Tester subclass"
+					},
 					"level": 3,
-					"text": { "en": "Choose a path." },
+					"text": {
+						"en": "Choose a path."
+					},
 					"grants": [],
 					"choices": [
 						{
 							"id": "subclass",
-							"name": { "en": "Subclass" },
+							"name": {
+								"en": "Subclass"
+							},
 							"count": 1,
 							"gives": "subclass",
-							"from": { "subclasses": "tester" }
+							"from": {
+								"subclasses": "tester"
+							}
 						}
 					]
 				},
 				{
 					"id": "tester-asi",
-					"name": { "en": "Ability Score Improvement" },
+					"name": {
+						"en": "Ability Score Improvement"
+					},
 					"level": 4,
-					"text": { "en": "Take a general feat." },
+					"text": {
+						"en": "Take a general feat."
+					},
 					"grants": [],
 					"choices": [
 						{
 							"id": "feat",
-							"name": { "en": "Feat" },
+							"name": {
+								"en": "Feat"
+							},
 							"count": 1,
 							"gives": "feat",
-							"from": { "feats": "general" }
+							"from": {
+								"feats": "general"
+							}
 						}
 					]
 				}
@@ -103,15 +160,26 @@
 			"id": "tester/tough",
 			"class": "tester",
 			"rules": "2024",
-			"name": { "en": "Path of the Tough" },
+			"name": {
+				"en": "Path of the Tough"
+			},
 			"source": "fixture",
 			"features": [
 				{
 					"id": "tough-hide",
-					"name": { "en": "Tough hide" },
+					"name": {
+						"en": "Tough hide"
+					},
 					"level": 3,
-					"text": { "en": "One more hit point per level." },
-					"grants": [{ "kind": "hp", "perLevel": 1 }],
+					"text": {
+						"en": "One more hit point per level."
+					},
+					"grants": [
+						{
+							"kind": "hp",
+							"perLevel": 1
+						}
+					],
 					"choices": []
 				}
 			]
@@ -121,16 +189,28 @@
 		{
 			"id": "fixture-folk",
 			"rules": "2024",
-			"name": { "en": "Fixture folk" },
+			"name": {
+				"en": "Fixture folk"
+			},
 			"size": ["medium"],
 			"speed": 30,
 			"features": [
 				{
 					"id": "fixture-folk-sight",
-					"name": { "en": "Darkvision" },
+					"name": {
+						"en": "Darkvision"
+					},
 					"level": 1,
-					"text": { "en": "Sees in the dark." },
-					"grants": [{ "kind": "sense", "id": "darkvision", "range": 60 }],
+					"text": {
+						"en": "Sees in the dark."
+					},
+					"grants": [
+						{
+							"kind": "sense",
+							"id": "darkvision",
+							"range": 60
+						}
+					],
 					"choices": []
 				}
 			]
@@ -140,33 +220,51 @@
 		{
 			"id": "fixture-bg",
 			"rules": "2024",
-			"name": { "en": "Fixture background" },
+			"name": {
+				"en": "Fixture background"
+			},
 			"abilities": ["str", "con", "dex"],
 			"feat": "fixture-feat",
 			"features": [
 				{
 					"id": "fixture-bg-abilities",
-					"name": { "en": "Ability scores" },
+					"name": {
+						"en": "Ability scores"
+					},
 					"level": 1,
-					"text": { "en": "+2 and +1, or +1 three times." },
+					"text": {
+						"en": "+2 and +1, or +1 three times."
+					},
 					"grants": [],
 					"choices": [
 						{
 							"id": "abilities",
-							"name": { "en": "Ability scores" },
+							"name": {
+								"en": "Ability scores"
+							},
 							"count": 3,
 							"gives": "ability",
-							"from": { "abilities": ["str", "con", "dex"] }
+							"from": {
+								"abilities": ["str", "con", "dex"]
+							}
 						}
 					]
 				},
 				{
 					"id": "fixture-bg-skills",
-					"name": { "en": "Skills" },
+					"name": {
+						"en": "Skills"
+					},
 					"level": 1,
-					"text": { "en": "Insight and Arcana." },
+					"text": {
+						"en": "Insight and Arcana."
+					},
 					"grants": [
-						{ "kind": "proficiency", "what": "skill", "ids": ["insight", "arcana"] }
+						{
+							"kind": "proficiency",
+							"what": "skill",
+							"ids": ["insight", "arcana"]
+						}
 					],
 					"choices": []
 				}
@@ -177,16 +275,29 @@
 		{
 			"id": "fixture-feat",
 			"rules": "2024",
-			"name": { "en": "Quick" },
+			"name": {
+				"en": "Quick"
+			},
 			"category": "origin",
 			"repeatable": false,
 			"features": [
 				{
 					"id": "quick",
-					"name": { "en": "Quick" },
+					"name": {
+						"en": "Quick"
+					},
 					"level": 1,
-					"text": { "en": "Add your proficiency bonus to initiative." },
-					"grants": [{ "kind": "initiative", "add": { "proficiency": true } }],
+					"text": {
+						"en": "Add your proficiency bonus to initiative."
+					},
+					"grants": [
+						{
+							"kind": "initiative",
+							"add": {
+								"proficiency": true
+							}
+						}
+					],
 					"choices": []
 				}
 			]
@@ -194,24 +305,36 @@
 		{
 			"id": "ability-score-improvement",
 			"rules": "2024",
-			"name": { "en": "Ability Score Improvement" },
+			"name": {
+				"en": "Ability Score Improvement"
+			},
 			"category": "general",
 			"repeatable": true,
-			"requires": { "level": 4 },
+			"requires": {
+				"level": 4
+			},
 			"features": [
 				{
 					"id": "asi",
-					"name": { "en": "Ability Score Improvement" },
+					"name": {
+						"en": "Ability Score Improvement"
+					},
 					"level": 1,
-					"text": { "en": "+2 to one score or +1 to two." },
+					"text": {
+						"en": "+2 to one score or +1 to two."
+					},
 					"grants": [],
 					"choices": [
 						{
 							"id": "abilities",
-							"name": { "en": "Ability scores" },
+							"name": {
+								"en": "Ability scores"
+							},
 							"count": 2,
 							"gives": "ability",
-							"from": { "abilities": ["str", "dex", "con", "int", "wis", "cha"] }
+							"from": {
+								"abilities": ["str", "dex", "con", "int", "wis", "cha"]
+							}
 						}
 					]
 				}
@@ -221,7 +344,9 @@
 	"armor": [
 		{
 			"id": "leather",
-			"name": { "en": "Leather Armor" },
+			"name": {
+				"en": "Leather Armor"
+			},
 			"category": "light",
 			"ac": 11,
 			"dexMax": null,
@@ -229,7 +354,9 @@
 		},
 		{
 			"id": "half-plate",
-			"name": { "en": "Half Plate Armor" },
+			"name": {
+				"en": "Half Plate Armor"
+			},
 			"category": "medium",
 			"ac": 15,
 			"dexMax": 2,
@@ -237,7 +364,9 @@
 		},
 		{
 			"id": "chain-mail",
-			"name": { "en": "Chain Mail" },
+			"name": {
+				"en": "Chain Mail"
+			},
 			"category": "heavy",
 			"ac": 16,
 			"dexMax": 0,
@@ -246,7 +375,9 @@
 		},
 		{
 			"id": "shield",
-			"name": { "en": "Shield" },
+			"name": {
+				"en": "Shield"
+			},
 			"category": "shield",
 			"ac": 2,
 			"dexMax": 0,
@@ -256,7 +387,9 @@
 	"weapons": [
 		{
 			"id": "dagger",
-			"name": { "en": "Dagger" },
+			"name": {
+				"en": "Dagger"
+			},
 			"category": "simple",
 			"ranged": false,
 			"damage": "1d4",
@@ -267,7 +400,9 @@
 		},
 		{
 			"id": "longsword",
-			"name": { "en": "Longsword" },
+			"name": {
+				"en": "Longsword"
+			},
 			"category": "martial",
 			"ranged": false,
 			"damage": "1d8",
@@ -277,7 +412,9 @@
 		},
 		{
 			"id": "shortbow",
-			"name": { "en": "Shortbow" },
+			"name": {
+				"en": "Shortbow"
+			},
 			"category": "simple",
 			"ranged": true,
 			"damage": "1d6",
@@ -288,12 +425,57 @@
 		}
 	],
 	"skills": [
-		{ "id": "athletics", "ability": "str", "name": { "en": "Athletics" } },
-		{ "id": "acrobatics", "ability": "dex", "name": { "en": "Acrobatics" } },
-		{ "id": "stealth", "ability": "dex", "name": { "en": "Stealth" } },
-		{ "id": "arcana", "ability": "int", "name": { "en": "Arcana" } },
-		{ "id": "insight", "ability": "wis", "name": { "en": "Insight" } },
-		{ "id": "perception", "ability": "wis", "name": { "en": "Perception" } },
-		{ "id": "persuasion", "ability": "cha", "name": { "en": "Persuasion" } }
-	]
+		{
+			"id": "athletics",
+			"ability": "str",
+			"name": {
+				"en": "Athletics"
+			}
+		},
+		{
+			"id": "acrobatics",
+			"ability": "dex",
+			"name": {
+				"en": "Acrobatics"
+			}
+		},
+		{
+			"id": "stealth",
+			"ability": "dex",
+			"name": {
+				"en": "Stealth"
+			}
+		},
+		{
+			"id": "arcana",
+			"ability": "int",
+			"name": {
+				"en": "Arcana"
+			}
+		},
+		{
+			"id": "insight",
+			"ability": "wis",
+			"name": {
+				"en": "Insight"
+			}
+		},
+		{
+			"id": "perception",
+			"ability": "wis",
+			"name": {
+				"en": "Perception"
+			}
+		},
+		{
+			"id": "persuasion",
+			"ability": "cha",
+			"name": {
+				"en": "Persuasion"
+			}
+		}
+	],
+	"tools": [],
+	"languages": [],
+	"creation": []
 }
