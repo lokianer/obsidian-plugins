@@ -20,6 +20,7 @@ import {
   type CharacterDraft,
   draftProblems,
   emptyDraft,
+  heldElsewhere,
   POINT_BUDGET,
   POINT_COSTS,
   rollAbilities,
@@ -50,8 +51,10 @@ export interface CharacterBuilderDeps {
   roll: () => number;
   /** Renders the equipment texts' Markdown, owned by `component`. */
   render: (markdown: string, target: HTMLElement, component: Component) => void;
-  /** Writes the character and opens its sheet; the dialog closes once that is done. */
-  create: (draft: CharacterDraft) => Promise<void>;
+  /** Writes the character's note and gives its path; the dialog closes once that is done. */
+  create: (draft: CharacterDraft) => Promise<string>;
+  /** Opens the sheet of the written note; a failure is only reported, the note stays. */
+  open: (path: string) => Promise<void>;
 }
 
 const METHODS: readonly AbilityMethod[] = ['standard', 'point-buy', 'rolled', 'typed'];
@@ -560,6 +563,16 @@ export class CharacterBuilderModal extends Modal {
     const slot = slots.find((s) => s.key === code.slice('choice:'.length));
     if (slot === undefined) return code;
     const what = this.slotName(slot);
+    const held = heldElsewhere(this.draft, this.deps.rules, slot.key);
+    if (held.length > 0) {
+      const values = held
+        .map((id) => {
+          const option = slot.options.find((o) => o.id === id);
+          return option === undefined ? id : local(option.name, this.deps.lang);
+        })
+        .join(', ');
+      return t('characterBuilder.problem.held', { what, values });
+    }
     return slot.chosen.length < slot.wanted
       ? t('characterBuilder.problem.choice', { n: slot.wanted - slot.chosen.length, what })
       : t('characterBuilder.problem.each', { what });
@@ -615,14 +628,21 @@ export class CharacterBuilderModal extends Modal {
     if (this.busy || draftProblems(this.draft, this.deps.rules).length > 0) return;
     this.busy = true;
     this.drawPreview();
+    let path: string;
     try {
-      await this.deps.create(this.draft);
+      path = await this.deps.create(this.draft);
     } catch (error) {
       this.busy = false;
       this.drawPreview();
       new Notice(this.deps.t('characterBuilder.failed', { reason: String(error) }));
       return;
     }
+    // The note exists now: the dialog goes either way, or a second click would write another one.
     this.close();
+    try {
+      await this.deps.open(path);
+    } catch (error) {
+      new Notice(this.deps.t('characterBuilder.openFailed', { path, reason: String(error) }));
+    }
   }
 }

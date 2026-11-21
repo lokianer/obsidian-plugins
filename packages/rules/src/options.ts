@@ -7,7 +7,7 @@ import type { Character } from './character';
 import { collect, growingValues, type Placed } from './collect';
 import type { Rules } from './data';
 import { derive, resolveAmount } from './derive';
-import type { Amount, Choice, Text } from './model';
+import type { Amount, Choice, OptionSource, Text } from './model';
 import { maxSpellLevel } from './spellcasting';
 
 export interface ChoiceSlot {
@@ -46,6 +46,10 @@ export function levelOptions(character: Character, rules: Rules, at: number | nu
   const level = character.levels.length;
   const feats = new Set(placed.map((p) => p.from));
   const options = new Set(placed.map((p) => p.feature.id));
+  /** The options taken in an earlier entry (or at creation) than `at`: what a prerequisite may rest on. */
+  const earlier = new Set(
+    placed.filter((p) => at !== null && (p.at === null || p.at < at)).map((p) => p.feature.id),
+  );
 
   const mod = Object.fromEntries(ABILITIES.map((a) => [a, sheet.abilities[a].modifier])) as Record<
     Ability,
@@ -98,7 +102,10 @@ export function levelOptions(character: Character, rules: Rules, at: number | nu
         const maxLevel = spellLevel(from.level, p);
         slot.spells = { list: from.spells, maxLevel };
       } else {
-        slot.options = offered(choice).filter((o) => chosen.includes(o.id) || !has(choice, o.id));
+        const qualified = (id: string) => meets(from, id, p.owner);
+        slot.options = offered(choice).filter(
+          (o) => chosen.includes(o.id) || (!has(choice, o.id) && qualified(o.id)),
+        );
       }
       slots.push(slot);
     }
@@ -118,6 +125,18 @@ export function levelOptions(character: Character, rules: Rules, at: number | nu
     // The class's level when this entry was taken.
     const upTo = character.levels.slice(0, at ?? level).filter((e) => e.class === classId).length;
     return maxSpellLevel(casting.progression, upTo);
+  }
+
+  /** Whether the character meets an option's prerequisite: its owner class's level at `at`, an earlier option. */
+  function meets(from: OptionSource, id: string, owner: string | null): boolean {
+    if (!('options' in from)) return true;
+    const need = from.options.find((o) => o.id === id)?.requires;
+    if (need === undefined) return true;
+    if (need.level !== undefined) {
+      const upTo = character.levels.slice(0, at ?? level).filter((e) => e.class === owner).length;
+      if (upTo < need.level) return false;
+    }
+    return need.option === undefined || earlier.has(need.option);
   }
 
   /** Whether the character already has this value from somewhere. */

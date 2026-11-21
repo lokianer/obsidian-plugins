@@ -7,6 +7,7 @@ import {
   characterNoteText,
   draftProblems,
   emptyDraft,
+  heldElsewhere,
   rollAbilities,
   toCharacter,
 } from '../src/character/draft';
@@ -14,9 +15,10 @@ import { computedKeys, differs, readCharacter } from '../src/character/note';
 
 const rules = loadRules([SRD_52]);
 
-/** Fills every open slot of the draft with its first allowed options (ability points spread). */
+/** Fills every open slot of the draft, one after the other, with its first allowed options (ability points spread). */
 function fill(draft: CharacterDraft): CharacterDraft {
-  for (let round = 0; round < 6; round++) {
+  for (let round = 0; round < 40; round++) {
+    let filled = false;
     const c = toCharacter(draft, rules);
     const slots = [...levelOptions(c, rules, null), ...levelOptions(c, rules, 1)];
     for (const slot of slots) {
@@ -32,10 +34,15 @@ function fill(draft: CharacterDraft): CharacterDraft {
           );
         }
         draft.choices[slot.key] = out;
+        filled = true;
       } else if (slot.options.length > 0) {
         draft.choices[slot.key] = slot.options.slice(0, slot.wanted).map((o) => o.id);
+        filled = true;
       }
+      // One slot at a time: what it took is no longer offered to the next.
+      if (filled) break;
     }
+    if (!filled) break;
   }
   return draft;
 }
@@ -91,6 +98,34 @@ describe('toCharacter, the class changed', () => {
     const c = toCharacter(d, rules);
     const all = [...Object.keys(c.choices), ...Object.keys(c.levels[0]!.choices)];
     expect(all.some((k) => k.startsWith('fighter-'))).toBe(false);
+  });
+});
+
+describe('draftProblems, a value kept across a background change', () => {
+  function humanSage(): CharacterDraft {
+    const d = emptyDraft();
+    d.name = 'Brin Holt';
+    d.species = 'human';
+    d.background = 'sage';
+    d.class = 'fighter';
+    fill(d);
+    d.choices['human-versatile/feat'] = ['savage-attacker'];
+    d.choices['human-skillful/skill'] = ['athletics'];
+    d.choices['fighter-core/skills'] = ['acrobatics', 'perception'];
+    return d;
+  }
+
+  it('is sound while nothing else grants the values', () => {
+    expect(draftProblems(humanSage(), rules)).toEqual([]);
+  });
+
+  it('reports the slots whose kept value the new background grants as well', () => {
+    const d = humanSage();
+    d.background = 'soldier';
+    const problems = draftProblems(d, rules);
+    expect(problems).toContain('choice:human-versatile/feat');
+    expect(problems).toContain('choice:human-skillful/skill');
+    expect(heldElsewhere(d, rules, 'human-skillful/skill')).toEqual(['athletics']);
   });
 });
 

@@ -68,7 +68,14 @@ function featureProblems(owner: string, feature: Feature, rules: Rules): string[
       }
     }
     if ('options' in from) {
-      for (const option of from.options) found.push(...featureProblems(at, option, rules));
+      const ids = new Set(from.options.map((o) => o.id));
+      for (const option of from.options) {
+        found.push(...featureProblems(at, option, rules));
+        const needed = option.requires?.option;
+        if (needed !== undefined && (needed === option.id || !ids.has(needed))) {
+          found.push(`${at} ${option.id}: requires unknown option '${needed}'`);
+        }
+      }
     }
   }
   return found;

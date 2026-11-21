@@ -114,6 +114,9 @@ export function registerCharacters(ctx: Context): void {
             characterNoteText(draft, rules()),
           );
           new Notice(t('characterBuilder.created', { path }));
+          return path;
+        },
+        open: async (path) => {
           // The new note's metadata first, then the sheet can read it.
           await ctx.indexed(path);
           await openSheet(path);

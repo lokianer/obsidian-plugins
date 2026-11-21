@@ -718,7 +718,10 @@ export const en = {
   'characterBuilder.problem.abilities': 'Set the ability scores the way the method says.',
   'characterBuilder.problem.choice': 'Choose {n} more: {what}',
   'characterBuilder.problem.each': 'Too many on one ability: {what}',
+  'characterBuilder.problem.held': 'Choose again: {what} — {values} already comes from elsewhere',
   'characterBuilder.created': '{path} created.',
+  'characterBuilder.openFailed':
+    'The character was created ({path}), but its sheet could not be opened: {reason}',
   'characterBuilder.failed': 'The character could not be created: {reason}',
   'sheet.title': 'Character sheet',
   'sheet.none': 'Open a character note to see its sheet.',
@@ -1511,7 +1514,10 @@ export const de: Record<StringKey, string> = {
     'Lege die Attributswerte so fest, wie die Methode es verlangt.',
   'characterBuilder.problem.choice': 'Wähle noch {n}: {what}',
   'characterBuilder.problem.each': 'Zu viele auf einem Attribut: {what}',
+  'characterBuilder.problem.held': 'Wähle neu: {what} — {values} stammt bereits aus anderer Quelle',
   'characterBuilder.created': '{path} angelegt.',
+  'characterBuilder.openFailed':
+    'Der Charakter wurde angelegt ({path}), aber das Datenblatt ließ sich nicht öffnen: {reason}',
   'characterBuilder.failed': 'Der Charakter konnte nicht angelegt werden: {reason}',
   'sheet.title': 'Charakterbogen',
   'sheet.none': 'Öffne eine Charakternotiz, um ihren Bogen zu sehen.',

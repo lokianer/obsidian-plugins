@@ -364,3 +364,21 @@ describe('SRD 5.2.1 tools and languages', () => {
     }
   });
 });
+
+describe('option prerequisites', () => {
+  it('carries every prerequisite its text names as `requires`', () => {
+    const options = rules.data.classes
+      .flatMap((c) => c.features)
+      .flatMap((f) => f.choices)
+      .flatMap((ch) => ('options' in ch.from ? ch.from.options : []));
+    const stated = options.filter((o) => o.text.en.startsWith('Prerequisite:'));
+    expect(stated.length).toBeGreaterThan(20);
+    for (const o of stated) {
+      const first = o.text.en.split('\n')[0]!;
+      const level = /Level (\d+)\+/.exec(first)?.[1];
+      expect(o.requires?.level, o.id).toBe(level === undefined ? undefined : Number(level));
+      expect(o.requires?.option !== undefined, o.id).toBe(/ Invocation$/.test(first));
+    }
+    expect(options.filter((o) => !o.text.en.startsWith('Prerequisite:') && o.requires)).toEqual([]);
+  });
+});

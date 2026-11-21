@@ -152,6 +152,23 @@ function abilitiesBroken(d: CharacterDraft): boolean {
   }
 }
 
+/**
+ * The values a slot holds that the character also has from elsewhere (a background that grants the
+ * same skill, a non-repeatable feat twice), or that it does not qualify for: those the slot would not
+ * offer if it were empty. Spells and ability points are not checked.
+ */
+export function heldElsewhere(draft: CharacterDraft, rules: Rules, key: string): string[] {
+  const { [key]: own, ...rest } = draft.choices;
+  if (own === undefined || own.length === 0) return [];
+  const c = toCharacter({ ...draft, choices: rest }, rules);
+  const slot = [...levelOptions(c, rules, null), ...levelOptions(c, rules, 1)].find(
+    (s) => s.key === key,
+  );
+  if (slot === undefined || slot.spells !== undefined || slot.choice.gives === 'ability') return [];
+  const offered = new Set(slot.options.map((o) => o.id));
+  return own.filter((id) => !offered.has(id));
+}
+
 /** Stable codes: `name`, `species`, `background`, `class`, `abilities`, `choice:<key>`. */
 export function draftProblems(draft: CharacterDraft, rules: Rules): string[] {
   const problems: string[] = [];
@@ -165,7 +182,13 @@ export function draftProblems(draft: CharacterDraft, rules: Rules): string[] {
     const tooMany =
       slot.each !== undefined &&
       slot.chosen.some((id) => slot.chosen.filter((x) => x === id).length > slot.each!);
-    if (slot.chosen.length < slot.wanted || tooMany) problems.push(`choice:${slot.key}`);
+    if (
+      slot.chosen.length < slot.wanted ||
+      tooMany ||
+      heldElsewhere(draft, rules, slot.key).length > 0
+    ) {
+      problems.push(`choice:${slot.key}`);
+    }
   }
   return problems;
 }

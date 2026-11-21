@@ -1043,9 +1043,12 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 - **Layout.** The Create button sits in the preview card; the preview is above the form when the
   pane is narrow.
 - **Spells** come from the plugin's SRD 5.1 spell list (`SRD_SPELLS`) filtered by class and level;
-  the rules package knows only the counts and the highest level. Swapping prepared spells and
-  re-choosing are C3.
+  the rules package knows only the counts and the highest level. These are the SRD 5.1 (2014)
+  class lists, which can differ from the 2024 ones. Spells are filtered by class and level only;
+  de-duplicating spells comes with C3. Swapping prepared spells and re-choosing are C3.
 - **Dialog contract.** `levelOptions(character, rules, at)` returns every allowed option for every
-  open choice and drops values the character already has; the draft prunes choices that no longer
-  exist when species, background or class change.
+  open choice and, except for spells, drops values the character already has and options it does
+  not qualify for (an invocation's `requires`: class level at that entry and an option held from an
+  earlier entry); the draft prunes choices that no longer exist when species, background or class
+  change, and `draftProblems` reports a kept value that another source now grants as well.
 - **Left out:** levelling up in a dialog (C3), the books' content (C6), packages and coins (C5).

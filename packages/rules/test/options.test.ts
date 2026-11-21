@@ -99,7 +99,7 @@ describe('levelOptions', () => {
     const inv = (n: string) => `warlock-invocation-${n}`;
     const INV = 'warlock-eldritch-invocations/invocations';
     const c = hero('human', 'soldier', [
-      { class: 'warlock', choices: { [INV]: [inv('agonizing-blast')] } },
+      { class: 'warlock', choices: { [INV]: [inv('pact-of-the-tome')] } },
       { class: 'warlock', choices: { [INV]: [inv('armor-of-shadows'), inv('devils-sight')] } },
       { class: 'warlock' },
       { class: 'warlock' },
@@ -107,10 +107,56 @@ describe('levelOptions', () => {
     ]);
     const slot = find(levelOptions(c, rules, 5), INV);
     expect(slot?.wanted).toBe(2);
-    expect(ids(slot)).not.toContain(inv('agonizing-blast'));
+    expect(ids(slot)).not.toContain(inv('pact-of-the-tome'));
     expect(ids(slot)).not.toContain(inv('devils-sight'));
     expect(ids(slot)).toContain(inv('ascendant-step'));
     expect(find(levelOptions(c, rules, 3), INV)).toBeUndefined();
+  });
+
+  describe('invocation prerequisites', () => {
+    const inv = (n: string) => `warlock-invocation-${n}`;
+    const INV = 'warlock-eldritch-invocations/invocations';
+    const warlock = (first: string, levels = 5) =>
+      hero(
+        'human',
+        'soldier',
+        Array.from({ length: levels }, (_, i) =>
+          i === 0 ? { class: 'warlock', choices: { [INV]: [inv(first)] } } : { class: 'warlock' },
+        ),
+      );
+
+    it('offers a level-1 warlock only invocations without a level or invocation prerequisite', () => {
+      const offered = ids(find(levelOptions(warlock('pact-of-the-blade', 1), rules, 1), INV)) ?? [];
+      expect(offered).toContain(inv('armor-of-shadows'));
+      for (const n of ['agonizing-blast', 'thirsting-blade', 'witch-sight', 'devouring-blade']) {
+        expect(offered).not.toContain(inv(n));
+      }
+    });
+
+    it('offers Thirsting Blade at level 5 with Pact of the Blade, and not without it', () => {
+      const withBlade = ids(find(levelOptions(warlock('pact-of-the-blade'), rules, 5), INV));
+      expect(withBlade).toContain(inv('thirsting-blade'));
+      expect(withBlade).not.toContain(inv('devouring-blade'));
+      const withTome = ids(find(levelOptions(warlock('pact-of-the-tome'), rules, 5), INV));
+      expect(withTome).not.toContain(inv('thirsting-blade'));
+      expect(withTome).toContain(inv('agonizing-blast'));
+    });
+
+    it('does not count an invocation taken in the same entry', () => {
+      const c = hero('human', 'soldier', [
+        { class: 'warlock', choices: { [INV]: [inv('pact-of-the-blade')] } },
+        { class: 'warlock' },
+        { class: 'warlock' },
+        { class: 'warlock' },
+        {
+          class: 'warlock',
+          choices: { [INV]: [inv('pact-of-the-chain'), inv('armor-of-shadows')] },
+        },
+      ]);
+      const offered = ids(find(levelOptions(c, rules, 5), INV));
+      expect(offered).toContain(inv('thirsting-blade'));
+      expect(offered).not.toContain(inv('investment-of-the-chain-master'));
+    });
   });
 
   it('offers a feat only when its requirements are met and it is not held', () => {

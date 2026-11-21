@@ -112,6 +112,11 @@ export interface Feature {
   /** The class level (or character level, for species) it comes at; 1 when it has none. */
   level: number;
   text: Text;
+  /**
+   * For an option of a choice (an invocation): what the character needs before it may take it, the
+   * class level and the id of another option it must already hold.
+   */
+  requires?: { level?: number; option?: string };
   grants: Grant[];
   choices: Choice[];
 }

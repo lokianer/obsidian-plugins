@@ -2728,7 +2728,10 @@ describe('character sheet', () => {
 describe('character builder', () => {
   const rules = loadRules([SRD_52]);
 
-  function builder(createDep?: (draft: CharacterDraft) => Promise<void>) {
+  function builder(
+    createDep?: (draft: CharacterDraft) => Promise<string>,
+    openDep: (path: string) => Promise<void> = () => Promise.resolve(),
+  ) {
     const created: CharacterDraft[] = [];
     const modal = new CharacterBuilderModal(app, {
       t: createT('de'),
@@ -2739,8 +2742,9 @@ describe('character builder', () => {
       render: (markdown, target) => void (target.textContent = markdown),
       create: (draft) => {
         created.push(structuredClone(draft));
-        return createDep?.(draft) ?? Promise.resolve();
+        return createDep?.(draft) ?? Promise.resolve('Characters/Brin Holt.md');
       },
+      open: openDep,
     });
     root.appendChild(modal.modalEl);
     modal.onOpen();
@@ -2773,8 +2777,11 @@ describe('character builder', () => {
     return { modal, el, created, click, tileOf, slots, create, fillSlots };
   }
 
-  function start(createDep?: (draft: CharacterDraft) => Promise<void>) {
-    const b = builder(createDep);
+  function start(
+    createDep?: (draft: CharacterDraft) => Promise<string>,
+    openDep?: (path: string) => Promise<void>,
+  ) {
+    const b = builder(createDep, openDep);
     const name = b.el.querySelector<HTMLInputElement>('.dnd5e-cb-name');
     if (name === null) throw new Error('no name');
     name.value = 'Brin Holt';
@@ -2785,8 +2792,11 @@ describe('character builder', () => {
     return b;
   }
 
-  function humanFighter(createDep?: (draft: CharacterDraft) => Promise<void>) {
-    const b = start(createDep);
+  function humanFighter(
+    createDep?: (draft: CharacterDraft) => Promise<string>,
+    openDep?: (path: string) => Promise<void>,
+  ) {
+    const b = start(createDep, openDep);
     b.fillSlots();
     return b;
   }
@@ -2866,8 +2876,8 @@ describe('character builder', () => {
     let finish: () => void = () => undefined;
     const first = humanFighter(
       () =>
-        new Promise<void>((resolve) => {
-          finish = resolve;
+        new Promise<string>((resolve) => {
+          finish = () => resolve('Characters/Brin Holt.md');
         }),
     );
     first.click(first.create());
@@ -2885,6 +2895,40 @@ describe('character builder', () => {
       'Der Charakter konnte nicht angelegt werden: Error: disk full',
     );
     expect(failing.created).toHaveLength(1);
+  });
+
+  it('closes once the note is written, and says so when the sheet cannot open', async () => {
+    const opened: string[] = [];
+    const b = humanFighter(undefined, (path) => {
+      opened.push(path);
+      return Promise.reject(new Error('no leaf'));
+    });
+    const close = vi.spyOn(b.modal, 'close');
+    b.click(b.create());
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(b.created).toHaveLength(1);
+    expect(opened).toEqual(['Characters/Brin Holt.md']);
+    expect(close).toHaveBeenCalledTimes(1);
+    b.click(b.create());
+    expect(b.created).toHaveLength(1);
+    expect(notices[notices.length - 1]).toBe(
+      'Der Charakter wurde angelegt (Characters/Brin Holt.md), aber das Datenblatt ließ sich nicht öffnen: Error: no leaf',
+    );
+  });
+
+  it('names a kept choice the new background grants as well', () => {
+    const { el, click, tileOf } = start();
+    click(tileOf('species', 'Mensch'));
+    click(tileOf('background', 'Weiser'));
+    const pill = (key: string, id: string) =>
+      el.querySelector<HTMLElement>(
+        `.dnd5e-cb-slot[data-key="${key}"] .dnd5e-pill[data-id="${id}"]`,
+      );
+    click(pill('human-skillful/skill', 'athletics'));
+    click(tileOf('background', 'Soldat'));
+    expect(texts(el, '.dnd5e-cb-problems li')).toContain(
+      'Wähle neu: Geschickt — Athletik stammt bereits aus anderer Quelle',
+    );
   });
 
   it('rolls scores and switches the ability method', () => {

@@ -5896,7 +5896,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe, ein Hexenmeisterzaubertrick, der Schaden bewirkt\n\nWähle einen der dir bekannten Hexenmeisterzaubertricks aus, die Schaden bewirken. Du kannst den Schadenswürfen des Zaubers deinen Charismamodifikator hinzufügen.\n\nKann wiederholt werden: Du kannst diese Anrufung mehr als einmal erhalten. Wähle bei Wiederholung einen anderen passenden Zaubertrick aus."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-armor-of-shadows",
@@ -5924,7 +5927,10 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe\n\nDu kannst Schweben auf dich selbst wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5
+									}
 								},
 								{
 									"id": "warlock-invocation-devils-sight",
@@ -5944,7 +5950,10 @@
 											"range": 120
 										}
 									],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-devouring-blade",
@@ -5958,7 +5967,11 @@
 										"de": "Voraussetzung: Ab 12. Hexenmeisterstufe, Anrufung Dürstende Klinge\n\nDer zusätzliche Angriff deiner Anrufung Dürstende Klinge bewirkt jetzt zwei zusätzliche Angriffe statt einem."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 12,
+										"option": "warlock-invocation-thirsting-blade"
+									}
 								},
 								{
 									"id": "warlock-invocation-eldritch-mind",
@@ -5986,7 +5999,11 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe, Anrufung Pakt der Klinge\n\nEinmal pro Zug kannst du, wenn du eine Kreatur mit deiner Paktwaffe triffst, einen Paktmagie-Zauberplatz verbrauchen, um dem Ziel zusätzlich 1W8 Energieschaden sowie 1W8 pro Zauberplatzgrad zuzufügen. Wenn das Ziel von höchstens riesiger Größe ist, kannst du es außerdem umstoßen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5,
+										"option": "warlock-invocation-pact-of-the-blade"
+									}
 								},
 								{
 									"id": "warlock-invocation-eldritch-spear",
@@ -6000,7 +6017,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe, ein Hexenmeisterzaubertrick, der Schaden bewirkt\n\nWähle einen der dir bekannten Hexenmeisterzaubertricks aus, die Schaden bewirken und eine Reichweite von mindestens drei Metern haben. Wenn du diesen Zauber wirkst, ist seine Reichweite um das Zehnfache deiner Hexenmeisterstufe in Metern erhöht.\n\nKann wiederholt werden: Du kannst diese Anrufung mehr als einmal erhalten. Wähle bei Wiederholung einen anderen passenden Zaubertrick aus."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-fiendish-vigor",
@@ -6014,7 +6034,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe\n\nDu kannst Falsches Leben auf dich selbst wirken, ohne einen Zauberplatz zu verbrauchen. Wenn du den Zauber mit diesem Merkmal wirkst, würfelst du nicht, um die temporären Trefferpunkte zu ermitteln, sondern erhältst automatisch das höchste Würfelergebnis."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-gaze-of-two-minds",
@@ -6028,7 +6051,10 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe\n\nDu kannst eine Bonusaktion verwenden, um eine bereitwillige Kreatur zu berühren und bis zum Ende deines nächsten Zugs ihre Sinne zu nutzen. Solange sich diese Kreatur auf derselben Existenzebene wie du befindet, kannst du in den nächsten Zügen eine Bonusaktion ausführen, um die Verbindung aufrechtzuhalten und die Wirkungsdauer bis zum Ende deines jeweils nächsten Zugs zu verlängern. Die Verbindung endet, wenn sie nicht auf diese Weise aufrechterhalten wird.\n\nWährend du die Sinne der anderen Kreatur nutzt, stehen dir auch all ihre Spezialsinne zur Verfügung, und sofern der Abstand zwischen euch höchstens 18 Meter beträgt, kannst du Zauber nach deiner Wahl von deinem Bereich oder von dem der Kreatur aus wirken."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5
+									}
 								},
 								{
 									"id": "warlock-invocation-gift-of-the-depths",
@@ -6042,7 +6068,10 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe\n\nDu kannst unter Wasser atmen und erhältst eine Schwimmbewegungsrate in Höhe deiner Bewegungsrate.\n\nAußerdem kannst du den Zauber Wasser atmen wirken, ohne einen Zauberplatz zu verbrauchen. Du erhältst die Fähigkeit, ihn auf diese Art zu wirken, nach einer langen Rast zurück."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5
+									}
 								},
 								{
 									"id": "warlock-invocation-gift-of-the-protectors",
@@ -6056,7 +6085,11 @@
 										"de": "Voraussetzung: Ab 9. Hexenmeisterstufe, Anrufung Pakt des Buches\n\nIn deinem Buch der Schatten erscheint eine neue Seite, wenn du es beschwörst. Eine Kreatur kann mit deiner Erlaubnis eine Aktion ausführen, um ihren Namen auf diese Seite zu schreiben. Die höchstmögliche Anzahl von Namen auf der Seite entspricht deinem Charismamodifikator (mindestens ein Name).\n\nWenn die Trefferpunkte einer Kreatur, deren Name auf der Seite steht, auf 0 sinken, die Kreatur aber noch nicht stirbt, erhält sie auf magische Art einen Trefferpunkt zurück. Wenn diese Magie ausgelöst wurde, kann sie erst nach einer langen Rast erneut verwendet werden.\n\nAls magische Aktion kannst du einen Namen von der Seite entfernen, indem du ihn berührst."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 9,
+										"option": "warlock-invocation-pact-of-the-tome"
+									}
 								},
 								{
 									"id": "warlock-invocation-investment-of-the-chain-master",
@@ -6070,7 +6103,11 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe, Anrufung Pakt der Kette\n\nWenn du Vertrauten finden wirkst, verleihst du dem beschworenen Vertrauten etwas von deiner schauerlichen Kraft und gewährst ihm damit folgende Vorzüge:\n\nFlugfähig oder aquatisch: Der Vertraute erhält entweder eine Flug- oder eine Schwimmbewegungsrate (nach deiner Wahl) von zwölf Metern.\n\nSchneller Angriff: Als Bonusaktion kannst du deinem Vertrauten befehlen, die Angriffsaktion auszuführen.\n\nGleißender oder nekrotischer Schaden: Wann immer der Vertraute Hieb-, Stich- oder Wuchtschaden bewirkt, kannst du diesen in gleißenden oder nekrotischen Schaden umwandeln.\n\nDein Rettungswurf-SG: Wenn der Vertraute eine Kreatur zu einem Rettungswurf zwingt, gilt dein Zauberrettungswurf-SG.\n\nResistenz: Wenn der Vertraute Schaden erleidet, kannst du eine Reaktion ausführen, um ihm Resistenz gegen diese Schadensart zu gewähren."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5,
+										"option": "warlock-invocation-pact-of-the-chain"
+									}
 								},
 								{
 									"id": "warlock-invocation-lessons-of-the-first-ones",
@@ -6097,7 +6134,10 @@
 												"feats": "origin"
 											}
 										}
-									]
+									],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-lifedrinker",
@@ -6111,7 +6151,11 @@
 										"de": "Voraussetzung: Ab 9. Hexenmeisterstufe, Anrufung Pakt der Klinge\n\nEinmal pro Zug kannst du, wenn du eine Kreatur mit deiner Paktwaffe triffst, der Kreatur zusätzlich 1W6 gleißenden, nekrotischen oder psychischen Schaden (nach deiner Wahl) zufügen, und du kannst einen deiner Trefferpunktewürfel verbrauchen, mit ihm würfeln und eine Anzahl von Trefferpunkten in Höhe des Ergebnisses plus deines Konstitutionsmodifikators (mindestens 1 Trefferpunkt) zurückerhalten."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 9,
+										"option": "warlock-invocation-pact-of-the-blade"
+									}
 								},
 								{
 									"id": "warlock-invocation-mask-of-many-faces",
@@ -6125,7 +6169,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe\n\nDu kannst Selbstverkleidung wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-master-of-myriad-forms",
@@ -6139,7 +6186,10 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe\n\nDu kannst Gestalt verändern wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5
+									}
 								},
 								{
 									"id": "warlock-invocation-misty-visions",
@@ -6153,7 +6203,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe\n\nDu kannst Lautloses Trugbild wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-one-with-shadows",
@@ -6167,7 +6220,10 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe\n\nIn dämmrigem Licht oder Dunkelheit kannst du Unsichtbarkeit auf dich selbst wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5
+									}
 								},
 								{
 									"id": "warlock-invocation-otherworldly-leap",
@@ -6181,7 +6237,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe\n\nDu kannst Springen auf dich selbst wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-pact-of-the-blade",
@@ -6237,7 +6296,10 @@
 										"de": "Voraussetzung: Ab 2. Hexenmeisterstufe, ein Hexenmeisterzaubertrick, der Schaden über einen Angriffswurf bewirkt\n\nWähle einen dir bekannten Hexenmeisterzaubertrick aus, der einen Angriffswurf erfordert. Wenn du eine Kreatur von höchstens großer Größe mit diesem Zaubertrick triffst, kannst du sie um bis zu drei Meter in gerader Linie von dir wegstoßen.\n\nKann wiederholt werden: Du kannst diese Anrufung mehr als einmal erhalten. Wähle bei Wiederholung einen anderen passenden Zaubertrick aus."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 2
+									}
 								},
 								{
 									"id": "warlock-invocation-thirsting-blade",
@@ -6251,7 +6313,11 @@
 										"de": "Voraussetzung: Ab 5. Hexenmeisterstufe, Anrufung Pakt der Klinge\n\nDu erhältst das Merkmal Zusätzlicher Angriff, das nur für deine Paktwaffe gilt. Wenn du in deinem Zug die Angriffsaktion ausführst, kannst du mit dieser Waffe zweimal statt einmal angreifen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 5,
+										"option": "warlock-invocation-pact-of-the-blade"
+									}
 								},
 								{
 									"id": "warlock-invocation-visions-of-distant-realms",
@@ -6265,7 +6331,10 @@
 										"de": "Voraussetzung: Ab 9. Hexenmeisterstufe\n\nDu kannst Arkanes Auge wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 9
+									}
 								},
 								{
 									"id": "warlock-invocation-whispers-of-the-grave",
@@ -6279,7 +6348,10 @@
 										"de": "Voraussetzung: Ab 7. Hexenmeisterstufe\n\nDu kannst Mit Toten sprechen wirken, ohne einen Zauberplatz zu verbrauchen."
 									},
 									"grants": [],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 7
+									}
 								},
 								{
 									"id": "warlock-invocation-witch-sight",
@@ -6299,7 +6371,10 @@
 											"range": 30
 										}
 									],
-									"choices": []
+									"choices": [],
+									"requires": {
+										"level": 15
+									}
 								}
 							]
 						}

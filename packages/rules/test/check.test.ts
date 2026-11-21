@@ -67,6 +67,35 @@ describe('the data check', () => {
     ]);
   });
 
+  it('reports an option whose prerequisite names an option that is not there', () => {
+    const data = copy();
+    const option = (id: string, requires?: { level?: number; option?: string }) => ({
+      id,
+      name: { en: id },
+      level: 1,
+      text: { en: id },
+      requires,
+      grants: [],
+      choices: [],
+    });
+    data.classes[0]!.features[0]!.choices.push({
+      id: 'picks',
+      name: { en: 'Picks' },
+      count: 1,
+      gives: 'option',
+      from: {
+        options: [
+          option('a'),
+          option('b', { level: 5, option: 'a' }),
+          option('c', { option: 'zzz' }),
+        ],
+      },
+    });
+    expect(checkRules(loadRules([data]))).toEqual([
+      "class tester tester-core/picks c: requires unknown option 'zzz'",
+    ]);
+  });
+
   it('reports an empty German text', () => {
     const data = copy();
     data.classes[0]!.features[0]!.text.de = '';

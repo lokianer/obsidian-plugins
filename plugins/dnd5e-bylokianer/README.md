@@ -581,8 +581,8 @@ Only the 2024 rules in the dialog for now; the starting equipment is shown as te
 The engine lives in the shared package `packages/rules`: armour class from armour, shield and
 unarmoured formulas; multiclass spell slots (2024 rounds half casters up, 2014 down) and pact
 slots apart; resources with their die and rest. Not yet: levelling up in a dialog,
-spending hit points, slots and resources, choosing spells, German names of the rules' content, the
-books' subclasses and feats (phases C1b–C7).
+spending hit points, slots and resources, swapping prepared spells, the books' subclasses and
+feats (phases C3–C7). Spells are chosen in the dialog and the rules' content has German names.
 
 - **Show faction warnings** — every note the plugin could not read cleanly, with a **Fix** button
   that opens the note's card on the broken entry.
