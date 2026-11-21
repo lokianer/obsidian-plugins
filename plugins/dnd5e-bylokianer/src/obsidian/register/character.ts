@@ -5,10 +5,13 @@
 // from a command or a character note's file menu.
 
 import { loadRules, type Rules, SRD_52 } from '@obsidian-plugins/rules';
-import { MarkdownRenderer, TFile } from 'obsidian';
+import { MarkdownRenderer, Notice, TFile } from 'obsidian';
 
+import { characterNoteText } from '../../character/draft';
 import { computedKeys, differs, readCharacter, sheetData } from '../../character/note';
+import { CharacterBuilderModal } from '../character-builder';
 import { CHARACTER_VIEW, CharacterSheetView } from '../character-sheet-view';
+import { newNote } from '../new-note';
 import { SRD_SPELLS } from '../../spells/srd-spells';
 import type { Context } from './context';
 
@@ -89,6 +92,33 @@ export function registerCharacters(ctx: Context): void {
       if (!checking) void openSheet(file.path);
       return true;
     },
+  });
+  plugin.addCommand({
+    id: 'new-character',
+    name: t('command.newCharacter'),
+    callback: () =>
+      new CharacterBuilderModal(app, {
+        t,
+        lang: ctx.lang(),
+        rules: rules(),
+        spells: SRD_SPELLS,
+        roll: () => 1 + Math.floor(Math.random() * 6),
+        render: (markdown, target, component) =>
+          void MarkdownRenderer.render(app, markdown, target, '', component),
+        create: async (draft) => {
+          const path = await newNote(
+            app,
+            ctx.cache,
+            ctx.settings().characterFolder,
+            draft.name,
+            characterNoteText(draft, rules()),
+          );
+          new Notice(t('characterBuilder.created', { path }));
+          // The new note's metadata first, then the sheet can read it.
+          await ctx.indexed(path);
+          await openSheet(path);
+        },
+      }).open(),
   });
   plugin.registerEvent(
     app.workspace.on('file-menu', (menu, file) => {

@@ -43,7 +43,7 @@ export const POINT_COSTS: Record<number, number> = {
   14: 7,
   15: 9,
 };
-const POINT_BUDGET = 27;
+export const POINT_BUDGET = 27;
 
 export function emptyDraft(): CharacterDraft {
   return {
@@ -93,6 +93,14 @@ function build(
   };
 }
 
+/** A choice can open another (a feat's own); a handful of passes reaches every depth there is. */
+const MAX_PASSES = 8;
+
+const sameKeys = (a: Record<string, unknown>, b: Record<string, unknown>) => {
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every((k) => k in b);
+};
+
 function pick(draft: CharacterDraft, slots: ChoiceSlot[]): Record<string, string[]> {
   const out: Record<string, string[]> = {};
   for (const s of slots) {
@@ -105,22 +113,21 @@ function pick(draft: CharacterDraft, slots: ChoiceSlot[]): Record<string, string
 /**
  * The character the draft describes. A choice of a slot that no longer exists (an elf's choice
  * after the species became human) is dropped; a slot that only appears after another choice (a
- * feat's own) is found by building again until the kept keys stop changing.
+ * feat's own) is found by building again until the kept keys stop changing (at most `MAX_PASSES` times).
  */
 export function toCharacter(draft: CharacterDraft, rules: Rules): Character {
   let creation: Record<string, string[]> = {};
   let first: Record<string, string[]> = {};
-  for (;;) {
+  for (let pass = 0; pass < MAX_PASSES; pass++) {
     const c = build(draft, creation, first);
     const nextCreation = pick(draft, levelOptions(c, rules, null));
     const nextFirst = pick(draft, levelOptions(c, rules, 1));
-    const stable =
-      Object.keys(nextCreation).length === Object.keys(creation).length &&
-      Object.keys(nextFirst).length === Object.keys(first).length;
+    const stable = sameKeys(nextCreation, creation) && sameKeys(nextFirst, first);
     creation = nextCreation;
     first = nextFirst;
-    if (stable) return build(draft, creation, first);
+    if (stable) break;
   }
+  return build(draft, creation, first);
 }
 
 // ── problems ─────────────────────────────────────────────────────────────────────────────────

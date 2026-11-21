@@ -60,6 +60,8 @@ export interface Settings {
   monsterManual: unknown;
   /** The folder in the campaign new own spells go to. */
   spellFolder: string;
+  /** The folder in the campaign built characters go to. */
+  characterFolder: string;
   /** The deck the Deck tab showed last: `standard` or an own deck's path. */
   deckSelected: string;
   /** The encounter note the Battle tab showed last. */
@@ -108,6 +110,7 @@ export const DEFAULT_SETTINGS: Settings = {
   deckSize: 22,
   deckFolder: 'Decks',
   spellFolder: 'Spells',
+  characterFolder: 'Party',
   monsterFolder: 'Monsters',
   encounterFolder: 'Encounters',
   monsterManual: null,
@@ -129,6 +132,7 @@ type PathKey =
   | 'npcFolder'
   | 'deckFolder'
   | 'spellFolder'
+  | 'characterFolder'
   | 'monsterFolder'
   | 'encounterFolder';
 const PATHS: readonly PathKey[] = [
@@ -140,6 +144,7 @@ const PATHS: readonly PathKey[] = [
   'npcFolder',
   'deckFolder',
   'spellFolder',
+  'characterFolder',
   'monsterFolder',
   'encounterFolder',
 ];

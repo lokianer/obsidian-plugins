@@ -1,0 +1,158 @@
+/* The New character dialog: tiles for species, background and class, the ability scores by one
+   of four methods, one block per open choice, and a preview made of the sheet's own parts. The
+   layout, tiles and pills come from the NPC and spell builders. */
+
+.dnd5e-character-builder .dnd5e-npc-tiles {
+  max-height: 260px;
+}
+
+.dnd5e-cb-section-head {
+  margin-top: var(--size-4-5);
+}
+
+.dnd5e-cb-roll-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--size-4-3);
+  margin-top: var(--size-4-2);
+}
+
+.dnd5e-cb-hint,
+.dnd5e-cb-points {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.dnd5e-cb-points {
+  margin-top: var(--size-4-2);
+}
+
+.dnd5e-cb-abilities {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+}
+
+.dnd5e-cb-ability,
+.dnd5e-cb-point {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+
+.dnd5e-cb-ability-name,
+.dnd5e-cb-point-name {
+  flex: 1 1 auto;
+  color: var(--text-muted);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+}
+
+.dnd5e-cb-ability-score,
+.dnd5e-cb-point-count {
+  min-width: 2ch;
+  font-size: 16px;
+  font-weight: var(--font-bold);
+  text-align: center;
+}
+
+.dnd5e-cb-ability-select,
+.dnd5e-cb-ability-input {
+  width: 5em;
+  font-size: 16px;
+}
+
+.dnd5e-cb-ability-minus,
+.dnd5e-cb-ability-plus,
+.dnd5e-cb-minus,
+.dnd5e-cb-plus {
+  min-width: 2em;
+  padding: 0 var(--size-4-2);
+  font-size: 16px;
+}
+
+/* One block per choice: its name and count as the head, the options as pills below. */
+.dnd5e-cb-slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  padding: var(--size-4-3) 0;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.dnd5e-cb-slot-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--size-4-2);
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-cb-slot-count {
+  color: var(--text-accent);
+}
+
+.dnd5e-cb-points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--size-4-2);
+}
+
+.dnd5e-cb-pills.is-spells {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.dnd5e-cb-equipment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+}
+
+.dnd5e-cb-equip-text {
+  font-size: 16px;
+}
+
+.dnd5e-cb-equipment .markdown-rendered {
+  overflow-wrap: anywhere;
+}
+
+/* The preview is the sheet's head, tiles and ability column inside the builder's card. */
+.dnd5e-cb-preview.dnd5e-cs {
+  padding: var(--size-4-5);
+}
+
+.dnd5e-cb-preview .dnd5e-cs-name {
+  font-size: var(--h2-size);
+}
+
+.dnd5e-cb-preview .dnd5e-cs-ability-mod {
+  font-size: 16px;
+  font-weight: var(--font-semibold);
+}
+
+.dnd5e-cb-problems {
+  margin: 0;
+  padding-left: var(--size-4-5);
+  color: var(--text-warning);
+  font-size: 16px;
+}
+
+.dnd5e-cb-problems:empty {
+  display: none;
+}
+
+.dnd5e-cb-create {
+  align-self: flex-start;
+}
+
+.dnd5e-cb-create:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

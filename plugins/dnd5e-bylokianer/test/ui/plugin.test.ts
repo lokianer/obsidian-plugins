@@ -49,6 +49,7 @@ it('registers every module of the plugin', async () => {
         "new-race",
         "add-statblock",
         "open-character-sheet",
+        "new-character",
       ],
       "editorExtensions": 1,
       "postProcessors": 2,

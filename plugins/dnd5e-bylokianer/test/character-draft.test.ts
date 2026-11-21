@@ -82,6 +82,18 @@ describe('toCharacter', () => {
   });
 });
 
+describe('toCharacter, the class changed', () => {
+  it('drops the fighter-* keys once the class is a wizard', () => {
+    const d = humanFighter();
+    const before = toCharacter(d, rules);
+    expect(Object.keys(before.levels[0]!.choices).some((k) => k.startsWith('fighter-'))).toBe(true);
+    d.class = 'wizard';
+    const c = toCharacter(d, rules);
+    const all = [...Object.keys(c.choices), ...Object.keys(c.levels[0]!.choices)];
+    expect(all.some((k) => k.startsWith('fighter-'))).toBe(false);
+  });
+});
+
 describe('draftProblems', () => {
   const abilitiesOf = (d: CharacterDraft) => draftProblems(d, rules).includes('abilities');
   it('checks the point buy', () => {

@@ -44,7 +44,62 @@ const TABS = ['actions', 'spells', 'features', 'inventory', 'skills', 'notes', '
 type Tab = (typeof TABS)[number];
 
 /** `+3`, `+0`, `−1` (a true minus sign). */
-const signed = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
+export const signed = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
+
+/** A length in feet; in meters (feet × 0.3) for German. */
+export function feetText(feet: number, lang: Lang, t: T): string {
+  const n = lang === 'de' ? String(Math.round(feet * 3) / 10).replace('.', ',') : feet;
+  return t('sheet.feet', { n });
+}
+
+// The parts the sheet shares with the character builder's preview.
+
+/** The head: name, a line under it, hit points as a tile. */
+export function sheetHead(el: HTMLElement, t: T, name: string, sub: string, hp: string): void {
+  const head = el.createDiv({ cls: 'dnd5e-cs-head' });
+  const who = head.createDiv({ cls: 'dnd5e-cs-who' });
+  who.createDiv({ cls: 'dnd5e-cs-name', text: name });
+  who.createDiv({ cls: 'dnd5e-cs-sub', text: sub });
+  const box = tiles(head);
+  box.addClass('dnd5e-cs-hp');
+  tile(box, hp, t('sheet.hp'));
+}
+
+/** The row of key numbers under the head. */
+export function keyTiles(el: HTMLElement, t: T, values: [string, StringKey][]): void {
+  const row = tiles(el);
+  row.addClass('dnd5e-cs-tiles');
+  for (const [value, label] of values) tile(row, value, t(label));
+}
+
+/** A built character's key numbers: AC, initiative, speed, proficiency, passive Perception. */
+export function builtTiles(sheet: Sheet, lang: Lang, t: T): [string, StringKey][] {
+  return [
+    [String(sheet.ac.total), 'sheet.ac'],
+    [signed(sheet.initiative.total), 'sheet.initiative'],
+    [feetText(sheet.speed, lang, t), 'sheet.speed'],
+    [signed(sheet.proficiency), 'sheet.proficiency'],
+    [String(sheet.passive.perception), 'sheet.passive'],
+  ];
+}
+
+/** The six ability boxes (name, score, modifier); `modifier` fills the last cell of box `i`. */
+export function abilityColumn(
+  parent: HTMLElement,
+  t: T,
+  sheet: Sheet,
+  modifier: (box: HTMLElement, i: number, value: number) => void,
+): void {
+  const short = t('statblock.abilities').split(',');
+  const column = parent.createDiv({ cls: 'dnd5e-cs-abilities' });
+  ABILITIES.forEach((a, i) => {
+    const { score, modifier: value } = sheet.abilities[a];
+    const box = column.createDiv({ cls: 'dnd5e-cs-ability' });
+    box.createSpan({ cls: 'dnd5e-cs-ability-name', text: short[i] ?? a.toUpperCase() });
+    box.createSpan({ cls: 'dnd5e-cs-ability-score', text: String(score) });
+    modifier(box, i, value);
+  });
+}
 
 const ABILITY_NAMES: Record<string, [string, string]> = {
   str: ['Strength', 'Stärke'],
@@ -196,26 +251,7 @@ export class CharacterSheetView extends ItemView {
   }
 
   private speed(feet: number): string {
-    const n = this.lang() === 'de' ? String(Math.round(feet * 3) / 10).replace('.', ',') : feet;
-    return this.deps.t('sheet.feet', { n });
-  }
-
-  // ---- the head ----
-
-  private head(el: HTMLElement, name: string, sub: string, hp: string): void {
-    const head = el.createDiv({ cls: 'dnd5e-cs-head' });
-    const who = head.createDiv({ cls: 'dnd5e-cs-who' });
-    who.createDiv({ cls: 'dnd5e-cs-name', text: name });
-    who.createDiv({ cls: 'dnd5e-cs-sub', text: sub });
-    const box = tiles(head);
-    box.addClass('dnd5e-cs-hp');
-    tile(box, hp, this.deps.t('sheet.hp'));
-  }
-
-  private keyTiles(el: HTMLElement, values: [string, StringKey][]): void {
-    const row = tiles(el);
-    row.addClass('dnd5e-cs-tiles');
-    for (const [value, label] of values) tile(row, value, this.deps.t(label));
+    return feetText(feet, this.lang(), this.deps.t);
   }
 
   // ---- a built character ----
@@ -231,8 +267,9 @@ export class CharacterSheetView extends ItemView {
       })
       .join(' / ');
     const current = typeof fm.hp_current === 'number' ? fm.hp_current : sheet.hp.total;
-    this.head(
+    sheetHead(
       el,
+      t,
       data.name,
       [this.nameOf(character.species), classes, character.rules].join(' · '),
       `${current} / ${sheet.hp.total}`,
@@ -249,13 +286,7 @@ export class CharacterSheetView extends ItemView {
         text: t('sheet.unknown', { what: sheet.unknown.join(', ') }),
       });
     }
-    this.keyTiles(el, [
-      [String(sheet.ac.total), 'sheet.ac'],
-      [signed(sheet.initiative.total), 'sheet.initiative'],
-      [this.speed(sheet.speed), 'sheet.speed'],
-      [signed(sheet.proficiency), 'sheet.proficiency'],
-      [String(sheet.passive.perception), 'sheet.passive'],
-    ]);
+    keyTiles(el, t, builtTiles(sheet, this.lang(), t));
     const body = el.createDiv({ cls: 'dnd5e-cs-body' });
     this.side(body.createDiv({ cls: 'dnd5e-cs-side' }), data.name, sheet);
     const main = body.createDiv({ cls: 'dnd5e-cs-main' });
@@ -283,13 +314,7 @@ export class CharacterSheetView extends ItemView {
   private side(el: HTMLElement, who: string, sheet: Sheet): void {
     const { t } = this.deps;
     const lang = this.lang();
-    const short = t('statblock.abilities').split(',');
-    const column = el.createDiv({ cls: 'dnd5e-cs-abilities' });
-    ABILITIES.forEach((a, i) => {
-      const { score, modifier } = sheet.abilities[a];
-      const box = column.createDiv({ cls: 'dnd5e-cs-ability' });
-      box.createSpan({ cls: 'dnd5e-cs-ability-name', text: short[i] ?? a.toUpperCase() });
-      box.createSpan({ cls: 'dnd5e-cs-ability-score', text: String(score) });
+    abilityColumn(el, t, sheet, (box, i, modifier) => {
       const name = abilityCheckName(i, lang);
       this.rollButton(
         box,
@@ -549,8 +574,9 @@ export class CharacterSheetView extends ItemView {
     const current = num(fm.hp_current) ?? hp;
     const sub = str(fm.subclass) === '' ? '' : ` (${str(fm.subclass)})`;
     const origin = [str(fm.race ?? fm.species), `${str(fm.class)} ${level ?? ''}`.trim() + sub];
-    this.head(
+    sheetHead(
       el,
+      this.deps.t,
       data.name,
       origin.filter((p) => p !== '').join(' · '),
       hp === null ? '—' : `${current} / ${hp}`,
@@ -558,7 +584,7 @@ export class CharacterSheetView extends ItemView {
     const initiative = num(fm.initiative);
     const speed = num(fm.speed);
     const passive = num(fm.passive_perception);
-    this.keyTiles(el, [
+    keyTiles(el, this.deps.t, [
       [str(fm.ac) || '—', 'sheet.ac'],
       [initiative === null ? '—' : signed(initiative), 'sheet.initiative'],
       [speed === null ? '—' : this.speed(speed), 'sheet.speed'],

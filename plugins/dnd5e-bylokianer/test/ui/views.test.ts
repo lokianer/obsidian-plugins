@@ -40,6 +40,8 @@ import {
 import { type DraftDeck, ownCards, ownDeckText } from '../../src/deck/own';
 import { DeckBuilderModal } from '../../src/obsidian/deck-builder';
 import { SpellBuilderModal } from '../../src/obsidian/spell-builder';
+import { CharacterBuilderModal } from '../../src/obsidian/character-builder';
+import { type CharacterDraft, toCharacter } from '../../src/character/draft';
 import type { SpellDraft } from '../../src/spells/draft';
 import { type DeckSource, STANDARD } from '../../src/obsidian/deck-store';
 import { DeckView } from '../../src/obsidian/deck-view';
@@ -62,7 +64,7 @@ import { MonsterManualView, type MonsterManualState } from '../../src/obsidian/m
 import type { SrdMonster } from '../../src/monsters/model';
 import { ownMonster } from '../../src/monsters/own';
 import { SRD_MONSTERS } from '../../src/monsters/srd-monsters';
-import { loadRules, SRD_52 } from '@obsidian-plugins/rules';
+import { derive, loadRules, SRD_52 } from '@obsidian-plugins/rules';
 import { sheetData } from '../../src/character/note';
 import { CharacterSheetView } from '../../src/obsidian/character-sheet-view';
 import { linkSpells } from '../../src/obsidian/spell-links';
@@ -2720,5 +2722,155 @@ describe('character sheet', () => {
       'Übung',
       'Passive Wahrnehmung',
     ]);
+  });
+});
+
+describe('character builder', () => {
+  const rules = loadRules([SRD_52]);
+
+  function builder() {
+    const created: CharacterDraft[] = [];
+    const modal = new CharacterBuilderModal(app, {
+      t: createT('de'),
+      lang: 'de',
+      rules,
+      spells: SRD_SPELLS,
+      roll: () => 4,
+      render: (markdown, target) => void (target.textContent = markdown),
+      create: (draft) => {
+        created.push(structuredClone(draft));
+        return Promise.resolve();
+      },
+    });
+    root.appendChild(modal.modalEl);
+    modal.onOpen();
+    const el = modal.contentEl;
+    const click = (target: Element | null | undefined) => {
+      if (!target) throw new Error('nothing to click');
+      target.dispatchEvent(new MouseEvent('click'));
+    };
+    const tileOf = (section: string, name: string) =>
+      [...el.querySelectorAll(`.dnd5e-cb-${section} .dnd5e-npc-tile`)].find(
+        (t) => t.querySelector('.dnd5e-npc-tile-name')?.textContent === name,
+      );
+    const slots = () => [...el.querySelectorAll<HTMLElement>('.dnd5e-cb-slot')];
+    const create = () =>
+      [...el.querySelectorAll<HTMLButtonElement>('button')].find(
+        (b) => b.textContent === 'Charakter erstellen',
+      );
+    /** Fills every slot, one click at a time (each click draws the form again). */
+    const fillSlots = () => {
+      for (let step = 0; step < 200; step++) {
+        const open = slots().find((s) => Number(s.dataset.chosen) < Number(s.dataset.wanted));
+        if (open === undefined) return;
+        const next = open.querySelector<HTMLButtonElement>(
+          '.dnd5e-cb-plus:not(:disabled), .dnd5e-cb-pills .dnd5e-pill:not(.is-active)',
+        );
+        if (next === null) throw new Error(`cannot fill ${open.dataset.key}`);
+        click(next);
+      }
+    };
+    return { modal, el, created, click, tileOf, slots, create, fillSlots };
+  }
+
+  function start() {
+    const b = builder();
+    const name = b.el.querySelector<HTMLInputElement>('.dnd5e-cb-name');
+    if (name === null) throw new Error('no name');
+    name.value = 'Brin Holt';
+    name.dispatchEvent(new Event('input'));
+    b.click(b.tileOf('species', 'Mensch'));
+    b.click(b.tileOf('background', 'Soldat'));
+    b.click(b.tileOf('class', 'Kämpfer'));
+    return b;
+  }
+
+  function humanFighter() {
+    const b = start();
+    b.fillSlots();
+    return b;
+  }
+
+  it('is disabled until everything is chosen, then creates a draft whose numbers match the preview', async () => {
+    const { el, created, click, create, fillSlots } = start();
+    expect(create()?.disabled).toBe(true);
+    expect(texts(el, '.dnd5e-cb-problems li').every((p) => p?.startsWith('Wähle noch'))).toBe(true);
+    expect(texts(el, '.dnd5e-cb-problems li').length).toBeGreaterThan(0);
+    fillSlots();
+    click(
+      [...el.querySelectorAll('.dnd5e-cb-weapons .dnd5e-pill')].find(
+        (p) => p.textContent === 'Langschwert',
+      ),
+    );
+    expect(texts(el, '.dnd5e-cb-problems li')).toEqual([]);
+    expect(create()?.disabled).toBe(false);
+    click(create());
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    const draft = created[0];
+    if (draft === undefined) throw new Error('nothing created');
+    const sheet = derive(toCharacter(draft, rules), rules);
+    const shown = (label: string) =>
+      [...el.querySelectorAll('.dnd5e-cb-preview .dnd5e-tile')]
+        .find((t) => t.querySelector('.dnd5e-tile-label')?.textContent === label)
+        ?.querySelector('.dnd5e-tile-value')?.textContent;
+    expect(shown('RK')).toBe(String(sheet.ac.total));
+    expect(shown('Trefferpunkte')).toBe(String(sheet.hp.total));
+    expect(sheet.hp.total).toBeGreaterThan(0);
+    expect(draft.weapons).toEqual(['longsword']);
+    expect(draft.name).toBe('Brin Holt');
+  });
+
+  it('speaks German in the step heads and the options', () => {
+    const { el, tileOf, click } = humanFighter();
+    expect(texts(el, '.dnd5e-cb-slot .dnd5e-cb-slot-head').join('|')).toContain('Sprachen');
+    expect(texts(el, '.dnd5e-cb-slot .dnd5e-pill')).toContain('Zwergisch');
+    expect(texts(el, '.dnd5e-cb-section-head')).toEqual([
+      'Charakter',
+      'Spezies',
+      'Hintergrund',
+      'Klasse',
+      'Attributswerte',
+      'Auswahl',
+      'Ausrüstung',
+    ]);
+    click(tileOf('background', 'Krimineller'));
+    expect(el.querySelector('.dnd5e-cb-equipment')?.textContent).toContain('Diebeswerkzeug');
+    expect(el.querySelector('.dnd5e-cb-equipment')?.textContent).toContain(
+      'Beschlagene Lederrüstung',
+    );
+  });
+
+  it('refuses a pill beyond what is wanted', () => {
+    const { slots, click } = start();
+    const skills = () => slots().find((s) => s.dataset.key === 'fighter-core/skills');
+    expect(skills()?.dataset.wanted).toBe('2');
+    for (let i = 0; i < 3; i++) {
+      click(skills()?.querySelector('.dnd5e-cb-pills .dnd5e-pill:not(.is-active)'));
+    }
+    expect(skills()?.querySelectorAll('.dnd5e-pill.is-active')).toHaveLength(2);
+    expect(skills()?.dataset.chosen).toBe('2');
+    click(skills()?.querySelector('.dnd5e-pill.is-active'));
+    expect(skills()?.dataset.chosen).toBe('1');
+  });
+
+  it('clears the old class choice blocks when the class changes', () => {
+    const { slots, click, tileOf } = humanFighter();
+    const keys = () => slots().map((s) => s.dataset.key ?? '');
+    expect(keys().some((k) => k.startsWith('fighter-'))).toBe(true);
+    click(tileOf('class', 'Magier'));
+    expect(keys().some((k) => k.startsWith('fighter-'))).toBe(false);
+    expect(keys()).toContain('wizard-core/skills');
+  });
+
+  it('rolls scores and switches the ability method', () => {
+    const { el, click } = builder();
+    click(el.querySelector('.dnd5e-cb-method[data-method="rolled"]'));
+    click(el.querySelector('.dnd5e-cb-roll'));
+    const scores = [...el.querySelectorAll<HTMLSelectElement>('select.dnd5e-cb-ability-select')];
+    expect(scores.map((s) => s.value)).toEqual(['12', '12', '12', '12', '12', '12']);
+    click(el.querySelector('.dnd5e-cb-method[data-method="point-buy"]'));
+    expect(texts(el, '.dnd5e-cb-points')[0]).toBe('Noch 27 Punkte');
+    click(el.querySelector('.dnd5e-cb-ability-plus'));
+    expect(texts(el, '.dnd5e-cb-points')[0]).toBe('Noch 26 Punkte');
   });
 });
