@@ -2728,7 +2728,7 @@ describe('character sheet', () => {
 describe('character builder', () => {
   const rules = loadRules([SRD_52]);
 
-  function builder() {
+  function builder(createDep?: (draft: CharacterDraft) => Promise<void>) {
     const created: CharacterDraft[] = [];
     const modal = new CharacterBuilderModal(app, {
       t: createT('de'),
@@ -2739,7 +2739,7 @@ describe('character builder', () => {
       render: (markdown, target) => void (target.textContent = markdown),
       create: (draft) => {
         created.push(structuredClone(draft));
-        return Promise.resolve();
+        return createDep?.(draft) ?? Promise.resolve();
       },
     });
     root.appendChild(modal.modalEl);
@@ -2773,8 +2773,8 @@ describe('character builder', () => {
     return { modal, el, created, click, tileOf, slots, create, fillSlots };
   }
 
-  function start() {
-    const b = builder();
+  function start(createDep?: (draft: CharacterDraft) => Promise<void>) {
+    const b = builder(createDep);
     const name = b.el.querySelector<HTMLInputElement>('.dnd5e-cb-name');
     if (name === null) throw new Error('no name');
     name.value = 'Brin Holt';
@@ -2785,8 +2785,8 @@ describe('character builder', () => {
     return b;
   }
 
-  function humanFighter() {
-    const b = start();
+  function humanFighter(createDep?: (draft: CharacterDraft) => Promise<void>) {
+    const b = start(createDep);
     b.fillSlots();
     return b;
   }
@@ -2860,6 +2860,31 @@ describe('character builder', () => {
     click(tileOf('class', 'Magier'));
     expect(keys().some((k) => k.startsWith('fighter-'))).toBe(false);
     expect(keys()).toContain('wizard-core/skills');
+  });
+
+  it('creates once on a double click, and stays open and usable when create fails', async () => {
+    let finish: () => void = () => undefined;
+    const first = humanFighter(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        }),
+    );
+    first.click(first.create());
+    first.click(first.create());
+    expect(first.created).toHaveLength(1);
+    expect(first.create()?.disabled).toBe(true);
+    finish();
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+    const failing = humanFighter(() => Promise.reject(new Error('disk full')));
+    failing.click(failing.create());
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    expect(failing.create()?.disabled).toBe(false);
+    expect(notices[notices.length - 1]).toBe(
+      'Der Charakter konnte nicht angelegt werden: Error: disk full',
+    );
+    expect(failing.created).toHaveLength(1);
   });
 
   it('rolls scores and switches the ability method', () => {

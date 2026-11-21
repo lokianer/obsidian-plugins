@@ -13,7 +13,7 @@ import {
   local,
   type Rules,
 } from '@obsidian-plugins/rules';
-import { type App, Component, Modal, setIcon, Setting } from 'obsidian';
+import { type App, Component, Modal, Notice, setIcon, Setting } from 'obsidian';
 
 import {
   type AbilityMethod,
@@ -72,6 +72,8 @@ export class CharacterBuilderModal extends Modal {
   private formEl!: HTMLElement;
   private previewEl!: HTMLElement;
   private equipment: Component | null = null;
+  /** True while `create` runs, so a second click writes nothing. */
+  private busy = false;
 
   constructor(
     app: App,
@@ -221,7 +223,8 @@ export class CharacterBuilderModal extends Modal {
   }
 
   private feet(feet: number): string {
-    return feetText(feet, this.deps.lang, this.deps.t);
+    // A non-breaking space keeps the unit with its number in a narrow tile.
+    return feetText(feet, this.deps.lang, this.deps.t).replace(' ', ' ');
   }
 
   private sizeName(id: string): string {
@@ -589,7 +592,7 @@ export class CharacterBuilderModal extends Modal {
       cls: 'mod-cta dnd5e-cb-create',
       text: t('characterBuilder.create'),
     });
-    create.disabled = problems.length > 0;
+    create.disabled = problems.length > 0 || this.busy;
     create.addEventListener('click', () => void this.finish());
   }
 
@@ -609,8 +612,17 @@ export class CharacterBuilderModal extends Modal {
   }
 
   private async finish(): Promise<void> {
-    if (draftProblems(this.draft, this.deps.rules).length > 0) return;
-    await this.deps.create(this.draft);
+    if (this.busy || draftProblems(this.draft, this.deps.rules).length > 0) return;
+    this.busy = true;
+    this.drawPreview();
+    try {
+      await this.deps.create(this.draft);
+    } catch (error) {
+      this.busy = false;
+      this.drawPreview();
+      new Notice(this.deps.t('characterBuilder.failed', { reason: String(error) }));
+      return;
+    }
     this.close();
   }
 }

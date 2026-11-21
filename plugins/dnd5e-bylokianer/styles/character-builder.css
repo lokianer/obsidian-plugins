@@ -3,7 +3,12 @@
    layout, tiles and pills come from the NPC and spell builders. */
 
 .dnd5e-character-builder .dnd5e-npc-tiles {
-  max-height: 260px;
+  max-height: none;
+  overflow: visible;
+}
+
+.dnd5e-character-builder .dnd5e-npc-tile-line {
+  overflow-wrap: anywhere;
 }
 
 .dnd5e-cb-section-head {
