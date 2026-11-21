@@ -4,6 +4,7 @@ export type * from './character';
 export * from './check';
 export * from './data';
 export { derive } from './derive';
+export { levelOptions, type ChoiceSlot } from './options';
 export { maxSpellLevel } from './spellcasting';
 export { SRD_52 } from './srd52';
 export { local } from './model';
