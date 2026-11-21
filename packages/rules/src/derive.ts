@@ -3,7 +3,7 @@
 
 import { type Ability, ABILITIES, modifier, proficiencyBonus } from './basics';
 import type { Character, Sheet, SheetFeature, Value } from './character';
-import { collect, type Placed } from './collect';
+import { collect, growingValues, type Placed } from './collect';
 import { armorClass, attacks, worn } from './combat';
 import type { Rules } from './data';
 import type { Amount, Grant } from './model';
@@ -87,10 +87,26 @@ export function derive(character: Character, rules: Rules): Sheet {
       } else if (grant.kind === 'resistance') for (const id of grant.ids) resistances.add(id);
     }
     for (const choice of p.feature.choices) {
-      const values = p.choices[key(p, choice.id)] ?? [];
-      const wanted = amount(choice.count, p.owner);
-      if (values.length < wanted) {
-        missing.push(p.at === null ? key(p, choice.id) : `level ${p.at}: ${key(p, choice.id)}`);
+      const growing = growingValues(character, p.owner, p.feature, choice);
+      let values: string[];
+      if (growing === null) {
+        values = p.choices[key(p, choice.id)] ?? [];
+        if (values.length < amount(choice.count, p.owner)) {
+          missing.push(p.at === null ? key(p, choice.id) : `level ${p.at}: ${key(p, choice.id)}`);
+        }
+      } else {
+        // The values held up to each class level must reach that level's count.
+        const held = new Set<string>();
+        const byLevel = (choice.count as { byLevel: number[] }).byLevel;
+        for (let k = p.feature.level; k <= classLevel(p.owner); k++) {
+          for (const v of growing.find((g) => g.classLevel === k)?.values ?? []) held.add(v);
+          if (held.size < (byLevel[k - 1] ?? 0)) {
+            const at = growing.find((g) => g.classLevel === k)?.at;
+            missing.push(`level ${at}: ${key(p, choice.id)}`);
+            break;
+          }
+        }
+        values = [...new Set(growing.flatMap((g) => g.values))];
       }
       if (choice.gives === 'skill') for (const v of values) skills.add(v);
       else if (choice.gives === 'expertise') for (const v of values) expertise.add(v);

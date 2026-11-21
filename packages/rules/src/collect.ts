@@ -5,7 +5,7 @@
 
 import type { Character } from './character';
 import type { Rules } from './data';
-import type { Feature } from './model';
+import type { Choice, Feature } from './model';
 
 export interface Placed {
   feature: Feature;
@@ -27,6 +27,44 @@ export interface Collected {
 
 const key = (feature: Feature, choiceId: string) => `${feature.id}/${choiceId}`;
 
+/** One level entry's share of a growing choice. */
+export interface Increment {
+  /** The class level of the entry. */
+  classLevel: number;
+  /** The character level of the entry. */
+  at: number;
+  /** What the entry holds for the choice. */
+  values: string[];
+  /** The entry's choices, where an option chosen here keeps its own. */
+  choices: Record<string, string[]>;
+}
+
+/**
+ * A choice whose count grows with the class level is stored per level as the increment: the
+ * entries of the owning class at or above the feature's level, in order. Null for any other
+ * choice.
+ */
+export function growingValues(
+  character: Character,
+  owner: string | null,
+  feature: Feature,
+  choice: Choice,
+): Increment[] | null {
+  if (owner === null || typeof choice.count !== 'object' || !('byLevel' in choice.count)) {
+    return null;
+  }
+  const id = key(feature, choice.id);
+  const result: Increment[] = [];
+  let classLevel = 0;
+  character.levels.forEach((entry, i) => {
+    if (entry.class !== owner) return;
+    classLevel++;
+    if (classLevel < feature.level) return;
+    result.push({ classLevel, at: i + 1, values: entry.choices[id] ?? [], choices: entry.choices });
+  });
+  return result;
+}
+
 export function collect(character: Character, rules: Rules): Collected {
   const placed: Placed[] = [];
   const unknown: string[] = [];
@@ -38,17 +76,23 @@ export function collect(character: Character, rules: Rules): Collected {
   const place = (p: Placed) => {
     placed.push(p);
     for (const choice of p.feature.choices) {
-      const values = p.choices[key(p.feature, choice.id)] ?? [];
       const from = choice.from;
-      for (const value of values) {
+      const growing = growingValues(character, p.owner, p.feature, choice);
+      const held =
+        growing
+          ?.flatMap((g) => g.values.map((value) => ({ value, from: g })))
+          .filter((h, i, all) => all.findIndex((o) => o.value === h.value) === i) ??
+        (p.choices[key(p.feature, choice.id)] ?? []).map((value) => ({ value, from: null }));
+      for (const { value, from: entry } of held) {
+        const q: Placed = entry === null ? p : { ...p, choices: entry.choices, at: entry.at };
         if (choice.gives === 'feat') {
           const feat = rules.feat(value);
           if (feat === undefined) miss(value);
-          else for (const f of feat.features) place({ ...p, feature: f, from: feat.id });
+          else for (const f of feat.features) place({ ...q, feature: f, from: feat.id });
         } else if (choice.gives === 'option' && 'options' in from) {
           const option = from.options.find((o) => o.id === value);
           if (option === undefined) miss(value);
-          else place({ ...p, feature: option });
+          else place({ ...q, feature: option });
         }
       }
     }

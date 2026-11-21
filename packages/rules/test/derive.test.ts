@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import fixture from '../data/fixture/fixture.json';
-import { type Character, derive, loadRules, type RulesData } from '../src/index';
+import { type Character, derive, loadRules, type RulesData, SRD_52 } from '../src/index';
 
 const rules = loadRules([fixture as RulesData]);
 
@@ -98,5 +98,67 @@ describe('derive', () => {
     const sheet = derive(c, rules);
     expect([...sheet.unknown].sort()).toEqual(['tester/nope', 'wizard']);
     expect(sheet.abilities.str.score).toBe(19);
+  });
+});
+
+describe('growing choices stored per level as the increment', () => {
+  const srd = loadRules([SRD_52]);
+  const INV = 'warlock-eldritch-invocations/invocations';
+  const inv = (n: number) =>
+    ['agonizing-blast', 'armor-of-shadows', 'ascendant-step', 'devils-sight', 'devouring-blade']
+      .slice(0, n)
+      .map((o) => `warlock-invocation-${o}`);
+  const hero = (cls: string, count: number, choices: Record<string, string[]>[]): Character => ({
+    rules: '2024',
+    species: 'human',
+    background: 'soldier',
+    abilities: { str: 10, dex: 16, con: 12, int: 10, wis: 14, cha: 10 },
+    choices: {},
+    levels: Array.from({ length: count }, (_, i) => ({
+      class: cls,
+      hp: i === 0 ? 'max' : 'average',
+      choices: choices[i] ?? {},
+    })),
+    inventory: [],
+    bonuses: [],
+  });
+  const options = (c: Character) =>
+    derive(c, srd).features.filter((f) => f.id.startsWith('warlock-invocation-'));
+  const short = (c: Character) => derive(c, srd).missing.filter((m) => m.includes('invocations'));
+  const all = inv(5);
+
+  it('reads growing choices spread over the levels', () => {
+    const c = hero('warlock', 5, [
+      { [INV]: all.slice(0, 1) },
+      { [INV]: all.slice(1, 3) },
+      {},
+      {},
+      { [INV]: all.slice(3, 5) },
+    ]);
+    expect(options(c)).toHaveLength(5);
+    expect(short(c)).toEqual([]);
+  });
+
+  it('reports a short increment at its level', () => {
+    const c = hero('warlock', 5, [{ [INV]: all.slice(0, 1) }, { [INV]: all.slice(1, 3) }]);
+    expect(short(c)).toEqual([`level 5: ${INV}`]);
+  });
+
+  it('accepts all growing choices at the first level', () => {
+    const c = hero('warlock', 5, [{ [INV]: all }]);
+    expect(options(c)).toHaveLength(5);
+    expect(short(c)).toEqual([]);
+  });
+
+  it('reads weapon mastery spread over levels', () => {
+    const M = 'fighter-weapon-mastery/mastery';
+    const c = hero('fighter', 4, [
+      { [M]: ['club', 'dagger', 'greatclub'] },
+      {},
+      {},
+      { [M]: ['longsword'] },
+    ]);
+    expect(derive(c, srd).missing.filter((m) => m.includes('mastery'))).toEqual([]);
+    expect(derive(c, srd).masteries).toEqual(['club', 'dagger', 'greatclub', 'longsword']);
   });
 });
