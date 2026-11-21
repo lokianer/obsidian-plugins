@@ -1019,3 +1019,15 @@ Spec `docs/superpowers/specs/2026-11-20-catalogues-design.md`, plan
 - **Left out:** lower-case split fragments and hyphenated units (such as "5-foot") are not caught
   by the checks; a choice of an unknown kind (languages, tools) falls back to its raw id on the
   sheet; the sidebar "Deinen Schwur brechen" stays out, like the English.
+
+## 2026-11-21 · Character builder: choices that grow with the level
+
+- **Decision (maintainer):** a choice whose count grows with the class level (Eldritch
+  Invocations, Metamagic, Weapon Mastery) is stored per level as the increment: each entry of
+  `levels` holds only the values that level adds (a warlock's fifth level, one more invocation).
+  The character's choice is the union of its levels' values.
+- **Why:** the level-up dialog (C3) shows exactly what a level newly grants, and removing or
+  re-choosing a level takes its values with it; no value is written twice.
+- **Left out:** the full list repeated at every level (easier to read in the note, but duplicated
+  and open to drift). Replacing an earlier pick on level-up (a warlock swapping an invocation) is
+  C3's to design. Built in C2, which writes new characters this way.

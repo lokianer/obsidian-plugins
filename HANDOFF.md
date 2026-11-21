@@ -36,10 +36,11 @@ for all of that data, shown on the sheet with German Obsidian (C1b).
 2. **Still waiting for the check from earlier:** V4–V6 (style C for the lists, Dice tab, deck and
    builders) and the catalogues K1–K3. Release 0.2.0 only after the maintainer's go-ahead.
 3. **Next phase:** C2 (create and level up in a dialog) after the check; it needs its plan first.
-4. **Before C2, decide** (from the C1 final review): choices whose count grows with the class level
-   (Eldritch Invocations, Metamagic, Weapon Mastery) are stored in full at the level that first
-   grants them; the level-up dialog needs them per level (spread over the class's entries, or the
-   increments per level). Weapon Mastery's data lists categories, not weapons. **Still open.**
+4. **Decided 2026-11-21** (maintainer, `DECISIONS.md`): choices whose count grows with the class
+   level (Eldritch Invocations, Metamagic, Weapon Mastery) are stored per level as the increment;
+   the character's choice is the union. Today C1 stores them in full at the first level; C2's plan
+   moves the engine and Wren's note to increments. Weapon Mastery's data lists categories, not
+   weapons (still to solve in C2).
 5. **Deferred minors from C1** (none blocks): 2024 third casters should round down (latent, no SRD
    third caster); 2014 single-class half casters need their own table (latent, no 2014 data); a
    feat taken at a class level follows that class's level, not the character's; the same origin
