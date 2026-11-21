@@ -6,7 +6,7 @@ import { ABILITIES, type Ability } from './basics';
 import type { Character } from './character';
 import { collect, growingValues, type Placed } from './collect';
 import type { Rules } from './data';
-import { derive } from './derive';
+import { derive, resolveAmount } from './derive';
 import type { Amount, Choice, Text } from './model';
 import { maxSpellLevel } from './spellcasting';
 
@@ -47,13 +47,17 @@ export function levelOptions(character: Character, rules: Rules, at: number | nu
   const feats = new Set(placed.map((p) => p.from));
   const options = new Set(placed.map((p) => p.feature.id));
 
-  const amount = (a: Amount, owner: string | null): number => {
-    if (typeof a === 'number') return a;
-    if ('ability' in a) return sheet.abilities[a.ability].modifier;
-    if ('proficiency' in a) return sheet.proficiency;
-    const owned = sheet.classes.find((c) => c.id === owner)?.level ?? level;
-    return a.byLevel[Math.max(1, owned) - 1] ?? 0;
-  };
+  const mod = Object.fromEntries(ABILITIES.map((a) => [a, sheet.abilities[a].modifier])) as Record<
+    Ability,
+    number
+  >;
+  const amount = (a: Amount, owner: string | null): number =>
+    resolveAmount(
+      a,
+      mod,
+      sheet.proficiency,
+      sheet.classes.find((c) => c.id === owner)?.level ?? level,
+    );
 
   const named = (id: string, name: Text | undefined): Option => ({ id, name: name ?? { en: id } });
 
@@ -102,7 +106,7 @@ export function levelOptions(character: Character, rules: Rules, at: number | nu
   return slots;
 
   /** The highest spell level of a spell choice: a number, or the class's table. */
-  function spellLevel(kind: unknown, p: Placed): number {
+  function spellLevel(kind: 'cantrip' | 'leveled' | number, p: Placed): number {
     if (typeof kind === 'number') return kind;
     if (kind === 'cantrip') return 0;
     const classId = p.owner;

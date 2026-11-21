@@ -132,4 +132,18 @@ describe('levelOptions', () => {
     const style = find(levelOptions(c, rules, 1), 'fighter-fighting-style/fighting-style');
     expect(ids(style)).toContain('archery');
   });
+
+  it('gives a Mystic Arcanum choice exactly its spell level', () => {
+    const c = hero(
+      'human',
+      'soldier',
+      Array.from({ length: 11 }, () => ({ class: 'warlock' })),
+    );
+    const slot = find(levelOptions(c, rules, 11), 'warlock-mystic-arcanum/arcanum-6');
+    expect(slot).toMatchObject({
+      wanted: 1,
+      spells: { list: 'warlock', maxLevel: 6 },
+      options: [],
+    });
+  });
 });

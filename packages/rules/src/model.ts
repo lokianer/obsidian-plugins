@@ -77,8 +77,8 @@ export type OptionSource =
   | { abilities: Ability[]; max?: number; each?: number }
   | { feats: FeatCategory }
   | { subclasses: string }
-  /** Spells of a class list: its cantrips, or its leveled spells. */
-  | { spells: string; level: 'cantrip' | 'leveled' }
+  /** Spells of a class list: its cantrips, its leveled spells, or spells of exactly one level. */
+  | { spells: string; level: 'cantrip' | 'leveled' | number }
   /**
    * Plain ids: tools, languages, armour or weapon kinds. A tool category id stands for every tool of
    * it; an empty list for a language choice means any standard language.

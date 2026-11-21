@@ -35,6 +35,19 @@ function scores(character: Character, placed: readonly Placed[]): Record<Ability
   return score;
 }
 
+/** An amount's value: `level` is the class level (or character level) a `byLevel` table follows. */
+export function resolveAmount(
+  a: Amount,
+  mod: Record<Ability, number>,
+  proficiency: number,
+  level: number,
+): number {
+  if (typeof a === 'number') return a;
+  if ('ability' in a) return mod[a.ability];
+  if ('proficiency' in a) return proficiency;
+  return a.byLevel[Math.max(1, level) - 1] ?? 0;
+}
+
 export function derive(character: Character, rules: Rules): Sheet {
   const { placed, classes, unknown } = collect(character, rules);
   const level = character.levels.length;
@@ -46,12 +59,8 @@ export function derive(character: Character, rules: Rules): Sheet {
   >;
   const classLevel = (owner: string | null) =>
     owner === null ? level : (classes.find((c) => c.id === owner)?.level ?? 0);
-  const amount = (a: Amount, owner: string | null): number => {
-    if (typeof a === 'number') return a;
-    if ('ability' in a) return mod[a.ability];
-    if ('proficiency' in a) return proficiency;
-    return a.byLevel[Math.max(1, classLevel(owner)) - 1] ?? 0;
-  };
+  const amount = (a: Amount, owner: string | null): number =>
+    resolveAmount(a, mod, proficiency, classLevel(owner));
 
   const saves = new Set<string>();
   const skills = new Set<string>();
