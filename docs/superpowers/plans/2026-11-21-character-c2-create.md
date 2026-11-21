@@ -1,6 +1,6 @@
 # Character Builder C2 — Create Character — Implementation Plan
 
-**Status:** written 2026-11-21, awaiting the maintainer's review.
+**Status:** built 2026-11-21, awaiting the maintainer's check in Obsidian.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

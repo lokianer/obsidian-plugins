@@ -54,9 +54,8 @@ and the push are the controller's.
 
 ## State of the working tree
 
-`main`, clean after the docs commit; not pushed (the controller pushes after the final review). The
-ledger is `.superpowers/sdd/2026-11-21-character-c2-create/` (git-ignored). The private vault's Daily
-and Changelog for the day are the controller's.
+`main`, clean apart from local Obsidian state; everything pushed. The C2 work folder under
+`.superpowers/sdd/` was deleted after the final review; the git history is the record.
 
 **Private, outside the repository:** `D:\03 Projekte\Code\Loki\dnd5e-library\work\srd52\` (the SRD
 PDFs and slices); the repository's JSON (`packages/rules/data/srd-5.2.1/`) is the source.
@@ -93,6 +92,13 @@ from `SRD_SPELLS` filtered by class and level; swapping and re-choosing are C3.
 
 ## Verification
 
-`pnpm check` before the docs commit: see the commit. Sable Thorn is covered by a plugin test (no
-`missing`, no `unknown`, computed keys already up to date) next to Wren's. The final whole-branch
-review of C2 is dispatched by the controller.
+Every task had its own review; tasks 4 and 6 needed one fix round each. Final whole-branch review
+(most capable model): no critical, two important findings, both fixed in `d617ae6`: invocation
+prerequisites as data (`requires`) and filtered in `levelOptions`; a value kept in a surviving slot
+that another source now grants is reported (`choice:<key>`, "choose again"). Also fixed: a failed
+sheet opening after the note was written no longer allows a second note; README and DECISIONS
+corrected. Scoped re-review clean. Deferred minors (C3): an option prerequisite taken in the same
+level entry is not counted; spells are not de-duplicated at later levels; cantrip prerequisites of
+invocations are text; a feat's level requirement uses the final level; the Spells tab merges several
+casters. Screenshots of the dialog (dark 1100 px, light German 900 px, 380 px) from the scratchpad
+harness. `pnpm check` after the fixes, exit 0: plugin 491, rules 86, session 15 tests.
